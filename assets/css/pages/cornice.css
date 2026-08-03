@@ -1,0 +1,108 @@
+/* ==========================================================================
+   CORNICE NARRATIVA (cornicenarrativa.html)
+   Generatore interattivo del "biglietto" di Long Story Short 2026:
+   l'utente sceglie capolinea, percorso e generi, e ottiene la sua traccia.
+   ========================================================================== */
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: #f7f7f7;
+  color: #000000;
+  letter-spacing: -0.02em;
+}
+
+/* Colori delle tre linee della metropolitana */
+:root {
+  --c: #00c8d4; /* linea ciano */
+  --m: #cc00a0; /* linea magenta */
+  --y: #d4b800; /* linea gialla */
+  --mid: #252523;
+  --border: #000000;
+  --red: #ff2222;
+}
+
+.content-wrapper {
+  max-width: 1200px;
+}
+
+/* La copertina qui sta ancora più in fondo e non intercetta i clic */
+.bg-fixed-cover {
+  z-index: -10;
+  pointer-events: none;
+}
+
+/* Sfumatura di riserva se la copertina non si carica */
+.bg-fixed-cover::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.4) 0%, rgba(247, 247, 247, 0.95) 100%);
+  z-index: -11;
+}
+
+.box-style {
+  border: 2px solid #000000;
+  background-color: #ffffff;
+  position: relative;
+}
+
+.fade-in {
+  animation: fadeIn 0.6s ease-out forwards;
+}
+
+/* --------------------------------------------------------------------------
+   Pallini identificativi delle linee nei pulsanti
+   -------------------------------------------------------------------------- */
+.dot-c,
+.dot-m,
+.dot-y {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  border: 1px solid #000;
+}
+
+.dot-c {
+  background: var(--c);
+}
+
+.dot-m {
+  background: var(--m);
+}
+
+.dot-y {
+  background: var(--y);
+}
+
+/* --------------------------------------------------------------------------
+   Scanalature laterali del biglietto.
+   Due cerchi color sfondo sovrapposti ai bordi simulano la fustellatura di un
+   vero biglietto della metro.
+   -------------------------------------------------------------------------- */
+.ticket-punch-left::before,
+.ticket-punch-right::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 24px;
+  height: 24px;
+  background-color: #f7f7f7; /* stesso colore del body */
+  border: 2px solid #000000;
+  border-radius: 50%;
+  z-index: 20;
+}
+
+.ticket-punch-left::before {
+  left: -12px;
+}
+
+.ticket-punch-right::after {
+  right: -12px;
+}
+
+/* Barra di scorrimento su fondo chiaro */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #f7f7f7; }
+::-webkit-scrollbar-thumb { background: #000000; border-radius: 10px; }

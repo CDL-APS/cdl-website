@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Il titolo viene sostituito da assets/js/opera.js col nome dell'opera -->
+    <title>CDL | Dettaglio Opera</title>
+
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="icon" type="image/png" href="assets/img/brand/favicon.png">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <link rel="stylesheet" href="assets/css/base.css">
+    <link rel="stylesheet" href="assets/css/components.css">
+    <link rel="stylesheet" href="assets/css/pages/opera.css">
+</head>
+<body class="antialiased">
+
+    <!-- Velo di caricamento: resta finché i dati dell'opera non sono pronti -->
+    <div id="loader">
+        <div class="flex flex-col items-center gap-4">
+            <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[--cdl-lavender]"></div>
+            <p id="loader-text" class="text-[8px] uppercase font-black tracking-widest opacity-40">Sincronizzazione archivio...</p>
+        </div>
+    </div>
+
+    <div class="bg-fixed-duotone"></div>
+
+    <div class="content-wrapper opacity-0" id="main-content">
+
+        <nav class="mb-10">
+            <a href="cortoteca.html" id="back-link" class="inline-flex items-center gap-3 text-[11px] font-black uppercase tracking-[0.3em] hover:text-[--cdl-lavender] transition-colors group">
+                <i data-lucide="arrow-left" class="w-4 h-4 group-hover:-translate-x-1 transition-transform"></i> Torna alla Cortoteca
+            </a>
+        </nav>
+
+        <header class="mb-8">
+            <div id="tagline-row" class="mb-2 hidden">
+                <span id="movie-tagline" class="text-[9px] md:text-[11px] font-black uppercase tracking-[0.4em] text-[--cdl-lavender] opacity-80"></span>
+            </div>
+
+            <div class="flex flex-col md:flex-row md:items-baseline justify-between gap-4">
+                <div class="flex flex-wrap items-baseline gap-4 md:gap-6">
+                    <h1 id="movie-title" class="text-4xl md:text-7xl font-black uppercase leading-none">---</h1>
+                    <span id="movie-year" class="text-[--cdl-lavender] font-black tracking-tighter text-2xl md:text-4xl">----</span>
+                </div>
+                <div class="flex flex-wrap items-center gap-4">
+                    <div id="genre-container" class="flex flex-wrap gap-2"></div>
+                    <a id="letterboxd-link" href="#" target="_blank" rel="noopener" class="hidden hover:opacity-70 transition-opacity">
+                        <img src="assets/img/partner/letterboxd.png" id="letterboxd-icon" alt="Letterboxd" class="h-6 md:h-8 w-auto">
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+            <!-- Colonna principale -->
+            <div class="lg:col-span-3 space-y-6">
+
+                <p id="movie-synopsis" class="text-sm md:text-base leading-relaxed opacity-90 font-medium pb-6 border-b border-white/10">---</p>
+
+                <div id="media-section" class="bento-border overflow-hidden bg-black relative group">
+                    <!-- Mostrato quando l'opera non ha ancora un video pubblicato -->
+                    <div id="coming-soon" class="hidden">
+                        <div class="coming-soon-badge">streaming del corto in arrivo</div>
+                    </div>
+
+                    <div id="video-wrapper" class="hidden relative h-full w-full">
+                        <div class="video-container">
+                            <iframe id="video-player" src="" title="Player video" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+                        </div>
+                        <div class="bg-[--cdl-lavender] h-1.5 w-full relative z-40"></div>
+                    </div>
+
+                    <img id="movie-still" src="" alt="Fotogramma dell'opera" class="hero-image hidden">
+                </div>
+
+                <div id="notes-section" class="p-8 bento-border bg-black/90 hidden">
+                    <h3 class="label-tech mb-4 text-white border-b border-white/10 pb-2">Note di Regia</h3>
+                    <p id="movie-notes" class="text-sm leading-relaxed text-white">---</p>
+                </div>
+            </div>
+
+            <!-- Colonna laterale: troupe e cast -->
+            <div class="space-y-6">
+                <div id="troupe-box" class="p-6 bento-border bg-white text-[--cdl-dark]">
+                    <div id="troupe-container" class="space-y-5"></div>
+                </div>
+
+                <div id="cast-box" class="p-6 bento-border border-[--cdl-lavender] hidden">
+                    <span class="label-tech text-[--cdl-lavender] mb-1 text-left font-black uppercase tracking-widest leading-none">con</span>
+                    <ul id="movie-cast" class="mt-4 space-y-3 text-[11px] font-black uppercase tracking-wider"></ul>
+                </div>
+            </div>
+        </div>
+
+        <footer class="mt-12 pb-4 flex flex-col justify-center items-center gap-2 fade-in">
+            <div class="flex flex-col justify-center items-center gap-2 text-[9px] font-black tracking-[0.2em] uppercase opacity-40 text-center leading-relaxed">
+                <div class="flex justify-center items-center gap-2">
+                    <img src="assets/img/brand/logo-cdl.png" alt="" class="h-2 w-auto footer-logo" onerror="this.style.display='none'">
+                    <span>2026 CDL APS</span>
+                </div>
+            </div>
+            <div class="flex flex-col items-center text-[7.5px] md:text-[8px] font-medium text-center tracking-wide text-white opacity-[0.15] hover:opacity-50 transition-opacity duration-300 mt-2 select-none leading-relaxed max-w-[320px] sm:max-w-none gap-1">
+                <span>Associazione di promozione del cinema giovane e indipendente</span>
+                <div>
+                    CDL APS &bull; Viale Laurana 13, Rimini, 47921 &bull; CF: 91200080405
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script src="assets/js/opera.js"></script>
+</body>
+</html>

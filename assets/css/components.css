@@ -1,0 +1,116 @@
+/* ==========================================================================
+   COMPONENTS — elementi grafici che ricorrono su più pagine.
+   Se una regola serve a una sola pagina, va in css/pages/, non qui.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Bordo "bento": la cornice bianca che definisce quasi ogni riquadro del sito
+   -------------------------------------------------------------------------- */
+.bento-border {
+  border: 2px solid var(--cdl-white);
+  position: relative;
+}
+
+/* Variante sottile, usata sulle card della pagina vantaggi */
+.bento-border--thin {
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+/* Ombra netta stile fumetto */
+.comic-shadow {
+  filter: drop-shadow(18px 18px 0px #000000);
+}
+
+/* --------------------------------------------------------------------------
+   Hover rosso: lo stato attivo condiviso dalle card cliccabili.
+   Gli !important servono a scavalcare le utility Tailwind applicate inline.
+   -------------------------------------------------------------------------- */
+.hover-red:hover {
+  background-color: var(--cdl-red) !important;
+  color: var(--cdl-white) !important;
+  border-color: var(--cdl-white) !important;
+}
+
+/* --------------------------------------------------------------------------
+   Card generica su fondo scuro (cortoteca, vantaggi)
+   -------------------------------------------------------------------------- */
+.card-dark {
+  border-left: 6px solid var(--cdl-lavender);
+  background-color: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(8px);
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.card-link {
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.card-link:hover {
+  border-color: var(--cdl-red) !important;
+  border-left-color: var(--cdl-red) !important;
+  transform: translateY(-4px);
+  background-color: rgba(0, 0, 0, 0.8) !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+/* --------------------------------------------------------------------------
+   Etichette tecniche (usate nella scheda opera e nei titoletti di sezione)
+   -------------------------------------------------------------------------- */
+.label-tech {
+  font-size: 9px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--cdl-lavender);
+  margin-bottom: 2px;
+  display: block;
+  opacity: 0.8;
+}
+
+.value-tech {
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  line-height: 1.2;
+}
+
+/* --------------------------------------------------------------------------
+   Icone social nel piede pagina
+   -------------------------------------------------------------------------- */
+.social-link {
+  display: inline-flex;
+  padding: 6px;
+  transition: transform 0.3s var(--ease-out), color 0.3s var(--ease-out);
+}
+
+.social-link:hover {
+  color: var(--cdl-red);
+  transform: scale(1.25);
+}
+
+/* --------------------------------------------------------------------------
+   Logo nel piede pagina.
+   Il logo originale è a colori: viene reso monocromatico via filtro, così lo
+   stesso file serve sia il fondo scuro sia quello chiaro.
+   -------------------------------------------------------------------------- */
+.footer-logo {
+  filter: brightness(0) invert(1);
+  opacity: 0.8;
+}
+
+/* Sulle pagine a fondo chiaro il logo va nero anziché bianco */
+.footer-logo--dark {
+  filter: brightness(0);
+  opacity: 1;
+}
+
+/* --------------------------------------------------------------------------
+   Barra di scorrimento.
+   Larghezza comune; i colori li imposta il foglio della singola pagina,
+   perché il sito alterna fondi scuri e fondi chiari.
+   -------------------------------------------------------------------------- */
+::-webkit-scrollbar {
+  width: 6px;
+}

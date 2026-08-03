@@ -1,0 +1,128 @@
+/* ==========================================================================
+   BASE — variabili di brand, reset e fondamenta tipografiche.
+   Caricato da tutte le pagine, sempre per primo.
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=Montserrat:wght@400;500;700;900&display=swap');
+
+:root {
+  /* Palette CDL */
+  --cdl-lavender: #b9bbf8;
+  --cdl-dark: #1d1d1b;
+  --cdl-white: #f7f7f7;
+  --cdl-red: #ff0000;
+
+  /* Curva di easing unica per tutte le micro-interazioni */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* --------------------------------------------------------------------------
+   Reset minimo del body. Il colore di sfondo e il font sono impostati dal
+   foglio della singola pagina, perché il sito alterna due mondi visivi:
+   fondo scuro (home, cortoteca, vantaggi, opera) e fondo chiaro (LSS).
+   -------------------------------------------------------------------------- */
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* --------------------------------------------------------------------------
+   Sfondi a tutta pagina
+   -------------------------------------------------------------------------- */
+
+/* Sfondo scuro animato, filtrato in bianco e nero "bruciato" via filtro SVG */
+.bg-fixed-duotone {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #222;
+  background-image: url('../img/sfondi/sfondo-animato.gif');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: -1;
+  opacity: 0.5;
+  filter: url(#burnt-bw-filter);
+}
+
+/* Copertina Long Story Short, usata sulle pagine a fondo chiaro */
+.bg-fixed-cover {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('../img/sfondi/cover-lss.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: -1;
+}
+
+/* Contenitore dei filtri SVG: presente nel DOM ma invisibile */
+.svg-filters {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  visibility: hidden;
+}
+
+/* --------------------------------------------------------------------------
+   Layout
+   -------------------------------------------------------------------------- */
+.content-wrapper {
+  width: 100%;
+  margin: 0 auto;
+  position: relative;
+  z-index: 10;
+}
+
+/* --------------------------------------------------------------------------
+   Animazione di ingresso condivisa
+   -------------------------------------------------------------------------- */
+.fade-in {
+  animation: fadeIn 0.8s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Accessibilità: focus da tastiera visibile e coerente col brand
+   -------------------------------------------------------------------------- */
+a:focus-visible,
+button:focus-visible {
+  outline: 3px solid var(--cdl-lavender);
+  outline-offset: 4px;
+}
+
+/* --------------------------------------------------------------------------
+   Rispetto delle preferenze di movimento ridotto.
+   Chi ha attivato "riduci animazioni" nel sistema operativo vede il sito
+   fermo invece che animato.
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

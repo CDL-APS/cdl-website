@@ -1,0 +1,114 @@
+/* ==========================================================================
+   SCHEDA OPERA (opera.html) — dettaglio del singolo cortometraggio
+   ========================================================================== */
+
+body {
+  font-family: 'Montserrat', sans-serif;
+  background-color: var(--cdl-dark);
+  color: var(--cdl-white);
+  letter-spacing: -0.02em;
+}
+
+/* Qui lo sfondo è più tenue e in scala di grigi: la pagina è densa di testo */
+.bg-fixed-duotone {
+  opacity: 0.3;
+  filter: grayscale(1) contrast(1.5);
+}
+
+.content-wrapper {
+  max-width: 1100px;
+  padding: 2rem;
+}
+
+#movie-tagline {
+  line-height: 1;
+  display: block;
+}
+
+/* --------------------------------------------------------------------------
+   Player video: rapporto 16:9 mantenuto col trucco del padding percentuale,
+   che si calcola sulla larghezza del contenitore (9/16 = 56.25%).
+   -------------------------------------------------------------------------- */
+.video-container {
+  position: relative;
+  padding-bottom: 56.25%;
+  height: 0;
+  overflow: hidden;
+  background: #000;
+}
+
+.video-container iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.hero-image {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-bottom: 8px solid var(--cdl-lavender);
+}
+
+/* --------------------------------------------------------------------------
+   Schermata di caricamento, coperta finché i dati non sono pronti
+   -------------------------------------------------------------------------- */
+#loader {
+  position: fixed;
+  inset: 0;
+  background: var(--cdl-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  transition: opacity 0.5s ease;
+}
+
+/* --------------------------------------------------------------------------
+   Etichette di genere
+   -------------------------------------------------------------------------- */
+.genre-tag {
+  border: 1px solid var(--cdl-white);
+  padding: 4px 10px;
+  font-size: 9px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+/* --------------------------------------------------------------------------
+   Velo "streaming in arrivo" per le opere senza video pubblicato
+   -------------------------------------------------------------------------- */
+#coming-soon {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(2px);
+  z-index: 5;
+}
+
+#coming-soon.hidden {
+  display: none !important;
+}
+
+.coming-soon-badge {
+  border: 2px solid var(--cdl-white);
+  padding: 1rem 1.5rem;
+  background: rgba(0, 0, 0, 0.8);
+  font-size: 10px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.3em;
+  text-align: center;
+  color: var(--cdl-white);
+}
+
+/* Barra di scorrimento su fondo scuro */
+::-webkit-scrollbar-track { background: var(--cdl-dark); }
+::-webkit-scrollbar-thumb { background: var(--cdl-lavender); }

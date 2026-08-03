@@ -1,0 +1,89 @@
+# Configurazione Netlify.
+# Il sito è statico: non c'è nulla da compilare, Netlify pubblica i file così
+# come sono. Questo file serve soprattutto per i redirect e per gli header.
+
+[build]
+  publish = "."
+  command = ""
+
+# ---------------------------------------------------------------------------
+# REDIRECT DAI VECCHI INDIRIZZI
+#
+# La riorganizzazione ha spostato la scheda di dettaglio di un'opera da
+# /cortoteca/info_film2 a /opera.html. I link già condivisi (Instagram, chat,
+# email) devono continuare a funzionare: questi redirect li reindirizzano al
+# nuovo indirizzo. Il 301 dice ai motori di ricerca che lo spostamento è
+# definitivo, così l'indicizzazione si trasferisce sulla nuova pagina.
+# La query string (?film=quartolivello) viene mantenuta in automatico.
+# ---------------------------------------------------------------------------
+
+[[redirects]]
+  from = "/cortoteca/info_film2"
+  to = "/opera.html"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/cortoteca/info_film2.html"
+  to = "/opera.html"
+  status = 301
+  force = true
+
+# Vecchi percorsi delle immagini dei corti
+[[redirects]]
+  from = "/cortoteca/*"
+  to = "/assets/img/film/:splat"
+  status = 301
+
+# Il database dei film ha cambiato nome e posizione
+[[redirects]]
+  from = "/dati_film.json"
+  to = "/data/film.json"
+  status = 301
+
+# Immagini spostate dalla radice ad assets/
+[[redirects]]
+  from = "/Logo.png"
+  to = "/assets/img/brand/logo-cdl.png"
+  status = 301
+
+[[redirects]]
+  from = "/cdl_iconaNew.png"
+  to = "/assets/img/brand/icona-cdl.png"
+  status = 301
+
+[[redirects]]
+  from = "/LongStoryShort.png"
+  to = "/assets/img/brand/long-story-short.png"
+  status = 301
+
+[[redirects]]
+  from = "/immagini/*"
+  to = "/assets/img/nuvole/:splat"
+  status = 301
+
+# ---------------------------------------------------------------------------
+# HEADER
+# ---------------------------------------------------------------------------
+
+# Le immagini e i fogli di stile hanno nomi stabili: si possono tenere in cache
+# a lungo nel browser di chi visita. Se un'immagine cambia contenuto ma non
+# nome, va rinominata, altrimenti i visitatori abituali vedranno la vecchia.
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=604800"
+
+# Il database dei film cambia spesso: cache breve, così un corto aggiunto
+# oggi si vede subito.
+[[headers]]
+  for = "/data/*"
+  [headers.values]
+    Cache-Control = "public, max-age=300"
+
+# Protezioni di base su tutte le pagine
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"

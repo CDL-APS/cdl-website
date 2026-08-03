@@ -4,365 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CDL | Vantaggi per i soci</title>
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" href="cdl_favicon.png">
-    
+    <meta name="description" content="I vantaggi riservati ai soci di CDL APS: convenzioni, eventi, supporto ai progetti.">
+
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="icon" type="image/png" href="assets/img/brand/favicon.png">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    <style>
-        /* Import Montserrat */
-        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap');
 
-        :root {
-            --cdl-lavender: #b9bbf8;
-            --cdl-dark: #1d1d1b;
-            --cdl-white: #f7f7f7;
-            --cdl-red: #ff0000;
-        }
-
-        body {
-            font-family: 'Montserrat', sans-serif;
-            background-color: var(--cdl-dark);
-            color: var(--cdl-white);
-            margin: 0;
-            padding: 0;
-            min-height: 100vh;
-            letter-spacing: -0.03em;
-            overflow-x: hidden;
-            position: relative;
-        }
-
-        /* Ottimizzazione Desktop: Pagina sbloccata ma compatta */
-        @media (min-width: 1024px) {
-            body {
-                min-height: 100vh;
-                overflow-y: auto;
-                display: flex;
-                align-items: flex-start;
-                justify-content: center;
-                padding: 3rem 2rem !important;
-            }
-            .content-wrapper {
-                max-width: 1100px;
-                width: 100%;
-                margin: 0 auto;
-            }
-            .services-grid {
-                gap: 1.25rem !important;
-            }
-            .card {
-                min-height: 160px !important;
-                padding: 1.75rem !important;
-            }
-            .social-box {
-                margin-top: 2.5rem !important;
-            }
-            footer {
-                margin-top: 3rem !important;
-            }
-        }
-
-        /* Sfondo Fisso aggiornato */
-        .bg-fixed-duotone {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: url('gif_sfondo.gif');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            z-index: -1;
-            opacity: 0.5;
-            filter: url(#burnt-bw-filter);
-        }
-
-        .bento-border {
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            position: relative;
-        }
-
-        /* Sezioni Header */
-        .section-header {
-            font-weight: 900;
-            text-transform: uppercase;
-            letter-spacing: 0.3em;
-            font-size: 12px;
-            color: var(--cdl-lavender);
-            margin: 2.5rem 0 1.25rem 0;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .section-header::after {
-            content: '';
-            flex: 1;
-            height: 1px;
-            background: linear-gradient(90deg, var(--cdl-lavender), transparent);
-        }
-
-        /* Effetto hover solo per i riquadri cliccabili */
-        .card-link {
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .card-link:hover {
-            border-color: var(--cdl-red) !important;
-            border-left-color: var(--cdl-red) !important;
-            transform: translateY(-4px);
-            background-color: rgba(0, 0, 0, 0.8) !important;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-
-        .card-link:hover h2,
-        .card-link:hover .desc-premium {
-            color: var(--cdl-lavender) !important;
-        }
-
-        .fade-in {
-            animation: fadeIn 0.8s ease-out forwards;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .content-wrapper {
-            max-width: 1100px;
-            width: 100%;
-            margin: auto;
-        }
-
-        .services-grid {
-            display: grid;
-            grid-template-columns: repeat(12, 1fr);
-            gap: 1.5rem;
-        }
-
-        .card {
-            padding: 1.5rem 1.5rem;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            min-height: 130px;
-            overflow: hidden;
-            border-left: 6px solid var(--cdl-lavender);
-            background-color: rgba(0, 0, 0, 0.65); 
-            backdrop-filter: blur(8px);
-            transition: all 0.3s ease;
-        }
-
-        .card-minimal {
-            min-height: 80px !important;
-            padding: 1rem 1.5rem !important;
-            justify-content: center !important;
-        }
-
-        h2 {
-            font-weight: 900; 
-            text-transform: uppercase;
-            line-height: 1.1;
-            font-size: clamp(1.2rem, 3.5vw, 1.6rem); 
-            hyphens: auto;
-            word-wrap: break-word;
-            color: white;
-            transition: color 0.3s ease;
-        }
-
-        .desc-premium {
-            font-size: clamp(0.7rem, 1vw, 0.85rem); 
-            font-weight: 400; 
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            opacity: 0.9;
-            line-height: 1.4;
-            color: white;
-            transition: color 0.3s ease;
-            margin-top: 1rem;
-        }
-
-        /* Stile per l'iconcina link con sfondo bianco */
-        .icon-link-filled {
-            background-color: white;
-            color: black;
-            padding: 4px;
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 26px;
-            height: 26px;
-            transition: all 0.3s ease;
-            flex-shrink: 0;
-        }
-
-        .card-link:hover .icon-link-filled {
-            background-color: var(--cdl-red);
-            color: white;
-        }
-
-        /* Gestione Loghi Brand */
-        .brand-logo-img {
-            max-height: 65px;
-            width: auto;
-            object-fit: contain;
-            filter: brightness(0) invert(1);
-            transition: all 0.3s ease;
-            flex-shrink: 0;
-        }
-
-        .card-link:hover .brand-logo-img {
-            filter: brightness(0) saturate(100%) invert(84%) sepia(21%) hue-rotate(202deg) brightness(98%) contrast(97%);
-        }
-
-        .svg-filters {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 0;
-            height: 0;
-            visibility: hidden;
-        }
-
-        .footer-logo {
-            filter: brightness(0) invert(1);
-            opacity: 0.8;
-        }
-
-        /* Banner CTA - Permette l'uscita della tessera */
-        .cta-banner {
-            background-color: var(--cdl-red);
-            color: white;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            border: 2px solid white;
-            cursor: pointer;
-            position: relative;
-            overflow: visible !important;
-            display: flex;
-            align-items: center;
-            justify-content: flex-start;
-        }
-
-        .cta-banner:hover {
-            transform: scale(1.02);
-            background-color: black;
-            color: white;
-            border-color: white;
-        }
-
-        /* Menu Socio a comparsa */
-        #socio-menu {
-            display: none;
-            position: absolute;
-            top: 100%;
-            right: 0;
-            margin-top: 1.5rem;
-            width: 280px;
-            background-color: var(--cdl-dark);
-            border: 1px solid var(--cdl-lavender);
-            z-index: 100;
-            box-shadow: 20px 20px 0px rgba(0,0,0,0.4);
-            overflow: hidden;
-        }
-
-        #socio-menu.active {
-            display: block;
-            animation: fadeIn 0.3s ease-out;
-        }
-
-        .socio-menu-item {
-            padding: 1.25rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            text-transform: uppercase;
-            font-size: 11px;
-            font-weight: 900;
-            letter-spacing: 0.15em;
-            color: white;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            transition: all 0.2s ease;
-        }
-
-        .socio-menu-item:last-child {
-            border-bottom: none;
-        }
-
-        .socio-menu-item:hover {
-            background-color: var(--cdl-lavender);
-            color: var(--cdl-dark);
-        }
-
-        /* Immagine Tessera nel pulsante - Enorme e fuori riquadro */
-        .tessera-img {
-            height: 150px;
-            width: auto;
-            position: absolute;
-            right: -10px;
-            top: 50%;
-            transform: translateY(-50%) rotate(10deg);
-            filter: drop-shadow(15px 15px 20px rgba(0,0,0,0.8));
-            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            z-index: 20;
-            pointer-events: none;
-        }
-
-        .cta-banner:hover .tessera-img {
-            transform: translateY(-55%) rotate(-5deg) scale(1.1);
-            filter: drop-shadow(20px 20px 30px rgba(0,0,0,0.9));
-        }
-
-        @media (max-width: 768px) {
-            .services-grid {
-                grid-template-columns: 1fr;
-                gap: 1rem;
-                width: 100%;
-            }
-            
-            .col-span-12, .col-span-6 {
-                grid-column: span 1 / span 1 !important;
-            }
-
-            .card {
-                min-height: 120px;
-                padding: 1.25rem;
-            }
-
-            h2 {
-                font-size: 1.3rem;
-            }
-            .brand-logo-img {
-                max-height: 45px;
-            }
-            .modal-container {
-                height: 90vh;
-            }
-            .section-header {
-                font-size: 10px;
-                letter-spacing: 0.2em;
-            }
-            .tessera-img {
-                height: 90px;
-                right: -25px;
-            }
-            #socio-menu {
-                right: -20px;
-                width: calc(100vw - 40px);
-                max-width: 300px;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="assets/css/base.css">
+    <link rel="stylesheet" href="assets/css/components.css">
+    <link rel="stylesheet" href="assets/css/pages/vantaggi.css">
 </head>
 <body class="antialiased p-6 md:p-12">
 
-    <!-- Sfondo Fisso -->
     <div class="bg-fixed-duotone"></div>
 
-    <!-- Filtro SVG Bianco e Nero "Bruciato" -->
     <svg class="svg-filters" aria-hidden="true" focusable="false">
         <filter id="burnt-bw-filter">
             <feColorMatrix type="matrix" values="0.25 0.65 0.1 0 0
@@ -378,30 +35,26 @@
     </svg>
 
     <div class="content-wrapper">
-        
-        <!-- Header Container - Allineato stretch per pareggiare altezze -->
+
         <div class="flex flex-row justify-between items-stretch mb-4 gap-4 md:gap-12 fade-in relative z-50">
             <header class="flex flex-col justify-end">
                 <a href="index.html" class="inline-flex items-center gap-3 text-[11px] font-black uppercase tracking-[0.3em] hover:text-[--cdl-lavender] transition-colors mb-4 group text-white">
                     <i data-lucide="arrow-left" class="w-4 h-4 group-hover:-translate-x-1 transition-transform"></i> Torna alla Home
                 </a>
-                <!-- Titolo interamente viola -->
                 <h1 class="text-3xl md:text-7xl font-black text-[--cdl-lavender] uppercase leading-[0.9]">Vantaggi<br>Per i soci</h1>
             </header>
 
             <div class="flex items-end relative">
-                <!-- Bottone strutturato verticalmente per pareggiare altezza h1 -->
-                <button id="socio-toggle" class="cta-banner bento-border pl-4 pr-20 md:pl-8 md:pr-32 py-2 md:py-4 group">
+                <button id="socio-toggle" aria-haspopup="true" aria-expanded="false" class="cta-banner bento-border pl-4 pr-20 md:pl-8 md:pr-32 py-2 md:py-4 group">
                     <div class="flex flex-col items-start leading-none text-white">
                         <span class="text-lg md:text-4xl font-black tracking-tighter uppercase">DIVENTA</span>
                         <span class="text-lg md:text-4xl font-black tracking-tighter uppercase">SOCIO</span>
                     </div>
-                    <img src="tessera1.png" alt="Tessera CDL" class="tessera-img" onerror="this.style.display='none'">
+                    <img src="assets/img/partner/tessera-cdl.png" alt="" class="tessera-img" onerror="this.style.display='none'">
                 </button>
 
-                <!-- Menu Opzioni -->
-                <div id="socio-menu" class="bento-border">
-                    <a href="https://wa.me/393493290864?text=Ciao,%20vorrei%20diventare%20socio%20di%20CDL%20APS" target="_blank" class="socio-menu-item">
+                <div id="socio-menu" class="bento-border--thin">
+                    <a href="https://wa.me/393493290864?text=Ciao,%20vorrei%20diventare%20socio%20di%20CDL%20APS" target="_blank" rel="noopener" class="socio-menu-item">
                         Contattaci su WhatsApp <i data-lucide="message-circle" class="w-4 h-4"></i>
                     </a>
                     <a href="mailto:cdlprods@gmail.com?subject=Richiesta%20Diventare%20Socio&body=Ciao,%20vorrei%20diventare%20socio%20di%20CDL%20APS" class="socio-menu-item">
@@ -411,7 +64,6 @@
             </div>
         </div>
 
-        <!-- INTRO TEXT - TUTTO BIANCO, BOLD, MAIUSCOLO E GIUSTIFICATO -->
         <div class="mt-8 mb-10 fade-in opacity-90 w-full text-sm md:text-xl uppercase font-bold text-white text-justify">
             <p class="leading-relaxed mb-6 tracking-normal">
                 CDL È UNA REALTÀ INDIPENDENTE CHE ESPLORA, SOSTIENE E DIFFONDE IL CINEMA GIOVANE TRAMITE LA REALIZZAZIONE DI CORTOMETRAGGI E L’ORGANIZZAZIONE DI EVENTI CINEMATOGRAFICI.
@@ -424,12 +76,11 @@
             </p>
         </div>
 
-        <!-- SEZIONE 1: CINEMA INDIPENDENTE -->
-        <div class="section-header fade-in">Cinema Indipendente & Supporto</div>
+        <!-- Sezione 1: cinema indipendente -->
+        <div class="section-header fade-in">Cinema Indipendente &amp; Supporto</div>
         <main class="services-grid fade-in relative z-10">
-            
-            <!-- SVILUPPO NUOVI PROGETTI -->
-            <div class="col-span-12 md:col-span-6 bento-border card">
+
+            <div class="col-span-12 md:col-span-6 bento-border--thin card">
                 <div class="flex justify-between items-start w-full">
                     <div class="flex items-center gap-4 flex-1">
                         <i data-lucide="clapperboard" class="w-12 h-12 text-white brand-logo-img"></i>
@@ -439,8 +90,7 @@
                 <p class="desc-premium">Collabora a produzioni originali o ricevi supporto logistico e creativo per la tua prossima idea.</p>
             </div>
 
-            <!-- CORTOTECA -->
-            <a href="cortoteca.html" class="col-span-12 md:col-span-6 bento-border card card-link">
+            <a href="cortoteca.html" class="col-span-12 md:col-span-6 bento-border--thin card card-link">
                 <div class="flex justify-between items-start w-full">
                     <div class="flex items-center gap-4 flex-1">
                         <i data-lucide="circle-play" class="w-12 h-12 text-white brand-logo-img"></i>
@@ -454,14 +104,13 @@
             </a>
         </main>
 
-        <!-- SEZIONE 2: I NOSTRI PARTNERS -->
+        <!-- Sezione 2: partner -->
         <div class="section-header fade-in">I Nostri Partners</div>
         <main class="services-grid fade-in relative z-10">
-            <!-- SUPERCINEMA -->
-            <a href="https://www.centrosupercinema.com/" target="_blank" class="col-span-12 md:col-span-6 bento-border card card-link">
+            <a href="https://www.centrosupercinema.com/" target="_blank" rel="noopener" class="col-span-12 md:col-span-6 bento-border--thin card card-link">
                 <div class="flex justify-between items-start w-full">
                     <div class="flex items-center gap-4 flex-1">
-                        <img src="centro2.png" alt="Supercinema Logo" class="brand-logo-img" onerror="this.style.display='none'">
+                        <img src="assets/img/partner/supercinema.png" alt="C'entro Supercinema" class="brand-logo-img" onerror="this.style.display='none'">
                         <h2 class="font-black text-white leading-tight uppercase">COLLABORAZIONE CON<br>C'ENTRO SUPERCINEMA</h2>
                     </div>
                     <div class="icon-link-filled">
@@ -471,11 +120,10 @@
                 <p class="desc-premium">ENTRA A PREZZO RIDOTTO NELLE SALE DI SANTARCANGELO DI ROMAGNA PER TUTTA LA STAGIONE.</p>
             </a>
 
-            <!-- ARKADIA STUDIOS -->
-            <a href="https://arkadiastudios.it/rental-noleggio/" target="_blank" class="col-span-12 md:col-span-6 bento-border card card-link">
+            <a href="https://arkadiastudios.it/rental-noleggio/" target="_blank" rel="noopener" class="col-span-12 md:col-span-6 bento-border--thin card card-link">
                 <div class="flex justify-between items-start w-full">
                     <div class="flex items-center gap-4 flex-1">
-                        <img src="arkadia1.png" alt="Arkadia Logo" class="brand-logo-img" onerror="this.style.display='none'">
+                        <img src="assets/img/partner/arkadia.png" alt="Arkadia Studios" class="brand-logo-img" onerror="this.style.display='none'">
                         <h2 class="font-black text-white leading-tight uppercase">PARTNERSHIP CON<br>ARKADIA STUDIOS</h2>
                     </div>
                     <div class="icon-link-filled">
@@ -485,11 +133,10 @@
                 <p class="desc-premium">OTTIENI LO SCONTO DEL 15% PER IL SERVIZIO DI NOLEGGIO ATTREZZATURA PRESSO ARKADIA RENTAL.</p>
             </a>
 
-            <!-- ALCATRAZ -->
-            <a href="https://www.alcatraz.shop/" target="_blank" class="col-span-12 md:col-span-6 bento-border card card-link">
+            <a href="https://www.alcatraz.shop/" target="_blank" rel="noopener" class="col-span-12 md:col-span-6 bento-border--thin card card-link">
                 <div class="flex justify-between items-start w-full">
                     <div class="flex items-center gap-4 flex-1">
-                        <img src="alcatraz1.png" alt="Alcatraz Logo" class="brand-logo-img" onerror="this.style.display='none'">
+                        <img src="assets/img/partner/alcatraz.png" alt="Alcatraz" class="brand-logo-img" onerror="this.style.display='none'">
                         <h2 class="font-black text-white leading-tight uppercase">SCONTO DA<br>ALCATRAZ</h2>
                     </div>
                     <div class="icon-link-filled">
@@ -499,8 +146,7 @@
                 <p class="desc-premium">OTTIENI IL 5% DI SCONTO SULL'EDITORIA PRESSO LA STORICA FUMETTERIA RIMINESE.</p>
             </a>
 
-            <!-- PROSSIME COLLABORAZIONI -->
-            <div class="col-span-12 md:col-span-6 bento-border card card-minimal opacity-70">
+            <div class="col-span-12 md:col-span-6 bento-border--thin card card-minimal opacity-70">
                 <div class="flex justify-between items-center w-full">
                     <div class="flex items-center gap-4">
                         <i data-lucide="plus-circle" class="w-10 h-10 text-white brand-logo-img"></i>
@@ -510,11 +156,10 @@
             </div>
         </main>
 
-        <!-- SEZIONE 3: EVENTI CDL -->
-        <div class="section-header fade-in">Eventi & Community CDL</div>
+        <!-- Sezione 3: eventi -->
+        <div class="section-header fade-in">Eventi &amp; Community CDL</div>
         <main class="services-grid fade-in relative z-10">
-            <!-- INVITI PRIVATI -->
-            <div class="col-span-12 md:col-span-6 bento-border card">
+            <div class="col-span-12 md:col-span-6 bento-border--thin card">
                 <div class="flex justify-between items-start w-full">
                     <div class="flex items-center gap-4 flex-1">
                         <i data-lucide="popcorn" class="w-12 h-12 text-white brand-logo-img"></i>
@@ -524,8 +169,7 @@
                 <p class="desc-premium">Accedi ad eventi, anteprime e workshop tecnici riservati esclusivamente alla cerchia dei tesserati.</p>
             </div>
 
-            <!-- RICONOSCIMENTO SOCI -->
-            <div class="col-span-12 md:col-span-6 bento-border card">
+            <div class="col-span-12 md:col-span-6 bento-border--thin card">
                 <div class="flex justify-between items-start w-full">
                     <div class="flex items-center gap-4 flex-1">
                         <i data-lucide="users" class="w-12 h-12 text-white brand-logo-img"></i>
@@ -536,33 +180,25 @@
             </div>
         </main>
 
-        <!-- Box Social -->
         <div class="mt-10 flex flex-wrap items-center justify-center gap-8 social-box">
-            <!-- Instagram Icon Inline SVG -->
-            <a href="https://instagram.com/cdl_aps" target="_blank" class="text-white hover:text-[--cdl-red] transition-all transform hover:scale-125">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-instagram"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
+            <a href="https://instagram.com/cdl_aps" target="_blank" rel="noopener" aria-label="Instagram" class="social-link text-white">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
             </a>
-            <!-- YouTube Icon Inline SVG -->
-            <a href="https://youtube.com/@cdlprods" target="_blank" class="text-white hover:text-[--cdl-red] transition-all transform hover:scale-125">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-youtube"><path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 2-2 69.44 69.44 0 0 1 15 0 2 2 0 0 1 2 2 24.12 24.12 0 0 1 0 10 2 2 0 0 1-2 2 69.44 69.44 0 0 1-15 0 2 2 0 0 1-2-2z"/><polyline points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/></svg>
+            <a href="https://youtube.com/@cdlprods" target="_blank" rel="noopener" aria-label="YouTube" class="social-link text-white">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 2-2 69.44 69.44 0 0 1 15 0 2 2 0 0 1 2 2 24.12 24.12 0 0 1 0 10 2 2 0 0 1-2 2 69.44 69.44 0 0 1-15 0 2 2 0 0 1-2-2z"/><polyline points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/></svg>
             </a>
-            <!-- Mail Icon Inline SVG -->
-            <a href="mailto:cdlprods@gmail.com" class="text-white hover:text-[--cdl-red] transition-all transform hover:scale-125">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-mail"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+            <a href="mailto:cdlprods@gmail.com" aria-label="Scrivici" class="social-link text-white">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
             </a>
         </div>
 
-        <!-- Footer -->
         <footer class="mt-12 pb-4 flex flex-col justify-center items-center gap-2 fade-in">
-            <!-- CDL Logo and Copyright -->
             <div class="flex flex-col justify-center items-center gap-2 text-[9px] font-black tracking-[0.2em] uppercase opacity-40 text-center leading-relaxed">
                 <div class="flex justify-center items-center gap-2">
-                    <img src="Logo.png" alt="" class="h-2 w-auto footer-logo" 
-                         onerror="this.style.display='none'">
+                    <img src="assets/img/brand/logo-cdl.png" alt="" class="h-2 w-auto footer-logo" onerror="this.style.display='none'">
                     <span>2026 CDL APS</span>
                 </div>
             </div>
-            <!-- Subtle/Faded Association details & Slogan (Leggibile solo con attenzione, stessa opacità 15%) -->
             <div class="flex flex-col items-center text-[7.5px] md:text-[8px] font-medium text-center tracking-wide text-white opacity-[0.15] hover:opacity-50 transition-opacity duration-300 mt-2 select-none leading-relaxed max-w-[320px] sm:max-w-none gap-1">
                 <span>Associazione di promozione del cinema giovane e indipendente</span>
                 <div>
@@ -572,22 +208,6 @@
         </footer>
     </div>
 
-    <script>
-        lucide.createIcons();
-
-        const socioToggle = document.getElementById('socio-toggle');
-        const socioMenu = document.getElementById('socio-menu');
-
-        socioToggle.addEventListener('click', (e) => {
-            e.stopPropagation();
-            socioMenu.classList.toggle('active');
-        });
-
-        document.addEventListener('click', (e) => {
-            if (!socioMenu.contains(e.target) && e.target !== socioToggle) {
-                socioMenu.classList.remove('active');
-            }
-        });
-    </script>
+    <script src="assets/js/vantaggi.js"></script>
 </body>
 </html>
