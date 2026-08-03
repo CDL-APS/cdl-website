@@ -1,0 +1,29 @@
+/* ==========================================================================
+   LONG STORY SHORT (longstoryshort.html) — pagina a fondo chiaro
+   ========================================================================== */
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: #f7f7f7;
+  color: #000000;
+  letter-spacing: -0.02em;
+}
+
+.content-wrapper {
+  max-width: 1200px;
+}
+
+/* Riquadro dal bordo nero: l'equivalente chiaro del bento scuro */
+.box-style {
+  border: 2px solid #000000;
+  position: relative;
+}
+
+.fade-in {
+  animation: fadeIn 0.8s ease-out forwards;
+}
+
+/* Barra di scorrimento su fondo chiaro */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #f7f7f7; }
+::-webkit-scrollbar-thumb { background: #000000; border-radius: 10px; }

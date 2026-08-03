@@ -4,183 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CDL | Cortoteca</title>
-    <!-- Favicon -->
+    <meta name="description" content="L'archivio dei cortometraggi realizzati dai soci di CDL APS.">
+
     <link rel="icon" type="image/x-icon" href="favicon.ico">
-    
+    <link rel="icon" type="image/png" href="assets/img/brand/favicon.png">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    <style>
-        /* Importazione font Montserrat */
-        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;900&display=swap');
 
-        :root {
-            --cdl-lavender: #b9bbf8;
-            --cdl-dark: #1d1d1b;
-            --cdl-white: #f7f7f7;
-            --cdl-red: #ff0000;
-        }
-
-        body {
-            font-family: 'Montserrat', sans-serif;
-            background-color: var(--cdl-dark);
-            color: var(--cdl-white);
-            margin: 0;
-            padding: 0;
-            min-height: 100vh;
-            letter-spacing: -0.03em;
-            overflow-x: hidden;
-            position: relative;
-        }
-
-        /* Ottimizzazione Desktop */
-        @media (min-width: 1024px) {
-            body {
-                min-height: 100vh;
-                overflow-y: auto;
-                display: flex;
-                align-items: flex-start;
-                justify-content: center;
-                padding: 2rem 2rem !important;
-            }
-            .content-wrapper {
-                max-width: 1100px;
-                width: 100%;
-                margin: 0 auto;
-            }
-        }
-
-        /* Sfondo Fisso con Nuova GIF */
-        .bg-fixed-duotone {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: url('gif_sfondo.gif');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            z-index: -1;
-            opacity: 0.5;
-            filter: url(#burnt-bw-filter);
-        }
-
-        .bento-border {
-            border: 2px solid var(--cdl-white);
-            position: relative;
-        }
-
-        .movie-card {
-            border-left: 10px solid var(--cdl-lavender);
-            background-color: rgba(0, 0, 0, 0.65); 
-            backdrop-filter: blur(8px);
-            transition: all 0.3s ease;
-            cursor: pointer;
-            overflow: hidden;
-            display: block;
-        }
-
-        .movie-card:hover {
-            border-color: var(--cdl-red) !important;
-            border-left-color: var(--cdl-red) !important;
-            transform: translateY(-4px);
-            background-color: rgba(0, 0, 0, 0.85);
-        }
-
-        .img-still {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            opacity: 0.8;
-            transition: all 0.5s ease;
-        }
-
-        .movie-card:hover .img-still {
-            opacity: 1;
-            transform: scale(1.05);
-        }
-
-        .overlay {
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.1) 100%);
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-            padding: 1rem;
-            transition: opacity 0.3s ease;
-        }
-
-        .fade-in {
-            animation: fadeIn 0.8s ease-out forwards;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        h1 { font-weight: 900; text-transform: uppercase; line-height: 1; }
-        h2 { font-weight: 900; text-transform: uppercase; line-height: 1.1; color: white; transition: color 0.3s ease; }
-
-        .search-container {
-            background-color: white;
-            color: var(--cdl-dark);
-            border: 2px solid var(--cdl-dark);
-            box-shadow: 6px 6px 0px rgba(0,0,0,0.3);
-            transition: all 0.2s ease;
-        }
-
-        /* Toggle Switch Styles */
-        .switch {
-            position: relative;
-            display: inline-block;
-            width: 44px;
-            height: 24px;
-        }
-        .switch input { opacity: 0; width: 0; height: 0; }
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background-color: #333;
-            transition: .4s;
-            border-radius: 24px;
-            border: 1px solid white;
-        }
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 16px; width: 16px;
-            left: 3px; bottom: 3px;
-            background-color: white;
-            transition: .4s;
-            border-radius: 50%;
-        }
-        input:checked + .slider { background-color: var(--cdl-lavender); }
-        input:checked + .slider:before { transform: translateX(20px); background-color: var(--cdl-dark); }
-
-        .svg-filters { position: fixed; width: 0; height: 0; visibility: hidden; }
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: var(--cdl-dark); }
-        ::-webkit-scrollbar-thumb { background: var(--cdl-lavender); }
-
-        /* Stilizzazione Logo CDL (Colori originali) */
-        .cdl-logo-badge {
-            height: 10px; 
-            width: auto;
-            opacity: 1;
-            transition: transform 0.3s ease;
-        }
-        @media (min-width: 768px) { 
-            .cdl-logo-badge { height: 14px; } 
-        }
-
-        .footer-logo {
-            filter: brightness(0) invert(1);
-            opacity: 0.8;
-        }
-    </style>
+    <link rel="stylesheet" href="assets/css/base.css">
+    <link rel="stylesheet" href="assets/css/components.css">
+    <link rel="stylesheet" href="assets/css/pages/cortoteca.css">
 </head>
 <body class="antialiased p-6 md:p-12">
 
@@ -201,8 +35,7 @@
     </svg>
 
     <div class="content-wrapper">
-        
-        <!-- Header -->
+
         <div class="flex flex-col md:flex-row md:justify-between md:items-end mb-6 gap-6 fade-in relative z-50">
             <header>
                 <a href="index.html" class="inline-flex items-center gap-3 text-[11px] font-black uppercase tracking-[0.3em] hover:text-[--cdl-lavender] transition-colors mb-4 group text-white">
@@ -211,31 +44,30 @@
                 <h1 class="text-4xl md:text-6xl font-black text-[--cdl-lavender] leading-none tracking-tighter uppercase">CORTOTECA</h1>
             </header>
 
-            <!-- Search Bar -->
             <div class="w-full md:w-auto">
                 <div class="search-container flex items-center gap-4 p-3 md:p-4 w-full md:min-w-[320px]">
                     <i data-lucide="search" class="w-5 h-5 opacity-70"></i>
+                    <label for="db-search" class="sr-only">Cerca un'opera</label>
                     <input type="text" id="db-search" placeholder="CERCA PER TITOLO, REGISTA O PRODUZIONE..." class="bg-transparent border-none opacity-100 outline-none font-black uppercase text-[10px] md:text-[9px] tracking-widest placeholder-black/40 w-full">
                 </div>
             </div>
         </div>
 
-        <!-- INTRO TEXT - FORMATTATO COME RIFERIMENTO -->
         <div class="mt-8 mb-10 fade-in opacity-90 w-full text-sm md:text-xl uppercase font-bold text-white text-justify relative z-50">
             <p class="leading-relaxed tracking-normal">
                 La Cortoteca di CDL è lo spazio dedicato alle opere dei soci di CDL APS che ne fanno richiesta, ideata per scoprire progetti di cinema indipendente e conoscere realtà del territorio tramite lo streaming direttamente sul sito.
             </p>
         </div>
 
-        <!-- Sorting Selector -->
+        <!-- Ordinamento: interruttore fra alfabetico e cronologico -->
         <div class="flex items-center justify-start md:justify-end gap-6 mb-8 fade-in opacity-80 scale-90 origin-left md:origin-right">
             <div class="flex items-center gap-2">
                 <i data-lucide="arrow-down-az" class="w-4 h-4"></i>
                 <span class="text-[10px] font-black uppercase tracking-widest">PER NOME</span>
             </div>
-            
+
             <label class="switch">
-                <input type="checkbox" id="sort-toggle" checked>
+                <input type="checkbox" id="sort-toggle" aria-label="Ordina per anno" checked>
                 <span class="slider"></span>
             </label>
 
@@ -246,9 +78,8 @@
         </div>
 
         <main id="movie-grid" class="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 fade-in relative z-10" style="animation-delay: 0.2s;">
-            <!-- I film verranno caricati qui dallo script -->
-            
-            <!-- SLOT VUOTO (Link a vantaggi-tesseramento) -->
+            <!-- Le card delle opere vengono inserite qui da assets/js/cortoteca.js -->
+
             <a href="vantaggi-tesseramento.html" id="add-card" class="bento-border aspect-square bg-black/40 backdrop-blur-md flex flex-col items-center justify-center p-4 text-center border-dashed opacity-50 group hover:opacity-100 transition-opacity order-last">
                 <i data-lucide="plus" class="w-8 h-8 text-[--cdl-lavender] mb-3 group-hover:rotate-90 transition-transform"></i>
                 <span class="text-[8px] md:text-[10px] font-black uppercase tracking-[0.1em] text-white">VUOI LA TUA OPERA SUL DATABASE?</span>
@@ -256,33 +87,25 @@
             </a>
         </main>
 
-        <!-- Box Social -->
         <div class="mt-10 flex flex-wrap items-center justify-center gap-8 relative z-50">
-            <!-- Instagram Icon Inline SVG -->
-            <a href="https://instagram.com/cdl_aps" target="_blank" class="text-white hover:text-[--cdl-red] transition-all transform hover:scale-125">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-instagram"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
+            <a href="https://instagram.com/cdl_aps" target="_blank" rel="noopener" aria-label="Instagram" class="social-link text-white">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
             </a>
-            <!-- YouTube Icon Inline SVG -->
-            <a href="https://youtube.com/@cdlprods" target="_blank" class="text-white hover:text-[--cdl-red] transition-all transform hover:scale-125">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-youtube"><path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 2-2 69.44 69.44 0 0 1 15 0 2 2 0 0 1 2 2 24.12 24.12 0 0 1 0 10 2 2 0 0 1-2 2 69.44 69.44 0 0 1-15 0 2 2 0 0 1-2-2z"/><polyline points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/></svg>
+            <a href="https://youtube.com/@cdlprods" target="_blank" rel="noopener" aria-label="YouTube" class="social-link text-white">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 2-2 69.44 69.44 0 0 1 15 0 2 2 0 0 1 2 2 24.12 24.12 0 0 1 0 10 2 2 0 0 1-2 2 69.44 69.44 0 0 1-15 0 2 2 0 0 1-2-2z"/><polyline points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/></svg>
             </a>
-            <!-- Mail Icon Inline SVG -->
-            <a href="mailto:cdlprods@gmail.com" class="text-white hover:text-[--cdl-red] transition-all transform hover:scale-125">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-mail"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+            <a href="mailto:cdlprods@gmail.com" aria-label="Scrivici" class="social-link text-white">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
             </a>
         </div>
 
-        <!-- Footer -->
         <footer class="mt-12 pb-4 flex flex-col justify-center items-center gap-2 fade-in">
-            <!-- CDL Logo and Copyright -->
             <div class="flex flex-col justify-center items-center gap-2 text-[9px] font-black tracking-[0.2em] uppercase opacity-40 text-center leading-relaxed">
                 <div class="flex justify-center items-center gap-2">
-                    <img src="Logo.png" alt="" class="h-2 w-auto footer-logo" 
-                         onerror="this.style.display='none'">
+                    <img src="assets/img/brand/logo-cdl.png" alt="" class="h-2 w-auto footer-logo" onerror="this.style.display='none'">
                     <span>2026 CDL APS</span>
                 </div>
             </div>
-            <!-- Subtle/Faded Association details & Slogan (Leggibile solo con attenzione, stessa opacità 15%) -->
             <div class="flex flex-col items-center text-[7.5px] md:text-[8px] font-medium text-center tracking-wide text-white opacity-[0.15] hover:opacity-50 transition-opacity duration-300 mt-2 select-none leading-relaxed max-w-[320px] sm:max-w-none gap-1">
                 <span>Associazione di promozione del cinema giovane e indipendente</span>
                 <div>
@@ -292,97 +115,6 @@
         </footer>
     </div>
 
-    <script>
-        let allMovies = [];
-
-        async function init() {
-            try {
-                const response = await fetch('dati_film.json');
-                if (!response.ok) throw new Error("Database non trovato");
-                allMovies = await response.json();
-                
-                sortAndRender();
-            } catch (error) {
-                console.error(error);
-                document.getElementById('movie-grid').innerHTML += `<div class="col-span-full text-center p-8 opacity-50 uppercase font-black text-xs">Errore caricamento database</div>`;
-            }
-            lucide.createIcons();
-        }
-
-        function sortAndRender() {
-            const grid = document.getElementById('movie-grid');
-            const addCard = document.getElementById('add-card');
-            const sortByDate = document.getElementById('sort-toggle').checked;
-            const searchTerm = document.getElementById('db-search').value.toLowerCase().trim();
-
-            const currentCards = grid.querySelectorAll('.movie-card');
-            currentCards.forEach(c => c.remove());
-
-            let filtered = allMovies.filter(m => {
-                const title = (m.titolo || "").toLowerCase();
-                const author = (m.regista || "").toLowerCase();
-                const prod = (m.produzione || "").toLowerCase();
-                return title.includes(searchTerm) || author.includes(searchTerm) || prod.includes(searchTerm);
-            });
-
-            // Logica di ordinamento: PER ANNO (crescente) | PER NOME (A-Z)
-            if (sortByDate) {
-                filtered.sort((a, b) => a.anno - b.anno);
-            } else {
-                filtered.sort((a, b) => a.titolo.localeCompare(b.titolo));
-            }
-
-            filtered.forEach((movie, index) => {
-                const card = document.createElement('a');
-                // Puntiamo alla pagina info_film2 senza estensione .html
-                card.href = movie.codice ? 'cortoteca/info_film2?film=' + movie.codice : '#';
-                
-                card.className = 'movie-card bento-border aspect-square group';
-                card.style.opacity = '0';
-                card.style.transform = 'translateY(15px)';
-                card.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
-                card.style.transitionDelay = `${0.03 * index}s`;
-
-                // Loghino CDL (Originale senza filtri colore)
-                const cdlLogo = movie.cdl === 'si' ? `<img src="Logo.png" class="cdl-logo-badge" alt="CDL">` : '';
-
-                // Pulizia percorso immagine
-                const fileName = movie.still ? movie.still.split('/').pop() : '';
-                const stillPath = `cortoteca/${fileName}`;
-
-                card.innerHTML = `
-                    <img src="${stillPath}" alt="${movie.titolo}" class="img-still" onerror="this.src='https://placehold.co/600x600/1d1d1b/f7f7f7?text=${encodeURIComponent(movie.titolo)}'">
-                    <div class="overlay">
-                        <div class="flex justify-between items-start mb-auto">
-                            <i data-lucide="play" class="w-3 h-3 text-white opacity-0 group-hover:opacity-100 transition-opacity"></i>
-                            ${cdlLogo}
-                        </div>
-                        <div class="flex justify-between items-end mb-1 md:mb-2 gap-2">
-                            <h2 class="text-xs md:text-xl font-black group-hover:text-[--cdl-lavender]">${movie.titolo}</h2>
-                            <span class="text-[7px] md:text-[9px] font-black uppercase text-[--cdl-lavender] tracking-[0.2em] flex-shrink-0">${movie.anno}</span>
-                        </div>
-                        <div class="pt-1 md:pt-2 border-t border-white/20 flex flex-col gap-0.5">
-                            <span class="text-[7px] md:text-[9px] font-black uppercase tracking-wider opacity-90">REGIA: ${movie.regista}</span>
-                            <span class="text-[6px] md:text-[8px] font-medium uppercase tracking-widest opacity-60">PRODUZIONE: ${movie.produzione}</span>
-                        </div>
-                    </div>
-                `;
-                
-                grid.insertBefore(card, addCard);
-                setTimeout(() => {
-                    card.style.opacity = '1';
-                    card.style.transform = 'translateY(0)';
-                }, 50);
-            });
-
-            addCard.style.display = searchTerm.length > 0 ? 'none' : 'flex';
-            lucide.createIcons();
-        }
-
-        document.getElementById('sort-toggle').addEventListener('change', sortAndRender);
-        document.getElementById('db-search').addEventListener('input', sortAndRender);
-
-        document.addEventListener('DOMContentLoaded', init);
-    </script>
+    <script src="assets/js/cortoteca.js"></script>
 </body>
 </html>

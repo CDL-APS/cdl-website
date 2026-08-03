@@ -4,232 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CDL</title>
-    <!-- Favicon aggiornata -->
-    <link class="favicon" rel="icon" type="image/x-icon" href="favicon.ico">
-    
+    <meta name="description" content="CDL APS, associazione riminese di promozione del cinema giovane e indipendente.">
+
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="icon" type="image/png" href="assets/img/brand/favicon.png">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    <style>
-        /* Importazione font Montserrat e Inter (con pesi 600 per Inter medio-bold) */
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@600;700;900&family=Montserrat:wght@400;700;900&display=swap');
- 
-        :root {
-            --cdl-lavender: #b9bbf8;
-            --cdl-dark: #1d1d1b;
-            --cdl-white: #f7f7f7;
-            --cdl-red: #ff0000;
-            /* Curva di easing unica per tutte le micro-interazioni */
-            --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-        }
- 
-        body {
-            font-family: 'Montserrat', sans-serif;
-            background-color: var(--cdl-dark);
-            color: var(--cdl-white);
-            margin: 0;
-            padding: 0;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            letter-spacing: -0.02em;
-            overflow-x: hidden;
-            position: relative;
-            -webkit-font-smoothing: antialiased;
-            text-rendering: optimizeLegibility;
-        }
- 
-        .font-inter {
-            font-family: 'Inter', sans-serif;
-        }
- 
-        /* Sfondo Fisso con Filtro Bianco e Nero "Bruciato" */
-        .bg-fixed-duotone {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: #222; 
-            background-image: url('gif_sfondo.gif'); 
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            z-index: -1;
-            opacity: 0.5;
-            filter: url(#burnt-bw-filter);
-        }
- 
-        @media (min-width: 1024px) {
-            body {
-                overflow-y: hidden;
-            }
-        }
- 
-        /* --- Sistema card bento unificato --- */
-        .bento-border {
-            border: 2px solid var(--cdl-white);
-            position: relative;
-            transition:
-                background-color 0.3s var(--ease-out),
-                color 0.3s var(--ease-out),
-                border-color 0.3s var(--ease-out),
-                transform 0.3s var(--ease-out);
-        }
- 
-        /* Leggero sollevamento al passaggio: tattile, non sposta il layout */
-        .bento-border:hover {
-            transform: translateY(-3px);
-        }
- 
-        .comic-shadow {
-            filter: drop-shadow(18px 18px 0px #000000);
-        }
- 
-        /* Hover effetto: bianco e rosso senza nero (con !important per sovrascrivere utility Tailwind) */
-        .hover-red:hover {
-            background-color: var(--cdl-red) !important;
-            color: var(--cdl-white) !important;
-            border-color: var(--cdl-white) !important;
-        }
- 
-        /* Frecce e chevron: transizione morbida coerente su tutte le card */
-        .bento-border [data-lucide],
-        .bento-border svg.lucide {
-            transition: transform 0.3s var(--ease-out), color 0.3s var(--ease-out);
-        }
- 
-        /* Focus da tastiera visibile (accessibilità), coerente col brand */
-        a:focus-visible {
-            outline: 3px solid var(--cdl-lavender);
-            outline-offset: 4px;
-        }
- 
-        .rec-dot {
-            width: 6px;
-            height: 6px;
-            background-color: var(--cdl-red);
-            border-radius: 50%;
-            display: inline-block;
-            animation: pulse 1.5s infinite;
-        }
- 
-        @keyframes pulse {
-            0% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.4; transform: scale(1.2); }
-            100% { opacity: 1; transform: scale(1); }
-        }
- 
-        .fade-in {
-            animation: fadeIn 0.8s ease-out forwards;
-        }
- 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
- 
-        .content-wrapper {
-            max-width: 1000px;
-            width: 100%;
-            margin: auto;
-            position: relative;
-            z-index: 10;
-        }
- 
-        /* Griglia principale */
-        .main-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1rem;
-            align-items: stretch; /* le due card in basso restano sempre alla stessa altezza */
-        }
- 
-        @media (max-width: 768px) {
-            .main-grid {
-                grid-template-columns: 1fr;
-            }
-        }
- 
-        h1, h2, h3 {
-            font-weight: 900;
-            text-transform: uppercase;
-            font-style: normal;
-        }
- 
-        .footer-logo {
-            filter: brightness(0) invert(1);
-            opacity: 0.8;
-        }
- 
-        /* Icone social: hover coerente + area di click/focus più comoda */
-        .social-link {
-            display: inline-flex;
-            padding: 6px;
-            transition: transform 0.3s var(--ease-out), color 0.3s var(--ease-out);
-        }
-        .social-link:hover {
-            color: var(--cdl-red);
-            transform: scale(1.25);
-        }
- 
-        /* Nuvoletta del pensiero animata */
-        #domanda-image {
-            position: absolute;
-            top: 25%;
-            left: 75%;
-            transform: translate(-50%, -50%) scale(0);
-            z-index: 100;
-            max-width: 160px;
-            width: 40%;
-            pointer-events: none;
-            opacity: 0;
-            transition: 
-                opacity 0.6s ease-in-out, 
-                transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-            backface-visibility: hidden;
-        }
- 
-        #domanda-image.active {
-            opacity: 1;
-            transform: translate(-50%, -50%) scale(1);
-            animation: floatThought 2s ease-in-out infinite;
-        }
- 
-        @keyframes floatThought {
-            0%, 100% { transform: translate(-50%, -50%) scale(1); }
-            50% { transform: translate(-50%, -53%) scale(1.03); }
-        }
- 
-        /* Animazione di oscillazione per l'icona principale ridotta */
-        @keyframes iconFloatGentle {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-6px) rotate(0.5deg); }
-        }
- 
-        .animate-icon-float {
-            animation: iconFloatGentle 6s ease-in-out infinite;
-        }
- 
-        /* Rispetto delle preferenze di movimento ridotto */
-        @media (prefers-reduced-motion: reduce) {
-            *, *::before, *::after {
-                animation-duration: 0.001ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.001ms !important;
-            }
-            .rec-dot { animation: none; opacity: 1; }
-            .animate-icon-float { animation: none; }
-            .bento-border:hover { transform: none; }
-        }
-    </style>
+
+    <link rel="stylesheet" href="assets/css/base.css">
+    <link rel="stylesheet" href="assets/css/components.css">
+    <link rel="stylesheet" href="assets/css/pages/home.css">
 </head>
 <body class="antialiased p-6 md:p-8">
- 
-    <!-- Sfondo con Filtro -->
+
     <div class="bg-fixed-duotone"></div>
- 
-    <!-- Filtro SVG Bianco e Nero "Bruciato" -->
-    <svg style="position: absolute; width: 0; height: 0;" aria-hidden="true" focusable="false">
+
+    <!-- Filtro bianco e nero "bruciato" applicato allo sfondo.
+         feColorMatrix converte in grigio pesando i canali RGB; feComponentTransfer
+         ne rialza le alte luci fino a bruciarle. -->
+    <svg class="svg-filters" aria-hidden="true" focusable="false">
         <filter id="burnt-bw-filter">
             <feColorMatrix type="matrix" values="0.25 0.65 0.1 0 0
                                                  0.25 0.65 0.1 0 0
@@ -242,48 +36,43 @@
             </feComponentTransfer>
         </filter>
     </svg>
- 
+
     <div class="content-wrapper flex flex-col justify-center">
         <main class="fade-in" style="animation-delay: 0.2s;">
-            
-            <!-- Sezione Hero -->
+
+            <!-- Hero: cliccando l'icona compare una nuvoletta a caso -->
             <div class="mb-6 flex flex-col items-center justify-center text-center relative group cursor-pointer" onclick="toggleCredits(event)">
-                <!-- Immagine nuvola -->
-                <img id="domanda-image" src="immagini/nuvola1.png" alt="" style="display: none;">
- 
+                <img id="domanda-image" src="assets/img/nuvole/nuvola1.png" alt="" style="display: none;">
+
                 <div class="z-0 relative flex items-center justify-center animate-icon-float">
-                    <img src="cdl_iconaNew.png" alt="CDL Icon" class="comic-shadow w-full max-w-[380px] h-auto object-contain transition-transform duration-700 group-hover:scale-105" 
+                    <img src="assets/img/brand/icona-cdl.png" alt="CDL" class="comic-shadow w-full max-w-[380px] h-auto object-contain transition-transform duration-700 group-hover:scale-105"
                          onerror="this.src='https://placehold.co/380x210/1d1d1b/f7f7f7?text=CDL+ICON';">
                 </div>
             </div>
- 
+
             <div class="main-grid">
-                <!-- LINK: LONG STORY SHORT (Tutta riga in alto, perfettamente centrato in verticale e orizzontale, adattato per mobile) -->
+                <!-- Long Story Short: fascia intera in alto -->
                 <a href="longstoryshort.html" class="group bento-border flex items-center justify-center px-10 md:px-6 py-4 hover-red transition-all duration-300 bg-[--cdl-white] text-[--cdl-dark] col-span-2 overflow-hidden min-h-[85px] md:min-h-[100px] relative">
-                    <!-- Contenitore flessibile centrale con allineamento ottimizzato per evitare sovrapposizioni su schermi piccoli -->
                     <div class="flex items-center justify-center gap-3 md:gap-4">
-                        <img src="LSS.png" alt="" class="h-8 sm:h-10 md:h-12 w-auto object-contain rounded" onerror="this.style.display='none'">
+                        <img src="assets/img/brand/lss-mini.png" alt="" class="h-8 sm:h-10 md:h-12 w-auto object-contain rounded" onerror="this.style.display='none'">
                         <h2 class="text-lg sm:text-2xl md:text-3xl lg:text-4xl font-semibold tracking-tight leading-none font-inter whitespace-nowrap !normal-case">Long Story Short</h2>
                     </div>
-                    <!-- Freccia di rimando agganciata a destra (spostata leggermente su mobile) -->
                     <i data-lucide="arrow-up-right" class="w-5 h-5 absolute right-4 md:right-6 flex-shrink-0 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"></i>
                 </a>
- 
-                <!-- LINK: VANTAGGI PER I SOCI (A sinistra, super compatto, altezza e testo ottimizzati) -->
+
+                <!-- Vantaggi per i soci -->
                 <a href="vantaggi-tesseramento.html" class="group bento-border flex flex-col hover-red transition-all duration-300 bg-[--cdl-lavender] text-black col-span-2 md:col-span-1 overflow-hidden min-h-[80px]">
-                    <!-- Badge superiore più compresso -->
                     <div class="bg-black text-white px-3 py-1 w-full flex items-center justify-center gap-2 text-[9px] md:text-[10px] font-black tracking-[0.12em] uppercase border-b-2 border-white transition-all duration-300 group-hover:bg-white group-hover:text-[--cdl-red] group-hover:border-white">
                         <span class="rec-dot"></span>
                         TESSERAMENTO 2026 APERTO
                     </div>
-                    <!-- Area contenuto centrata verticalmente e testo uniformato -->
                     <div class="flex-grow flex items-center justify-between w-full px-5 py-2.5">
                         <h2 class="text-xs md:text-sm font-black uppercase tracking-tight leading-none">SCOPRI QUI I VANTAGGI PER I SOCI</h2>
                         <i data-lucide="arrow-up-right" class="w-4 h-4 ml-4 flex-shrink-0 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"></i>
                     </div>
                 </a>
- 
-                <!-- LINK: CORTOTECA (A destra, super compatto, altezza e testo uniformati) -->
+
+                <!-- Cortoteca -->
                 <a href="cortoteca.html" class="group bento-border flex items-center justify-between px-6 py-2 hover-red transition-all duration-300 bg-[--cdl-dark] col-span-2 md:col-span-1 min-h-[80px]">
                     <div class="flex items-center gap-3">
                         <i data-lucide="play-circle" class="w-5 h-5 text-[--cdl-lavender] group-hover:text-white"></i>
@@ -292,35 +81,29 @@
                     <i data-lucide="chevron-right" class="w-4 h-4 transform group-hover:translate-x-1"></i>
                 </a>
             </div>
- 
-            <!-- Box Social -->
+
+            <!-- Social -->
             <div class="mt-8 flex flex-wrap items-center justify-center gap-6">
-                <!-- Instagram Icon Inline SVG -->
-                <a href="https://instagram.com/cdl_aps" target="_blank" class="social-link text-white">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-instagram"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
+                <a href="https://instagram.com/cdl_aps" target="_blank" rel="noopener" aria-label="Instagram" class="social-link text-white">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
                 </a>
-                <!-- YouTube Icon Inline SVG -->
-                <a href="https://youtube.com/@cdlprods" target="_blank" class="social-link text-white">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-youtube"><path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 2-2 69.44 69.44 0 0 1 15 0 2 2 0 0 1 2 2 24.12 24.12 0 0 1 0 10 2 2 0 0 1-2 2 69.44 69.44 0 0 1-15 0 2 2 0 0 1-2-2z"/><polyline points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/></svg>
+                <a href="https://youtube.com/@cdlprods" target="_blank" rel="noopener" aria-label="YouTube" class="social-link text-white">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 2-2 69.44 69.44 0 0 1 15 0 2 2 0 0 1 2 2 24.12 24.12 0 0 1 0 10 2 2 0 0 1-2 2 69.44 69.44 0 0 1-15 0 2 2 0 0 1-2-2z"/><polyline points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/></svg>
                 </a>
-                <!-- Mail Icon Inline SVG -->
-                <a href="mailto:cdlprods@gmail.com" class="social-link text-white">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-mail"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                <a href="mailto:cdlprods@gmail.com" aria-label="Scrivici" class="social-link text-white">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
                 </a>
             </div>
         </main>
- 
-        <!-- Footer -->
+
         <footer class="mt-10 pb-4 flex flex-col justify-center items-center gap-2 fade-in">
-            <!-- CDL Logo and Copyright -->
             <div class="flex flex-col justify-center items-center gap-2 text-[9px] font-black tracking-[0.2em] uppercase opacity-40 text-center leading-relaxed">
                 <div class="flex justify-center items-center gap-2">
-                    <img src="Logo.png" alt="" class="h-2 w-auto footer-logo" 
-                         onerror="this.style.display='none'">
+                    <img src="assets/img/brand/logo-cdl.png" alt="" class="h-2 w-auto footer-logo" onerror="this.style.display='none'">
                     <span>2026 CDL APS</span>
                 </div>
             </div>
-            <!-- Subtle/Faded Association details & Slogan (Leggibile solo con attenzione, stessa opacità 15%) -->
+            <!-- Dati dell'associazione: appena percettibili, si accendono al passaggio -->
             <div class="flex flex-col items-center text-[7.5px] md:text-[8px] font-medium text-center tracking-wide text-white opacity-[0.15] hover:opacity-50 transition-opacity duration-300 mt-2 select-none leading-relaxed max-w-[320px] sm:max-w-none gap-1">
                 <span>Associazione di promozione del cinema giovane e indipendente</span>
                 <div>
@@ -329,79 +112,7 @@
             </div>
         </footer>
     </div>
- 
-    <script>
-        // Inizializzazione icone Lucide rimanenti
-        lucide.createIcons();
- 
-        let domandaTimeout;
-        let lastImageIndex = -1;
-        let isCloudActive = false;
-        
-        const images = [
-            'immagini/nuvola1.png', 
-            'immagini/nuvola2.png', 
-            'immagini/nuvola3.png', 
-            'immagini/nuvola4.png', 
-            'immagini/nuvola5.png'
-        ];
- 
-        function toggleCredits(event) {
-            event.stopPropagation();
-            const img = document.getElementById('domanda-image');
-            
-            if (isCloudActive) return;
-            
-            if (domandaTimeout) clearTimeout(domandaTimeout);
-            
-            isCloudActive = true;
- 
-            let randomIndex;
-            do {
-                randomIndex = Math.floor(Math.random() * images.length);
-            } while (randomIndex === lastImageIndex);
-            
-            lastImageIndex = randomIndex;
-            
-            img.src = images[randomIndex];
- 
-            const randomTop = Math.floor(Math.random() * (35 - 5 + 1)) + 5;
-            const randomLeft = Math.floor(Math.random() * (85 - 60 + 1)) + 60;
- 
-            img.style.top = randomTop + '%';
-            img.style.left = randomLeft + '%';
-            
-            img.onload = function() {
-                img.style.display = 'block';
-                img.classList.add('active');
-            };
- 
-            img.onerror = function() {
-                console.error("Impossibile caricare: " + img.src);
-                isCloudActive = false;
-            };
-            
-            domandaTimeout = setTimeout(() => {
-                img.classList.remove('active');
-                setTimeout(() => {
-                    img.style.display = 'none';
-                    isCloudActive = false;
-                }, 600);
-            }, 2000);
-        }
- 
-        document.addEventListener('click', () => {
-            const img = document.getElementById('domanda-image');
-            if (img && img.classList.contains('active')) {
-                img.classList.remove('active');
-                if (domandaTimeout) clearTimeout(domandaTimeout);
-                setTimeout(() => {
-                    img.style.display = 'none';
-                    isCloudActive = false;
-                }, 600);
-            }
-        });
-    </script>
+
+    <script src="assets/js/home.js"></script>
 </body>
 </html>
- 
