@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CDL | Dettaglio Opera</title>
+    <!-- Favicon con fallback multiplo -->
+    <link rel="icon" type="image/png" href="../cdl_favicon.png">
+    <link rel="icon" type="image/x-icon" href="../favicon.ico">
+    <link rel="shortcut icon" href="../favicon.ico">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700;900&display=swap');
+
+        :root {
+            --cdl-lavender: #b9bbf8;
+            --cdl-dark: #1d1d1b;
+            --cdl-white: #f7f7f7;
+            --cdl-red: #ff0000;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--cdl-dark);
+            color: var(--cdl-white);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            letter-spacing: -0.02em;
+            overflow-x: hidden;
+        }
+
+        /* Sfondo Fisso */
+        .bg-fixed-duotone {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('../gif_sfondo.gif');
+            background-size: cover;
+            background-position: center;
+            z-index: -1;
+            opacity: 0.3;
+            filter: grayscale(1) contrast(1.5);
+        }
+
+        .content-wrapper {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 2rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        .bento-border {
+            border: 2px solid var(--cdl-white);
+        }
+
+        .label-tech {
+            font-size: 9px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: var(--cdl-lavender);
+            margin-bottom: 2px;
+            display: block;
+            opacity: 0.8;
+        }
+
+        .value-tech {
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            line-height: 1.2;
+        }
+
+        #movie-tagline {
+            line-height: 1;
+            display: block;
+        }
+
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+            height: 0;
+            overflow: hidden;
+            background: #000;
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+        .hero-image {
+            width: 100%;
+            aspect-ratio: 16/9;
+            object-fit: cover;
+            border-bottom: 8px solid var(--cdl-lavender);
+        }
+
+        .fade-in {
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        #loader {
+            position: fixed;
+            inset: 0;
+            background: var(--cdl-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            transition: opacity 0.5s ease;
+        }
+
+        .genre-tag {
+            border: 1px solid var(--cdl-white);
+            padding: 4px 10px;
+            font-size: 9px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        #coming-soon {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(2px);
+            z-index: 5;
+        }
+
+        #coming-soon.hidden {
+            display: none !important;
+        }
+
+        .coming-soon-badge {
+            border: 2px solid var(--cdl-white);
+            padding: 1rem 1.5rem;
+            background: rgba(0,0,0,0.8);
+            font-size: 10px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.3em;
+            text-align: center;
+            color: var(--cdl-white);
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Schermata di Caricamento -->
+    <div id="loader">
+        <div class="flex flex-col items-center gap-4">
+            <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[--cdl-lavender]"></div>
+            <p id="loader-text" class="text-[8px] uppercase font-black tracking-widest opacity-40">Sincronizzazione archivio...</p>
+        </div>
+    </div>
+
+    <!-- Sfondo -->
+    <div class="bg-fixed-duotone"></div>
+
+    <div class="content-wrapper opacity-0" id="main-content">
+        
+        <!-- Navigazione -->
+        <nav class="mb-10">
+            <a href="../cortoteca.html" id="back-link" class="inline-flex items-center gap-3 text-[11px] font-black uppercase tracking-[0.3em] hover:text-[--cdl-lavender] transition-colors group">
+                <i data-lucide="arrow-left" class="w-4 h-4 group-hover:-translate-x-1 transition-transform"></i> Torna alla Cortoteca
+            </a>
+        </nav>
+
+        <!-- Header Opera -->
+        <header class="mb-8">
+            <!-- Tagline -->
+            <div id="tagline-row" class="mb-2 hidden">
+                <span id="movie-tagline" class="text-[9px] md:text-[11px] font-black uppercase tracking-[0.4em] text-[--cdl-lavender] opacity-80"></span>
+            </div>
+            
+            <div class="flex flex-col md:flex-row md:items-baseline justify-between gap-4">
+                <div class="flex flex-wrap items-baseline gap-4 md:gap-6">
+                    <h1 id="movie-title" class="text-4xl md:text-7xl font-black uppercase leading-none">---</h1>
+                    <span id="movie-year" class="text-[--cdl-lavender] font-black tracking-tighter text-2xl md:text-4xl">----</span>
+                </div>
+                <div class="flex flex-wrap items-center gap-4">
+                    <div id="genre-container" class="flex flex-wrap gap-2"></div>
+                    <!-- Logo Letterboxd -->
+                    <a id="letterboxd-link" href="#" target="_blank" class="hidden hover:opacity-70 transition-opacity">
+                        <img src="../boxd.png" id="letterboxd-icon" alt="Letterboxd" class="h-6 md:h-8 w-auto">
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+            <!-- Colonna Principale (3/4) -->
+            <div class="lg:col-span-3 space-y-6">
+                
+                <!-- Sinossi -->
+                <p id="movie-synopsis" class="text-sm md:text-base leading-relaxed opacity-90 font-medium pb-6 border-b border-white/10">---</p>
+
+                <!-- Media Player -->
+                <div id="media-section" class="bento-border overflow-hidden bg-black relative group">
+                    <div id="coming-soon" class="hidden">
+                        <div class="coming-soon-badge">streaming del corto in arrivo</div>
+                    </div>
+
+                    <!-- Player Wrapper Standard YouTube -->
+                    <div id="video-wrapper" class="hidden relative h-full w-full">
+                        <div class="video-container">
+                            <iframe id="video-player" src="" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+                        </div>
+                        <div class="bg-[--cdl-lavender] h-1.5 w-full relative z-40"></div>
+                    </div>
+
+                    <img id="movie-still" src="" alt="Still opera" class="hero-image hidden">
+                </div>
+
+                <!-- Note di Regia -->
+                <div id="notes-section" class="p-8 bento-border bg-black/90 hidden">
+                    <h3 class="label-tech mb-4 text-white border-b border-white/10 pb-2">Note di Regia</h3>
+                    <p id="movie-notes" class="text-sm leading-relaxed text-white">---</p>
+                </div>
+            </div>
+
+            <!-- Colonna Laterale (1/4) -->
+            <div class="space-y-6">
+                <!-- Troupe -->
+                <div id="troupe-box" class="p-6 bento-border bg-white text-[--cdl-dark]">
+                    <div id="troupe-container" class="space-y-5">
+                        <!-- Popolato dinamicamente via JS -->
+                    </div>
+                </div>
+
+                <!-- Cast -->
+                <div id="cast-box" class="p-6 bento-border border-[--cdl-lavender] hidden">
+                    <span class="label-tech text-[--cdl-lavender] mb-1 text-left font-black uppercase tracking-widest leading-none">con</span>
+                    <ul id="movie-cast" class="mt-4 space-y-3 text-[11px] font-black uppercase tracking-wider"></ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="mt-12 pb-4 flex flex-col justify-center items-center gap-2 fade-in">
+            <!-- CDL Logo and Copyright -->
+            <div class="flex flex-col justify-center items-center gap-2 text-[9px] font-black tracking-[0.2em] uppercase opacity-40 text-center leading-relaxed">
+                <div class="flex justify-center items-center gap-2">
+                    <img src="Logo.png" alt="" class="h-2 w-auto footer-logo" 
+                         onerror="this.style.display='none'">
+                    <span>2026 CDL APS</span>
+                </div>
+            </div>
+            <!-- Subtle/Faded Association details & Slogan (Leggibile solo con attenzione, stessa opacità 15%) -->
+            <div class="flex flex-col items-center text-[7.5px] md:text-[8px] font-medium text-center tracking-wide text-white opacity-[0.15] hover:opacity-50 transition-opacity duration-300 mt-2 select-none leading-relaxed max-w-[320px] sm:max-w-none gap-1">
+                <span>Associazione di promozione del cinema giovane e indipendente</span>
+                <div>
+                    CDL APS &bull; Viale Laurana 13, Rimini, 47921 &bull; CF: 91200080405
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        function getEmbedUrl(url) {
+            if (!url || url.trim() === "" || url === "null") return null;
+            
+            // YouTube standard embed
+            const ytRegex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|shorts\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/i;
+            const ytMatch = url.match(ytRegex);
+            if (ytMatch) return `https://www.youtube.com/embed/${ytMatch[1]}?autoplay=0&rel=0&modestbranding=1`;
+            
+            // Vimeo standard embed
+            const vimeoRegex = /(?:vimeo\.com\/|player\.vimeo\.com\/video\/)([0-9]+)/i;
+            const vimeoMatch = url.match(vimeoRegex);
+            if (vimeoMatch) return `https://player.vimeo.com/video/${vimeoMatch[1]}?badge=0&autopause=0&player_id=0&app_id=58479`;
+            
+            return null;
+        }
+
+        async function fetchDatabase() {
+            const paths = ['../dati_film.json', 'dati_film.json', './dati_film.json'];
+            for (const path of paths) {
+                try {
+                    const response = await fetch(path);
+                    if (response.ok) return await response.json();
+                } catch (e) {}
+            }
+            throw new Error("Database non trovato.");
+        }
+
+        async function initPage() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const filmCodice = urlParams.get('film');
+            const pageName = window.location.pathname.split("/").pop().split(".")[0];
+            const identifier = filmCodice || pageName;
+
+            const mainContent = document.getElementById('main-content');
+            const loader = document.getElementById('loader');
+
+            try {
+                const movies = await fetchDatabase();
+                const movie = movies.find(m => m.codice === identifier);
+
+                if (movie) {
+                    document.title = 'CDL | ' + movie.titolo;
+                    document.getElementById('movie-title').textContent = movie.titolo;
+                    document.getElementById('movie-year').textContent = movie.anno;
+                    
+                    // Tagline
+                    if (movie.tagline && movie.tagline.trim() !== "") {
+                        document.getElementById('movie-tagline').textContent = movie.tagline;
+                        document.getElementById('tagline-row').classList.remove('hidden');
+                    }
+
+                    document.getElementById('movie-synopsis').textContent = movie.sinossi || '---';
+                    
+                    // Note di Regia
+                    if (movie.note_regia && movie.note_regia.trim() !== "" && movie.note_regia !== "---") {
+                        document.getElementById('movie-notes').textContent = movie.note_regia;
+                        document.getElementById('notes-section').classList.remove('hidden');
+                    }
+
+                    // Generi
+                    const genreContainer = document.getElementById('genre-container');
+                    const genres = movie.genere ? movie.genere.split(',').map(g => g.trim()) : [];
+                    genres.forEach(g => {
+                        const span = document.createElement('span');
+                        span.className = 'genre-tag';
+                        span.textContent = g;
+                        genreContainer.appendChild(span);
+                    });
+
+                    // Letterboxd
+                    const lbBtn = document.getElementById('letterboxd-link');
+                    if (movie.letterboxd && movie.letterboxd !== "" && movie.letterboxd !== "null") {
+                        lbBtn.href = movie.letterboxd;
+                        lbBtn.classList.remove('hidden');
+                    }
+
+                    // Troupe Dinamica
+                    const troupeContainer = document.getElementById('troupe-container');
+                    troupeContainer.innerHTML = ''; 
+                    
+                    const rolesMap = [
+                        { label: 'Regia', key: 'regista' },
+                        { label: 'Produzione', key: 'produzione' },
+                        { label: 'DOP', key: 'fotografia' },
+                        { label: 'Sceneggiatura', key: 'sceneggiatura' },
+                        { label: 'Montaggio', key: 'montaggio' },
+                        { label: 'Trucco', key: 'trucco' },
+                        { label: 'Costumi', key: 'costumi' },
+                        { label: 'Scenografia', key: 'scenografia' },
+                        { label: 'Colonna Sonora', key: 'colonna sonora' }
+                    ];
+
+                    rolesMap.forEach(role => {
+                        const capitalizedKey = role.key.charAt(0).toUpperCase() + role.key.slice(1);
+                        const val = movie[role.key] || movie[capitalizedKey];
+                        
+                        if (val && val.toString().trim() !== "" && val !== "---" && val !== "null") {
+                            const div = document.createElement('div');
+                            div.innerHTML = `
+                                <span class="label-tech !text-black/40">${role.label}</span>
+                                <p class="value-tech">${val}</p>
+                            `;
+                            troupeContainer.appendChild(div);
+                        }
+                    });
+
+                    // Media
+                    const embedUrl = getEmbedUrl(movie.video_url);
+                    const videoWrapper = document.getElementById('video-wrapper');
+                    const movieStill = document.getElementById('movie-still');
+                    const comingSoon = document.getElementById('coming-soon');
+                    
+                    if (embedUrl) {
+                        document.getElementById('video-player').src = embedUrl;
+                        videoWrapper.classList.remove('hidden');
+                        comingSoon.classList.add('hidden');
+                        movieStill.classList.add('hidden');
+                    } else {
+                        let stillPath = movie.still;
+                        if (stillPath && !stillPath.startsWith('http')) stillPath = "../" + stillPath;
+                        movieStill.src = stillPath || '';
+                        movieStill.classList.remove('hidden');
+                        comingSoon.classList.remove('hidden');
+                        videoWrapper.classList.add('hidden');
+                    }
+
+                    // Cast
+                    const castList = document.getElementById('movie-cast');
+                    castList.innerHTML = '';
+                    let hasCast = false;
+                    for(let i=1; i<=10; i++) {
+                        const actor = movie[`cast${i}`];
+                        const role = movie[`ruolo_cast${i}`];
+                        if(actor && actor !== "" && actor !== "null") {
+                            hasCast = true;
+                            const li = document.createElement('li');
+                            li.className = "flex flex-col border-b border-white/10 pb-2";
+                            li.innerHTML = `
+                                <span class="flex items-center gap-2">
+                                    <i data-lucide="user" class="w-3 h-3 text-[--cdl-lavender] opacity-50"></i> ${actor}
+                                </span>
+                                ${role ? `<span class="text-[8px] text-[--cdl-lavender] opacity-100 font-bold ml-5 uppercase tracking-wider">${role}</span>` : ''}
+                            `;
+                            castList.appendChild(li);
+                        }
+                    }
+                    if (hasCast) document.getElementById('cast-box').classList.remove('hidden');
+
+                    loader.style.opacity = '0';
+                    setTimeout(() => {
+                        loader.style.display = 'none';
+                        mainContent.classList.add('fade-in');
+                        mainContent.style.opacity = '1';
+                        lucide.createIcons();
+                    }, 500);
+                } else {
+                    loader.innerHTML = `<p class="text-xs uppercase font-black">Opera non trovata.</p>`;
+                }
+            } catch (error) { 
+                loader.innerHTML = `<p class="text-xs uppercase font-black">Errore di Sincronizzazione.</p>`;
+            }
+        }
+        document.addEventListener('DOMContentLoaded', initPage);
+    </script>
+</body>
+</html>

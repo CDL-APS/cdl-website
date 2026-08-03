@@ -1,0 +1,1232 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mappa della Metro — Long Story Short 2026</title>
+    <!-- Favicon -->
+    <link class="favicon" rel="icon" type="image/x-icon" href="favicon.ico">
+    <!-- Tailwind CSS & Lucide Icons -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap');
+
+        :root {
+            --c: #00c8d4;
+            --m: #cc00a0;
+            --y: #d4b800;
+            --dark: #1d1d1b;
+            --mid: #252523;
+            --border: #000000;
+            --white: #ffffff;
+            --red: #ff2222;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            letter-spacing: -0.02em;
+            overflow-x: hidden;
+            background-color: #f7f7f7;
+            color: #000000;
+            position: relative;
+        }
+
+        /* Sfondo originale con copertina solida non trasparente e non bloccante */
+        .bg-fixed-cover {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('CoverLSS.jpg'); 
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            z-index: -10;
+            pointer-events: none;
+        }
+        /* Fallback elegante nel caso la copertina locale non sia disponibile */
+        .bg-fixed-cover::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.4) 0%, rgba(247,247,247,0.95) 100%);
+            z-index: -11;
+        }
+
+        .box-style {
+            border: 2px solid #000000;
+            background-color: #ffffff; /* Solido opaco bianco per contrasto totale */
+            position: relative;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f7f7f7; }
+        ::-webkit-scrollbar-thumb { background: #000000; border-radius: 4px; }
+
+        .content-wrapper {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Indicatori di linea metropolitana nei bottoni */
+        .dot-c { width: 8px; height: 8px; border-radius: 50%; background: var(--c); flex-shrink: 0; border: 1px solid #000; }
+        .dot-m { width: 8px; height: 8px; border-radius: 50%; background: var(--m); flex-shrink: 0; border: 1px solid #000; }
+        .dot-y { width: 8px; height: 8px; border-radius: 50%; background: var(--y); flex-shrink: 0; border: 1px solid #000; }
+
+        /* Scanalature laterali per emulare un vero biglietto della metropolitana */
+        .ticket-punch-left::before {
+            content: '';
+            position: absolute;
+            left: -12px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 24px;
+            height: 24px;
+            background-color: #f7f7f7; /* stesso colore del body */
+            border: 2px solid #000000;
+            border-radius: 50%;
+            z-index: 20;
+        }
+        .ticket-punch-right::after {
+            content: '';
+            position: absolute;
+            right: -12px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 24px;
+            height: 24px;
+            background-color: #f7f7f7; /* stesso colore del body */
+            border: 2px solid #000000;
+            border-radius: 50%;
+            z-index: 20;
+        }
+    </style>
+</head>
+<body class="antialiased p-3 sm:p-4 md:p-8 pb-24 lg:pb-8">
+
+    <div class="bg-fixed-cover"></div>
+
+    <div class="content-wrapper">
+        
+        <!-- Header con Logo Tipografico coordinato al sito -->
+        <header class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 md:mb-8 pb-4 md:pb-6 border-b-2 border-black fade-in">
+            <div>
+                <div class="flex items-center gap-2">
+                    <span class="text-[10px] font-black tracking-[0.25em] uppercase text-neutral-500">CDL — APS</span>
+                    <span class="w-1.5 h-1.5 bg-red-600 rounded-full"></span>
+                    <span class="text-[9px] font-bold text-neutral-400 uppercase tracking-wider">Rimini 2026</span>
+                </div>
+                <h1 class="text-2xl md:text-4xl font-black uppercase tracking-tighter text-black leading-none mt-1">
+                    Mappa <span class="text-neutral-500 font-light">della</span> Metro
+                </h1>
+            </div>
+            <div class="text-left md:text-right hidden sm:block">
+                <span class="text-xs font-black tracking-widest uppercase text-neutral-500 block">Lancio Evento</span>
+                <span class="text-[10px] text-neutral-600 font-bold block">LONG STORY SHORT — 24/28 GIUGNO</span>
+            </div>
+        </header>
+
+        <!-- GUIDA SCHEMATICA DELLE LINEE (Sotto il titolo principale) -->
+        <section class="box-style p-4 sm:p-6 bg-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] mb-8 fade-in" style="animation-delay: 0.1s;">
+            <div class="border-b-2 border-dashed border-neutral-200 pb-3 mb-4">
+                <h2 class="text-[10px] font-black tracking-[0.2em] uppercase text-neutral-400 flex items-center gap-2">
+                    <i data-lucide="info" class="w-4 h-4 text-black"></i> Guida Rapida ai Temi e ai Generi della Rete
+                </h2>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Linea Ciano -->
+                <div class="flex flex-col justify-between border-t-4 border-[#00c8d4] pt-3">
+                    <div>
+                        <h3 class="text-lg font-black uppercase text-[#00c8d4] tracking-tight mb-1 flex items-center gap-1.5">
+                            <span class="w-2.5 h-2.5 bg-[#00c8d4] rounded-full border border-black inline-block"></span>
+                            Linea Ciano
+                        </h3>
+                        <div class="text-[9px] font-black uppercase tracking-wider text-neutral-500 mb-2">Tema: Trasformazione</div>
+                        <p class="text-xs text-neutral-700 leading-relaxed mb-4 font-medium">
+                            La trasformazione non è un semplice passaggio da A a B, ma un processo di erosione e riscrittura. È lo scarto fisico tra un prima e un dopo, in cui il corpo e l’identità si modificano sotto il peso dell’esperienza. Che si tratti di una mutazione biologica, di un viaggio che logora la pelle o dell’ascesa inesorabile verso un obiettivo, il percorso opera su di noi una modifica irreversibile: per diventare qualcos’altro, bisogna prima accettare di non essere più se stessi.
+                        </p>
+                    </div>
+                    <div class="bg-neutral-50 p-2 border border-neutral-200 mt-2">
+                        <span class="text-[8px] font-black uppercase tracking-wider text-neutral-400 block mb-0.5">Generi di riferimento</span>
+                        <span class="text-[10px] font-bold text-[#00c8d4] uppercase tracking-wide">Road Movie &bull; Thriller Psicologico &bull; Rise-n-Fall</span>
+                    </div>
+                </div>
+
+                <!-- Linea Magenta -->
+                <div class="flex flex-col justify-between border-t-4 border-[#cc00a0] pt-3">
+                    <div>
+                        <h3 class="text-lg font-black uppercase text-[#cc00a0] tracking-tight mb-1 flex items-center gap-1.5">
+                            <span class="w-2.5 h-2.5 bg-[#cc00a0] rounded-full border border-black inline-block"></span>
+                            Linea Magenta
+                        </h3>
+                        <div class="text-[9px] font-black uppercase tracking-wider text-neutral-500 mb-2">Tema: Contrasto</div>
+                        <p class="text-xs text-neutral-700 leading-relaxed mb-4 font-medium">
+                            Questa linea invita a esplorare la frizione tra ciò che vediamo e ciò che percepiamo. Che si tratti di sovvertire il quotidiano attraverso una prospettiva distorta, di ingannare lo spettatore facendogli scambiare una menzogna per verità, o che si tratti dello scontro tra il reale e le sue crepe oniriche, il tema centrale è la rottura dell'equilibrio. Il conflitto non è solo tra personaggi, ma tra opposti che si divorano, idee, concetti, visioni.
+                        </p>
+                    </div>
+                    <div class="bg-neutral-50 p-2 border border-neutral-200 mt-2">
+                        <span class="text-[8px] font-black uppercase tracking-wider text-neutral-400 block mb-0.5">Generi di riferimento</span>
+                        <span class="text-[10px] font-bold text-[#cc00a0] uppercase tracking-wide">Realismo Magico &bull; Mockumentary &bull; Distopico</span>
+                    </div>
+                </div>
+
+                <!-- Linea Gialla -->
+                <div class="flex flex-col justify-between border-t-4 border-[#d4b800] pt-3">
+                    <div>
+                        <h3 class="text-lg font-black uppercase text-[#d4b800] tracking-tight mb-1 flex items-center gap-1.5">
+                            <span class="w-2.5 h-2.5 bg-[#d4b800] rounded-full border border-black inline-block"></span>
+                            Linea Gialla
+                        </h3>
+                        <div class="text-[9px] font-black uppercase tracking-wider text-neutral-500 mb-2">Tema: Evidenza</div>
+                        <p class="text-xs text-neutral-700 leading-relaxed mb-4 font-medium">
+                            Questa linea opera come un dispositivo di registrazione e archiviazione. Il tracciato congiunge la collina al mare, dando un punto di vista globale sulla città. Qui vi è la neutralizzazione del punto di vista soggettivo a favore della nuda presenza del reale. Il processo non prevede interpretazione o manipolazione drammaturgica: la realtà viene restituita così com’è, ponendo lo spettatore nella condizione di osservatore imparziale di un sistema fisso.
+                        </p>
+                    </div>
+                    <div class="bg-neutral-50 p-2 border border-neutral-200 mt-2">
+                        <span class="text-[8px] font-black uppercase tracking-wider text-neutral-400 block mb-0.5">Generi di riferimento</span>
+                        <span class="text-[10px] font-bold text-[#d4b800] uppercase tracking-wide">Documentario &bull; Found Footage &bull; Postmodernismo</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TABS DI NAVIGAZIONE MOBILE (Visibili solo su smartphone) -->
+        <div class="lg:hidden flex border-2 border-black mb-6 bg-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] sticky top-2 z-40 rounded-none">
+            <button onclick="setMobileTab('config')" id="tab-btn-config" class="flex-1 py-3 text-[10px] font-black uppercase tracking-widest border-r-2 border-black flex flex-col items-center gap-1 bg-black text-white">
+                <i data-lucide="sliders" class="w-4 h-4"></i>
+                <span>Configura</span>
+            </button>
+            <button onclick="setMobileTab('map')" id="tab-btn-map" class="flex-1 py-3 text-[10px] font-black uppercase tracking-widest border-r-2 border-black flex flex-col items-center gap-1 bg-white text-black">
+                <i data-lucide="map" class="w-4 h-4"></i>
+                <span>Mappa</span>
+            </button>
+            <button onclick="setMobileTab('ticket')" id="tab-btn-ticket" class="flex-1 py-3 text-[10px] font-black uppercase tracking-widest flex flex-col items-center gap-1 bg-white text-black relative">
+                <span id="ticket-badge" class="absolute top-2 right-4 w-2.5 h-2.5 bg-red-600 rounded-full hidden animate-ping"></span>
+                <i data-lucide="ticket" class="w-4 h-4"></i>
+                <span>Biglietto</span>
+            </button>
+        </div>
+
+        <!-- Griglia di Configurazione Centrale -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start mb-8">
+            
+            <!-- CONTENITORE INPUTS (Sempre visibile su desktop, filtrato su mobile) -->
+            <section id="mobile-sec-config" class="lg:col-span-6 space-y-6 fade-in">
+                
+                <!-- Box Selezione Capolinea Estratto -->
+                <div class="box-style p-4 sm:p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] bg-white">
+                    <h3 class="text-[9px] sm:text-[10px] font-black tracking-widest uppercase bg-black text-white px-3 py-1.5 inline-block mb-4">
+                        1. Seleziona il Capolinea Estratto
+                    </h3>
+                    <div class="flex flex-col gap-4" id="capo-select">
+                        <!-- Generato dinamicamente via JS -->
+                    </div>
+                </div>
+
+                <!-- Box Scelta Strada -->
+                <div id="strada-container" class="box-style p-4 sm:p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] bg-white opacity-40 pointer-events-none transition-all duration-300">
+                    <h3 class="text-[9px] sm:text-[10px] font-black tracking-widest uppercase bg-black text-white px-3 py-1.5 inline-block mb-4">
+                        2. Scegli la tua strada
+                    </h3>
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                        <!-- Strada Diretta -->
+                        <div id="strada-diretta" onclick="scegliStrada('diretta')" 
+                             class="border-2 border-black p-3 sm:p-4 cursor-pointer hover:bg-neutral-50 transition-all flex flex-col justify-between h-full relative">
+                            <div class="absolute top-3 right-3 text-black opacity-0 check-icon transition-opacity">
+                                <i data-lucide="check-circle-2" class="w-5 h-5 fill-black text-white"></i>
+                            </div>
+                            <div>
+                                <div class="mb-2"><i data-lucide="arrow-right-left" class="w-5 h-5 sm:w-6 sm:h-6 text-black"></i></div>
+                                <h4 class="font-black text-xs sm:text-sm uppercase tracking-wider mb-1 text-black">Diretto</h4>
+                                <p class="text-[11px] sm:text-xs font-medium text-neutral-500 leading-normal">Mantieni la linea assegnata, definendo una singola fermata intermedia.</p>
+                            </div>
+                            <div class="h-1.5 w-full mt-3" id="bar-diretta"></div>
+                        </div>
+
+                        <!-- Cambio Linea -->
+                        <div id="strada-cambio" onclick="scegliStrada('cambio')" 
+                             class="border-2 border-black p-3 sm:p-4 cursor-pointer hover:bg-neutral-50 transition-all flex flex-col justify-between h-full relative">
+                            <div class="absolute top-3 right-3 text-black opacity-0 check-icon transition-opacity">
+                                <i data-lucide="check-circle-2" class="w-5 h-5 fill-black text-white"></i>
+                            </div>
+                            <div>
+                                <div class="mb-2"><i data-lucide="shuffle" class="w-5 h-5 sm:w-6 sm:h-6 text-black"></i></div>
+                                <h4 class="font-black text-xs sm:text-sm uppercase tracking-wider mb-1 text-black">Cambio</h4>
+                                <p class="text-[11px] sm:text-xs font-medium text-neutral-500 leading-normal">Cambia linea passando per lo scalo e raggiungi un altro capolinea.</p>
+                            </div>
+                            <div class="h-1.5 w-full mt-3" id="bar-cambio"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Box Selezione Generi -->
+                <div id="generi-container" class="box-style p-4 sm:p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] bg-white opacity-40 pointer-events-none transition-all duration-300">
+                    <h3 class="text-[9px] sm:text-[10px] font-black tracking-widest uppercase bg-black text-white px-3 py-1.5 inline-block mb-4">
+                        3. Seleziona Genere Cinematografico
+                    </h3>
+                    <div class="flex flex-wrap gap-1.5 mb-4" id="generi">
+                        <!-- Generati dinamicamente via JS -->
+                    </div>
+                    <!-- Info Box Dettaglio Genere -->
+                    <div id="genere-info" class="border-2 border-black p-3 sm:p-4 bg-neutral-50" style="display:none;"></div>
+                </div>
+
+            </section>
+
+            <!-- CONTENITORE OUTPUTS (Fermate, Ticket) -->
+            <main id="mobile-sec-output" class="lg:col-span-6 space-y-6 fade-in">
+                
+                <!-- Box Dettaglio Capolinea Estratto (Nascondiamo se il biglietto è pronto per isolare l'itinerario) -->
+                <div id="capo-hero-box" class="box-style p-4 sm:p-6 bg-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hidden">
+                    <div class="flex justify-between items-start overflow-hidden">
+                        <div>
+                            <span class="text-[9px] font-black tracking-widest uppercase text-neutral-400">Capolinea selezionato</span>
+                            <h2 class="text-2xl sm:text-4xl font-black uppercase tracking-tight my-1 break-words text-black" id="capo-big"></h2>
+                            <div class="flex items-center gap-2 mt-2" id="capo-pills"></div>
+                        </div>
+                        <div class="text-4xl sm:text-5xl font-black opacity-10 uppercase tracking-tighter select-none pointer-events-none shrink-0" id="capo-wm"></div>
+                    </div>
+                </div>
+
+                <!-- Selezione Fermata Intermedia Diretto -->
+                <div id="panel-diretta" class="box-style p-4 sm:p-6 bg-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hidden">
+                    <h3 class="text-[9px] sm:text-[10px] font-black tracking-widest uppercase bg-black text-white px-3 py-1.5 inline-block mb-4">
+                        Seleziona Fermata Intermedia
+                    </h3>
+                    <div class="flex flex-wrap gap-1.5" id="fermate-dirette"></div>
+                    <div class="mt-4 p-3 border-2 border-red-500 bg-red-50 text-red-600 text-[10px] sm:text-xs font-bold tracking-wide uppercase flex items-center gap-2 hidden" id="alert-forbidden">
+                        <i data-lucide="alert-triangle" class="w-4 h-4 shrink-0"></i> Combinazione vietata: Molo ↔ Quattro Cavalli ↔ Darsena
+                    </div>
+                </div>
+
+                <!-- Selezione Cambio e Fermate -->
+                <div id="panel-cambio" class="box-style p-4 sm:p-6 bg-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hidden space-y-4 sm:space-y-6">
+                    <div>
+                        <h3 class="text-[9px] sm:text-[10px] font-black tracking-widest uppercase bg-black text-white px-3 py-1.5 inline-block mb-4">
+                            1. Capolinea di Arrivo (Altra Linea)
+                        </h3>
+                        <div class="flex flex-wrap gap-1.5" id="cambio-capolinee"></div>
+                    </div>
+                    
+                    <div id="cambio-step2" class="hidden border-t-2 border-dashed border-neutral-200 pt-4">
+                        <h3 class="text-[9px] sm:text-[10px] font-black tracking-widest uppercase bg-black text-white px-3 py-1.5 inline-block mb-4">
+                            2. Scegli Fermata Intermedia lungo il tragitto
+                        </h3>
+                        <div class="flex flex-wrap gap-1.5" id="cambio-fermate"></div>
+                    </div>
+                </div>
+
+                <!-- BIGLIETTO GENERATO (Ticket Style) -->
+                <div id="biglietto" class="hidden">
+                    <div class="box-style bg-[#f2edd9] text-stone-900 p-0 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] relative overflow-hidden ticket-punch-left ticket-punch-right">
+                        
+                        <!-- Banda Magnetica Superiore -->
+                        <div class="bg-stone-900 text-neutral-300 text-[8px] font-black tracking-[0.2em] text-center py-2 uppercase select-none flex items-center justify-center gap-1 sm:gap-2 px-6">
+                            <i data-lucide="arrow-right" class="w-3 h-3 text-neutral-300"></i>
+                            <span>INSERIRE DA QUESTO LATO</span>
+                            <i data-lucide="arrow-right" class="w-3 h-3 text-neutral-300"></i>
+                        </div>
+                        
+                        <div class="p-4 sm:p-6 relative z-10">
+                            <!-- Intestazione Biglietto -->
+                            <div class="flex justify-between items-center border-b border-stone-400 pb-3 mb-4">
+                                <div class="flex flex-col">
+                                    <span class="font-black tracking-wider text-[10px] sm:text-xs uppercase text-stone-900">METRO TICKET — RIMINI</span>
+                                    <span class="text-[7px] sm:text-[8px] font-bold text-stone-500 uppercase tracking-widest">LONG STORY SHORT 2026</span>
+                                </div>
+                                <div class="flex items-center gap-1 sm:bg-stone-900 sm:text-[#f2edd9] px-1.5 py-0.5 text-[8px] font-black tracking-widest uppercase rounded-sm shrink-0">
+                                    <span>VALIDO</span> <i data-lucide="check-circle" class="w-3 h-3 stroke-[3px]"></i>
+                                </div>
+                            </div>
+
+                            <!-- Griglia Tecnica dei Dettagli del Biglietto -->
+                            <div class="grid grid-cols-2 gap-3 mb-4 border-b border-stone-300 pb-4 text-[11px] font-bold" id="big-grid">
+                                <!-- Generato dinamicamente via JS -->
+                            </div>
+
+                            <!-- Itinerario di Produzione Visivo -->
+                            <div class="pt-2" id="big-perc">
+                                <!-- Generato dinamicamente via JS -->
+                            </div>
+                            
+                            <!-- Codice a Barre Simulato -->
+                            <div class="mt-4 sm:mt-6 pt-4 border-t border-stone-300 flex flex-col items-center justify-center gap-2">
+                                <div class="flex items-stretch justify-center h-8 w-full max-w-[280px] bg-stone-900 p-1 opacity-90 gap-[1.5px]">
+                                    <!-- Barcode finto asimmetrico -->
+                                    <div class="bg-[#f2edd9] w-1"></div><div class="bg-[#f2edd9] w-3"></div><div class="bg-[#f2edd9] w-1"></div><div class="bg-[#f2edd9] w-2"></div>
+                                    <div class="bg-[#f2edd9] w-1"></div><div class="bg-[#f2edd9] w-4"></div><div class="bg-[#f2edd9] w-1"></div><div class="bg-[#f2edd9] w-2"></div>
+                                    <div class="bg-[#f2edd9] w-2"></div><div class="bg-[#f2edd9] w-1"></div><div class="bg-[#f2edd9] w-3"></div><div class="bg-[#f2edd9] w-1"></div>
+                                    <div class="bg-[#f2edd9] w-4"></div><div class="bg-[#f2edd9] w-1"></div><div class="bg-[#f2edd9] w-2"></div><div class="bg-[#f2edd9] w-1"></div>
+                                    <div class="bg-[#f2edd9] w-2"></div><div class="bg-[#f2edd9] w-3"></div><div class="bg-[#f2edd9] w-1"></div><div class="bg-[#f2edd9] w-2"></div>
+                                </div>
+                                <span class="text-[7px] sm:text-[8px] font-mono tracking-[0.3em] uppercase text-stone-600">N. 02428-2026-RIMINI</span>
+                            </div>
+
+                            <!-- Pulsante Reset / Generatore Nuovo -->
+                            <button onclick="resetAll()" class="mt-6 w-full py-2.5 border-2 border-stone-900 bg-transparent hover:bg-stone-900 hover:text-[#f2edd9] text-stone-900 transition-all font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-2">
+                                <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i> Genera Nuovo Itinerario
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Placeholder Biglietto non pronto (Solo per mobile) -->
+                <div id="biglietto-placeholder" class="lg:hidden box-style border-dashed border-neutral-400 p-6 text-center text-neutral-500 bg-white/70">
+                    <i data-lucide="lock" class="w-8 h-8 mx-auto mb-2 opacity-50"></i>
+                    <p class="text-xs font-bold uppercase tracking-wider">Biglietto non ancora disponibile</p>
+                    <p class="text-[11px] font-medium text-neutral-400 mt-1">Completa tutti i passaggi nella scheda "Configura" per generare l'itinerario.</p>
+                </div>
+
+            </main>
+
+        </div>
+
+        <!-- SEZIONE MAPPA: Posizionata in basso, ora interamente visibile in orizzontale senza scorrimento -->
+        <section id="mobile-sec-map" class="mb-8 fade-in">
+            <div class="box-style p-3 sm:p-4 rounded-none bg-neutral-900 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] overflow-hidden">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-3 pb-3 border-b border-neutral-800">
+                    <div class="flex items-center gap-2">
+                        <i data-lucide="map" class="w-4 h-4 text-white"></i>
+                        <h2 class="text-[10px] sm:text-xs font-black tracking-widest uppercase text-white">Tracciato della Rete Metropolitana</h2>
+                    </div>
+                    <!-- Legenda Linee -->
+                    <div class="flex items-center gap-3 text-[8px] sm:text-[9px] font-black uppercase tracking-widest text-neutral-400">
+                        <span class="flex items-center gap-1"><span class="w-2 h-2 bg-[#00c8d4] rounded-full border border-black"></span> Ciano</span>
+                        <span class="flex items-center gap-1"><span class="w-2 h-2 bg-[#cc00a0] rounded-full border border-black"></span> Magenta</span>
+                        <span class="flex items-center gap-1"><span class="w-2 h-2 bg-[#d4b800] rounded-full border border-black"></span> Gialla</span>
+                    </div>
+                </div>
+                <!-- Contenitore SVG completamente reattivo e autoadattivo su qualsiasi schermo -->
+                <div class="bg-[#151514] p-2 sm:p-4 rounded-none border border-neutral-800 flex items-center justify-center">
+                    <svg id="map-svg" viewBox="0 0 700 250" class="w-full h-auto block max-w-full"></svg>
+                </div>
+            </div>
+        </section>
+
+        <!-- Piè di pagina e link social -->
+        <div class="mt-8 lg:mt-16 flex flex-col items-center gap-6 mb-4">
+            <!-- Torna alla home -->
+            <a href="index.html" class="group flex items-center gap-3 px-5 py-2.5 border-2 border-black bg-white text-black hover:bg-black hover:text-white transition-all duration-300 font-black uppercase text-[11px] tracking-widest shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:shadow-none translate-y-0 active:translate-y-1">
+                <i data-lucide="arrow-left" class="w-3.5 h-3.5 transition-transform group-hover:-translate-x-0.5"></i>
+                Torna alla Home
+            </a>
+
+            <!-- Social Box -->
+            <div class="flex items-center justify-center gap-6 text-black py-2">
+                <a href="https://instagram.com/cdl_aps" target="_blank" class="hover:text-red-600 transition-all transform hover:scale-110">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-instagram"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
+                </a>
+                <a href="https://youtube.com/@cdlprods" target="_blank" class="hover:text-red-600 transition-all transform hover:scale-110">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-youtube"><path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 2-2 69.44 69.44 0 0 1 15 0 2 2 0 0 1 2 2 24.12 24.12 0 0 1 0 10 2 2 0 0 1-2 2 69.44 69.44 0 0 1-15 0 2 2 0 0 1-2-2z"/><polyline points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/></svg>
+                </a>
+                <a href="mailto:cdlprods@gmail.com" class="hover:text-red-600 transition-all transform hover:scale-110">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-mail"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                </a>
+            </div>
+
+            <!-- Footer -->
+            <footer class="mt-12 pb-4 flex flex-col justify-center items-center gap-2 fade-in">
+                <!-- CDL Logo and Copyright -->
+                <div class="flex flex-col justify-center items-center gap-2 text-[9px] font-black tracking-[0.2em] uppercase opacity-40 text-center leading-relaxed">
+                    <div class="flex justify-center items-center gap-2">
+                        <img src="Logo.png" alt="" class="h-2 w-auto footer-logo grayscale" style="filter: grayscale(100%);" 
+                             onerror="this.style.display='none'">
+                        <span>2026 CDL APS</span>
+                    </div>
+                </div>
+                <!-- Subtle/Faded Association details & Slogan (Leggibile solo con attenzione, stessa opacità 15%) -->
+                <div class="flex flex-col items-center text-[7.5px] md:text-[8px] font-medium text-center tracking-wide text-black opacity-[0.15] hover:opacity-50 transition-opacity duration-300 mt-2 select-none leading-relaxed max-w-[320px] sm:max-w-none gap-1">
+                    <span>Associazione di promozione del cinema giovane e indipendente</span>
+                    <div>
+                        CDL APS &bull; Viale Laurana 13, Rimini, 47921 &bull; CF: 91200080405
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+<script>
+const RETE = {
+    ciano:   {nome:'Linea Ciano', tema:'Trasformazione', colore:'#00c8d4', key:'ciano',
+              generi:['Road Movie','Thriller Psicologico','Rise-n-Fall'],
+              fermate:['Darsena','Quattro Cavalli','Kennedy','Centro Studi','Aeroporto']},
+    magenta: {nome:'Linea Magenta', tema:'Contrasto', colore:'#cc00a0', key:'magenta',
+              generi:['Realismo Magico','Mockumentary','Distopico'],
+              fermate:['Zona Industriale','Parco Marecchia','Borgo','Arco','Centro Studi','Spiaggia Libera']},
+    gialla:  {nome:'Linea Gialla', tema:'Evidenza', colore:'#d4b800', key:'gialla',
+              generi:['Documentario','Found Footage','Postmodernismo'],
+              fermate:['Covignano','Parco della Cava','Arco','Stazione','Quattro Cavalli','Molo']}
+};
+
+const SCALI = {
+    'ciano-magenta':'Centro Studi','magenta-ciano':'Centro Studi',
+    'ciano-gialla':'Quattro Cavalli','gialla-ciano':'Quattro Cavalli',
+    'magenta-gialla':'Arco','gialla-magenta':'Arco'
+};
+
+const TUTTI_CAPOLINEE = [
+    {name:'Darsena',linea:'ciano'},{name:'Aeroporto',linea:'ciano'},
+    {name:'Zona Industriale',linea:'magenta'},{name:'Spiaggia Libera',linea:'magenta'},
+    {name:'Covignano',linea:'gialla'},{name:'Molo',linea:'gialla'}
+];
+
+const GENERI_INFO = {
+    'Road Movie': {
+        desc: "Il viaggio fisico come motore di mutamento interiore: la strada che consuma e ridefinisce chi la percorre.",
+        comps: [["Into the Wild", "2007"], ["Paris, Texas", "1984"]]
+    },
+    'Thriller Psicologico': {
+        desc: "Esplorare la degenerazione mentale causata da un attrito narrativo o morale.",
+        comps: [["Il Cigno Nero", "2010"], ["Gone Girl", "2014"]]
+    },
+    'Rise-n-Fall': {
+        desc: "Tracciare la traiettoria fisica e morale dell'ascesa e del crollo sistemico di un personaggio.",
+        comps: [["Il Petroliere", "2007"], ["Quei bravi ragazzi", "1990"]]
+    },
+    'Realismo Magico': {
+        desc: "La proiezione onirica o fantastica che contrasta con il rigore della struttura del reale.",
+        comps: [["Otto e mezzo", "1963"], ["Amélie", "2001"]]
+    },
+    'Mockumentary': {
+        desc: "La fiction che ruba lo stile del reale come espediente narrativo, manipolando l'osservatore.",
+        comps: [["Lake Mungo", "2008"], ["Borat", "2006"]]
+    },
+    'Distopico': {
+        desc: "La proiezione di un futuro alterato che si scontra e stride con le speranze di oggi.",
+        comps: [["1984", "1984"], ["Brazil", "1985"]]
+    },
+    'Documentario': {
+        desc: "Osservare il mondo circostante senza filtri artificiali, restituendone la verità strutturale.",
+        comps: [["The Fire Within", "2022"], ["Dope Boys Alphabet", "2021"]]
+    },
+    'Found Footage': {
+        desc: "Lasciare che siano i reperti d'archivio e le riprese casuali a raccontare l'opera.",
+        comps: [["Creep", "2014"], ["Backrooms", "2026"]]
+    },
+    'Postmodernismo': {
+        desc: "Raccontare il mondo frammentato di oggi con ironia, citazionismo e destrutturazione.",
+        comps: [["Pulp Fiction", "1994"], ["Fight Club", "1999"]]
+    }
+};
+
+let S = {
+    capoEstratto: null,
+    lineaEstratta: null,
+    genere: null,
+    strada: null,
+    fermataDiretta: null,
+    cambioCapoArrivo: null,
+    cambioLineaArrivo: null,
+    cambioFermata: null
+};
+
+// Stato della visualizzazione attiva su Mobile
+let activeMobileTab = 'config';
+
+function setMobileTab(tabId) {
+    activeMobileTab = tabId;
+    
+    // Gestione visibilità delle sezioni
+    const secConfig = document.getElementById('mobile-sec-config');
+    const secOutput = document.getElementById('mobile-sec-output');
+    const secMap = document.getElementById('mobile-sec-map');
+    const capoHeroBox = document.getElementById('capo-hero-box');
+    
+    const isReady = S.genere && (
+        (S.strada === 'diretta' && S.fermataDiretta) ||
+        (S.strada === 'cambio' && S.cambioCapoArrivo && S.cambioLineaArrivo)
+    );
+
+    if (window.innerWidth < 1024) { // Solo sotto il breakpoint LG di Tailwind
+        if (tabId === 'config') {
+            secConfig.classList.remove('hidden');
+            secOutput.classList.remove('hidden');
+            // Nasconde pannello ticket e hero-box su config se non pronti o se completato
+            capoHeroBox.classList.toggle('hidden', !S.capoEstratto || isReady);
+            document.getElementById('biglietto').classList.add('hidden');
+            document.getElementById('biglietto-placeholder').classList.add('hidden');
+            secMap.classList.add('hidden');
+        } else if (tabId === 'map') {
+            secConfig.classList.add('hidden');
+            secOutput.classList.add('hidden');
+            secMap.classList.remove('hidden');
+        } else if (tabId === 'ticket') {
+            secConfig.classList.add('hidden');
+            secOutput.classList.remove('hidden');
+            secMap.classList.add('hidden');
+            
+            // SEZIONE BIGLIETTO: Mostra solo ed esclusivamente il biglietto!
+            capoHeroBox.classList.add('hidden');
+            
+            if (isReady) {
+                document.getElementById('biglietto').classList.remove('hidden');
+                document.getElementById('biglietto-placeholder').classList.add('hidden');
+                document.getElementById('ticket-badge').classList.add('hidden');
+            } else {
+                document.getElementById('biglietto').classList.add('hidden');
+                document.getElementById('biglietto-placeholder').classList.remove('hidden');
+            }
+        }
+    } else {
+        // Ripristina la visualizzazione desktop standard
+        secConfig.classList.remove('hidden');
+        secOutput.classList.remove('hidden');
+        secMap.classList.remove('hidden');
+        // Su desktop, se il biglietto è pronto, nascondiamo l'hero box del capolinea per far risaltare solo il biglietto
+        capoHeroBox.classList.toggle('hidden', !S.capoEstratto || isReady);
+    }
+
+    // Aggiornamento stile dei bottoni tab
+    const tabs = ['config', 'map', 'ticket'];
+    tabs.forEach(t => {
+        const btn = document.getElementById(`tab-btn-${t}`);
+        if (btn) {
+            if (t === tabId) {
+                btn.classList.add('bg-black', 'text-white');
+                btn.classList.remove('bg-white', 'text-black');
+            } else {
+                btn.classList.remove('bg-black', 'text-white');
+                btn.classList.add('bg-white', 'text-black');
+            }
+        }
+    });
+}
+
+function ramoTra(arr,fromIdx,toIdx){
+    if(fromIdx===toIdx) return [];
+    const step=fromIdx<toIdx?1:-1;
+    const res=[];
+    for(let i=fromIdx+step;i!==toIdx;i+=step){ res.push(arr[i]); }
+    return res;
+}
+
+function calcolaPercorsoCambio(capoEstratto,lineaEstratta,capoArrivo,lineaArrivo){
+    const lFrom=RETE[lineaEstratta], lTo=RETE[lineaArrivo];
+    const scaloNome=SCALI[lineaEstratta+'-'+lineaArrivo];
+    const idxFrom=lFrom.fermate.indexOf(capoEstratto);
+    const idxScaloFrom=lFrom.fermate.indexOf(scaloNome);
+    const ramoFrom=ramoTra(lFrom.fermate,idxFrom,idxScaloFrom);
+    const idxTo=lTo.fermate.indexOf(capoArrivo);
+    const idxScaloTo=lTo.fermate.indexOf(scaloNome);
+    const ramoTo=ramoTra(lTo.fermate,idxScaloTo,idxTo);
+    const fermateDisponibili=[
+        ...ramoFrom.map(f=>({nome:f,linea:lineaEstratta})),
+        ...ramoTo.map(f=>({nome:f,linea:lineaArrivo}))
+    ];
+    const percorsoBase=[
+        {nome:capoEstratto,linea:lineaEstratta,tipo:'capo'},
+        ...ramoFrom.map(f=>({nome:f,linea:lineaEstratta,tipo:'stop'})),
+        {nome:scaloNome,linea:lineaEstratta,tipo:'scalo'},
+        {nome:scaloNome,linea:lineaArrivo,tipo:'scalo-b'},
+        ...ramoTo.map(f=>({nome:f,linea:lineaArrivo,tipo:'stop'})),
+        {nome:capoArrivo,linea:lineaArrivo,tipo:'capo'}
+    ];
+    return {scaloNome,fermateDisponibili,percorsoBase};
+}
+
+function calcolaPercorsoDiretto(capoEstratto,lineaEstratta,fermata){
+    const l=RETE[lineaEstratta];
+    const altroCapo=l.fermate[0]===capoEstratto?l.fermate[l.fermate.length-1]:l.fermate[0];
+    return [
+        {nome:capoEstratto,linea:lineaEstratta,tipo:'capo'},
+        {nome:fermata,linea:lineaEstratta,tipo:'stop'},
+        {nome:altroCapo,linea:lineaEstratta,tipo:'capo'}
+    ];
+}
+
+function isForbidden(a,f,b){
+    const forb=[['Molo','Quattro Cavalli','Darsena'],['Darsena','Quattro Cavalli','Molo']];
+    return forb.some(x=>(a===x[0]&&f===x[1]&&b===x[2])||(b===x[0]&&f===x[1]&&a===x[2]));
+}
+const CAMBIO_VIETATO=[['Aeroporto','Spiaggia Libera'],['Molo','Darsena']];
+function isCambioVietato(a,b){ return CAMBIO_VIETATO.some(x=>(a===x[0]&&b===x[1])||(a===x[1]&&b===x[0])); }
+
+function selezionaCapolinea(name,linea){
+    S = {
+        capoEstratto: name,
+        lineaEstratta: linea,
+        genere: null,
+        strada: null,
+        fermataDiretta: null,
+        cambioCapoArrivo: null,
+        cambioLineaArrivo: null,
+        cambioFermata: null
+    };
+    
+    // Rendi i box interattivi sbloccandoli con stile coerente
+    document.getElementById('strada-container').classList.remove('opacity-40', 'pointer-events-none');
+    document.getElementById('generi-container').classList.remove('opacity-40', 'pointer-events-none');
+    document.getElementById('capo-hero-box').classList.remove('hidden');
+    
+    render();
+    renderCapoSelect();
+}
+
+function renderCapoSelect(){
+    const groups={ciano:[],magenta:[],gialla:[]};
+    TUTTI_CAPOLINEE.forEach(c=>groups[c.linea].push(c));
+    
+    let html='';
+    ['ciano','magenta','gialla'].forEach(lk=>{
+        html+=`<div class="flex flex-col gap-1.5"><span class="text-[9px] font-black tracking-widest uppercase text-neutral-400 mb-1">${RETE[lk].nome}</span><div class="flex flex-wrap gap-1.5">`;
+        html+=groups[lk].map(c=>{
+            const active = S.capoEstratto===c.name;
+            const bgCol = lk==='ciano' ? 'bg-[#00c8d4]' : (lk==='magenta' ? 'bg-[#cc00a0]' : 'bg-[#d4b800]');
+            const textCol = active ? (lk==='magenta'?'text-white':'text-black') : 'text-black hover:bg-neutral-100';
+            
+            const dynamicClass = active 
+                ? `${bgCol} ${textCol} border-2 border-black font-black` 
+                : 'bg-white border-2 border-neutral-300';
+
+            return `<button class="px-2.5 py-1.5 text-[10px] sm:text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-1.5 ${dynamicClass}" 
+                            onclick="selezionaCapolinea('${c.name}','${c.linea}')">
+                        <span class="dot-${lk}"></span>${c.name}
+                    </button>`;
+        }).join('');
+        html+='</div></div>';
+    });
+    document.getElementById('capo-select').innerHTML=html;
+}
+
+// Funzione di rendering unificata per evitare qualsiasi blocco grafico
+function render(){ 
+    renderCapo(); 
+    renderGeneri(); 
+    renderStrade(); 
+    renderPanels(); 
+    renderMappa(); 
+    renderBiglietto(); 
+    
+    // Forza il ricalcolo della visibilità per mobile basato sul tab attivo
+    setMobileTab(activeMobileTab);
+}
+
+function renderCapo(){
+    if (!S.lineaEstratta) return;
+    const lk=S.lineaEstratta, l=RETE[lk];
+    document.getElementById('capo-wm').textContent=S.capoEstratto.substring(0,3);
+    const big=document.getElementById('capo-big'); 
+    big.textContent=S.capoEstratto;
+    
+    const colMap={ciano:'text-[#00c8d4]',magenta:'text-[#cc00a0]',gialla:'text-[#d4b800]'};
+    big.className=`text-xl sm:text-3xl md:text-4xl font-black uppercase tracking-tight my-1 ${colMap[lk]}`;
+    
+    const pillCol = lk==='ciano' ? 'bg-[#00c8d4] text-black' : (lk==='magenta' ? 'bg-[#cc00a0] text-white' : 'bg-[#d4b800] text-black');
+    document.getElementById('capo-pills').innerHTML=`<div class="px-2 py-0.5 text-[8px] font-black tracking-widest uppercase border border-black ${pillCol}">${l.nome}</div><div class="text-[9px] font-bold text-neutral-500 uppercase tracking-widest italic">TEMA: ${l.tema}</div>`;
+}
+
+function selGenere(g){ 
+    S.genere=g; 
+    render(); 
+    checkCompletionAndNotify();
+}
+
+function renderGeneri(){
+    if (!S.lineaEstratta) return;
+    
+    // Seleziona la linea corretta in base alla scelta della strada per mostrare i generi della linea finale se è stato effettuato un cambio
+    const lk = (S.strada === 'cambio' && S.cambioLineaArrivo) ? S.cambioLineaArrivo : S.lineaEstratta;
+    const l = RETE[lk];
+    const activeBg = lk==='ciano' ? 'bg-[#00c8d4] text-black border-black' : (lk==='magenta' ? 'bg-[#cc00a0] text-white border-black' : 'bg-[#d4b800] text-black border-black');
+    
+    document.getElementById('generi').innerHTML=l.generi.map(g=>{
+        const active = S.genere===g;
+        const buttonClass = active 
+            ? `${activeBg} font-black border-2` 
+            : 'bg-white text-black border-2 border-neutral-300 hover:border-black font-semibold';
+            
+        return `<button class="px-2.5 py-1.5 text-[10px] sm:text-xs uppercase tracking-wider transition-all ${buttonClass}" onclick="selGenere('${g}')">${g}</button>`;
+    }).join('');
+    renderGenereInfo();
+}
+
+function renderGenereInfo(){
+    const box=document.getElementById('genere-info');
+    if(!S.genere || !GENERI_INFO[S.genere]){ 
+        box.style.display='none'; 
+        box.innerHTML=''; 
+        return; 
+    }
+    const info=GENERI_INFO[S.genere];
+    box.style.display='block';
+    box.innerHTML=`
+        <div class="font-black text-[10px] sm:text-xs uppercase tracking-widest text-black mb-1">${S.genere}</div>
+        <div class="text-[11px] sm:text-xs text-neutral-600 leading-relaxed mb-3">${info.desc}</div>
+        <div class="text-[8px] font-black tracking-widest uppercase text-neutral-400 mb-1.5">Cinematografia Consigliata</div>
+        <div class="space-y-1.5">
+          ${info.comps.map(c=>`<div class="flex justify-between text-[11px] border-b border-neutral-200 pb-1"><span class="font-bold text-black pr-2 leading-tight">${c[0]}</span><span class="text-neutral-400 font-medium shrink-0">${c[1]}</span></div>`).join('')}
+        </div>`;
+}
+
+function renderStrade(){
+    ['diretta','cambio'].forEach(s=>{
+        const element = document.getElementById('strada-'+s);
+        const checkIcon = element.querySelector('.check-icon');
+        const isActive = S.strada===s;
+        
+        element.classList.toggle('bg-black', isActive);
+        element.classList.toggle('text-white', isActive);
+        
+        const h4El = element.querySelector('h4');
+        const pEl = element.querySelector('p');
+        const iconEl = element.querySelector('svg');
+        
+        if (isActive) {
+            h4El.classList.remove('text-black'); h4El.classList.add('text-white');
+            pEl.classList.remove('text-neutral-500'); pEl.classList.add('text-neutral-300');
+            iconEl.classList.remove('text-black'); iconEl.classList.add('text-white');
+        } else {
+            h4El.classList.remove('text-white'); h4El.classList.add('text-black');
+            pEl.classList.remove('text-neutral-300'); pEl.classList.add('text-neutral-500');
+            iconEl.classList.remove('text-white'); iconEl.classList.add('text-black');
+        }
+        
+        if (checkIcon) {
+            checkIcon.classList.toggle('opacity-0', !isActive);
+            checkIcon.classList.toggle('opacity-100', isActive);
+        }
+    });
+    
+    const barCiano = S.lineaEstratta==='ciano' ? 'bg-[#00c8d4]' : (S.lineaEstratta==='magenta' ? 'bg-[#cc00a0]' : 'bg-[#d4b800]');
+    document.getElementById('bar-diretta').className = `h-1 w-full mt-3 ${S.strada==='diretta' ? 'bg-white' : barCiano}`;
+    document.getElementById('bar-cambio').className = `h-1 w-full mt-3 ${S.strada==='cambio' ? 'bg-white' : barCiano}`;
+}
+
+function scegliStrada(s){
+    S.strada=s; S.fermataDiretta=null; S.cambioCapoArrivo=null; S.cambioLineaArrivo=null; S.cambioFermata=null;
+    S.genere=null; // Reset del genere cinematografico per motivi di compatibilità con la nuova modalità
+    render();
+}
+
+function renderPanels(){
+    const lk=S.lineaEstratta, l=RETE[lk];
+    
+    const panelDiretta = document.getElementById('panel-diretta');
+    const panelCambio = document.getElementById('panel-cambio');
+    
+    const isReady = S.genere && (
+        (S.strada === 'diretta' && S.fermataDiretta) ||
+        (S.strada === 'cambio' && S.cambioCapoArrivo && S.cambioLineaArrivo)
+    );
+
+    // Se completato, nascondi i pannelli di scelta per mostrare SOLO il biglietto pulito
+    if (isReady) {
+        panelDiretta.classList.add('hidden');
+        panelCambio.classList.add('hidden');
+        return;
+    }
+
+    panelDiretta.classList.toggle('hidden', S.strada!=='diretta');
+    panelCambio.classList.toggle('hidden', S.strada!=='cambio');
+
+    if(S.strada==='diretta' && l){
+        const AltroCapo=l.fermate[0]===S.capoEstratto?l.fermate[l.fermate.length-1]:l.fermate[0];
+        const intermedie=l.fermate.slice(1,l.fermate.length-1);
+        
+        document.getElementById('fermate-dirette').innerHTML=intermedie.map(f=>{
+            const vietata=isForbidden(S.capoEstratto,f,AltroCapo);
+            const active=S.fermataDiretta===f;
+            
+            const btnClass = vietata 
+                ? 'bg-neutral-100 text-neutral-300 border-neutral-200 cursor-not-allowed line-through' 
+                : (active 
+                    ? 'bg-black text-white border-black font-black' 
+                    : 'bg-white text-black border-neutral-300 hover:border-black font-semibold');
+            
+            const onclick=vietata?'':`onclick="scegliFermataDiretta('${f}')"`;
+            return `<button class="px-2.5 py-1.5 text-[10px] sm:text-xs uppercase tracking-wider transition-all border-2 ${btnClass}" ${onclick}>${f}</button>`;
+        }).join('');
+    }
+
+    if(S.strada==='cambio'){
+        const altriCapo=TUTTI_CAPOLINEE.filter(c=>c.linea!==lk);
+        
+        document.getElementById('cambio-capolinee').innerHTML=altriCapo.map(c=>{
+            const vietato=isCambioVietato(S.capoEstratto,c.name);
+            const active=S.cambioCapoArrivo===c.name;
+            const col = c.linea;
+            
+            const activeStyle = active 
+                ? (col==='ciano' ? 'bg-[#00c8d4] text-black border-black font-black' : (col==='magenta' ? 'bg-[#cc00a0] text-white border-black font-black' : 'bg-[#d4b800] text-black border-black font-black'))
+                : 'bg-white text-black border-neutral-300 hover:border-black font-semibold';
+            
+            const btnClass = vietato 
+                ? 'bg-neutral-100 text-neutral-300 border-neutral-200 cursor-not-allowed line-through' 
+                : activeStyle;
+                
+            const onclick=vietato?'':`onclick="scegliCambioCapo('${c.name}','${c.linea}')"`;
+            
+            return `<button class="px-2.5 py-1.5 text-[10px] sm:text-xs uppercase tracking-wider transition-all border-2 flex items-center gap-1.5 ${btnClass}" ${onclick}>
+                <span class="dot-${col}"></span>${c.name}
+                <span class="text-[8px] opacity-60 font-bold">(${RETE[col].nome.split(' ')[1].substring(0,3).toUpperCase()})</span>
+              </button>`;
+        }).join('');
+
+        const step2 = document.getElementById('cambio-step2');
+        if(S.cambioCapoArrivo&&S.cambioLineaArrivo){
+            step2.classList.remove('hidden');
+            const {fermateDisponibili}=calcolaPercorsoCambio(S.capoEstratto,lk,S.cambioCapoArrivo,S.cambioLineaArrivo);
+            
+            if(fermateDisponibili.length===0){
+                document.getElementById('cambio-fermate').innerHTML='<span class="text-[11px] text-neutral-500 font-medium italic">Nessuna fermata intermedia su questo itinerario. Passaggio diretto tramite lo Scalo.</span>';
+                S.cambioFermata = null; 
+            } else {
+                document.getElementById('cambio-fermate').innerHTML=fermateDisponibili.map(f=>{
+                    const active=S.cambioFermata===f.nome;
+                    const fCol = f.linea;
+                    
+                    const activeStyle = active 
+                        ? 'bg-black text-white border-black font-black' 
+                        : 'bg-white text-black border-neutral-300 hover:border-black font-semibold';
+                        
+                    return `<button class="px-2.5 py-1.5 text-[10px] sm:text-xs uppercase tracking-wider transition-all border-2 flex items-center gap-1.5 ${activeStyle}" onclick="scegliCambioFermata('${f.nome}')">
+                        <span class="dot-${fCol}"></span>${f.nome}
+                    </button>`;
+                }).join('');
+            }
+        } else {
+            step2.classList.add('hidden');
+        }
+    }
+    
+    setTimeout(() => { lucide.createIcons(); }, 10);
+}
+
+function scegliFermataDiretta(f){ 
+    S.fermataDiretta=f; 
+    render(); 
+    checkCompletionAndNotify();
+}
+function scegliCambioCapo(nome,linea){ 
+    S.cambioCapoArrivo=nome; 
+    S.cambioLineaArrivo=linea; 
+    S.cambioFermata=null; 
+    S.genere=null; // Reset del genere cinematografico per forzare la selezione del genere della nuova linea
+    render(); 
+}
+function scegliCambioFermata(f){ 
+    S.cambioFermata=f; 
+    render(); 
+    checkCompletionAndNotify();
+}
+
+// Navigazione smart automatica quando il biglietto è sbloccato
+function checkCompletionAndNotify() {
+    const isReady = S.genere && (
+        (S.strada === 'diretta' && S.fermataDiretta) ||
+        (S.strada === 'cambio' && S.cambioCapoArrivo && S.cambioLineaArrivo)
+    );
+    if (isReady && window.innerWidth < 1024) {
+        // Fai lampeggiare il badge sulla tab del biglietto e sposta l'utente lì per feedback immediato
+        document.getElementById('ticket-badge').classList.remove('hidden');
+        setTimeout(() => {
+            setMobileTab('ticket');
+        }, 300);
+    }
+}
+
+const POS_CIANO={
+    'Darsena':{x:50,y:55},'Quattro Cavalli':{x:130,y:55},'Kennedy':{x:320,y:55},
+    'Centro Studi':{x:490,y:55},'Aeroporto':{x:640,y:55}
+};
+const POS_MAGENTA={
+    'Zona Industriale':{x:50,y:130},'Parco Marecchia':{x:140,y:130},'Borgo':{x:220,y:130},
+    'Arco':{x:290,y:130},'Centro Studi':{x:490,y:130},'Spiaggia Libera':{x:640,y:130}
+};
+const POS_GIALLA={
+    'Covignano':{x:640,y:205},'Parco della Cava':{x:465,y:205},'Arco':{x:290,y:205},
+    'Stazione':{x:210,y:205},'Quattro Cavalli':{x:130,y:205},'Molo':{x:50,y:205}
+};
+const LINEE_ORD={
+    ciano:['Darsena','Quattro Cavalli','Kennedy','Centro Studi','Aeroporto'],
+    magenta:['Zona Industriale','Parco Marecchia','Borgo','Arco','Centro Studi','Spiaggia Libera'],
+    gialla:['Covignano','Parco della Cava','Arco','Stazione','Quattro Cavalli','Molo']
+};
+
+function getPos(f,linea){
+    if(linea==='ciano')return POS_CIANO[f]||null;
+    if(linea==='magenta')return POS_MAGENTA[f]||null;
+    if(linea==='gialla')return POS_GIALLA[f]||null;
+    return null;
+}
+
+function scaloCubic(nome,x,y1,y2){
+    let dx=28;
+    if(nome==='Arco') dx=-32;
+    if(nome==='Quattro Cavalli') dx=42;
+    if(nome==='Centro Studi') dx=30;
+    const dy=y2-y1;
+    return {cp1x:x+dx,cp1y:y1+dy*0.28, cp2x:x+dx,cp2y:y2-dy*0.28};
+}
+
+function connectorPath(nome,lkA,lkB){
+    const pa=getPos(nome,lkA), pb=getPos(nome,lkB);
+    const c=scaloCubic(nome,pa.x,pa.y,pb.y);
+    return `M${pa.x},${pa.y} C${c.cp1x},${c.cp1y} ${c.cp2x},${c.cp2y} ${pb.x},${pb.y}`;
+}
+
+function renderMappa(){
+    const svg=document.getElementById('map-svg');
+
+    let percorso=null;
+    if(S.strada==='diretta'&&S.fermataDiretta){
+        percorso=calcolaPercorsoDiretto(S.capoEstratto,S.lineaEstratta,S.fermataDiretta);
+    } else if(S.strada==='cambio'&&S.cambioCapoArrivo&&S.cambioLineaArrivo){
+        percorso=calcolaPercorsoCambio(S.capoEstratto,S.lineaEstratta,S.cambioCapoArrivo,S.cambioLineaArrivo).percorsoBase;
+    }
+
+    const lineaAttiva=S.lineaEstratta;
+    const hasCambio=S.strada==='cambio'&&S.cambioLineaArrivo;
+    let html='';
+
+    // Griglia tecnica
+    [55,130,205].forEach(y=>{ html+=`<line x1="0" y1="${y}" x2="700" y2="${y}" stroke="rgba(255,255,255,.05)" stroke-width="1"/>`; });
+
+    // Tracciamento linee della metropolitana (visibili sempre, più luminose se attive)
+    ['ciano','magenta','gialla'].forEach(lk=>{
+        const fermate=LINEE_ORD[lk], colore=RETE[lk].colore;
+        const isActive= !lineaAttiva || lk===lineaAttiva||(hasCambio&&lk===S.cambioLineaArrivo);
+        const op=isActive?'1':'0.15';
+        for(let i=0;i<fermate.length-1;i++){
+            const p1=getPos(fermate[i],lk), p2=getPos(fermate[i+1],lk);
+            if(!p1||!p2)continue;
+            html+=`<line x1="${p1.x}" y1="${p1.y}" x2="${p2.x}" y2="${p2.y}" stroke="${colore}" stroke-width="4.5" opacity="${op}" stroke-linecap="round"/>`;
+        }
+    });
+
+    // Connettori di interscambio
+    const connStyle='fill="none" stroke="rgba(247,247,247,.5)" stroke-width="3.5" stroke-dasharray="1,8" stroke-linecap="round"';
+    html+=`<path d="${connectorPath('Centro Studi','ciano','magenta')}" ${connStyle}/>`;
+    html+=`<path d="${connectorPath('Quattro Cavalli','ciano','gialla')}" ${connStyle}/>`;
+    html+=`<path d="${connectorPath('Arco','magenta','gialla')}" ${connStyle}/>`;
+
+    // Stazioni Base (sempre visibili, evidenziate se attive)
+    ['ciano','magenta','gialla'].forEach(lk=>{
+        LINEE_ORD[lk].forEach((f,i)=>{
+            const p=getPos(f,lk); if(!p)return;
+            const isCapo=i===0||i===LINEE_ORD[lk].length-1;
+            const colore=RETE[lk].colore;
+            const isActive= !lineaAttiva || lk===lineaAttiva||(hasCambio&&lk===S.cambioLineaArrivo);
+            const op=isActive?'1':'0.15';
+            if(isCapo) html+=`<circle cx="${p.x}" cy="${p.y}" r="6" fill="${colore}" stroke="#1d1d1b" stroke-width="1.5" opacity="${op}"/>`;
+            else html+=`<circle cx="${p.x}" cy="${p.y}" r="4" fill="#1d1d1b" stroke="${colore}" stroke-width="2.5" opacity="${op}"/>`;
+        });
+    });
+
+    // Nomi stazioni ed etichette
+    ['ciano','magenta','gialla'].forEach(lk=>{
+        const isActive= !lineaAttiva || lk===lineaAttiva||(hasCambio&&lk===S.cambioLineaArrivo);
+        if(!isActive)return;
+        LINEE_ORD[lk].forEach((f,i)=>{
+            const p=getPos(f,lk); if(!p)return;
+            const words=f.toUpperCase().split(' ');
+            const above=(lk==='ciano');
+            if(words.length>1){
+                const y0=above?p.y-22:p.y+15;
+                html+=`<text x="${p.x}" y="${y0}" font-family="Inter,sans-serif" font-size="7.5" font-weight="900" fill="#f7f7f7" text-anchor="middle" opacity="0.85" letter-spacing="0.08em"><tspan x="${p.x}" dy="0">${words[0]}</tspan><tspan x="${p.x}" dy="9.5">${words.slice(1).join(' ')}</tspan></text>`;
+            } else {
+                const y0=above?p.y-14:p.y+17;
+                html+=`<text x="${p.x}" y="${y0}" font-family="Inter,sans-serif" font-size="7.5" font-weight="900" fill="#f7f7f7" text-anchor="middle" opacity="0.85" letter-spacing="0.08em">${words[0]}</text>`;
+            }
+        });
+    });
+
+    // EVIDENZIAZIONE PERCORSO ATTIVO SELEZIONATO
+    if(percorso&&percorso.length>=2){
+        for(let i=0;i<percorso.length-1;i++){
+            const a=percorso[i], b=percorso[i+1];
+            const pa=getPos(a.nome,a.linea), pb=getPos(b.nome,b.linea);
+            if(!pa||!pb)continue;
+            const isInterscambio=a.tipo&&b.tipo&&a.tipo.indexOf('scalo')===0&&b.tipo.indexOf('scalo')===0&&a.nome===b.nome;
+            if(isInterscambio){
+                const d=connectorPath(a.nome,a.linea,b.linea);
+                html+=`<path d="${d}" fill="none" stroke="white" stroke-width="7" opacity="0.4" stroke-linecap="round"/>`;
+                html+=`<path d="${d}" fill="none" stroke="${RETE[b.linea].colore}" stroke-width="4.5" stroke-linecap="round"/>`;
+            } else {
+                const colore=RETE[a.linea].colore;
+                html+=`<line x1="${pa.x}" y1="${pa.y}" x2="${pb.x}" y2="${pb.y}" stroke="white" stroke-width="7" opacity="0.4" stroke-linecap="round"/>`;
+                html+=`<line x1="${pa.x}" y1="${pa.y}" x2="${pb.x}" y2="${pb.y}" stroke="${colore}" stroke-width="4.5" stroke-linecap="round"/>`;
+            }
+        }
+
+        const fermataEvid=S.strada==='cambio'?S.cambioFermata:S.strada==='diretta'?S.fermataDiretta:null;
+
+        percorso.forEach(stop=>{
+            const p=getPos(stop.nome,stop.linea); if(!p)return;
+            const isCapo=stop.tipo==='capo';
+            const isScalo=stop.tipo&&stop.tipo.indexOf('scalo')===0;
+            const isSel=stop.nome===fermataEvid&&stop.tipo==='stop';
+            const colore=RETE[stop.linea].colore;
+            if(isScalo){
+                html+=`<circle cx="${p.x}" cy="${p.y}" r="9.5" fill="#ff2222" stroke="white" stroke-width="2"/>`;
+                html+=`<text x="${p.x}" y="${p.y+0.5}" font-family="Inter,sans-serif" font-size="7" font-weight="900" fill="white" text-anchor="middle" dominant-baseline="middle">S</text>`;
+            } else if(isCapo){
+                html+=`<circle cx="${p.x}" cy="${p.y}" r="9" fill="${colore}" stroke="white" stroke-width="2"/>`;
+                if(stop.nome===S.capoEstratto) html+=`<circle cx="${p.x}" cy="${p.y}" r="14" fill="none" stroke="white" stroke-width="2" opacity="0.75" stroke-dasharray="2,2"/>`;
+            } else if(isSel){
+                html+=`<circle cx="${p.x}" cy="${p.y}" r="8.5" fill="${colore}" stroke="white" stroke-width="2.5"/>`;
+            } else {
+                html+=`<circle cx="${p.x}" cy="${p.y}" r="5" fill="#1d1d1b" stroke="${colore}" stroke-width="2.5"/>`;
+            }
+        });
+
+        // ANIMAZIONE DEL TRENO LUNGO IL PERCORSO
+        let d='';
+        for(let i=0;i<percorso.length;i++){
+            const s=percorso[i], p=getPos(s.nome,s.linea); if(!p)continue;
+            if(d===''){ d=`M ${p.x},${p.y}`; }
+            else {
+                const prev=percorso[i-1];
+                const inter=prev&&prev.tipo&&s.tipo&&prev.tipo.indexOf('scalo')===0&&s.tipo.indexOf('scalo')===0&&prev.nome===s.nome;
+                if(inter){
+                    const c=scaloCubic(s.nome,p.x,getPos(prev.nome,prev.linea).y,p.y);
+                    d+=` C ${c.cp1x},${c.cp1y} ${c.cp2x},${c.cp2y} ${p.x},${p.y}`;
+                } else { d+=` L ${p.x},${p.y}`; }
+            }
+        }
+        const pathId='tp-'+Date.now();
+        html+=`<path id="${pathId}" d="${d}" fill="none" stroke="none"/>`;
+        html+=`<circle r="5.5" fill="white" stroke="#000" stroke-width="1.5" opacity="0.95">
+          <animateMotion dur="5.5s" repeatCount="indefinite" rotate="auto" calcMode="linear" keyPoints="0;1;0" keyTimes="0;0.5;1"><mpath href="#${pathId}"/></animateMotion>
+        </circle>`;
+    }
+
+    svg.innerHTML=html;
+}
+
+function renderBiglietto(){
+    const el=document.getElementById('biglietto');
+    const lk=S.lineaEstratta;
+    const isCambio=S.strada==='cambio'&&S.cambioCapoArrivo&&S.cambioLineaArrivo;
+    const isDiretto=S.strada==='diretta'&&S.fermataDiretta;
+    
+    if(!S.genere||(!isCambio&&!isDiretto)){ el.classList.add('hidden'); return; }
+
+    const acMap={ciano:'text-[#00c8d4]',magenta:'text-[#cc00a0]',gialla:'text-[#d4b800]'};
+    let percorso, grid;
+
+    if(isDiretto){
+        const l=RETE[lk];
+        const altroCapo=l.fermate[0]===S.capoEstratto?l.fermate[l.fermate.length-1]:l.fermate[0];
+        percorso=[{nome:S.capoEstratto,role:'Partenza'},{nome:S.fermataDiretta,role:'Tratto Intermedio'},{nome:altroCapo,role:'Arrivo'}];
+        
+        grid=`
+          <div class="border-l-2 border-stone-800 pl-2">
+            <div class="text-[8px] font-black text-stone-500 uppercase tracking-wider">Linea</div>
+            <div class="text-xs font-black uppercase tracking-tight ${acMap[lk]}">${RETE[lk].nome}</div>
+          </div>
+          <div class="border-l-2 border-stone-800 pl-2">
+            <div class="text-[8px] font-black text-stone-500 uppercase tracking-wider">Tema Sviluppo</div>
+            <div class="text-xs font-black uppercase text-stone-900 tracking-tight">${RETE[lk].tema}</div>
+          </div>
+          <div class="border-l-2 border-stone-800 pl-2">
+            <div class="text-[8px] font-black text-stone-500 uppercase tracking-wider">Genere</div>
+            <div class="text-xs font-black uppercase text-stone-900 tracking-tight whitespace-normal break-words">${S.genere}</div>
+          </div>
+          <div class="border-l-2 border-stone-800 pl-2">
+            <div class="text-[8px] font-black text-stone-500 uppercase tracking-wider">Tragitto</div>
+            <div class="text-xs font-black uppercase text-stone-600 tracking-tight">Diretto</div>
+          </div>`;
+    } else {
+        const lkTo=S.cambioLineaArrivo;
+        const {scaloNome,percorsoBase}=calcolaPercorsoCambio(S.capoEstratto,lk,S.cambioCapoArrivo,lkTo);
+        
+        percorso=percorsoBase
+          .filter(s=>s.tipo==='capo'||s.tipo==='scalo'||(s.tipo==='stop'&&s.nome===S.cambioFermata))
+          .map(s=>({
+            nome:s.nome,
+            role:s.tipo==='capo'?(s.nome===S.capoEstratto?'Partenza':'Arrivo'):s.tipo==='scalo'?'Cambio Linea':'Tratto Intermedio',
+            red:s.tipo==='scalo'
+          }));
+          
+        grid=`
+          <div class="border-l-2 border-stone-800 pl-2">
+            <div class="text-[8px] font-black text-stone-500 uppercase tracking-wider">Partenza</div>
+            <div class="text-xs font-black uppercase tracking-tight ${acMap[lk]}">${RETE[lk].nome.split(' ')[1]}</div>
+          </div>
+          <div class="border-l-2 border-stone-800 pl-2">
+            <div class="text-[8px] font-black text-stone-500 uppercase tracking-wider">Arrivo</div>
+            <div class="text-xs font-black uppercase tracking-tight ${acMap[lkTo]}">${RETE[lkTo].nome.split(' ')[1]}</div>
+          </div>
+          <div class="border-l-2 border-stone-800 pl-2">
+            <div class="text-[8px] font-black text-stone-500 uppercase tracking-wider">Genere</div>
+            <div class="text-xs font-black uppercase text-stone-900 tracking-tight whitespace-normal break-words">${S.genere}</div>
+          </div>
+          <div class="border-l-2 border-stone-800 pl-2">
+            <div class="text-[8px] font-black text-stone-500 uppercase tracking-wider">Scalo</div>
+            <div class="text-xs font-black uppercase text-red-600 tracking-tight">${scaloNome}</div>
+          </div>`;
+    }
+
+    document.getElementById('big-grid').innerHTML=grid;
+    document.getElementById('big-perc').innerHTML=`
+        <div class="text-[9px] font-black tracking-widest uppercase text-stone-500 mb-3">Itinerario Certificato</div>
+        <div class="flex flex-col sm:flex-row sm:items-center flex-wrap gap-2.5 sm:gap-2">
+            ${percorso.map((s,i)=> `
+                <div class="flex items-center gap-2">
+                    <div class="border border-stone-800 px-3 py-1 bg-stone-100 flex flex-col justify-center">
+                        <div class="text-[11px] font-black uppercase text-stone-900 tracking-tight leading-none">${s.nome}</div>
+                        <div class="text-[7px] font-black uppercase ${s.red?'text-red-600':'text-stone-500'} tracking-wider mt-0.5">${s.role}</div>
+                    </div>
+                    ${i<percorso.length-1?'<div class="text-stone-400 text-xs font-bold rotate-90 sm:rotate-0"><i data-lucide="arrow-right" class="w-3 h-3 text-stone-800"></i></div>':''}
+                </div>
+            `).join('')}
+        </div>
+        <div class="mt-4 text-[10px] text-stone-600 font-medium italic flex items-start gap-2 border-t border-stone-300 pt-3">
+            <i data-lucide="info" class="w-3.5 h-3.5 text-stone-500 shrink-0 mt-0.5"></i>
+            <span>Questo percorso è reversibile: il capolinea estratto può fungere sia da setting iniziale che da destinazione conclusiva del cortometraggio.</span>
+        </div>
+    `;
+
+    el.classList.remove('hidden');
+    el.style.animation='fadeIn 0.5s ease-out';
+    setTimeout(() => { lucide.createIcons(); }, 10);
+}
+
+function resetAll() {
+    S={capoEstratto:null,lineaEstratta:null,genere:null,strada:null,
+       fermataDiretta:null,cambioCapoArrivo:null,cambioLineaArrivo:null,cambioFermata:null};
+       
+    document.getElementById('strada-container').classList.add('opacity-40', 'pointer-events-none');
+    document.getElementById('generi-container').classList.add('opacity-40', 'pointer-events-none');
+    document.getElementById('capo-hero-box').classList.add('hidden');
+    document.getElementById('panel-diretta').classList.add('hidden');
+    document.getElementById('panel-cambio').classList.add('hidden');
+    document.getElementById('biglietto').classList.add('hidden');
+    
+    // Su mobile torna al primo tab in fase di reset
+    setMobileTab('config');
+    renderCapoSelect();
+    renderMappa();
+}
+
+// Intercetta ridimensionamenti per ricalcolare visualizzazioni mobile/desktop
+window.addEventListener('resize', () => {
+    setMobileTab(activeMobileTab);
+});
+
+/* Inizializzazione Completa dell'Applicazione */
+renderCapoSelect();
+renderMappa();
+setMobileTab('config');
+lucide.createIcons();
+</script>
+</body>
+</html>

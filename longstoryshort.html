@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Long Story Short - CDL</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            letter-spacing: -0.02em;
+            overflow-x: hidden;
+            background-color: #f7f7f7;
+        }
+
+        .bg-fixed-cover {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('CoverLSS.jpg'); 
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            z-index: -1;
+        }
+
+        .box-style {
+            border: 2px solid #000000;
+            position: relative;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .footer-logo { filter: brightness(0); }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f7f7f7; }
+        ::-webkit-scrollbar-thumb { background: #000000; border-radius: 10px; }
+
+        .content-wrapper {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body class="antialiased p-4 md:p-10">
+
+    <div class="bg-fixed-cover"></div>
+
+    <div class="content-wrapper">
+        <header class="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-10 mb-10 fade-in" style="animation-delay: 0.1s;">
+            
+            <!-- Logo Box -->
+            <div class="lg:col-span-5 flex items-start justify-center lg:justify-start">
+                <div class="relative">
+                    <img src="LongStoryShort.png" alt="Long Story Short Logo" 
+                         class="w-full max-w-[450px] h-auto object-contain"
+                         onerror="this.src='https://placehold.co/600x300/ffffff/000000?text=Long+Story+Short';">
+                </div>
+            </div>
+
+            <!-- Format Description Box -->
+            <div class="lg:col-span-7 box-style p-6 md:p-8 rounded-none flex flex-col justify-center bg-[#f7f7f7]/80 backdrop-blur-sm">
+                <div class="text-sm md:text-base leading-relaxed space-y-4 text-black font-medium">
+                    <p>
+                        <strong class="text-black">Long Story Short</strong> è una sfida a tempo di brevi opere cinematografiche organizzata dall’associazione riminese <span class="text-black font-bold">CDL APS</span>. 
+                        L’evento si colloca a metà tra un laboratorio collettivo e un tradizionale contest di cortometraggi a tempo.
+                    </p>
+                    <p>
+                        Long Story Short si svolgerà dal <span class="text-black font-bold">24 al 28 giugno 2026</span>. 
+                        L’evento di lancio, previsto per le 18:00 di mercoledì 24 al <span class="italic">Cinema Teatro Tiberio</span>, svelerà la cornice narrativa che farà da contenitore per lo sviluppo dei cortometraggi. 
+                        Dalle 20:30 partono ufficialmente i 4 giorni di produzione.
+                    </p>
+                    <p>
+                        La serata finale, prevista per il <span class="text-black font-bold">10 luglio 2026</span> presso la sala del Cinema Teatro Tiberio, consisterà in una restituzione pubblica dei migliori corti prodotti durante l’evento, con tanto di ospiti e premiazioni.
+                    </p>
+                </div>
+            </div>
+        </header>
+
+        <!-- Sezione link colorata -->
+        <section class="mb-10 fade-in space-y-4" style="animation-delay: 0.2s;">
+            <!-- Cornice Narrativa: Gialla -->
+            <a href="cornicenarrativa.html"
+               class="box-style p-6 flex items-center justify-between bg-yellow-300 hover:bg-black hover:text-white transition-all duration-300">
+                <span class="font-black uppercase tracking-widest text-sm md:text-lg">CORNICE NARRATIVA</span>
+                <i data-lucide="book-open" class="w-6 h-6"></i>
+            </a>
+
+            <!-- Regolamento: Azzurra -->
+            <a href="https://drive.google.com/file/d/13YoJdutoPZ742wfnNk6AIJzraTnp3wLo/view?usp=drive_link" target="_blank"
+               class="box-style p-6 flex items-center justify-between bg-sky-300 hover:bg-black hover:text-white transition-all duration-300">
+                <span class="font-black uppercase tracking-widest text-sm md:text-lg">REGOLAMENTO UFFICIALE</span>
+                <i data-lucide="arrow-right" class="w-6 h-6"></i>
+            </a>
+            
+            <!-- Serata Finale: Magenta -->
+            <a href="https://www.instagram.com/p/Dac5JHeCFbF/?img_index=1" target="_blank"
+               class="box-style p-6 flex items-center justify-between bg-fuchsia-400 hover:bg-black hover:text-white transition-all duration-300">
+                <span class="font-black uppercase tracking-widest text-sm md:text-lg">SERATA FINALE</span>
+                <i data-lucide="award" class="w-6 h-6"></i>
+            </a>
+        </section>
+
+        <!-- Sezione in basso: Torna alla home, Social, Footer -->
+        <div class="mt-8 flex flex-col items-center gap-8 mb-10">
+            <a href="index.html" class="group flex items-center gap-3 px-6 py-3 border-2 border-black bg-white text-black hover:bg-black hover:text-white transition-all duration-300 font-black uppercase text-xs tracking-widest">
+                <i data-lucide="arrow-left" class="w-4 h-4 transition-transform group-hover:-translate-x-1"></i>
+                Torna alla Home
+            </a>
+
+            <!-- Box Social (Nero) -->
+            <div class="flex flex-wrap items-center justify-center gap-8 text-black">
+                <a href="https://instagram.com/cdl_aps" target="_blank" class="hover:text-red-600 transition-all transform hover:scale-125">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-instagram"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
+                </a>
+                <a href="https://youtube.com/@cdlprods" target="_blank" class="hover:text-red-600 transition-all transform hover:scale-125">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-youtube"><path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 2-2 69.44 69.44 0 0 1 15 0 2 2 0 0 1 2 2 24.12 24.12 0 0 1 0 10 2 2 0 0 1-2 2 69.44 69.44 0 0 1-15 0 2 2 0 0 1-2-2z"/><polyline points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/></svg>
+                </a>
+                <a href="mailto:cdlprods@gmail.com" class="hover:text-red-600 transition-all transform hover:scale-125">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-mail"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                </a>
+            </div>
+
+            <footer class="mt-12 pb-4 flex flex-col justify-center items-center gap-2 fade-in">
+                <!-- CDL Logo and Copyright -->
+                <div class="flex flex-col justify-center items-center gap-2 text-[9px] font-black tracking-[0.2em] uppercase opacity-40 text-center leading-relaxed">
+                    <div class="flex justify-center items-center gap-2 text-black">
+                        <img src="Logo.png" alt="" class="h-2 w-auto footer-logo" 
+                             onerror="this.style.display='none'">
+                        <span>2026 CDL APS</span>
+                    </div>
+                </div>
+                <!-- Subtle/Faded Association details & Slogan -->
+                <div class="flex flex-col items-center text-[7.5px] md:text-[8px] font-medium text-center tracking-wide text-black opacity-[0.4] hover:opacity-100 transition-opacity duration-300 mt-2 select-none leading-relaxed max-w-[320px] sm:max-w-none gap-1">
+                    <span>Associazione di promozione del cinema giovane e indipendente</span>
+                    <div>
+                        CDL APS &bull; Viale Laurana 13, Rimini, 47921 &bull; CF: 91200080405
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>
