@@ -1,0 +1,16 @@
+# File di sistema (macOS / Windows)
+.DS_Store
+Thumbs.db
+
+# Editor
+*.swp
+*.swo
+
+# Dipendenze e build (in vista di una futura migrazione a un generatore di siti statici, es. Astro)
+node_modules/
+dist/
+.astro/
+
+# Variabili d'ambiente / segreti
+.env
+.env.local
