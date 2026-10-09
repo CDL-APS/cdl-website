@@ -35,10 +35,11 @@
   to = "/assets/img/film/:splat"
   status = 301
 
-# Il database dei film ha cambiato nome e posizione
+# Il database dei film ha cambiato nome e posizione: oggi i dati stanno su
+# Supabase, data/opere.json ne è la copia di riserva
 [[redirects]]
   from = "/dati_film.json"
-  to = "/data/film.json"
+  to = "/data/opere.json"
   status = 301
 
 # Immagini spostate dalla radice ad assets/

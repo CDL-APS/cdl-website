@@ -12,8 +12,8 @@ com'è.
   nelle pagine: erano la causa principale della duplicazione precedente.
 - **JS**: un file per pagina in `assets/js/`, caricato in fondo al `<body>`.
   Fanno eccezione due file comuni: `barra.js` (indicatore della barra, su
-  tutte le pagine) e `opere.js` (lettura di `data/film.json`, da caricare
-  prima dello script della pagina). Non ci sono moduli ES né bundler: le
+  tutte le pagine) e `dati.js` (lettura di opere ed eventi, da caricare prima
+  dello script della pagina). Non ci sono moduli ES né bundler: le
   funzioni sono globali.
 - **Identità visiva**: fondo chiaro, Montserrat 900 per i titoli, angoli
   squircle (vedi `components.css`). Tailwind e Lucide restano solo su
@@ -25,14 +25,22 @@ com'è.
 
 ## Punti da conoscere
 
-- `data/film.json` è l'unica fonte dei cortometraggi. Lo leggono
-  `cortoteca.html` (griglia), `opera.html` (scheda), `produzioni.html` (opere
-  con `"cdl": true`) e la home (casella "L'ultima produzione CDL"): sono gusci
-  riempiti a runtime, una modifica al JSON si riflette su tutte. `cdl` è un
-  booleano; fra due produzioni dello stesso anno conta come più recente quella
-  più in alto nel file.
-- In home l'ultimo evento e la terza notizia sono ancora scritti a mano in
-  `index.html`, così come la pagina `eventi.html`.
+- **Opere ed eventi stanno su Supabase** (progetto dell'organizzazione CDL
+  APS). Schema e dati iniziali sono in `supabase/migrations/`: ogni modifica
+  allo schema va aggiunta lì come nuovo file, oltre che applicata. Le regole
+  di accesso (RLS) danno a chiunque la sola lettura di ciò che è pubblicato;
+  scrive solo chi è in `privato.redattori`.
+- `dati.js` legge dalla Data API con la chiave pubblica (sta nel sito
+  apposta). Se Supabase non risponde, ripiega su `data/opere.json` e
+  `data/eventi.json`, copie di riserva con la stessa forma delle tabelle; le
+  immagini, se mancano nel bucket `immagini`, ripiegano su `assets/img/`.
+  La chiave segreta (*secret* / *service_role*) non va mai nel repository.
+- Le pagine che leggono i dati (home, cortoteca, produzioni, eventi, opera)
+  sono gusci riempiti a runtime. I testi arrivano da un modulo: nei modelli
+  HTML vanno sempre passati da `esc()`, e i collegamenti da
+  `indirizzoSicuro()`.
+- Fra due produzioni CDL dello stesso anno conta come più recente quella
+  inserita per ultima (id più alto).
 - `opera.html` legge il codice dell'opera dalla query string (`?film=codice`).
   Senza parametro mostra "Opera non trovata".
 - `netlify.toml` mantiene in vita gli indirizzi precedenti alla
@@ -51,9 +59,9 @@ com'è.
 ## Verifica prima di pubblicare
 
 ```bash
-python3 -m json.tool data/film.json > /dev/null   # il JSON è valido
+python3 -m json.tool data/opere.json > /dev/null  # la copia di riserva è valida
 python3 -m http.server 5500                        # poi controlla le pagine
 ```
 
-Aprire almeno home, cortoteca, produzioni e una scheda opera: sono le pagine
-che dipendono da `data/film.json`, e quindi le prime a rompersi.
+Aprire almeno home, cortoteca, produzioni, eventi e una scheda opera: sono le
+pagine che dipendono dal database, e quindi le prime a rompersi.

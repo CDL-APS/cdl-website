@@ -1,0 +1,233 @@
+[
+  {
+    "id": 1,
+    "codice": "relativita",
+    "titolo": "Relatività",
+    "anno": 2024,
+    "regista": "Francesco Pasquinelli",
+    "produzione": "CDL",
+    "produzione_cdl": true,
+    "generi": [
+      "thriller"
+    ],
+    "tagline": "I ruoli sono effimeri, la verità è un palcoscenico grottesco",
+    "sinossi": "Una serata fra amici accende un pensiero insolito, che porterà ad un'assurda conclusione.",
+    "note_regia": "Il primo vero corto CDL. Citando la recensione dell'amico e critico Alessandro Della Porta: 'La relatività dell’uomo, maschera costante che non vogliamo togliere, mai'",
+    "fotogramma": "opere/relativita.jpg",
+    "video_url": "https://www.youtube.com/watch?v=l_Hdi3E3j5U&t=102s",
+    "letterboxd_url": "https://letterboxd.com/film/relativity-2024/",
+    "sceneggiatura": "Francesco Pasquinelli",
+    "produttore": "Francesco Pasquinelli, Elena Piccari, Matteo G. Bernardi",
+    "fotografia": "Riccardo Montanini",
+    "montaggio": "Anna Bellini",
+    "colonna_sonora": "Matteo G. Bernardi",
+    "scenografia": "Elena Piccari, Simone Ruvioli",
+    "trucco": "Giulia Forti",
+    "costumi": "Elena Piccari, Simone Ruvioli",
+    "interpreti": [
+      {
+        "posizione": 1,
+        "nome": "Luca Canarecci",
+        "ruolo": "Alberto"
+      },
+      {
+        "posizione": 2,
+        "nome": "Eleonora Casoni",
+        "ruolo": "Caterina"
+      },
+      {
+        "posizione": 3,
+        "nome": "Enea Maestri",
+        "ruolo": "Claudio"
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "codice": "quartolivello",
+    "titolo": "Quarto Livello",
+    "anno": 2024,
+    "regista": "Francesco Pasquinelli",
+    "produzione": "CDL, Arkadia Studios",
+    "produzione_cdl": true,
+    "generi": [
+      "thriller",
+      "mistero"
+    ],
+    "tagline": "Il cinema vero?",
+    "sinossi": "Un regista insegue l'essenza del cinema, spingendosi oltre i limiti della creazione. Ma più si avvicina alla sua verità, più la realtà si confonde.",
+    "note_regia": "Quarto Livello è il risultato di un 'incidente controllato' tra influenze completamente casuali. In primis, l’ennesima visione di Funny Games e di altri capolavori del maestro Haneke, perché un po’ di sadismo non guasta; poi la passione viscerale per la rottura della quarta parete, ma senza troppi intellettualismi; infine, una serata all’Esperanto passata a guardare due poliziotti che cercavano di placare un tizio convinto che fumare indoor fosse un diritto inalienabile. Qualche altra chicca, qualche altra minuzia, ed eccolo qui.",
+    "fotogramma": "opere/quartolivello.jpg",
+    "video_url": null,
+    "letterboxd_url": "https://letterboxd.com/film/level-four/",
+    "sceneggiatura": "Francesco Pasquinelli",
+    "produttore": "Francesco Pasquinelli, Elena Piccari, Matteo G. Bernardi",
+    "fotografia": "Matteo Cucci",
+    "montaggio": "Luigiantonio Perri",
+    "colonna_sonora": "Matteo G. Bernardi",
+    "scenografia": "Elena Piccari",
+    "trucco": "Arianna Ceccarelli",
+    "costumi": null,
+    "interpreti": [
+      {
+        "posizione": 1,
+        "nome": "Luca Canarecci",
+        "ruolo": "Regista, Alberto di Lucca"
+      },
+      {
+        "posizione": 2,
+        "nome": "Angelica Giulianelli",
+        "ruolo": "Aiuto regia, Chiara Diavoletti"
+      },
+      {
+        "posizione": 3,
+        "nome": "Nicolò Gorza",
+        "ruolo": "Poliziotto"
+      },
+      {
+        "posizione": 4,
+        "nome": "Andrea Bombardi",
+        "ruolo": "Poliziotto"
+      },
+      {
+        "posizione": 5,
+        "nome": "Gian Luca Neri",
+        "ruolo": "Locatore"
+      },
+      {
+        "posizione": 6,
+        "nome": "Gianmarco Pironi",
+        "ruolo": "Attore"
+      },
+      {
+        "posizione": 7,
+        "nome": "Alice Ronci",
+        "ruolo": "Attrice"
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "codice": "versomare",
+    "titolo": "Verso Mare",
+    "anno": 2024,
+    "regista": "Gabriele Rattini",
+    "produzione": "Gabriele Rattini",
+    "produzione_cdl": false,
+    "generi": [
+      "drammatico"
+    ],
+    "tagline": "'Andiamo al mare. Si, andiamo al mare'",
+    "sinossi": "Un ragazzo è intenzionato a togliersi la vita. Riaffiora però il ricordo di una giornata del suo passato, stravolta da un singolare incontro.",
+    "note_regia": "Verso Mare nasce in un periodo di incertezze e dubbi paralizzanti. Analizza il viaggio per ritrovare se stessi, fidandosi del processo e apprezzando il raggiungimento dei piccoli traguardi. È un viaggio interiore attraverso paesaggi incontaminati, autentici templi naturali, che riflettono la ricerca di pace e si trasformano in palcoscenico di una possibile redenzione.",
+    "fotogramma": "opere/versomare.jpg",
+    "video_url": null,
+    "letterboxd_url": "https://letterboxd.com/film/towards-the-sea/",
+    "sceneggiatura": "Gabriele Rattini",
+    "produttore": "Gabriele Rattini",
+    "fotografia": "Lorenzo Dellapasqua",
+    "montaggio": "Gabriele Rattini",
+    "colonna_sonora": "Filippo Maria Cortellini",
+    "scenografia": null,
+    "trucco": null,
+    "costumi": null,
+    "interpreti": [
+      {
+        "posizione": 1,
+        "nome": "Luca Canarecci",
+        "ruolo": "Ragazzo"
+      },
+      {
+        "posizione": 2,
+        "nome": "Viola Dini",
+        "ruolo": "Ragazza"
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "codice": "luparaverde",
+    "titolo": "Lupara Verde",
+    "anno": 2025,
+    "regista": "Gabriele Rattini",
+    "produzione": null,
+    "produzione_cdl": false,
+    "generi": [
+      "thriller"
+    ],
+    "tagline": "È troppo tardi per riavere il Pianeta dalla nostra parte.",
+    "sinossi": "Due criminali devono sbarazzarsi di un cadavere, trasportandolo attraverso una foresta che sembra ostacolare il loro cammino.",
+    "note_regia": "Lupara Verde è un’allegoria del rapporto fra uomo e natura. Siamo stati, e continuiamo a essere, distruttori e portatori di morte nell’ecosistema. Forse oggi, le attenzioni quotidiane che riserviamo all’ambiente, non sono sufficienti a eliminare le sofferenze della natura e a cessare di subirne il malcontento.",
+    "fotogramma": "opere/luparaverde.jpg",
+    "video_url": null,
+    "letterboxd_url": "https://letterboxd.com/film/lupara-verde/",
+    "sceneggiatura": "Gabriele Rattini",
+    "produttore": "Gabriele Rattini",
+    "fotografia": "Enea Maestri",
+    "montaggio": "Gabriele Rattini",
+    "colonna_sonora": null,
+    "scenografia": null,
+    "trucco": null,
+    "costumi": null,
+    "interpreti": [
+      {
+        "posizione": 1,
+        "nome": "Luca Canarecci",
+        "ruolo": "Criminale giovane"
+      },
+      {
+        "posizione": 2,
+        "nome": "Andrea Bombardi",
+        "ruolo": "Criminale adulto"
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "codice": "andrea",
+    "titolo": "Andrea",
+    "anno": 2025,
+    "regista": "Gabriele Rattini",
+    "produzione": "LVDA Film",
+    "produzione_cdl": false,
+    "generi": [
+      "drammatico"
+    ],
+    "tagline": "È giusto restare, oppure partire?",
+    "sinossi": "Un violinista di provincia, fortemente legato alla madre malata, deve partire per la città.",
+    "note_regia": "L’opera è liberamente ispirata alla poesia “Eli e radghi” (Ali e radici) di Annalisa Teodorani: 'A t’ò niné / fin a fèt indurmantè / èli e ràdghi a l s’è invrucédi. / E t’una nòta pursì / da la nèbia l’è scap fùra / un pésgh in fiòur.'",
+    "fotogramma": "opere/andrea.jpg",
+    "video_url": null,
+    "letterboxd_url": "https://letterboxd.com/film/andrea-2025-1/",
+    "sceneggiatura": "Gabriele Rattini, Alessio Petrillo, Laura Caminati, Rebecca Renzi, Simona Bussi, Thomas Calisesi, Myriam Mosca, Andrea Bombardi",
+    "produttore": "Alessio Petrillo",
+    "fotografia": "Matteo Cucci",
+    "montaggio": "Gabriele Rattini",
+    "colonna_sonora": null,
+    "scenografia": "Thomas Calisesi",
+    "trucco": "Rebecca Renzi, Simona Bussi",
+    "costumi": "Rebecca Renzi, Simona Bussi",
+    "interpreti": [
+      {
+        "posizione": 1,
+        "nome": "Andrea Bombardi",
+        "ruolo": "Andrea"
+      },
+      {
+        "posizione": 2,
+        "nome": "Laura Caminati",
+        "ruolo": "Mamma"
+      },
+      {
+        "posizione": 3,
+        "nome": "Myriam Mosca",
+        "ruolo": "Ragazza della città"
+      },
+      {
+        "posizione": 4,
+        "nome": "Thomas Calisesi",
+        "ruolo": "Andrea da ragazzo"
+      }
+    ]
+  }
+]

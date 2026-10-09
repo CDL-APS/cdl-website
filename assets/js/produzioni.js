@@ -2,8 +2,8 @@
    PRODUZIONI — elenco delle opere prodotte da CDL.
 
    Come la Cortoteca, la pagina non contiene le opere nell'HTML: tiene quelle
-   con "cdl": true in data/film.json (vedi opere.js) e le elenca dalla più
-   recente.
+   prodotte da CDL (produzione_cdl nel database, vedi dati.js) e le elenca
+   dalla più recente.
    ========================================================================== */
 
 const ICONA_ELENCO =
@@ -17,10 +17,11 @@ async function initProduzioni() {
 
     produzioni.forEach((opera) => {
       const li = document.createElement('li');
+      const dati = [opera.regista, opera.anno, opera.produzione].filter(Boolean).map(esc).join(' &bull; ');
       li.innerHTML = `
-        <a href="opera.html?film=${opera.codice}">
-          <span class="elenco-titolo">${opera.titolo}</span>
-          <span class="elenco-dati">${opera.regista} &bull; ${opera.anno} &bull; ${opera.produzione}</span>
+        <a href="opera.html?film=${encodeURIComponent(opera.codice)}">
+          <span class="elenco-titolo">${esc(opera.titolo)}</span>
+          <span class="elenco-dati">${dati}</span>
           ${ICONA_ELENCO}
         </a>
       `;

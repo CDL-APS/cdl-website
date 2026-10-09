@@ -1,10 +1,9 @@
 /* ==========================================================================
    CORTOTECA — griglia delle opere.
 
-   La pagina non contiene le opere nell'HTML: le legge da data/film.json e
-   costruisce le card a runtime. Per aggiungere un corto basta quindi
-   modificare il JSON, senza toccare una riga di codice. La lettura del file
-   è in opere.js.
+   La pagina non contiene le opere nell'HTML: le legge dal database (vedi
+   dati.js) e costruisce le card a runtime. Un corto aggiunto o pubblicato
+   dalla pagina di gestione compare qui senza toccare il codice.
    ========================================================================== */
 
 const LOGO_CDL = 'assets/img/brand/logo-cdl.png';
@@ -59,26 +58,29 @@ function sortAndRender() {
 
   filtered.forEach((movie, index) => {
     const card = document.createElement('a');
-    card.href = movie.codice ? 'opera.html?film=' + movie.codice : '#';
+    card.href = 'opera.html?film=' + encodeURIComponent(movie.codice);
     card.className = 'riquadro opera';
     card.style.transitionDelay = `${0.03 * index}s`;
 
     const bollino =
-      movie.cdl === true
+      movie.produzione_cdl
         ? `<span class="bollino-cdl"><img src="${LOGO_CDL}" alt="Produzione CDL"></span>`
         : '';
 
+    const produzione = movie.produzione ? `<br>Produzione: ${esc(movie.produzione)}` : '';
+
     // Se il fotogramma manca resta il fondo neutro del riquadro
     card.innerHTML = `
-      <img class="foto" src="${movie.still || ''}" alt="" loading="lazy" onerror="this.remove()">
+      <img class="foto" alt="" loading="lazy">
       ${bollino}
       <span class="freccia" aria-hidden="true">${ICONA_FRECCIA}</span>
       <div class="chip">
-        <p class="chip-etichetta">${movie.anno}</p>
-        <h2 class="chip-titolo">${movie.titolo}</h2>
-        <p class="chip-meta">Regia di ${movie.regista}<br>Produzione: ${movie.produzione}</p>
+        <p class="chip-etichetta">${esc(movie.anno)}</p>
+        <h2 class="chip-titolo">${esc(movie.titolo)}</h2>
+        <p class="chip-meta">Regia di ${esc(movie.regista)}${produzione}</p>
       </div>
     `;
+    mostraImmagine(card.querySelector('.foto'), movie.fotogramma);
 
     grid.insertBefore(card, addCard);
     setTimeout(() => card.classList.add('is-visibile'), 50);

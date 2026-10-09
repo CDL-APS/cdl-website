@@ -1,0 +1,15 @@
+[
+  {
+    "id": 1,
+    "codice": "long-story-short-2026",
+    "titolo": "Long Story Short 2026",
+    "data_inizio": "2026-06-24",
+    "data_fine": "2026-07-10",
+    "luogo": "Cinema Teatro Tiberio",
+    "riassunto": "Produzione dal 24 al 28 giugno 2026 • Serata finale 10 luglio 2026, Cinema Teatro Tiberio",
+    "descrizione": "Long Story Short è una sfida a tempo di brevi opere cinematografiche organizzata dall'associazione riminese CDL APS. L'evento si colloca a metà tra un laboratorio collettivo e un tradizionale contest di cortometraggi a tempo.",
+    "copertina": "eventi/lss-2026-copertina.jpg",
+    "miniatura": "eventi/lss-2026-miniatura.jpg",
+    "pagina": "longstoryshort.html"
+  }
+]
