@@ -1,116 +1,614 @@
 /* ==========================================================================
    COMPONENTS — elementi grafici che ricorrono su più pagine.
    Se una regola serve a una sola pagina, va in css/pages/, non qui.
+
+   L'identità è quella della nuova home: fondo chiaro, angoli squircle,
+   superfici in vetro. `corner-shape: squircle` trasforma un border-radius in
+   una superellisse; dove il browser non la conosce resta il border-radius
+   normale, cioè un angolo arrotondato: il risultato peggiora, non si rompe.
    ========================================================================== */
 
+/* Tutte le superfici curve del sito. La regola sta in un posto solo così la
+   forma resta la stessa dappertutto. */
+.barra,
+.indicatore,
+.voce--altrove,
+.riquadro,
+.chip,
+.freccia,
+.btn,
+.rimando,
+.da-scrivere,
+.scheda,
+.campo,
+.scelta,
+.indietro {
+  corner-shape: squircle;
+}
+
 /* --------------------------------------------------------------------------
-   Bordo "bento": la cornice bianca che definisce quasi ogni riquadro del sito
+   Barra di navigazione: capsula in vetro che galleggia sulla pagina.
+   Il contenuto le scorre sotto e lo sfocamento lo mostra sfumato.
+   L'indicatore lo muove assets/js/barra.js.
    -------------------------------------------------------------------------- */
-.bento-border {
-  border: 2px solid var(--cdl-white);
+.barra {
+  position: fixed;
+  top: var(--barra-top);
+  left: var(--barra-top);
+  right: var(--barra-top);
+  z-index: 100;
+  max-width: 1180px;
+  margin: 0 auto;
+  height: var(--barra-h);
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  gap: 0.4rem;
+  padding: 6px;
+  border-radius: 999px;
+  background: rgba(247, 247, 247, 0.6);
+  backdrop-filter: blur(22px) saturate(180%);
+  -webkit-backdrop-filter: blur(22px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.65);
+  box-shadow:
+    0 10px 30px rgba(29, 29, 27, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85);
+}
+
+.barra-gruppo {
   position: relative;
+  display: flex;
+  align-items: stretch;
 }
 
-/* Variante sottile, usata sulle card della pagina vantaggi */
-.bento-border--thin {
-  border: 1px solid rgba(255, 255, 255, 0.4);
+/* Indicatore: una bolla di vetro neutra, senza gradienti colorati. Compare
+   solo su Produzioni ed Eventi: sulla home la voce è il logo, e lì la bolla
+   si spegne (ci pensa il JS a togliere .indicatore--visibile). */
+.indicatore {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  box-shadow:
+    0 2px 10px rgba(29, 29, 27, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95);
+  opacity: 0;
+  pointer-events: none;
 }
 
-/* Ombra netta stile fumetto */
-.comic-shadow {
-  filter: drop-shadow(18px 18px 0px #000000);
+.indicatore--visibile { opacity: 1; }
+
+/* La transizione si accende dopo il primo posizionamento: all'apertura
+   l'indicatore è già sotto la voce giusta, non ci arriva scorrendo. */
+.indicatore--pronto {
+  transition: transform 0.45s var(--ease-out), width 0.45s var(--ease-out),
+    opacity 0.25s var(--ease-out);
 }
+
+.voce {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0 1.1rem;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10.5px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  white-space: nowrap;
+  color: var(--testo-tenue);
+  transition: color 0.25s var(--ease-out);
+}
+
+.voce:hover,
+.voce.is-active { color: var(--cdl-dark); }
+
+/* Misure esplicite (il file è 300x116): così la voce ha la sua larghezza già
+   al primo disegno e l'indicatore non la misura sbagliata mentre l'immagine
+   è ancora in arrivo. */
+.voce--logo img {
+  width: 34px;
+  height: 13px;
+  filter: brightness(0);
+  opacity: 0.65;
+  transition: opacity 0.25s var(--ease-out);
+}
+
+.voce--logo:hover img,
+.voce--logo.is-active img { opacity: 1; }
+
+/* Cortoteca: piena e staccata, perché è il format di piattaforma e non una
+   pagina come le altre */
+.voce--altrove {
+  align-self: center;
+  gap: 0.5rem;
+  padding: 0.65rem 1.1rem;
+  border-radius: 999px;
+  background: var(--cdl-dark);
+  color: var(--cdl-white);
+  transition: background-color 0.3s var(--ease-out), color 0.3s var(--ease-out),
+    transform 0.3s var(--ease-out);
+}
+
+.voce--altrove:hover {
+  background: var(--cdl-red);
+  color: var(--cdl-white);
+  transform: translateY(-1px);
+}
+
+/* Dentro la Cortoteca (griglia e schede opera) il pulsante diventa lavanda:
+   segna dove ci si trova come fa la bolla per le altre voci */
+.voce--altrove.is-active {
+  background: var(--cdl-lavender);
+  color: var(--cdl-dark);
+}
+
+.voce--altrove svg { width: 12px; height: 12px; }
+
+/* Il triangolo del play a sinistra dice che dietro c'è una piattaforma di
+   streaming; la freccia a destra che si esce da questa pagina. */
+.voce--altrove .icona-play { width: 11px; height: 11px; }
 
 /* --------------------------------------------------------------------------
-   Hover rosso: lo stato attivo condiviso dalle card cliccabili.
-   Gli !important servono a scavalcare le utility Tailwind applicate inline.
+   Impianto delle sezioni
    -------------------------------------------------------------------------- */
-.hover-red:hover {
-  background-color: var(--cdl-red) !important;
-  color: var(--cdl-white) !important;
-  border-color: var(--cdl-white) !important;
+.sezione {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: clamp(2.5rem, 6vw, 5rem) 1.5rem;
+  scroll-margin-top: calc(var(--barra-h) + var(--barra-top) * 2);
 }
 
-/* --------------------------------------------------------------------------
-   Card generica su fondo scuro (cortoteca, vantaggi)
-   -------------------------------------------------------------------------- */
-.card-dark {
-  border-left: 6px solid var(--cdl-lavender);
-  background-color: rgba(0, 0, 0, 0.65);
-  backdrop-filter: blur(8px);
-  transition: all 0.3s ease;
-  overflow: hidden;
+/* Prima sezione di una pagina interna: il titolo parte poco sotto la barra,
+   senza il respiro pieno di sezione */
+.sezione--prima { padding-top: clamp(2rem, 4.5vw, 3.5rem); }
+
+.due-colonne {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr);
+  gap: clamp(1.5rem, 5vw, 4rem);
+  align-items: start;
 }
 
-.card-link {
-  cursor: pointer;
-  transition: all 0.3s ease;
+.due-colonne h1,
+.due-colonne h2 { font-size: clamp(1.85rem, 4.6vw, 3.25rem); }
+
+.corpo {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-width: 62ch;
+  font-size: 1.02rem;
+  line-height: 1.65;
+  color: var(--testo-tenue);
 }
 
-.card-link:hover {
-  border-color: var(--cdl-red) !important;
-  border-left-color: var(--cdl-red) !important;
-  transform: translateY(-4px);
-  background-color: rgba(0, 0, 0, 0.8) !important;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+.corpo p:first-child { color: var(--cdl-dark); font-size: 1.12rem; }
+
+.corpo strong { color: var(--cdl-dark); font-weight: 700; }
+
+/* Corpo del testo sulle superfici scure */
+.corpo--chiaro { color: rgba(247, 247, 247, 0.92); }
+
+.corpo--chiaro p:first-child { color: var(--cdl-white); }
+
+.corpo--chiaro strong { color: var(--cdl-white); }
+
+/* Testo ancora da scrivere: si vede che è un promemoria, non copy */
+.da-scrivere {
+  padding: 0.85rem 1.1rem;
+  border-radius: var(--r-s);
+  background: rgba(185, 187, 248, 0.22);
+  font-size: 0.9rem !important;
+  font-style: italic;
+  color: var(--testo-tenue) !important;
 }
 
-/* --------------------------------------------------------------------------
-   Etichette tecniche (usate nella scheda opera e nei titoletti di sezione)
-   -------------------------------------------------------------------------- */
-.label-tech {
+.corpo--chiaro .da-scrivere {
+  background: rgba(185, 187, 248, 0.16);
+  color: rgba(247, 247, 247, 0.92) !important;
+}
+
+/* Etichetta tecnica: maiuscoletto spaziato sopra titoli e dati */
+.etichetta {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-family: 'Montserrat', sans-serif;
   font-size: 9px;
   font-weight: 900;
   text-transform: uppercase;
   letter-spacing: 0.2em;
-  color: var(--cdl-lavender);
-  margin-bottom: 2px;
-  display: block;
-  opacity: 0.8;
+  color: var(--testo-medio);
 }
 
-.value-tech {
-  font-size: 13px;
-  font-weight: 700;
+/* Titoletto di gruppo, con un filetto che corre fino al margine */
+.titoletto {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: clamp(2.5rem, 5vw, 3.5rem) 0 var(--spazio);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10.5px;
+  font-weight: 900;
   text-transform: uppercase;
-  line-height: 1.2;
+  letter-spacing: 0.2em;
+  color: var(--testo-medio);
+}
+
+.titoletto::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--riga);
+}
+
+/* Ritorno alla pagina madre (scheda opera → Cortoteca, cornice → LSS) */
+.indietro {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: clamp(1.25rem, 3vw, 2rem);
+  padding: 0.55rem 0.9rem 0.55rem 0.7rem;
+  border-radius: 999px;
+  border: 1px solid var(--riga);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 9.5px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--testo-medio);
+  transition: color 0.25s var(--ease-out), border-color 0.25s var(--ease-out),
+    background-color 0.25s var(--ease-out);
+}
+
+.indietro svg { width: 13px; height: 13px; transition: transform 0.3s var(--ease-out); }
+
+.indietro:hover {
+  color: var(--cdl-dark);
+  border-color: var(--cdl-dark);
+  background: rgba(185, 187, 248, 0.22);
+}
+
+.indietro:hover svg { transform: translateX(-2px); }
+
+/* --------------------------------------------------------------------------
+   Pulsanti
+   -------------------------------------------------------------------------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.8rem 1.3rem;
+  border-radius: var(--r-s);
+  border: 2px solid var(--cdl-dark);
+  background: none;
+  color: var(--cdl-dark);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10.5px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  cursor: pointer;
+  transition: background-color 0.3s var(--ease-out), color 0.3s var(--ease-out),
+    border-color 0.3s var(--ease-out), transform 0.3s var(--ease-out);
+}
+
+.btn:hover {
+  background: var(--cdl-red);
+  border-color: var(--cdl-red);
+  color: var(--cdl-white);
+  transform: translateY(-2px);
+}
+
+.btn--pieno { background: var(--cdl-dark); color: var(--cdl-white); }
+
+/* Variante per le superfici scure */
+.btn--chiaro { border-color: var(--cdl-white); color: var(--cdl-white); }
+
+.btn--chiaro.btn--pieno { background: var(--cdl-white); color: var(--cdl-dark); }
+
+.azioni { display: flex; flex-wrap: wrap; gap: 0.7rem; margin-top: 1.6rem; }
+
+/* Rimando secondario: presente ma non urlato */
+.rimando {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  text-decoration: underline;
+  text-underline-offset: 5px;
+  transition: color 0.25s var(--ease-out);
+}
+
+.rimando:hover { color: var(--cdl-red); }
+
+/* --------------------------------------------------------------------------
+   Riquadro: fotografia a piena superficie, quasi pulita; le scritte stanno su
+   una lastra di vetro chiaro in basso, non su un mascherone.
+   -------------------------------------------------------------------------- */
+.riquadro {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: 360px;
+  padding: 0;
+  overflow: hidden;
+  border-radius: var(--r-l);
+  background: rgba(29, 29, 27, 0.06);
+  transition: box-shadow 0.4s var(--ease-out);
+}
+
+/* Niente translate sul contenitore al passaggio del mouse: spostare un
+   elemento che ritaglia i figli con corner-shape lo manda su un livello
+   composito a parte, e per la durata dell'animazione gli angoli tornano
+   quadrati. Si anima l'ombra e la fotografia dentro, che non ritagliano
+   nulla. */
+a.riquadro:hover {
+  box-shadow: 0 16px 40px rgba(29, 29, 27, 0.16);
+}
+
+.riquadro .foto {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+  transform: scale(1.02);
+  transition: transform 0.7s var(--ease-out);
+}
+
+a.riquadro:hover .foto { transform: scale(1.07); }
+
+/* Freccia: pastiglia di vetro nell'angolo, al posto della riga "vai a…" */
+.freccia {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 999px;
+  background: rgba(247, 247, 247, 0.72);
+  backdrop-filter: blur(14px) saturate(150%);
+  -webkit-backdrop-filter: blur(14px) saturate(150%);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  color: var(--cdl-dark);
+  transition: transform 0.35s var(--ease-out), background-color 0.35s var(--ease-out);
+}
+
+.freccia svg { width: 16px; height: 16px; }
+
+a.riquadro:hover .freccia,
+a.scheda:hover .freccia {
+  transform: translate(2px, -2px);
+  background: var(--cdl-white);
+}
+
+/* Lastra di vetro con le scritte. Il fondo chiaro al 78% più lo sfocamento
+   tengono il testo scuro leggibile su qualunque fotogramma, chiaro o scuro. */
+.chip {
+  position: relative;
+  z-index: 2;
+  margin: 12px;
+  padding: 0.95rem 1.05rem;
+  border-radius: var(--r-m);
+  background: rgba(247, 247, 247, 0.78);
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  color: var(--cdl-dark);
+}
+
+.chip-etichetta {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-bottom: 0.45rem;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 9px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--testo-medio);
+}
+
+.chip-titolo {
+  font-family: 'Montserrat', sans-serif;
+  font-size: clamp(1.05rem, 2vw, 1.3rem);
+  font-weight: 900;
+  text-transform: uppercase;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.chip-meta {
+  margin-top: 0.4rem;
+  font-size: 0.78rem;
+  line-height: 1.4;
+  color: var(--testo-chip);
+}
+
+/* Riquadro ancora da riempire: cornice tratteggiata, nessuna foto */
+.riquadro--vuoto {
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  min-height: 260px;
+  padding: 1.5rem;
+  text-align: center;
+  background: none;
+  border: 2px dashed var(--riga);
+}
+
+.riquadro--vuoto span {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 9.5px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--testo-tenue);
+}
+
+a.riquadro--vuoto { transition: border-color 0.3s var(--ease-out), background-color 0.3s var(--ease-out); }
+
+a.riquadro--vuoto:hover {
+  border-color: var(--cdl-lavender);
+  background: rgba(185, 187, 248, 0.16);
+  box-shadow: none;
 }
 
 /* --------------------------------------------------------------------------
-   Icone social nel piede pagina
+   Scheda: superficie piatta per testo e dati, senza fotografia. È il
+   fratello del riquadro quando non c'è un'immagine da mostrare.
    -------------------------------------------------------------------------- */
+.scheda {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: clamp(1.1rem, 2vw, 1.5rem);
+  border-radius: var(--r-m);
+  border: 1px solid var(--riga);
+  background: rgba(29, 29, 27, 0.025);
+}
+
+a.scheda {
+  transition: background-color 0.3s var(--ease-out), border-color 0.3s var(--ease-out),
+    box-shadow 0.4s var(--ease-out);
+}
+
+a.scheda:hover {
+  background: rgba(185, 187, 248, 0.28);
+  border-color: transparent;
+  box-shadow: 0 16px 40px rgba(29, 29, 27, 0.1);
+}
+
+.scheda .freccia { top: 12px; right: 12px; width: 34px; height: 34px; }
+
+/* Icona di testa, al tratto come quelle della barra */
+.scheda-icona { margin-bottom: 0.4rem; }
+
+.scheda-icona svg { width: 34px; height: 34px; stroke-width: 1.6; }
+
+.scheda-titolo {
+  font-family: 'Montserrat', sans-serif;
+  font-size: clamp(1rem, 1.8vw, 1.2rem);
+  font-weight: 900;
+  text-transform: uppercase;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+}
+
+.scheda-testo { font-size: 0.9rem; line-height: 1.55; color: var(--testo-tenue); }
+
+/* --------------------------------------------------------------------------
+   Pallino rosso lampeggiante
+   -------------------------------------------------------------------------- */
+.rec-dot {
+  width: 6px;
+  height: 6px;
+  background-color: var(--cdl-red);
+  border-radius: 50%;
+  display: inline-block;
+  flex: 0 0 auto;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(1.2); }
+}
+
+/* --------------------------------------------------------------------------
+   Piede
+   -------------------------------------------------------------------------- */
+.piede {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 2.5rem 1.5rem 3rem;
+  border-top: 1px solid var(--riga);
+}
+
+.piede-social { display: flex; gap: 1.5rem; }
+
+.piede-social svg { width: 20px; height: 20px; }
+
+.piede-riga {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 9px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--testo-tenue);
+}
+
+.piede-riga img { height: 8px; width: auto; }
+
+.piede-dati { text-align: center; font-size: 8px; line-height: 1.7; opacity: 0.4; }
+
+/* Icone social */
 .social-link {
   display: inline-flex;
   padding: 6px;
   transition: transform 0.3s var(--ease-out), color 0.3s var(--ease-out);
 }
 
+.social-link svg { width: 20px; height: 20px; }
+
 .social-link:hover {
   color: var(--cdl-red);
   transform: scale(1.25);
 }
 
-/* --------------------------------------------------------------------------
-   Logo nel piede pagina.
-   Il logo originale è a colori: viene reso monocromatico via filtro, così lo
-   stesso file serve sia il fondo scuro sia quello chiaro.
-   -------------------------------------------------------------------------- */
-.footer-logo {
-  filter: brightness(0) invert(1);
-  opacity: 0.8;
-}
-
-/* Sulle pagine a fondo chiaro il logo va nero anziché bianco */
+/* Il logo originale è a colori: il filtro lo porta a nero pieno */
 .footer-logo--dark {
   filter: brightness(0);
   opacity: 1;
 }
 
 /* --------------------------------------------------------------------------
-   Barra di scorrimento.
-   Larghezza comune; i colori li imposta il foglio della singola pagina,
-   perché il sito alterna fondi scuri e fondi chiari.
+   Adattamenti
    -------------------------------------------------------------------------- */
-::-webkit-scrollbar {
-  width: 6px;
+@media (max-width: 1000px) {
+  .due-colonne { grid-template-columns: 1fr; }
 }
+
+@media (max-width: 620px) {
+  :root { --barra-h: 50px; --r-l: 24px; }
+  .barra { padding: 5px; gap: 0.2rem; }
+  .voce { padding: 0 0.55rem; font-size: 9.5px; letter-spacing: 0.06em; }
+  .voce--altrove { padding: 0.55rem 0.7rem; }
+  .sezione { padding-left: 1rem; padding-right: 1rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .indicatore--pronto { transition: none; }
+  .rec-dot { animation: none; }
+}
+
+/* Barra di scorrimento su fondo chiaro */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.05); }
+::-webkit-scrollbar-thumb { background: var(--cdl-dark); }

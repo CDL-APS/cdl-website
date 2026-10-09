@@ -69,6 +69,9 @@
 # Le immagini e i fogli di stile hanno nomi stabili: si possono tenere in cache
 # a lungo nel browser di chi visita. Se un'immagine cambia contenuto ma non
 # nome, va rinominata, altrimenti i visitatori abituali vedranno la vecchia.
+# Per CSS e JS le pagine aggiungono una versione all'indirizzo
+# (base.css?v=2026-10-09): quando li modifichi, aggiorna la data in tutte le
+# pagine, così il browser scarica la versione nuova.
 [[headers]]
   for = "/assets/*"
   [headers.values]

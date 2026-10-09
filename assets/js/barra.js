@@ -1,5 +1,5 @@
 /* ==========================================================================
-   NUOVA HOME — indicatore dello slider di navigazione.
+   BARRA — indicatore della barra di navigazione, comune a tutte le pagine.
 
    Le tre voci di sinistra (logo, Produzioni, Eventi) sono le pagine del sito
    nuovo: l'indicatore lavanda sta sotto quella in cui ci si trova — la marca
@@ -7,7 +7,8 @@
    per poi tornare al suo posto. Cortoteca è fuori dal gruppo: è il format di
    piattaforma, non una pagina come le altre.
 
-   Lo stesso file serve home-nuova.html, produzioni.html ed eventi.html.
+   Le pagine che non appartengono a nessuna delle tre voci (Cortoteca, schede
+   opera, vantaggi soci) non marcano nulla: l'indicatore resta spento.
    ========================================================================== */
 
 (function () {

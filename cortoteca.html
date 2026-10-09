@@ -9,112 +9,95 @@
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link rel="icon" type="image/png" href="assets/img/brand/favicon.png">
 
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
-
-    <link rel="stylesheet" href="assets/css/base.css">
-    <link rel="stylesheet" href="assets/css/components.css">
-    <link rel="stylesheet" href="assets/css/pages/cortoteca.css">
+    <link rel="stylesheet" href="assets/css/base.css?v=2026-10-09">
+    <link rel="stylesheet" href="assets/css/components.css?v=2026-10-09">
+    <link rel="stylesheet" href="assets/css/pages/cortoteca.css?v=2026-10-09">
 </head>
-<body class="antialiased p-6 md:p-12">
+<body>
 
-    <div class="bg-fixed-duotone"></div>
+    <nav class="barra" aria-label="Navigazione principale">
+        <div class="barra-gruppo">
+            <span class="indicatore" aria-hidden="true"></span>
 
-    <svg class="svg-filters" aria-hidden="true" focusable="false">
-        <filter id="burnt-bw-filter">
-            <feColorMatrix type="matrix" values="0.25 0.65 0.1 0 0
-                                                 0.25 0.65 0.1 0 0
-                                                 0.25 0.65 0.1 0 0
-                                                 0 0 0 1 0" />
-            <feComponentTransfer color-interpolation-filters="sRGB">
-                <feFuncR type="table" tableValues="0.0 0.4 1.0 1.6" />
-                <feFuncG type="table" tableValues="0.0 0.4 1.0 1.6" />
-                <feFuncB type="table" tableValues="0.0 0.4 1.0 1.6" />
-            </feComponentTransfer>
-        </filter>
-    </svg>
+            <a href="index.html" class="voce voce--logo" aria-label="Home">
+                <img src="assets/img/brand/logo-cdl.png" alt="CDL" onerror="this.replaceWith(document.createTextNode('CDL'))">
+            </a>
+            <a href="produzioni.html" class="voce">Produzioni</a>
+            <a href="eventi.html" class="voce">Eventi</a>
+        </div>
 
-    <div class="content-wrapper">
+        <a href="cortoteca.html" class="voce voce--altrove is-active" aria-current="page">
+            <svg class="icona-play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.14v13.72L19 12 8 5.14Z"/></svg>
+            Cortoteca
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h6"/></svg>
+        </a>
+    </nav>
 
-        <div class="flex flex-col md:flex-row md:justify-between md:items-end mb-6 gap-6 fade-in relative z-50">
-            <header>
-                <a href="index.html" class="inline-flex items-center gap-3 text-[11px] font-black uppercase tracking-[0.3em] hover:text-[--cdl-lavender] transition-colors mb-4 group text-white">
-                    <i data-lucide="arrow-left" class="w-4 h-4 group-hover:-translate-x-1 transition-transform"></i> Torna alla Home
-                </a>
-                <h1 class="text-4xl md:text-6xl font-black text-[--cdl-lavender] leading-none tracking-tighter uppercase">CORTOTECA</h1>
-            </header>
-
-            <div class="w-full md:w-auto">
-                <div class="search-container flex items-center gap-4 p-3 md:p-4 w-full md:min-w-[320px]">
-                    <i data-lucide="search" class="w-5 h-5 opacity-70"></i>
-                    <label for="db-search" class="sr-only">Cerca un'opera</label>
-                    <input type="text" id="db-search" placeholder="CERCA PER TITOLO, REGISTA O PRODUZIONE..." class="bg-transparent border-none opacity-100 outline-none font-black uppercase text-[10px] md:text-[9px] tracking-widest placeholder-black/40 w-full">
+    <main>
+        <section class="sezione sezione--prima">
+            <div class="due-colonne">
+                <h1>Cortoteca</h1>
+                <div class="corpo">
+                    <p>La Cortoteca di CDL è lo spazio dedicato alle opere dei soci di CDL APS che ne fanno richiesta, ideata per scoprire progetti di cinema indipendente e conoscere realtà del territorio tramite lo streaming direttamente sul sito.</p>
                 </div>
             </div>
-        </div>
 
-        <div class="mt-8 mb-10 fade-in opacity-90 w-full text-sm md:text-xl uppercase font-bold text-white text-justify relative z-50">
-            <p class="leading-relaxed tracking-normal">
-                La Cortoteca di CDL è lo spazio dedicato alle opere dei soci di CDL APS che ne fanno richiesta, ideata per scoprire progetti di cinema indipendente e conoscere realtà del territorio tramite lo streaming direttamente sul sito.
-            </p>
-        </div>
+            <!-- Ricerca e ordinamento: li legge assets/js/cortoteca.js -->
+            <div class="strumenti">
+                <label class="campo" for="db-search">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+                    <span class="sr-only">Cerca un'opera</span>
+                    <input type="search" id="db-search" placeholder="Cerca per titolo, regista o produzione" autocomplete="off">
+                </label>
 
-        <!-- Ordinamento: interruttore fra alfabetico e cronologico -->
-        <div class="flex items-center justify-start md:justify-end gap-6 mb-8 fade-in opacity-80 scale-90 origin-left md:origin-right">
-            <div class="flex items-center gap-2">
-                <i data-lucide="arrow-down-az" class="w-4 h-4"></i>
-                <span class="text-[10px] font-black uppercase tracking-widest">PER NOME</span>
+                <div class="ordine" role="group" aria-label="Ordina le opere">
+                    <input type="radio" name="ordine" id="ordine-anno" value="anno" checked>
+                    <label for="ordine-anno" class="scelta">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2v3"/><path d="M16 2v3"/><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/></svg>
+                        Per anno
+                    </label>
+                    <input type="radio" name="ordine" id="ordine-nome" value="nome">
+                    <label for="ordine-nome" class="scelta">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 16 4 4 4-4"/><path d="M7 20V4"/><path d="M20 8h-5"/><path d="M15 10V6.5a2.5 2.5 0 0 1 5 0V10"/><path d="M15 14h5l-5 6h5"/></svg>
+                        Per nome
+                    </label>
+                </div>
             </div>
 
-            <label class="switch">
-                <input type="checkbox" id="sort-toggle" aria-label="Ordina per anno" checked>
-                <span class="slider"></span>
-            </label>
+            <div id="movie-grid" class="griglia-opere">
+                <!-- Le card delle opere vengono inserite qui da assets/js/cortoteca.js -->
 
-            <div class="flex items-center gap-2">
-                <i data-lucide="calendar" class="w-4 h-4"></i>
-                <span class="text-[10px] font-black uppercase tracking-widest">PER ANNO</span>
+                <a href="vantaggi-tesseramento.html" id="add-card" class="riquadro riquadro--vuoto">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+                    <span>Vuoi la tua opera in Cortoteca?</span>
+                    <span class="invito">Entra in CDL</span>
+                </a>
             </div>
-        </div>
+        </section>
+    </main>
 
-        <main id="movie-grid" class="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 fade-in relative z-10" style="animation-delay: 0.2s;">
-            <!-- Le card delle opere vengono inserite qui da assets/js/cortoteca.js -->
-
-            <a href="vantaggi-tesseramento.html" id="add-card" class="bento-border aspect-square bg-black/40 backdrop-blur-md flex flex-col items-center justify-center p-4 text-center border-dashed opacity-50 group hover:opacity-100 transition-opacity order-last">
-                <i data-lucide="plus" class="w-8 h-8 text-[--cdl-lavender] mb-3 group-hover:rotate-90 transition-transform"></i>
-                <span class="text-[8px] md:text-[10px] font-black uppercase tracking-[0.1em] text-white">VUOI LA TUA OPERA SUL DATABASE?</span>
-                <span class="text-[7px] md:text-[8px] font-bold uppercase opacity-80 mt-2 tracking-widest text-[--cdl-lavender]">Entra in CDL</span>
-            </a>
-        </main>
-
-        <div class="mt-10 flex flex-wrap items-center justify-center gap-8 relative z-50">
-            <a href="https://instagram.com/cdl_aps" target="_blank" rel="noopener" aria-label="Instagram" class="social-link text-white">
+    <footer class="piede">
+        <div class="piede-social">
+            <a href="https://instagram.com/cdl_aps" target="_blank" rel="noopener" aria-label="Instagram" class="social-link">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
             </a>
-            <a href="https://youtube.com/@cdlprods" target="_blank" rel="noopener" aria-label="YouTube" class="social-link text-white">
+            <a href="https://youtube.com/@cdlprods" target="_blank" rel="noopener" aria-label="YouTube" class="social-link">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 2-2 69.44 69.44 0 0 1 15 0 2 2 0 0 1 2 2 24.12 24.12 0 0 1 0 10 2 2 0 0 1-2 2 69.44 69.44 0 0 1-15 0 2 2 0 0 1-2-2z"/><polyline points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/></svg>
             </a>
-            <a href="mailto:cdlprods@gmail.com" aria-label="Scrivici" class="social-link text-white">
+            <a href="mailto:cdlprods@gmail.com" aria-label="Scrivici" class="social-link">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
             </a>
         </div>
+        <div class="piede-riga">
+            <img src="assets/img/brand/logo-cdl.png" alt="" class="footer-logo--dark" onerror="this.style.display='none'">
+            <span>2026 CDL APS</span>
+        </div>
+        <p class="piede-dati">Associazione di promozione del cinema giovane e indipendente<br>
+        CDL APS &bull; Viale Laurana 13, Rimini, 47921 &bull; CF: 91200080405</p>
+    </footer>
 
-        <footer class="mt-12 pb-4 flex flex-col justify-center items-center gap-2 fade-in">
-            <div class="flex flex-col justify-center items-center gap-2 text-[9px] font-black tracking-[0.2em] uppercase opacity-40 text-center leading-relaxed">
-                <div class="flex justify-center items-center gap-2">
-                    <img src="assets/img/brand/logo-cdl.png" alt="" class="h-2 w-auto footer-logo" onerror="this.style.display='none'">
-                    <span>2026 CDL APS</span>
-                </div>
-            </div>
-            <div class="flex flex-col items-center text-[7.5px] md:text-[8px] font-medium text-center tracking-wide text-white opacity-[0.15] hover:opacity-50 transition-opacity duration-300 mt-2 select-none leading-relaxed max-w-[320px] sm:max-w-none gap-1">
-                <span>Associazione di promozione del cinema giovane e indipendente</span>
-                <div>
-                    CDL APS &bull; Viale Laurana 13, Rimini, 47921 &bull; CF: 91200080405
-                </div>
-            </div>
-        </footer>
-    </div>
-
-    <script src="assets/js/cortoteca.js"></script>
+    <script src="assets/js/barra.js?v=2026-10-09"></script>
+    <script src="assets/js/opere.js?v=2026-10-09"></script>
+    <script src="assets/js/cortoteca.js?v=2026-10-09"></script>
 </body>
 </html>

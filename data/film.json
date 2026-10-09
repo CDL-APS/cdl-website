@@ -31,7 +31,7 @@
     "ruolo_cast7": "Attrice",
     "sinossi": "Un regista insegue l'essenza del cinema, spingendosi oltre i limiti della creazione. Ma più si avvicina alla sua verità, più la realtà si confonde.",
     "note_regia": "Quarto Livello è il risultato di un 'incidente controllato' tra influenze completamente casuali. In primis, l’ennesima visione di Funny Games e di altri capolavori del maestro Haneke, perché un po’ di sadismo non guasta; poi la passione viscerale per la rottura della quarta parete, ma senza troppi intellettualismi; infine, una serata all’Esperanto passata a guardare due poliziotti che cercavano di placare un tizio convinto che fumare indoor fosse un diritto inalienabile. Qualche altra chicca, qualche altra minuzia, ed eccolo qui.",
-    "cdl": "si",
+    "cdl": true,
     "video_url": "",
     "letterboxd": "https://letterboxd.com/film/level-four/",
     "tagline": "Il cinema vero?"
@@ -68,7 +68,7 @@
     "ruolo_cast7": "",
     "sinossi": "Una serata fra amici accende un pensiero insolito, che porterà ad un'assurda conclusione.",
     "note_regia": "Il primo vero corto CDL. Citando la recensione dell'amico e critico Alessandro Della Porta: 'La relatività dell’uomo, maschera costante che non vogliamo togliere, mai'",
-    "cdl": "si",
+    "cdl": true,
     "video_url": "https://www.youtube.com/watch?v=l_Hdi3E3j5U&t=102s",
     "letterboxd": "https://letterboxd.com/film/relativity-2024/",
     "tagline": "I ruoli sono effimeri, la verità è un palcoscenico grottesco"
@@ -105,7 +105,7 @@
     "ruolo_cast7": "",
     "sinossi": "Un ragazzo è intenzionato a togliersi la vita. Riaffiora però il ricordo di una giornata del suo passato, stravolta da un singolare incontro.",
     "note_regia": "Verso Mare nasce in un periodo di incertezze e dubbi paralizzanti. Analizza il viaggio per ritrovare se stessi, fidandosi del processo e apprezzando il raggiungimento dei piccoli traguardi. È un viaggio interiore attraverso paesaggi incontaminati, autentici templi naturali, che riflettono la ricerca di pace e si trasformano in palcoscenico di una possibile redenzione.",
-    "cdl": "No",
+    "cdl": false,
     "video_url": "",
     "letterboxd": "https://letterboxd.com/film/towards-the-sea/",
     "tagline": "'Andiamo al mare. Si, andiamo al mare'"
@@ -142,7 +142,7 @@
     "ruolo_cast7": "",
     "sinossi": "Due criminali devono sbarazzarsi di un cadavere, trasportandolo attraverso una foresta che sembra ostacolare il loro cammino.",
     "note_regia": "Lupara Verde è un’allegoria del rapporto fra uomo e natura. Siamo stati, e continuiamo a essere, distruttori e portatori di morte nell’ecosistema. Forse oggi, le attenzioni quotidiane che riserviamo all’ambiente, non sono sufficienti a eliminare le sofferenze della natura e a cessare di subirne il malcontento.",
-    "cdl": "No",
+    "cdl": false,
     "video_url": "",
     "letterboxd": "https://letterboxd.com/film/lupara-verde/",
     "tagline": "È troppo tardi per riavere il Pianeta dalla nostra parte."
@@ -179,7 +179,7 @@
     "ruolo_cast7": "",
     "sinossi": "Un violinista di provincia, fortemente legato alla madre malata, deve partire per la città.",
     "note_regia": "L’opera è liberamente ispirata alla poesia “Eli e radghi” (Ali e radici) di Annalisa Teodorani: 'A t’ò niné / fin a fèt indurmantè / èli e ràdghi a l s’è invrucédi. / E t’una nòta pursì / da la nèbia l’è scap fùra / un pésgh in fiòur.'",
-    "cdl": "No",
+    "cdl": false,
     "video_url": "",
     "letterboxd": "https://letterboxd.com/film/andrea-2025-1/",
     "tagline": "È giusto restare, oppure partire?"

@@ -12,7 +12,7 @@ Apri la cartella in VS Code, poi clic destro su `index.html` → **Open with Liv
 Server**. Il sito si apre su `http://localhost:5500` e si ricarica da solo a
 ogni salvataggio.
 
-> **Serve un server, non basta il doppio clic sul file.** Cortoteca e schede
+> **Serve un server, non basta il doppio clic sul file.** Home, Cortoteca, Produzioni e schede
 > opera leggono `data/film.json` con una richiesta di rete, che i browser
 > bloccano quando la pagina è aperta come `file://`. Con Live Server funziona
 > tutto. L'estensione è già fra quelle consigliate in `.vscode/extensions.json`:
@@ -31,6 +31,8 @@ python3 -m http.server 5500
 ```
 .
 ├── index.html                 Home
+├── produzioni.html            Le produzioni CDL (testo da scrivere)
+├── eventi.html                Gli eventi CDL (da sviluppare)
 ├── longstoryshort.html        Pagina dell'evento Long Story Short
 ├── cornicenarrativa.html      Generatore del "biglietto" di LSS 2026
 ├── cortoteca.html             Archivio dei cortometraggi
@@ -42,21 +44,23 @@ python3 -m http.server 5500
 │
 ├── assets/
 │   ├── css/
-│   │   ├── base.css           Colori del brand, sfondi, fondamenta comuni
-│   │   ├── components.css     Pezzi ricorrenti: bordi bento, card, footer
+│   │   ├── base.css           Colori, misure e tipografia del brand
+│   │   ├── components.css     Pezzi ricorrenti: barra, riquadri, schede, piede
 │   │   └── pages/             Uno per pagina, solo ciò che è specifico
 │   ├── js/
-│   │   ├── icons.js           Attiva le icone Lucide
-│   │   ├── home.js            Nuvoletta del pensiero
+│   │   ├── barra.js           Indicatore della barra, su tutte le pagine
+│   │   ├── opere.js           Lettura di data/film.json, comune a più pagine
+│   │   ├── home.js            Casella "L'ultima produzione CDL"
+│   │   ├── produzioni.js      Elenco delle produzioni CDL
 │   │   ├── cortoteca.js       Griglia, ricerca e ordinamento delle opere
 │   │   ├── opera.js           Riempimento della scheda opera
-│   │   ├── vantaggi.js        Menu "Diventa socio"
 │   │   └── cornice.js         Generatore del biglietto LSS
 │   └── img/
 │       ├── brand/             Logo, icona, favicon
 │       ├── partner/           Loghi dei partner, tessera
-│       ├── nuvole/            Nuvolette della home
-│       ├── sfondi/            Sfondo animato e copertina LSS
+│       ├── nuvole/            Nuvolette della vecchia home (servono ai redirect)
+│       ├── sfondi/            Wallpaper della home
+│       ├── eventi/            Copertina e miniatura di LSS 2026, alleggerite
 │       └── film/              Fotogrammi dei corti
 │
 ├── netlify.toml               Redirect dai vecchi indirizzi e cache
@@ -85,11 +89,14 @@ Campi importanti:
 | `titolo`, `anno`, `regista`, `produzione` | Compaiono nella griglia e sono usati dalla ricerca |
 | `still` | Percorso del fotogramma, es. `assets/img/film/miofilm.jpg` |
 | `video_url` | Link YouTube o Vimeo. **Se lo lasci vuoto** la scheda mostra "streaming in arrivo" invece del player |
-| `cdl` | `"si"` se è una produzione CDL: aggiunge il logo sulla card |
+| `cdl` | `true` se è una produzione CDL, altrimenti `false` (senza virgolette). Le produzioni CDL hanno il logo sulla card, compaiono in Produzioni e la più recente va in home |
 | `cast1`…`cast10` e `ruolo_cast1`…`ruolo_cast10` | Cast; le posizioni vuote vengono saltate |
 | `sinossi`, `note_regia`, `tagline`, `letterboxd` | Facoltativi: se vuoti, la sezione non appare |
 
-Salva, ricarica la pagina, e il corto è nell'archivio.
+Salva, ricarica la pagina, e il corto è nell'archivio. Se è una produzione CDL
+compare anche in Produzioni e, se è la più recente, nella casella "L'ultima
+produzione CDL" della home: non c'è altro da aggiornare. Fra due produzioni
+dello stesso anno conta come più recente quella più in alto nel file.
 
 **Attenzione al JSON**: virgole e virgolette devono essere esatte, un errore
 di battitura fa sparire l'intera Cortoteca. Prima di pubblicare, apri la
@@ -118,8 +125,9 @@ servono a non rompere i link già condivisi su Instagram e nelle chat.
 
 ## Nota su Tailwind
 
-Le pagine caricano Tailwind e le icone Lucide da CDN, cioè da un server esterno,
-con un `<script>` nell'`<head>`. È la scelta più semplice e non richiede alcuna
-compilazione, ma ha due conseguenze da tenere a mente: il sito non funziona
-offline, e Tailwind in versione CDN è più lento di una versione compilata.
-Finché il sito resta di queste dimensioni va benissimo così.
+Solo la cornice narrativa carica ancora Tailwind e le icone Lucide da CDN,
+cioè da un server esterno, con un `<script>` nell'`<head>`: il suo script
+costruisce i blocchi con classi Tailwind. Due conseguenze da tenere a mente:
+quella pagina non funziona offline, e Tailwind in versione CDN è più lento di
+una versione compilata. Tutte le altre pagine usano solo i fogli in
+`assets/css/` e icone SVG scritte nell'HTML.

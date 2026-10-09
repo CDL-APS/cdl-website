@@ -1,0 +1,79 @@
+/* ==========================================================================
+   PRODUZIONI (produzioni.html) — elenco delle opere prodotte da CDL
+   ========================================================================== */
+
+.elenco {
+  list-style: none;
+  margin-top: clamp(2rem, 5vw, 3rem);
+  border-top: 1px solid var(--riga);
+}
+
+.elenco a {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 0.35rem 1.5rem;
+  padding: 1.1rem 0.5rem;
+  border-radius: var(--r-s);
+  border-bottom: 1px solid var(--riga);
+  transition: padding-left 0.3s var(--ease-out), color 0.3s var(--ease-out),
+    background-color 0.3s var(--ease-out);
+}
+
+.elenco a:hover {
+  color: var(--cdl-red);
+  padding-left: 1rem;
+  background: rgba(185, 187, 248, 0.16);
+}
+
+.elenco-titolo {
+  font-family: 'Montserrat', sans-serif;
+  font-size: clamp(1.15rem, 2.6vw, 1.75rem);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.elenco-dati {
+  grid-column: 1;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--testo-tenue);
+}
+
+.elenco-freccia { grid-row: 1 / span 2; align-self: center; width: 20px; height: 20px; }
+
+.riga-altrove {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 1.5rem;
+  padding: 0.8rem 1.2rem;
+  border-radius: var(--r-s);
+  corner-shape: squircle;
+  background: var(--cdl-dark);
+  color: var(--cdl-white);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  transition: background-color 0.3s var(--ease-out);
+}
+
+.riga-altrove:hover { background: var(--cdl-red); }
+
+/* Database non raggiungibile o nessuna produzione */
+.elenco-avviso {
+  padding: 2rem 0.5rem;
+  border-bottom: 1px solid var(--riga);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--testo-tenue);
+}

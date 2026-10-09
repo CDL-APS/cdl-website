@@ -6,8 +6,6 @@
    data/film.json e riempie i campi. Una sola pagina serve tutte le opere.
    ========================================================================== */
 
-const PERCORSO_DATABASE = 'data/film.json';
-
 /* Trasforma un link YouTube o Vimeo nel corrispondente URL di embed.
    Restituisce null se il campo è vuoto o non riconosciuto, ed è questo che
    fa comparire il velo "streaming in arrivo". */
@@ -54,13 +52,11 @@ async function initPage() {
   const loader = document.getElementById('loader');
 
   try {
-    const response = await fetch(PERCORSO_DATABASE);
-    if (!response.ok) throw new Error('Database non trovato.');
-    const movies = await response.json();
+    const movies = await caricaOpere();
     const movie = movies.find((m) => m.codice === identifier);
 
     if (!movie) {
-      loader.innerHTML = '<p class="text-xs uppercase font-black">Opera non trovata.</p>';
+      loader.innerHTML = '<p class="etichetta">Opera non trovata.</p>';
       return;
     }
 
@@ -70,14 +66,14 @@ async function initPage() {
 
     if (valorizzato(movie.tagline)) {
       document.getElementById('movie-tagline').textContent = movie.tagline;
-      document.getElementById('tagline-row').classList.remove('hidden');
+      document.getElementById('tagline-row').hidden = false;
     }
 
     document.getElementById('movie-synopsis').textContent = movie.sinossi || '---';
 
     if (valorizzato(movie.note_regia)) {
       document.getElementById('movie-notes').textContent = movie.note_regia;
-      document.getElementById('notes-section').classList.remove('hidden');
+      document.getElementById('notes-section').hidden = false;
     }
 
     // Generi: campo unico separato da virgole, una etichetta per ciascuno
@@ -85,7 +81,7 @@ async function initPage() {
     const genres = movie.genere ? movie.genere.split(',').map((g) => g.trim()) : [];
     genres.forEach((g) => {
       const span = document.createElement('span');
-      span.className = 'genre-tag';
+      span.className = 'genere';
       span.textContent = g;
       genreContainer.appendChild(span);
     });
@@ -93,7 +89,7 @@ async function initPage() {
     const lbBtn = document.getElementById('letterboxd-link');
     if (valorizzato(movie.letterboxd)) {
       lbBtn.href = movie.letterboxd;
-      lbBtn.classList.remove('hidden');
+      lbBtn.hidden = false;
     }
 
     // Troupe
@@ -107,10 +103,7 @@ async function initPage() {
 
       if (valorizzato(val)) {
         const div = document.createElement('div');
-        div.innerHTML = `
-          <span class="label-tech !text-black/40">${role.label}</span>
-          <p class="value-tech">${val}</p>
-        `;
+        div.innerHTML = `<dt>${role.label}</dt><dd>${val}</dd>`;
         troupeContainer.appendChild(div);
       }
     });
@@ -124,14 +117,14 @@ async function initPage() {
 
     if (embedUrl) {
       document.getElementById('video-player').src = embedUrl;
-      videoWrapper.classList.remove('hidden');
-      comingSoon.classList.add('hidden');
-      movieStill.classList.add('hidden');
+      videoWrapper.hidden = false;
+      comingSoon.hidden = true;
+      movieStill.hidden = true;
     } else {
       movieStill.src = movie.still || '';
-      movieStill.classList.remove('hidden');
-      comingSoon.classList.remove('hidden');
-      videoWrapper.classList.add('hidden');
+      movieStill.hidden = false;
+      comingSoon.hidden = false;
+      videoWrapper.hidden = true;
     }
 
     // Cast: campi numerati cast1…cast10 con il ruolo appaiato
@@ -144,30 +137,25 @@ async function initPage() {
       if (valorizzato(actor)) {
         hasCast = true;
         const li = document.createElement('li');
-        li.className = 'flex flex-col border-b border-white/10 pb-2';
         li.innerHTML = `
-          <span class="flex items-center gap-2">
-            <i data-lucide="user" class="w-3 h-3 text-[--cdl-lavender] opacity-50"></i> ${actor}
-          </span>
-          ${role ? `<span class="text-[8px] text-[--cdl-lavender] opacity-100 font-bold ml-5 uppercase tracking-wider">${role}</span>` : ''}
+          <span class="cast-nome">${actor}</span>
+          ${role ? `<span class="cast-ruolo">${role}</span>` : ''}
         `;
         castList.appendChild(li);
       }
     }
-    if (hasCast) document.getElementById('cast-box').classList.remove('hidden');
+    if (hasCast) document.getElementById('cast-box').hidden = false;
 
     // Solo ora si toglie il velo di caricamento, così la pagina non appare
     // mai a metà riempimento
     loader.style.opacity = '0';
     setTimeout(() => {
       loader.style.display = 'none';
-      mainContent.classList.add('fade-in');
-      mainContent.style.opacity = '1';
-      lucide.createIcons();
+      mainContent.classList.add('is-pronta');
     }, 500);
   } catch (error) {
     console.error(error);
-    loader.innerHTML = '<p class="text-xs uppercase font-black">Errore di Sincronizzazione.</p>';
+    loader.innerHTML = '<p class="etichetta">Errore di sincronizzazione.</p>';
   }
 }
 
