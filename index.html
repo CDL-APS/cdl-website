@@ -9,110 +9,176 @@
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link rel="icon" type="image/png" href="assets/img/brand/favicon.png">
 
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
-
-    <link rel="stylesheet" href="assets/css/base.css">
-    <link rel="stylesheet" href="assets/css/components.css">
-    <link rel="stylesheet" href="assets/css/pages/home.css">
+    <link rel="stylesheet" href="assets/css/base.css?v=2026-10-09-3">
+    <link rel="stylesheet" href="assets/css/components.css?v=2026-10-09-3">
+    <link rel="stylesheet" href="assets/css/pages/home.css?v=2026-10-09-3">
 </head>
-<body class="antialiased p-6 md:p-8">
+<body>
 
-    <div class="bg-fixed-duotone"></div>
+    <!-- ==================================================================
+         SLIDER DI NAVIGAZIONE
+         Fisso in alto, senza altre scritte accanto. Il logo è la Home; le
+         altre tre voci aprono pagine. L'indicatore lavanda segna la pagina
+         in cui ci si trova e scorre sulla voce sfiorata dal mouse.
+         ================================================================== -->
+    <nav class="barra" aria-label="Navigazione principale">
+        <div class="barra-gruppo">
+            <span class="indicatore" aria-hidden="true"></span>
 
-    <!-- Filtro bianco e nero "bruciato" applicato allo sfondo.
-         feColorMatrix converte in grigio pesando i canali RGB; feComponentTransfer
-         ne rialza le alte luci fino a bruciarle. -->
-    <svg class="svg-filters" aria-hidden="true" focusable="false">
-        <filter id="burnt-bw-filter">
-            <feColorMatrix type="matrix" values="0.25 0.65 0.1 0 0
-                                                 0.25 0.65 0.1 0 0
-                                                 0.25 0.65 0.1 0 0
-                                                 0 0 0 1 0" />
-            <feComponentTransfer color-interpolation-filters="sRGB">
-                <feFuncR type="table" tableValues="0.0 0.4 1.0 1.6" />
-                <feFuncG type="table" tableValues="0.0 0.4 1.0 1.6" />
-                <feFuncB type="table" tableValues="0.0 0.4 1.0 1.6" />
-            </feComponentTransfer>
-        </filter>
-    </svg>
+            <a href="#home" class="voce voce--logo is-active" aria-label="Home" aria-current="page">
+                <img src="assets/img/brand/logo-cdl.png" alt="CDL" onerror="this.replaceWith(document.createTextNode('CDL'))">
+            </a>
+            <a href="produzioni.html" class="voce">Produzioni</a>
+            <a href="eventi.html" class="voce">Eventi</a>
+        </div>
 
-    <div class="content-wrapper flex flex-col justify-center">
-        <main class="fade-in" style="animation-delay: 0.2s;">
+        <a href="cortoteca.html" class="voce voce--altrove">
+            <svg class="icona-play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.14v13.72L19 12 8 5.14Z"/></svg>
+            Cortoteca
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h6"/></svg>
+        </a>
+    </nav>
 
-            <!-- Hero: cliccando l'icona compare una nuvoletta a caso -->
-            <div class="mb-6 flex flex-col items-center justify-center text-center relative group cursor-pointer" onclick="toggleCredits(event)">
-                <img id="domanda-image" src="assets/img/nuvole/nuvola1.png" alt="" style="display: none;">
+    <main>
 
-                <div class="z-0 relative flex items-center justify-center animate-icon-float">
-                    <img src="assets/img/brand/icona-cdl.png" alt="CDL" class="comic-shadow w-full max-w-[380px] h-auto object-contain transition-transform duration-700 group-hover:scale-105"
-                         onerror="this.src='https://placehold.co/380x210/1d1d1b/f7f7f7?text=CDL+ICON';">
+        <!-- ==============================================================
+             APERTURA — presentazione e "Ciao!" in un solo blocco, a tutta
+             larghezza. È l'unico blocco statico della parte alta: non porta
+             da nessuna parte, e si vede perché non ha cornice, non ha una
+             riga d'azione e non reagisce al passaggio del mouse, al
+             contrario dei tre riquadri qui sotto.
+             ============================================================== -->
+        <section class="sezione" id="home">
+            <!-- Titolo, icona e descrizione sono fratelli: così su schermo
+                 stretto la griglia può mettere il titolo in alto a sinistra,
+                 l'icona in alto a destra e la descrizione sotto, a tutta
+                 larghezza. -->
+            <div class="apertura">
+                <img class="foto" src="assets/img/sfondi/wallpaper-cdl.jpg" alt="">
+                <h1>Cinema giovane<br><span>e indipendente</span></h1>
+                <img class="icona" src="assets/img/brand/icona-cdl.png" alt="CDL" onerror="this.style.display='none'">
+                <div class="corpo corpo--chiaro">
+                    <p><strong>Ciao!</strong> CDL &egrave; un'associazione di promozione del cinema giovane e indipendente, che lo esplora, lo sostiene e lo diffonde attraverso la realizzazione di progetti cinematografici e l'organizzazione di eventi.</p>
                 </div>
             </div>
 
-            <div class="main-grid">
-                <!-- Long Story Short: fascia intera in alto -->
-                <a href="longstoryshort.html" class="group bento-border flex items-center justify-center px-10 md:px-6 py-4 hover-red transition-all duration-300 bg-[--cdl-white] text-[--cdl-dark] col-span-2 overflow-hidden min-h-[85px] md:min-h-[100px] relative">
-                    <div class="flex items-center justify-center gap-3 md:gap-4">
-                        <img src="assets/img/brand/lss-mini.png" alt="" class="h-8 sm:h-10 md:h-12 w-auto object-contain rounded" onerror="this.style.display='none'">
-                        <h2 class="text-lg sm:text-2xl md:text-3xl lg:text-4xl font-semibold tracking-tight leading-none font-inter whitespace-nowrap !normal-case">Long Story Short</h2>
-                    </div>
-                    <i data-lucide="arrow-up-right" class="w-5 h-5 absolute right-4 md:right-6 flex-shrink-0 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"></i>
-                </a>
+            <!-- Ultime notizie e tesseramento. Evento e produzione arrivano
+                 dal database; la terza casella si aggiorna a mano. -->
+            <div class="griglia-home">
 
-                <!-- Vantaggi per i soci -->
-                <a href="vantaggi-tesseramento.html" class="group bento-border flex flex-col hover-red transition-all duration-300 bg-[--cdl-lavender] text-black col-span-2 md:col-span-1 overflow-hidden min-h-[80px]">
-                    <div class="bg-black text-white px-3 py-1 w-full flex items-center justify-center gap-2 text-[9px] md:text-[10px] font-black tracking-[0.12em] uppercase border-b-2 border-white transition-all duration-300 group-hover:bg-white group-hover:text-[--cdl-red] group-hover:border-white">
-                        <span class="rec-dot"></span>
-                        TESSERAMENTO 2026 APERTO
+                <!-- Ultime notizie: evento a sinistra, produzione a destra,
+                     ognuna con sotto il rimando al proprio elenco completo. -->
+                <div class="notizie">
+                    <div class="notizie-colonna">
+                        <!-- Riempita da assets/js/home.js con l'evento pubblicato
+                             più recente: non va aggiornata a mano -->
+                        <a class="notizia" id="ultimo-evento" href="eventi.html" hidden>
+                            <img class="notizia-foto" alt="" loading="lazy">
+                            <span class="notizia-etichetta">L'ultimo evento CDL</span>
+                            <span class="notizia-titolo"></span>
+                            <span class="notizia-meta"></span>
+                        </a>
+                        <a class="notizia-tutti" href="eventi.html">
+                            Tutti gli eventi
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h6"/></svg>
+                        </a>
                     </div>
-                    <div class="flex-grow flex items-center justify-between w-full px-5 py-2.5">
-                        <h2 class="text-xs md:text-sm font-black uppercase tracking-tight leading-none">SCOPRI QUI I VANTAGGI PER I SOCI</h2>
-                        <i data-lucide="arrow-up-right" class="w-4 h-4 ml-4 flex-shrink-0 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"></i>
-                    </div>
-                </a>
 
-                <!-- Cortoteca -->
-                <a href="cortoteca.html" class="group bento-border flex items-center justify-between px-6 py-2 hover-red transition-all duration-300 bg-[--cdl-dark] col-span-2 md:col-span-1 min-h-[80px]">
-                    <div class="flex items-center gap-3">
-                        <i data-lucide="play-circle" class="w-5 h-5 text-[--cdl-lavender] group-hover:text-white"></i>
-                        <h2 class="text-xs md:text-sm font-black uppercase tracking-tight leading-none">CORTOTECA</h2>
+                    <div class="notizie-colonna">
+                        <!-- Riempita da assets/js/home.js con la produzione CDL più
+                             recente: non va aggiornata a mano -->
+                        <a class="notizia" id="ultima-produzione" href="produzioni.html" hidden>
+                            <img class="notizia-foto" alt="" loading="lazy">
+                            <span class="notizia-etichetta">L'ultima produzione CDL</span>
+                            <span class="notizia-titolo"></span>
+                            <span class="notizia-meta"></span>
+                        </a>
+                        <a class="notizia-tutti" href="produzioni.html">
+                            Tutte le produzioni
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h6"/></svg>
+                        </a>
                     </div>
-                    <i data-lucide="chevron-right" class="w-4 h-4 transform group-hover:translate-x-1"></i>
+
+                    <!-- Terza casella, pronta per l'ultima notizia. Per
+                         riempirla: sostituire questo blocco con la stessa
+                         struttura delle due qui sopra — <a class="notizia">
+                         con foto, titolo e dati — lasciando fuori
+                         .notizia-etichetta, che qui non serve. -->
+                    <div class="notizie-colonna">
+                        <div class="notizia notizia--vuota" aria-hidden="true"></div>
+                    </div>
+                </div>
+
+                <!-- Tinta unita lavanda, con la tessera dentro al riquadro -->
+                <a href="#socio" class="riquadro riquadro--tessera">
+                    <img class="tessera" src="assets/img/partner/tessera-cdl.png" alt="" onerror="this.style.display='none'">
+                    <span class="tessera-testo">
+                        <span class="chip-etichetta"><span class="rec-dot"></span> Tesseramento 2026</span>
+                        <span class="chip-titolo">Il tesseramento &egrave; aperto</span>
+                        <span class="chip-meta">Diventa socio CDL
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                        </span>
+                    </span>
                 </a>
             </div>
+        </section>
 
-            <!-- Social -->
-            <div class="mt-8 flex flex-wrap items-center justify-center gap-6">
-                <a href="https://instagram.com/cdl_aps" target="_blank" rel="noopener" aria-label="Instagram" class="social-link text-white">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
-                </a>
-                <a href="https://youtube.com/@cdlprods" target="_blank" rel="noopener" aria-label="YouTube" class="social-link text-white">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 2-2 69.44 69.44 0 0 1 15 0 2 2 0 0 1 2 2 24.12 24.12 0 0 1 0 10 2 2 0 0 1-2 2 69.44 69.44 0 0 1-15 0 2 2 0 0 1-2-2z"/><polyline points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/></svg>
-                </a>
-                <a href="mailto:cdlprods@gmail.com" aria-label="Scrivici" class="social-link text-white">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
-                </a>
-            </div>
-        </main>
-
-        <footer class="mt-10 pb-4 flex flex-col justify-center items-center gap-2 fade-in">
-            <div class="flex flex-col justify-center items-center gap-2 text-[9px] font-black tracking-[0.2em] uppercase opacity-40 text-center leading-relaxed">
-                <div class="flex justify-center items-center gap-2">
-                    <img src="assets/img/brand/logo-cdl.png" alt="" class="h-2 w-auto footer-logo" onerror="this.style.display='none'">
-                    <span>2026 CDL APS</span>
+        <!-- ==============================================================
+             SOSTIENI CDL — sulla home il tema è il sostegno al progetto.
+             L'elenco dei vantaggi sta sulla sua pagina.
+             ============================================================== -->
+        <!-- Nessun pannello sotto il testo: il fotogramma scelto è scuro
+             abbastanza da reggere il bianco da solo (vedi il commento nel
+             foglio di stile). -->
+        <section class="sostieni" id="socio">
+            <img class="foto" src="assets/img/film/quartolivello.jpg" alt="" loading="lazy">
+            <div class="sostieni-interno due-colonne">
+                <h2 class="titolo-marchio">
+                    Sostieni
+                    <img src="assets/img/brand/logo-cdl.png" alt="CDL" onerror="this.replaceWith(document.createTextNode('CDL'))">
+                </h2>
+                <div class="corpo corpo--chiaro">
+                    <p>Associarti a CDL significa contribuire attivamente al nostro progetto di diffusione della cultura cinematografica indipendente.</p>
+                    <div class="azioni">
+                        <a href="https://wa.me/393493290864?text=Ciao,%20vorrei%20diventare%20socio%20di%20CDL%20APS" target="_blank" rel="noopener" class="btn btn--chiaro btn--pieno">Diventa socio
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg>
+                        </a>
+                        <a href="mailto:cdlprods@gmail.com?subject=Richiesta%20Diventare%20Socio" class="btn btn--chiaro">Scrivici
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                        </a>
+                    </div>
+                    <a href="vantaggi-tesseramento.html" class="rimando">Tutti i vantaggi per i soci
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h6"/></svg>
+                    </a>
                 </div>
             </div>
-            <!-- Dati dell'associazione: appena percettibili, si accendono al passaggio -->
-            <div class="flex flex-col items-center text-[7.5px] md:text-[8px] font-medium text-center tracking-wide text-white opacity-[0.15] hover:opacity-50 transition-opacity duration-300 mt-2 select-none leading-relaxed max-w-[320px] sm:max-w-none gap-1">
-                <span>Associazione di promozione del cinema giovane e indipendente</span>
-                <div>
-                    CDL APS &bull; Viale Laurana 13, Rimini, 47921 &bull; CF: 91200080405
-                </div>
-            </div>
-        </footer>
-    </div>
+        </section>
 
-    <script src="assets/js/home.js"></script>
+    </main>
+
+    <!-- ================================================================== -->
+    <footer class="piede">
+        <div class="piede-social">
+            <a href="https://instagram.com/cdl_aps" target="_blank" rel="noopener" aria-label="Instagram" class="social-link">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
+            </a>
+            <a href="https://youtube.com/@cdlprods" target="_blank" rel="noopener" aria-label="YouTube" class="social-link">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 2-2 69.44 69.44 0 0 1 15 0 2 2 0 0 1 2 2 24.12 24.12 0 0 1 0 10 2 2 0 0 1-2 2 69.44 69.44 0 0 1-15 0 2 2 0 0 1-2-2z"/><polyline points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/></svg>
+            </a>
+            <a href="mailto:cdlprods@gmail.com" aria-label="Scrivici" class="social-link">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+            </a>
+        </div>
+        <div class="piede-riga">
+            <img src="assets/img/brand/logo-cdl.png" alt="" class="footer-logo--dark" onerror="this.style.display='none'">
+            <span>2026 CDL APS</span>
+        </div>
+        <p class="piede-dati">Associazione di promozione del cinema giovane e indipendente<br>
+        CDL APS &bull; Viale Laurana 13, Rimini, 47921 &bull; CF: 91200080405</p>
+    </footer>
+
+    <script src="assets/js/barra.js?v=2026-10-09-3"></script>
+    <script src="assets/js/dati.js?v=2026-10-09-3"></script>
+    <script src="assets/js/home.js?v=2026-10-09-3"></script>
 </body>
 </html>

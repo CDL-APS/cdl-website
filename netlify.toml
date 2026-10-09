@@ -35,10 +35,11 @@
   to = "/assets/img/film/:splat"
   status = 301
 
-# Il database dei film ha cambiato nome e posizione
+# Il database dei film ha cambiato nome e posizione: oggi i dati stanno su
+# Supabase, data/opere.json ne è la copia di riserva
 [[redirects]]
   from = "/dati_film.json"
-  to = "/data/film.json"
+  to = "/data/opere.json"
   status = 301
 
 # Immagini spostate dalla radice ad assets/
@@ -69,6 +70,9 @@
 # Le immagini e i fogli di stile hanno nomi stabili: si possono tenere in cache
 # a lungo nel browser di chi visita. Se un'immagine cambia contenuto ma non
 # nome, va rinominata, altrimenti i visitatori abituali vedranno la vecchia.
+# Per CSS e JS le pagine aggiungono una versione all'indirizzo
+# (base.css?v=2026-10-09-2): quando li modifichi, aggiorna la data in tutte le
+# pagine, così il browser scarica la versione nuova.
 [[headers]]
   for = "/assets/*"
   [headers.values]

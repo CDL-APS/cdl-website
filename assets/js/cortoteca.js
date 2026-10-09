@@ -1,40 +1,46 @@
 /* ==========================================================================
    CORTOTECA — griglia delle opere.
 
-   La pagina non contiene le opere nell'HTML: le legge da data/film.json e
-   costruisce le card a runtime. Per aggiungere un corto basta quindi
-   modificare il JSON, senza toccare una riga di codice.
+   La pagina non contiene le opere nell'HTML: le legge dal database (vedi
+   dati.js) e costruisce le card a runtime. Un corto aggiunto o pubblicato
+   dalla pagina di gestione compare qui senza toccare il codice.
    ========================================================================== */
 
-const PERCORSO_DATABASE = 'data/film.json';
 const LOGO_CDL = 'assets/img/brand/logo-cdl.png';
+
+const ICONA_FRECCIA =
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>';
 
 let allMovies = [];
 
 async function init() {
   try {
-    const response = await fetch(PERCORSO_DATABASE);
-    if (!response.ok) throw new Error('Database non trovato');
-    allMovies = await response.json();
+    allMovies = await caricaOpere();
     sortAndRender();
   } catch (error) {
     console.error(error);
-    document.getElementById('movie-grid').innerHTML +=
-      '<div class="col-span-full text-center p-8 opacity-50 uppercase font-black text-xs">Errore caricamento database</div>';
+    mostraAvviso('Errore caricamento database');
   }
-  lucide.createIcons();
+}
+
+function mostraAvviso(testo) {
+  const grid = document.getElementById('movie-grid');
+  const avviso = document.createElement('p');
+  avviso.className = 'avviso';
+  avviso.textContent = testo;
+  grid.insertBefore(avviso, document.getElementById('add-card'));
 }
 
 function sortAndRender() {
   const grid = document.getElementById('movie-grid');
   const addCard = document.getElementById('add-card');
-  const sortByDate = document.getElementById('sort-toggle').checked;
+  const sortByDate = document.getElementById('ordine-anno').checked;
   const searchTerm = document.getElementById('db-search').value.toLowerCase().trim();
 
   // Si ricostruisce l'intera griglia a ogni ricerca o riordino: con qualche
   // decina di opere è più semplice e altrettanto veloce di un aggiornamento
   // selettivo
-  grid.querySelectorAll('.movie-card').forEach((c) => c.remove());
+  grid.querySelectorAll('.opera, .avviso').forEach((c) => c.remove());
 
   const filtered = allMovies.filter((m) => {
     const title = (m.titolo || '').toLowerCase();
@@ -52,51 +58,42 @@ function sortAndRender() {
 
   filtered.forEach((movie, index) => {
     const card = document.createElement('a');
-    card.href = movie.codice ? 'opera.html?film=' + movie.codice : '#';
-    card.className = 'movie-card bento-border aspect-square group';
-
-    // Ogni card parte trasparente e scivola in posizione con un ritardo
-    // crescente, per un ingresso a cascata
-    card.style.opacity = '0';
-    card.style.transform = 'translateY(15px)';
-    card.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+    card.href = 'opera.html?film=' + encodeURIComponent(movie.codice);
+    card.className = 'riquadro opera';
     card.style.transitionDelay = `${0.03 * index}s`;
 
-    const cdlLogo = movie.cdl === 'si' ? `<img src="${LOGO_CDL}" class="cdl-logo-badge" alt="CDL">` : '';
-    const stillPath = movie.still || '';
+    const bollino =
+      movie.produzione_cdl
+        ? `<span class="bollino-cdl"><img src="${LOGO_CDL}" alt="Produzione CDL"></span>`
+        : '';
 
+    const produzione = movie.produzione ? `<br>Produzione: ${esc(movie.produzione)}` : '';
+
+    // Se il fotogramma manca resta il fondo neutro del riquadro
     card.innerHTML = `
-      <img src="${stillPath}" alt="${movie.titolo}" class="img-still" onerror="this.src='https://placehold.co/600x600/1d1d1b/f7f7f7?text=${encodeURIComponent(movie.titolo)}'">
-      <div class="overlay">
-        <div class="flex justify-between items-start mb-auto">
-          <i data-lucide="play" class="w-3 h-3 text-white opacity-0 group-hover:opacity-100 transition-opacity"></i>
-          ${cdlLogo}
-        </div>
-        <div class="flex justify-between items-end mb-1 md:mb-2 gap-2">
-          <h2 class="text-xs md:text-xl font-black group-hover:text-[--cdl-lavender]">${movie.titolo}</h2>
-          <span class="text-[7px] md:text-[9px] font-black uppercase text-[--cdl-lavender] tracking-[0.2em] flex-shrink-0">${movie.anno}</span>
-        </div>
-        <div class="pt-1 md:pt-2 border-t border-white/20 flex flex-col gap-0.5">
-          <span class="text-[7px] md:text-[9px] font-black uppercase tracking-wider opacity-90">REGIA: ${movie.regista}</span>
-          <span class="text-[6px] md:text-[8px] font-medium uppercase tracking-widest opacity-60">PRODUZIONE: ${movie.produzione}</span>
-        </div>
+      <img class="foto" alt="" loading="lazy">
+      ${bollino}
+      <span class="freccia" aria-hidden="true">${ICONA_FRECCIA}</span>
+      <div class="chip">
+        <p class="chip-etichetta">${esc(movie.anno)}</p>
+        <h2 class="chip-titolo">${esc(movie.titolo)}</h2>
+        <p class="chip-meta">Regia di ${esc(movie.regista)}${produzione}</p>
       </div>
     `;
+    mostraImmagine(card.querySelector('.foto'), movie.fotogramma);
 
     grid.insertBefore(card, addCard);
-    setTimeout(() => {
-      card.style.opacity = '1';
-      card.style.transform = 'translateY(0)';
-    }, 50);
+    setTimeout(() => card.classList.add('is-visibile'), 50);
   });
+
+  if (filtered.length === 0) mostraAvviso('Nessuna opera trovata');
 
   // Il riquadro tratteggiato "vuoi la tua opera qui?" sparisce durante una
   // ricerca, dove sarebbe solo rumore
-  addCard.style.display = searchTerm.length > 0 ? 'none' : 'flex';
-  lucide.createIcons();
+  addCard.style.display = searchTerm.length > 0 ? 'none' : '';
 }
 
-document.getElementById('sort-toggle').addEventListener('change', sortAndRender);
+document.querySelectorAll('input[name="ordine"]').forEach((r) => r.addEventListener('change', sortAndRender));
 document.getElementById('db-search').addEventListener('input', sortAndRender);
 
 document.addEventListener('DOMContentLoaded', init);

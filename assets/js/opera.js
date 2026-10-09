@@ -2,17 +2,15 @@
    SCHEDA OPERA — dettaglio di un singolo cortometraggio.
 
    La pagina è un guscio vuoto: legge il codice dell'opera dalla query string
-   (opera.html?film=quartolivello), cerca la voce corrispondente in
-   data/film.json e riempie i campi. Una sola pagina serve tutte le opere.
+   (opera.html?film=quartolivello), chiede quell'opera al database (vedi
+   dati.js) e riempie i campi. Una sola pagina serve tutte le opere.
    ========================================================================== */
-
-const PERCORSO_DATABASE = 'data/film.json';
 
 /* Trasforma un link YouTube o Vimeo nel corrispondente URL di embed.
    Restituisce null se il campo è vuoto o non riconosciuto, ed è questo che
    fa comparire il velo "streaming in arrivo". */
 function getEmbedUrl(url) {
-  if (!url || url.trim() === '' || url === 'null') return null;
+  if (!url || url.trim() === '') return null;
 
   const ytRegex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|shorts\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/i;
   const ytMatch = url.match(ytRegex);
@@ -26,8 +24,8 @@ function getEmbedUrl(url) {
 }
 
 /* Ruoli mostrati nella colonna troupe, nell'ordine in cui appaiono.
-   La chiave deve combaciare col nome del campo in film.json; i ruoli con
-   campo vuoto vengono semplicemente saltati. */
+   La chiave è il nome della colonna nella tabella opere; i ruoli con campo
+   vuoto vengono semplicemente saltati. */
 const RUOLI_TROUPE = [
   { label: 'Regia', key: 'regista' },
   { label: 'Produzione', key: 'produzione' },
@@ -37,13 +35,11 @@ const RUOLI_TROUPE = [
   { label: 'Trucco', key: 'trucco' },
   { label: 'Costumi', key: 'costumi' },
   { label: 'Scenografia', key: 'scenografia' },
-  { label: 'Colonna Sonora', key: 'colonna sonora' }
+  { label: 'Colonna Sonora', key: 'colonna_sonora' }
 ];
 
-const MAX_CAST = 10;
-
 function valorizzato(v) {
-  return v && v.toString().trim() !== '' && v !== '---' && v !== 'null';
+  return v !== null && v !== undefined && v.toString().trim() !== '';
 }
 
 async function initPage() {
@@ -54,13 +50,10 @@ async function initPage() {
   const loader = document.getElementById('loader');
 
   try {
-    const response = await fetch(PERCORSO_DATABASE);
-    if (!response.ok) throw new Error('Database non trovato.');
-    const movies = await response.json();
-    const movie = movies.find((m) => m.codice === identifier);
+    const movie = identifier ? await caricaOpera(identifier) : null;
 
     if (!movie) {
-      loader.innerHTML = '<p class="text-xs uppercase font-black">Opera non trovata.</p>';
+      loader.innerHTML = '<p class="etichetta">Opera non trovata.</p>';
       return;
     }
 
@@ -70,47 +63,43 @@ async function initPage() {
 
     if (valorizzato(movie.tagline)) {
       document.getElementById('movie-tagline').textContent = movie.tagline;
-      document.getElementById('tagline-row').classList.remove('hidden');
+      document.getElementById('tagline-row').hidden = false;
     }
 
-    document.getElementById('movie-synopsis').textContent = movie.sinossi || '---';
+    const sinossi = document.getElementById('movie-synopsis');
+    if (valorizzato(movie.sinossi)) sinossi.textContent = movie.sinossi;
+    else sinossi.hidden = true;
 
     if (valorizzato(movie.note_regia)) {
       document.getElementById('movie-notes').textContent = movie.note_regia;
-      document.getElementById('notes-section').classList.remove('hidden');
+      document.getElementById('notes-section').hidden = false;
     }
 
-    // Generi: campo unico separato da virgole, una etichetta per ciascuno
+    // Generi: una etichetta per ciascuno
     const genreContainer = document.getElementById('genre-container');
-    const genres = movie.genere ? movie.genere.split(',').map((g) => g.trim()) : [];
-    genres.forEach((g) => {
+    (movie.generi || []).forEach((g) => {
       const span = document.createElement('span');
-      span.className = 'genre-tag';
+      span.className = 'genere';
       span.textContent = g;
       genreContainer.appendChild(span);
     });
 
     const lbBtn = document.getElementById('letterboxd-link');
-    if (valorizzato(movie.letterboxd)) {
-      lbBtn.href = movie.letterboxd;
-      lbBtn.classList.remove('hidden');
+    // Solo indirizzi web veri: il campo arriva da un modulo
+    if (valorizzato(movie.letterboxd_url) && /^https?:\/\//.test(movie.letterboxd_url)) {
+      lbBtn.href = movie.letterboxd_url;
+      lbBtn.hidden = false;
     }
 
     // Troupe
     const troupeContainer = document.getElementById('troupe-container');
     troupeContainer.innerHTML = '';
     RUOLI_TROUPE.forEach((role) => {
-      // Alcune voci storiche del JSON hanno l'iniziale maiuscola: si accettano
-      // entrambe le grafie
-      const capitalizedKey = role.key.charAt(0).toUpperCase() + role.key.slice(1);
-      const val = movie[role.key] || movie[capitalizedKey];
+      const val = movie[role.key];
 
       if (valorizzato(val)) {
         const div = document.createElement('div');
-        div.innerHTML = `
-          <span class="label-tech !text-black/40">${role.label}</span>
-          <p class="value-tech">${val}</p>
-        `;
+        div.innerHTML = `<dt>${role.label}</dt><dd>${esc(val)}</dd>`;
         troupeContainer.appendChild(div);
       }
     });
@@ -124,50 +113,40 @@ async function initPage() {
 
     if (embedUrl) {
       document.getElementById('video-player').src = embedUrl;
-      videoWrapper.classList.remove('hidden');
-      comingSoon.classList.add('hidden');
-      movieStill.classList.add('hidden');
+      videoWrapper.hidden = false;
+      comingSoon.hidden = true;
+      movieStill.hidden = true;
     } else {
-      movieStill.src = movie.still || '';
-      movieStill.classList.remove('hidden');
-      comingSoon.classList.remove('hidden');
-      videoWrapper.classList.add('hidden');
+      movieStill.hidden = false;
+      mostraImmagine(movieStill, movie.fotogramma);
+      comingSoon.hidden = false;
+      videoWrapper.hidden = true;
     }
 
-    // Cast: campi numerati cast1…cast10 con il ruolo appaiato
+    // Cast: gli interpreti arrivano già nell'ordine giusto
     const castList = document.getElementById('movie-cast');
     castList.innerHTML = '';
-    let hasCast = false;
-    for (let i = 1; i <= MAX_CAST; i++) {
-      const actor = movie[`cast${i}`];
-      const role = movie[`ruolo_cast${i}`];
-      if (valorizzato(actor)) {
-        hasCast = true;
-        const li = document.createElement('li');
-        li.className = 'flex flex-col border-b border-white/10 pb-2';
-        li.innerHTML = `
-          <span class="flex items-center gap-2">
-            <i data-lucide="user" class="w-3 h-3 text-[--cdl-lavender] opacity-50"></i> ${actor}
-          </span>
-          ${role ? `<span class="text-[8px] text-[--cdl-lavender] opacity-100 font-bold ml-5 uppercase tracking-wider">${role}</span>` : ''}
-        `;
-        castList.appendChild(li);
-      }
-    }
-    if (hasCast) document.getElementById('cast-box').classList.remove('hidden');
+    const interpreti = movie.interpreti || [];
+    interpreti.forEach((interprete) => {
+      const li = document.createElement('li');
+      li.innerHTML = `
+        <span class="cast-nome">${esc(interprete.nome)}</span>
+        ${interprete.ruolo ? `<span class="cast-ruolo">${esc(interprete.ruolo)}</span>` : ''}
+      `;
+      castList.appendChild(li);
+    });
+    if (interpreti.length) document.getElementById('cast-box').hidden = false;
 
     // Solo ora si toglie il velo di caricamento, così la pagina non appare
     // mai a metà riempimento
     loader.style.opacity = '0';
     setTimeout(() => {
       loader.style.display = 'none';
-      mainContent.classList.add('fade-in');
-      mainContent.style.opacity = '1';
-      lucide.createIcons();
+      mainContent.classList.add('is-pronta');
     }, 500);
   } catch (error) {
     console.error(error);
-    loader.innerHTML = '<p class="text-xs uppercase font-black">Errore di Sincronizzazione.</p>';
+    loader.innerHTML = '<p class="etichetta">Errore di sincronizzazione.</p>';
   }
 }
 

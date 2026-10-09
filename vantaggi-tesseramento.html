@@ -9,205 +9,160 @@
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link rel="icon" type="image/png" href="assets/img/brand/favicon.png">
 
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
-
-    <link rel="stylesheet" href="assets/css/base.css">
-    <link rel="stylesheet" href="assets/css/components.css">
-    <link rel="stylesheet" href="assets/css/pages/vantaggi.css">
+    <link rel="stylesheet" href="assets/css/base.css?v=2026-10-09-3">
+    <link rel="stylesheet" href="assets/css/components.css?v=2026-10-09-3">
+    <link rel="stylesheet" href="assets/css/pages/vantaggi.css?v=2026-10-09-3">
 </head>
-<body class="antialiased p-6 md:p-12">
+<body>
 
-    <div class="bg-fixed-duotone"></div>
+    <nav class="barra" aria-label="Navigazione principale">
+        <div class="barra-gruppo">
+            <span class="indicatore" aria-hidden="true"></span>
 
-    <svg class="svg-filters" aria-hidden="true" focusable="false">
-        <filter id="burnt-bw-filter">
-            <feColorMatrix type="matrix" values="0.25 0.65 0.1 0 0
-                                                 0.25 0.65 0.1 0 0
-                                                 0.25 0.65 0.1 0 0
-                                                 0 0 0 1 0" />
-            <feComponentTransfer color-interpolation-filters="sRGB">
-                <feFuncR type="table" tableValues="0.0 0.4 1.0 1.6" />
-                <feFuncG type="table" tableValues="0.0 0.4 1.0 1.6" />
-                <feFuncB type="table" tableValues="0.0 0.4 1.0 1.6" />
-            </feComponentTransfer>
-        </filter>
-    </svg>
+            <a href="index.html" class="voce voce--logo" aria-label="Home">
+                <img src="assets/img/brand/logo-cdl.png" alt="CDL" onerror="this.replaceWith(document.createTextNode('CDL'))">
+            </a>
+            <a href="produzioni.html" class="voce">Produzioni</a>
+            <a href="eventi.html" class="voce">Eventi</a>
+        </div>
 
-    <div class="content-wrapper">
+        <a href="cortoteca.html" class="voce voce--altrove">
+            <svg class="icona-play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.14v13.72L19 12 8 5.14Z"/></svg>
+            Cortoteca
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h6"/></svg>
+        </a>
+    </nav>
 
-        <div class="flex flex-row justify-between items-stretch mb-4 gap-4 md:gap-12 fade-in relative z-50">
-            <header class="flex flex-col justify-end">
-                <a href="index.html" class="inline-flex items-center gap-3 text-[11px] font-black uppercase tracking-[0.3em] hover:text-[--cdl-lavender] transition-colors mb-4 group text-white">
-                    <i data-lucide="arrow-left" class="w-4 h-4 group-hover:-translate-x-1 transition-transform"></i> Torna alla Home
+    <main>
+        <section class="sezione sezione--prima">
+            <div class="due-colonne">
+                <h1>Vantaggi<br>per i soci</h1>
+                <div class="corpo">
+                    <p>CDL è una realtà indipendente che esplora, sostiene e diffonde il cinema giovane tramite la realizzazione di cortometraggi e l'organizzazione di eventi cinematografici.</p>
+                    <p>I servizi che riserviamo ai nostri soci sono in continuo aggiornamento.</p>
+                    <p>Ricorda che associarti a CDL significa contribuire attivamente al nostro progetto di diffusione della cultura cinematografica indipendente.</p>
+                </div>
+            </div>
+
+            <!-- Invito a iscriversi: stessa tinta lavanda e stessa tessera del
+                 riquadro del tesseramento in home -->
+            <div class="invito" id="socio">
+                <div class="invito-testo">
+                    <p class="etichetta"><span class="rec-dot"></span> Tesseramento 2026</p>
+                    <h2>Diventa socio</h2>
+                    <div class="azioni">
+                        <a href="https://wa.me/393493290864?text=Ciao,%20vorrei%20diventare%20socio%20di%20CDL%20APS" target="_blank" rel="noopener" class="btn btn--pieno">Contattaci su WhatsApp
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg>
+                        </a>
+                        <a href="mailto:cdlprods@gmail.com?subject=Richiesta%20Diventare%20Socio&amp;body=Ciao,%20vorrei%20diventare%20socio%20di%20CDL%20APS" class="btn">Scrivici una mail
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                        </a>
+                    </div>
+                </div>
+                <img class="tessera" src="assets/img/partner/tessera-cdl.png" alt="" onerror="this.style.display='none'">
+            </div>
+
+            <!-- Sezione 1: cinema indipendente -->
+            <h2 class="titoletto">Cinema indipendente &amp; supporto</h2>
+            <div class="griglia-vantaggi">
+                <div class="scheda vantaggio">
+                    <span class="scheda-icona" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12.296 3.464 3.02 3.956"/><path d="M20.2 6 3 11l-.9-2.4c-.3-1.1.3-2.2 1.3-2.5l13.5-4c1.1-.3 2.2.3 2.5 1.3z"/><path d="M3 11h18v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="m6.18 5.276 3.1 3.899"/></svg>
+                    </span>
+                    <h3 class="scheda-titolo">Sviluppo nuovi progetti</h3>
+                    <p class="scheda-testo">Collabora a produzioni originali o ricevi supporto logistico e creativo per la tua prossima idea.</p>
+                </div>
+
+                <a href="cortoteca.html" class="scheda vantaggio">
+                    <span class="scheda-icona" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 9.003a1 1 0 0 1 1.517-.859l4.997 2.997a1 1 0 0 1 0 1.718l-4.997 2.997A1 1 0 0 1 9 14.996z"/><circle cx="12" cy="12" r="10"/></svg>
+                    </span>
+                    <span class="freccia" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+                    </span>
+                    <h3 class="scheda-titolo">Cortoteca</h3>
+                    <p class="scheda-testo">Scopri l'archivio esclusivo dedicato alle opere realizzate dai soci della community CDL.</p>
                 </a>
-                <h1 class="text-3xl md:text-7xl font-black text-[--cdl-lavender] uppercase leading-[0.9]">Vantaggi<br>Per i soci</h1>
-            </header>
-
-            <div class="flex items-end relative">
-                <button id="socio-toggle" aria-haspopup="true" aria-expanded="false" class="cta-banner bento-border pl-4 pr-20 md:pl-8 md:pr-32 py-2 md:py-4 group">
-                    <div class="flex flex-col items-start leading-none text-white">
-                        <span class="text-lg md:text-4xl font-black tracking-tighter uppercase">DIVENTA</span>
-                        <span class="text-lg md:text-4xl font-black tracking-tighter uppercase">SOCIO</span>
-                    </div>
-                    <img src="assets/img/partner/tessera-cdl.png" alt="" class="tessera-img" onerror="this.style.display='none'">
-                </button>
-
-                <div id="socio-menu" class="bento-border--thin">
-                    <a href="https://wa.me/393493290864?text=Ciao,%20vorrei%20diventare%20socio%20di%20CDL%20APS" target="_blank" rel="noopener" class="socio-menu-item">
-                        Contattaci su WhatsApp <i data-lucide="message-circle" class="w-4 h-4"></i>
-                    </a>
-                    <a href="mailto:cdlprods@gmail.com?subject=Richiesta%20Diventare%20Socio&body=Ciao,%20vorrei%20diventare%20socio%20di%20CDL%20APS" class="socio-menu-item">
-                        Contattaci via Mail <i data-lucide="mail" class="w-4 h-4"></i>
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <div class="mt-8 mb-10 fade-in opacity-90 w-full text-sm md:text-xl uppercase font-bold text-white text-justify">
-            <p class="leading-relaxed mb-6 tracking-normal">
-                CDL È UNA REALTÀ INDIPENDENTE CHE ESPLORA, SOSTIENE E DIFFONDE IL CINEMA GIOVANE TRAMITE LA REALIZZAZIONE DI CORTOMETRAGGI E L’ORGANIZZAZIONE DI EVENTI CINEMATOGRAFICI.
-            </p>
-            <p class="leading-relaxed mb-6 tracking-normal">
-                I SERVIZI CHE RISERVIAMO AI NOSTRI SOCI SONO IN CONTINUO AGGIORNAMENTO.
-            </p>
-            <p class="leading-relaxed tracking-normal">
-                RICORDA CHE ASSOCIARTI A CDL SIGNIFICA CONTRIBUIRE ATTIVAMENTE AL NOSTRO PROGETTO DI DIFFUSIONE DELLA CULTURA CINEMATOGRAFICA INDIPENDENTE.
-            </p>
-        </div>
-
-        <!-- Sezione 1: cinema indipendente -->
-        <div class="section-header fade-in">Cinema Indipendente &amp; Supporto</div>
-        <main class="services-grid fade-in relative z-10">
-
-            <div class="col-span-12 md:col-span-6 bento-border--thin card">
-                <div class="flex justify-between items-start w-full">
-                    <div class="flex items-center gap-4 flex-1">
-                        <i data-lucide="clapperboard" class="w-12 h-12 text-white brand-logo-img"></i>
-                        <h2 class="font-black text-white leading-tight uppercase">SVILUPPO NUOVI PROGETTI</h2>
-                    </div>
-                </div>
-                <p class="desc-premium">Collabora a produzioni originali o ricevi supporto logistico e creativo per la tua prossima idea.</p>
             </div>
 
-            <a href="cortoteca.html" class="col-span-12 md:col-span-6 bento-border--thin card card-link">
-                <div class="flex justify-between items-start w-full">
-                    <div class="flex items-center gap-4 flex-1">
-                        <i data-lucide="circle-play" class="w-12 h-12 text-white brand-logo-img"></i>
-                        <h2 class="font-black text-white leading-tight uppercase">CORTOTECA</h2>
-                    </div>
-                    <div class="icon-link-filled">
-                        <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
-                    </div>
-                </div>
-                <p class="desc-premium">Scopri l'archivio esclusivo dedicato alle opere realizzate dai soci della community CDL</p>
-            </a>
-        </main>
+            <!-- Sezione 2: partner -->
+            <h2 class="titoletto">I nostri partner</h2>
+            <div class="griglia-vantaggi">
+                <a href="https://www.centrosupercinema.com/" target="_blank" rel="noopener" class="scheda vantaggio">
+                    <img class="vantaggio-logo" src="assets/img/partner/supercinema.png" alt="C'entro Supercinema" onerror="this.style.display='none'">
+                    <span class="freccia" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h6"/></svg>
+                    </span>
+                    <h3 class="scheda-titolo">Collaborazione con C'entro Supercinema</h3>
+                    <p class="scheda-testo">Entra a prezzo ridotto nelle sale di Santarcangelo di Romagna per tutta la stagione.</p>
+                </a>
 
-        <!-- Sezione 2: partner -->
-        <div class="section-header fade-in">I Nostri Partners</div>
-        <main class="services-grid fade-in relative z-10">
-            <a href="https://www.centrosupercinema.com/" target="_blank" rel="noopener" class="col-span-12 md:col-span-6 bento-border--thin card card-link">
-                <div class="flex justify-between items-start w-full">
-                    <div class="flex items-center gap-4 flex-1">
-                        <img src="assets/img/partner/supercinema.png" alt="C'entro Supercinema" class="brand-logo-img" onerror="this.style.display='none'">
-                        <h2 class="font-black text-white leading-tight uppercase">COLLABORAZIONE CON<br>C'ENTRO SUPERCINEMA</h2>
-                    </div>
-                    <div class="icon-link-filled">
-                        <i data-lucide="external-link" class="w-4 h-4"></i>
-                    </div>
-                </div>
-                <p class="desc-premium">ENTRA A PREZZO RIDOTTO NELLE SALE DI SANTARCANGELO DI ROMAGNA PER TUTTA LA STAGIONE.</p>
-            </a>
+                <a href="https://arkadiastudios.it/rental-noleggio/" target="_blank" rel="noopener" class="scheda vantaggio">
+                    <img class="vantaggio-logo" src="assets/img/partner/arkadia.png" alt="Arkadia Studios" onerror="this.style.display='none'">
+                    <span class="freccia" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h6"/></svg>
+                    </span>
+                    <h3 class="scheda-titolo">Partnership con Arkadia Studios</h3>
+                    <p class="scheda-testo">Ottieni lo sconto del 15% per il servizio di noleggio attrezzatura presso Arkadia Rental.</p>
+                </a>
 
-            <a href="https://arkadiastudios.it/rental-noleggio/" target="_blank" rel="noopener" class="col-span-12 md:col-span-6 bento-border--thin card card-link">
-                <div class="flex justify-between items-start w-full">
-                    <div class="flex items-center gap-4 flex-1">
-                        <img src="assets/img/partner/arkadia.png" alt="Arkadia Studios" class="brand-logo-img" onerror="this.style.display='none'">
-                        <h2 class="font-black text-white leading-tight uppercase">PARTNERSHIP CON<br>ARKADIA STUDIOS</h2>
-                    </div>
-                    <div class="icon-link-filled">
-                        <i data-lucide="external-link" class="w-4 h-4"></i>
-                    </div>
-                </div>
-                <p class="desc-premium">OTTIENI LO SCONTO DEL 15% PER IL SERVIZIO DI NOLEGGIO ATTREZZATURA PRESSO ARKADIA RENTAL.</p>
-            </a>
+                <a href="https://www.alcatraz.shop/" target="_blank" rel="noopener" class="scheda vantaggio">
+                    <img class="vantaggio-logo" src="assets/img/partner/alcatraz.png" alt="Alcatraz" onerror="this.style.display='none'">
+                    <span class="freccia" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h6"/></svg>
+                    </span>
+                    <h3 class="scheda-titolo">Sconto da Alcatraz</h3>
+                    <p class="scheda-testo">Ottieni il 5% di sconto sull'editoria presso la storica fumetteria riminese.</p>
+                </a>
 
-            <a href="https://www.alcatraz.shop/" target="_blank" rel="noopener" class="col-span-12 md:col-span-6 bento-border--thin card card-link">
-                <div class="flex justify-between items-start w-full">
-                    <div class="flex items-center gap-4 flex-1">
-                        <img src="assets/img/partner/alcatraz.png" alt="Alcatraz" class="brand-logo-img" onerror="this.style.display='none'">
-                        <h2 class="font-black text-white leading-tight uppercase">SCONTO DA<br>ALCATRAZ</h2>
-                    </div>
-                    <div class="icon-link-filled">
-                        <i data-lucide="external-link" class="w-4 h-4"></i>
-                    </div>
-                </div>
-                <p class="desc-premium">OTTIENI IL 5% DI SCONTO SULL'EDITORIA PRESSO LA STORICA FUMETTERIA RIMINESE.</p>
-            </a>
-
-            <div class="col-span-12 md:col-span-6 bento-border--thin card card-minimal opacity-70">
-                <div class="flex justify-between items-center w-full">
-                    <div class="flex items-center gap-4">
-                        <i data-lucide="plus-circle" class="w-10 h-10 text-white brand-logo-img"></i>
-                        <h2 class="font-black text-white leading-tight uppercase">NUOVE COLLABORAZIONI IN ARRIVO</h2>
-                    </div>
+                <div class="riquadro riquadro--vuoto vantaggio--vuoto">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M8 12h8"/><path d="M12 8v8"/></svg>
+                    <span>Nuove collaborazioni in arrivo</span>
                 </div>
             </div>
-        </main>
 
-        <!-- Sezione 3: eventi -->
-        <div class="section-header fade-in">Eventi &amp; Community CDL</div>
-        <main class="services-grid fade-in relative z-10">
-            <div class="col-span-12 md:col-span-6 bento-border--thin card">
-                <div class="flex justify-between items-start w-full">
-                    <div class="flex items-center gap-4 flex-1">
-                        <i data-lucide="popcorn" class="w-12 h-12 text-white brand-logo-img"></i>
-                        <h2 class="font-black text-white leading-tight uppercase">EVENTI DEDICATI</h2>
-                    </div>
+            <!-- Sezione 3: eventi -->
+            <h2 class="titoletto">Eventi &amp; community CDL</h2>
+            <div class="griglia-vantaggi">
+                <div class="scheda vantaggio">
+                    <span class="scheda-icona" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a2 2 0 0 0 0-4 2 2 0 0 0-4 0 2 2 0 0 0-4 0 2 2 0 0 0-4 0 2 2 0 0 0 0 4"/><path d="M10 22 9 8"/><path d="m14 22 1-14"/><path d="M20 8c.5 0 .9.4.8 1l-2.6 12c-.1.5-.7 1-1.2 1H7c-.6 0-1.1-.4-1.2-1L3.2 9c-.1-.6.3-1 .8-1Z"/></svg>
+                    </span>
+                    <h3 class="scheda-titolo">Eventi dedicati</h3>
+                    <p class="scheda-testo">Accedi ad eventi, anteprime e workshop tecnici riservati esclusivamente alla cerchia dei tesserati.</p>
                 </div>
-                <p class="desc-premium">Accedi ad eventi, anteprime e workshop tecnici riservati esclusivamente alla cerchia dei tesserati.</p>
-            </div>
 
-            <div class="col-span-12 md:col-span-6 bento-border--thin card">
-                <div class="flex justify-between items-start w-full">
-                    <div class="flex items-center gap-4 flex-1">
-                        <i data-lucide="users" class="w-12 h-12 text-white brand-logo-img"></i>
-                        <h2 class="font-black text-white leading-tight uppercase">IL TUO NOME SUL GRANDE SCHERMO</h2>
-                    </div>
+                <div class="scheda vantaggio">
+                    <span class="scheda-icona" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><path d="M16 3.128a4 4 0 0 1 0 7.744"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><circle cx="9" cy="7" r="4"/></svg>
+                    </span>
+                    <h3 class="scheda-titolo">Il tuo nome sul grande schermo</h3>
+                    <p class="scheda-testo">I nomi dei nostri tesserati vengono inseriti nei credits proiettati prima e dopo ogni nostro evento pubblico.</p>
                 </div>
-                <p class="desc-premium">I nomi dei nostri tesserati vengono inseriti nei credits proiettati prima e dopo ogni nostro evento pubblico.</p>
             </div>
-        </main>
+        </section>
+    </main>
 
-        <div class="mt-10 flex flex-wrap items-center justify-center gap-8 social-box">
-            <a href="https://instagram.com/cdl_aps" target="_blank" rel="noopener" aria-label="Instagram" class="social-link text-white">
+    <footer class="piede">
+        <div class="piede-social">
+            <a href="https://instagram.com/cdl_aps" target="_blank" rel="noopener" aria-label="Instagram" class="social-link">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
             </a>
-            <a href="https://youtube.com/@cdlprods" target="_blank" rel="noopener" aria-label="YouTube" class="social-link text-white">
+            <a href="https://youtube.com/@cdlprods" target="_blank" rel="noopener" aria-label="YouTube" class="social-link">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 2-2 69.44 69.44 0 0 1 15 0 2 2 0 0 1 2 2 24.12 24.12 0 0 1 0 10 2 2 0 0 1-2 2 69.44 69.44 0 0 1-15 0 2 2 0 0 1-2-2z"/><polyline points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/></svg>
             </a>
-            <a href="mailto:cdlprods@gmail.com" aria-label="Scrivici" class="social-link text-white">
+            <a href="mailto:cdlprods@gmail.com" aria-label="Scrivici" class="social-link">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
             </a>
         </div>
+        <div class="piede-riga">
+            <img src="assets/img/brand/logo-cdl.png" alt="" class="footer-logo--dark" onerror="this.style.display='none'">
+            <span>2026 CDL APS</span>
+        </div>
+        <p class="piede-dati">Associazione di promozione del cinema giovane e indipendente<br>
+        CDL APS &bull; Viale Laurana 13, Rimini, 47921 &bull; CF: 91200080405</p>
+    </footer>
 
-        <footer class="mt-12 pb-4 flex flex-col justify-center items-center gap-2 fade-in">
-            <div class="flex flex-col justify-center items-center gap-2 text-[9px] font-black tracking-[0.2em] uppercase opacity-40 text-center leading-relaxed">
-                <div class="flex justify-center items-center gap-2">
-                    <img src="assets/img/brand/logo-cdl.png" alt="" class="h-2 w-auto footer-logo" onerror="this.style.display='none'">
-                    <span>2026 CDL APS</span>
-                </div>
-            </div>
-            <div class="flex flex-col items-center text-[7.5px] md:text-[8px] font-medium text-center tracking-wide text-white opacity-[0.15] hover:opacity-50 transition-opacity duration-300 mt-2 select-none leading-relaxed max-w-[320px] sm:max-w-none gap-1">
-                <span>Associazione di promozione del cinema giovane e indipendente</span>
-                <div>
-                    CDL APS &bull; Viale Laurana 13, Rimini, 47921 &bull; CF: 91200080405
-                </div>
-            </div>
-        </footer>
-    </div>
-
-    <script src="assets/js/vantaggi.js"></script>
+    <script src="assets/js/barra.js?v=2026-10-09-3"></script>
 </body>
 </html>

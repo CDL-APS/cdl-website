@@ -2,160 +2,168 @@
    CORTOTECA (cortoteca.html) — griglia delle opere
    ========================================================================== */
 
-body {
-  font-family: 'Montserrat', sans-serif;
-  background-color: var(--cdl-dark);
-  color: var(--cdl-white);
-  letter-spacing: -0.03em;
-}
-
-@media (min-width: 1024px) {
-  body {
-    overflow-y: auto;
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-    padding: 2rem 2rem !important;
-  }
-  .content-wrapper {
-    max-width: 1100px;
-  }
-}
-
-h1 {
-  font-weight: 900;
-  text-transform: uppercase;
-  line-height: 1;
-}
-
-h2 {
-  font-weight: 900;
-  text-transform: uppercase;
-  line-height: 1.1;
-  color: white;
-  transition: color 0.3s ease;
-}
-
 /* --------------------------------------------------------------------------
-   Card di un'opera
+   Ricerca e ordinamento
    -------------------------------------------------------------------------- */
-.movie-card {
-  border-left: 10px solid var(--cdl-lavender);
-  background-color: rgba(0, 0, 0, 0.65);
-  backdrop-filter: blur(8px);
-  transition: all 0.3s ease;
-  cursor: pointer;
-  overflow: hidden;
-  display: block;
-}
-
-.movie-card:hover {
-  border-color: var(--cdl-red) !important;
-  border-left-color: var(--cdl-red) !important;
-  transform: translateY(-4px);
-  background-color: rgba(0, 0, 0, 0.85);
-}
-
-.img-still {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  opacity: 0.8;
-  transition: all 0.5s ease;
-}
-
-.movie-card:hover .img-still {
-  opacity: 1;
-  transform: scale(1.05);
-}
-
-/* Sfumatura che rende leggibile il testo sopra il fotogramma */
-.overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.1) 100%);
+.strumenti {
   display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  padding: 1rem;
-  transition: opacity 0.3s ease;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin: clamp(2rem, 5vw, 3rem) 0 var(--spazio);
 }
 
-/* Bollino CDL sulle opere prodotte dall'associazione */
-.cdl-logo-badge {
-  height: 10px;
-  width: auto;
-  opacity: 1;
-  transition: transform 0.3s ease;
+.campo {
+  flex: 1 1 320px;
+  max-width: 520px;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0 1.1rem;
+  height: 48px;
+  border-radius: var(--r-s);
+  border: 1px solid var(--riga);
+  background: rgba(29, 29, 27, 0.025);
+  color: var(--testo-medio);
+  cursor: text;
+  transition: border-color 0.25s var(--ease-out), background-color 0.25s var(--ease-out);
 }
 
-@media (min-width: 768px) {
-  .cdl-logo-badge {
-    height: 14px;
-  }
+.campo:focus-within {
+  border-color: var(--cdl-dark);
+  background: var(--cdl-white);
 }
 
-/* --------------------------------------------------------------------------
-   Barra di ricerca
-   -------------------------------------------------------------------------- */
-.search-container {
-  background-color: white;
+.campo input {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  border: 0;
+  outline: 0;
+  background: none;
+  font: inherit;
+  font-size: 0.95rem;
   color: var(--cdl-dark);
-  border: 2px solid var(--cdl-dark);
-  box-shadow: 6px 6px 0px rgba(0, 0, 0, 0.3);
-  transition: all 0.2s ease;
 }
+
+.campo input::placeholder { color: var(--testo-tenue); }
+
+/* L'anello del focus lo disegna già il bordo del campo */
+.campo input:focus-visible { outline: none; }
+
+/* Interruttore a due posizioni: due radio nascosti, le etichette fanno da
+   pulsanti. Quello scelto è pieno. */
+.ordine {
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  border-radius: 999px;
+  border: 1px solid var(--riga);
+}
+
+.ordine input { position: absolute; opacity: 0; pointer-events: none; }
+
+.scelta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.6rem 0.95rem;
+  border-radius: 999px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 9.5px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--testo-tenue);
+  cursor: pointer;
+  transition: background-color 0.25s var(--ease-out), color 0.25s var(--ease-out);
+}
+
+.scelta svg { width: 13px; height: 13px; }
+
+.scelta:hover { color: var(--cdl-dark); }
+
+.ordine input:checked + .scelta { background: var(--cdl-dark); color: var(--cdl-white); }
+
+.ordine input:focus-visible + .scelta { outline: 3px solid var(--cdl-lavender); outline-offset: 2px; }
 
 /* --------------------------------------------------------------------------
-   Interruttore di ordinamento (per nome / per anno)
+   Griglia delle opere
    -------------------------------------------------------------------------- */
-.switch {
-  position: relative;
-  display: inline-block;
-  width: 44px;
-  height: 24px;
+.griglia-opere {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--spazio);
 }
 
-.switch input {
+.griglia-opere .riquadro {
+  min-height: 0;
+  aspect-ratio: 1;
+}
+
+/* Ingresso a cascata: ogni card parte bassa e trasparente, il ritardo
+   crescente lo imposta cortoteca.js */
+.opera {
   opacity: 0;
-  width: 0;
-  height: 0;
+  transform: translateY(15px);
+  transition: opacity 0.4s ease, transform 0.4s ease, box-shadow 0.4s var(--ease-out);
 }
 
-.slider {
+.opera.is-visibile { opacity: 1; transform: none; }
+
+/* Bollino CDL sulle opere prodotte dall'associazione: stessa pastiglia di
+   vetro della freccia, nell'angolo opposto */
+.bollino-cdl {
   position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #333;
-  transition: 0.4s;
-  border-radius: 24px;
-  border: 1px solid white;
+  top: 14px;
+  left: 14px;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  height: 38px;
+  padding: 0 0.9rem;
+  border-radius: 999px;
+  corner-shape: squircle;
+  background: rgba(247, 247, 247, 0.72);
+  backdrop-filter: blur(14px) saturate(150%);
+  -webkit-backdrop-filter: blur(14px) saturate(150%);
+  border: 1px solid rgba(255, 255, 255, 0.7);
 }
 
-.slider:before {
-  position: absolute;
-  content: '';
-  height: 16px;
-  width: 16px;
-  left: 3px;
-  bottom: 3px;
-  background-color: white;
-  transition: 0.4s;
-  border-radius: 50%;
+.bollino-cdl img { width: 31px; height: 12px; filter: brightness(0); }
+
+/* Riquadro "vuoi la tua opera qui?" sempre in coda */
+#add-card { order: 1; }
+
+#add-card svg { width: 26px; height: 26px; color: var(--testo-medio); transition: transform 0.4s var(--ease-out); }
+
+#add-card:hover svg { transform: rotate(90deg); }
+
+#add-card .invito { color: var(--cdl-dark); }
+
+/* Ricerca senza risultati o database non raggiungibile */
+.avviso {
+  grid-column: 1 / -1;
+  padding: 3rem 1rem;
+  text-align: center;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--testo-tenue);
 }
 
-input:checked + .slider {
-  background-color: var(--cdl-lavender);
+@media (max-width: 1000px) {
+  .griglia-opere { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
-input:checked + .slider:before {
-  transform: translateX(20px);
-  background-color: var(--cdl-dark);
+@media (max-width: 620px) {
+  .griglia-opere { grid-template-columns: 1fr; }
+  .campo { max-width: none; }
 }
 
-/* Barra di scorrimento su fondo scuro */
-::-webkit-scrollbar-track { background: var(--cdl-dark); }
-::-webkit-scrollbar-thumb { background: var(--cdl-lavender); }
+@media (prefers-reduced-motion: reduce) {
+  .opera { opacity: 1; transform: none; }
+}

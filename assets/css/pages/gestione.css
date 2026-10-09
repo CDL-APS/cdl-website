@@ -1,0 +1,312 @@
+/* ==========================================================================
+   GESTIONE (gestione.html) — pagina riservata ai redattori: accesso, elenco
+   di opere ed eventi, moduli di modifica.
+   ========================================================================== */
+
+/* Niente barra galleggiante: al suo posto una testata semplice che resta in
+   cima. Lo spazio riservato alla barra in base.css qui non serve. */
+body.gestione { padding-top: 0; }
+
+.g-testata {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem clamp(1rem, 3vw, 1.5rem);
+  background: rgba(247, 247, 247, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--riga);
+}
+
+.g-marchio {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10.5px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+}
+
+.g-marchio img { width: 42px; height: auto; filter: brightness(0); }
+
+.g-utente { display: flex; align-items: center; gap: 0.75rem; }
+
+.g-utente-email { font-size: 0.85rem; color: var(--testo-tenue); }
+
+.g-utente .btn,
+.g-intestazione .btn { padding: 0.6rem 1rem; }
+
+/* Messaggio di esito (salvato, errore) */
+.g-avviso {
+  margin-bottom: var(--spazio);
+  padding: 0.85rem 1.1rem;
+  border-radius: var(--r-s);
+  corner-shape: squircle;
+  background: rgba(185, 187, 248, 0.35);
+  font-weight: 600;
+}
+
+.g-avviso--errore { background: rgba(255, 0, 0, 0.12); color: #a00000; }
+
+.g-vuoto {
+  padding: 2rem 0;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--testo-tenue);
+}
+
+/* --------------------------------------------------------------------------
+   Accesso
+   -------------------------------------------------------------------------- */
+.g-accesso {
+  max-width: 420px;
+  margin: clamp(1rem, 6vw, 4rem) auto;
+  gap: 1rem;
+}
+
+.g-accesso h1 { font-size: clamp(1.6rem, 4vw, 2.2rem); }
+
+.g-accesso .btn { align-self: flex-start; }
+
+/* --------------------------------------------------------------------------
+   Elenco
+   -------------------------------------------------------------------------- */
+.g-intestazione {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: var(--spazio);
+}
+
+.g-intestazione h1 { font-size: clamp(1.6rem, 4vw, 2.6rem); }
+
+.g-schede {
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  border-radius: 999px;
+  border: 1px solid var(--riga);
+}
+
+.g-scheda {
+  padding: 0.6rem 1.1rem;
+  border: 0;
+  border-radius: 999px;
+  background: none;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--testo-tenue);
+  cursor: pointer;
+}
+
+.g-scheda[aria-selected='true'] { background: var(--cdl-dark); color: var(--cdl-white); }
+
+.g-elenco { list-style: none; border-top: 1px solid var(--riga); }
+
+.g-riga {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.3rem 1rem;
+  width: 100%;
+  padding: 1rem 0.5rem;
+  border: 0;
+  border-bottom: 1px solid var(--riga);
+  background: none;
+  font: inherit;
+  text-align: left;
+  color: inherit;
+  cursor: pointer;
+  transition: background-color 0.25s var(--ease-out);
+}
+
+.g-riga:hover { background: rgba(185, 187, 248, 0.18); }
+
+.g-riga-titolo {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+}
+
+.g-riga-dati { grid-column: 1; font-size: 0.85rem; color: var(--testo-tenue); }
+
+.g-segni { grid-row: 1 / span 2; grid-column: 2; display: flex; gap: 0.4rem; }
+
+.g-segno {
+  padding: 0.35rem 0.65rem;
+  border-radius: 999px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 8.5px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  background: rgba(29, 29, 27, 0.08);
+}
+
+.g-segno--pubblicata { background: var(--cdl-lavender); }
+
+.g-segno--bozza { background: none; border: 1px dashed var(--testo-tenue); color: var(--testo-tenue); }
+
+/* --------------------------------------------------------------------------
+   Moduli
+   -------------------------------------------------------------------------- */
+.g-modulo { display: flex; flex-direction: column; gap: var(--spazio); }
+
+.g-gruppo { margin: 0; padding: 0; border: 0; min-width: 0; }
+
+.g-gruppo .titoletto { width: 100%; margin-top: 0.5rem; padding: 0; }
+
+.g-griglia {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem 1.25rem;
+}
+
+.g-campo { display: flex; flex-direction: column; gap: 0.4rem; }
+
+.g-campo--largo { grid-column: 1 / -1; }
+
+.g-campo > span:first-child {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 9px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--testo-medio);
+}
+
+.g-campo small,
+.g-spunta small { font-size: 0.78rem; line-height: 1.4; color: var(--testo-tenue); }
+
+.g-campo input,
+.g-campo textarea,
+.g-interprete input {
+  width: 100%;
+  padding: 0.7rem 0.9rem;
+  border: 1px solid var(--riga);
+  border-radius: var(--r-s);
+  corner-shape: squircle;
+  background: rgba(29, 29, 27, 0.025);
+  font: inherit;
+  font-size: 0.95rem;
+  color: var(--cdl-dark);
+  transition: border-color 0.2s var(--ease-out), background-color 0.2s var(--ease-out);
+}
+
+.g-campo textarea { resize: vertical; line-height: 1.55; }
+
+.g-campo input:focus,
+.g-campo textarea:focus,
+.g-interprete input:focus {
+  outline: none;
+  border-color: var(--cdl-dark);
+  background: #fff;
+}
+
+.g-campo input[readonly] { color: var(--testo-tenue); background: none; border-style: dashed; }
+
+/* Campo da correggere dopo un tentativo di salvataggio */
+.g-modulo.is-verificato :invalid { border-color: var(--cdl-red); }
+
+.g-spunta {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  grid-column: 1 / -1;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.g-spunta input { width: 18px; height: 18px; margin-top: 2px; accent-color: var(--cdl-dark); }
+
+/* Immagini */
+.g-anteprima {
+  width: 100%;
+  max-width: 420px;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: var(--r-m);
+  corner-shape: squircle;
+  background: rgba(29, 29, 27, 0.06);
+}
+
+.g-immagine-azioni { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+
+.g-immagine-azioni .btn { padding: 0.6rem 1rem; }
+
+/* Cast */
+.g-interpreti { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 0.75rem; }
+
+.g-interprete {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) repeat(3, 38px);
+  gap: 0.4rem;
+  align-items: center;
+}
+
+.g-icona {
+  height: 38px;
+  border: 1px solid var(--riga);
+  border-radius: var(--r-s);
+  background: none;
+  font-size: 0.95rem;
+  color: var(--testo-medio);
+  cursor: pointer;
+}
+
+.g-icona:hover { border-color: var(--cdl-dark); color: var(--cdl-dark); }
+
+/* Corti collegati a un evento */
+.g-collegate {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 0.6rem 1.25rem;
+}
+
+.g-collegate .g-spunta { grid-column: auto; font-weight: 500; }
+
+/* Fondo del modulo: pubblicazione e pulsanti */
+.g-piede-modulo {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 0.5rem;
+  padding: 1rem 0;
+  border-top: 1px solid var(--riga);
+  background: var(--cdl-white);
+}
+
+.g-piede-modulo .azioni { margin-top: 0; }
+
+.g-piede-modulo .g-spunta { grid-column: auto; }
+
+.g-elimina { border-color: var(--cdl-red); color: var(--cdl-red); }
+
+.btn[disabled] { opacity: 0.5; pointer-events: none; }
+
+@media (max-width: 760px) {
+  .g-griglia { grid-template-columns: 1fr; }
+  .g-utente-email { display: none; }
+  .g-interprete { grid-template-columns: minmax(0, 1fr) repeat(3, 38px); }
+  .g-interprete [data-ruolo] { grid-column: 1; grid-row: 2; }
+}

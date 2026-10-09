@@ -2,14 +2,14 @@
    CORNICE NARRATIVA (cornicenarrativa.html)
    Generatore interattivo del "biglietto" di Long Story Short 2026:
    l'utente sceglie capolinea, percorso e generi, e ottiene la sua traccia.
-   ========================================================================== */
 
-body {
-  font-family: 'Inter', sans-serif;
-  background-color: #f7f7f7;
-  color: #000000;
-  letter-spacing: -0.02em;
-}
+   La pagina usa ancora Tailwind, perché assets/js/cornice.js costruisce i
+   suoi blocchi con quelle classi. Barra, piede e fondo sono quelli del resto
+   del sito; qui sotto le superfici del generatore vengono riportate alla
+   stessa identità (angoli squircle, bordi sottili, niente ombre nere).
+   Le regole partono da body.cornice: due classi bastano a scavalcare le
+   utility di Tailwind, che arrivano dopo questo foglio.
+   ========================================================================== */
 
 /* Colori delle tre linee della metropolitana */
 :root {
@@ -21,34 +21,87 @@ body {
   --red: #ff2222;
 }
 
-.content-wrapper {
-  max-width: 1200px;
-}
+.cornice .sezione { padding-bottom: clamp(2rem, 4vw, 3rem); }
 
-/* La copertina qui sta ancora più in fondo e non intercetta i clic */
-.bg-fixed-cover {
-  z-index: -10;
-  pointer-events: none;
-}
+/* --------------------------------------------------------------------------
+   Testata dello strumento: il filetto nero diventa la riga sottile del sito
+   -------------------------------------------------------------------------- */
+.cornice .testata-cornice { border-bottom: 1px solid var(--riga); }
 
-/* Sfumatura di riserva se la copertina non si carica */
-.bg-fixed-cover::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.4) 0%, rgba(247, 247, 247, 0.95) 100%);
-  z-index: -11;
-}
-
-.box-style {
-  border: 2px solid #000000;
-  background-color: #ffffff;
+/* --------------------------------------------------------------------------
+   Superfici: da cornice nera con ombra a fumetto a scheda chiara squircle
+   -------------------------------------------------------------------------- */
+.cornice .box-style {
   position: relative;
+  border: 1px solid var(--riga);
+  border-radius: var(--r-m);
+  corner-shape: squircle;
+  box-shadow: none;
 }
 
-.fade-in {
-  animation: fadeIn 0.6s ease-out forwards;
+/* Riquadri tratteggiati (biglietto non ancora pronto) */
+.cornice .box-style.border-dashed { border: 2px dashed var(--riga); }
+
+/* Etichette dei passaggi: pastiglie scure invece di rettangoli */
+.cornice h3.bg-black {
+  border-radius: 999px;
+  padding-left: 0.9rem;
+  padding-right: 0.9rem;
 }
+
+/* Pulsanti di scelta (generi, fermate, capolinea): pastiglie */
+.cornice .box-style button {
+  border-radius: 999px;
+  corner-shape: squircle;
+}
+
+/* Le due strade (diretto, cambio): stessa forma delle altre schede. Quella
+   scelta è nera, e deve restarlo anche sotto il mouse: senza questa regola
+   l'hover di Tailwind la schiariva lasciando il testo bianco su bianco. */
+.cornice [id^='strada-'] {
+  border-radius: var(--r-m);
+  corner-shape: squircle;
+}
+
+.cornice [id^='strada-'].bg-black:hover { background-color: #000; }
+
+/* Riquadri dei generi di riferimento sotto ogni linea */
+.cornice .bg-neutral-50 { border-radius: var(--r-s); corner-shape: squircle; }
+
+/* Mappa: riquadro scuro come l'apertura della home */
+.cornice #mobile-sec-map .box-style { border-color: transparent; border-radius: var(--r-l); }
+
+.cornice #mobile-sec-map .box-style > div:last-child {
+  border-radius: var(--r-m);
+  corner-shape: squircle;
+}
+
+/* --------------------------------------------------------------------------
+   Schede su mobile: agganciate sotto la barra galleggiante, non sopra
+   -------------------------------------------------------------------------- */
+.cornice #schede-mobili {
+  top: calc(var(--barra-h) + var(--barra-top) + 8px);
+  overflow: hidden;
+  border: 1px solid var(--riga);
+  border-radius: var(--r-m);
+  corner-shape: squircle;
+  box-shadow: 0 10px 30px rgba(29, 29, 27, 0.1);
+}
+
+.cornice #schede-mobili button { border-right: 1px solid var(--riga); }
+
+.cornice #schede-mobili button:last-child { border-right: 0; }
+
+/* --------------------------------------------------------------------------
+   Biglietto: resta un biglietto della metro, con il suo bordo scuro, ma con
+   gli angoli e l'ombra del resto del sito
+   -------------------------------------------------------------------------- */
+.cornice #biglietto .box-style {
+  border: 2px solid var(--cdl-dark);
+  box-shadow: 0 16px 40px rgba(29, 29, 27, 0.16);
+}
+
+.cornice #biglietto button { border-radius: var(--r-s); corner-shape: squircle; }
 
 /* --------------------------------------------------------------------------
    Pallini identificativi delle linee nei pulsanti
@@ -88,8 +141,8 @@ body {
   transform: translateY(-50%);
   width: 24px;
   height: 24px;
-  background-color: #f7f7f7; /* stesso colore del body */
-  border: 2px solid #000000;
+  background-color: var(--cdl-white); /* stesso colore del body */
+  border: 2px solid var(--cdl-dark);
   border-radius: 50%;
   z-index: 20;
 }
@@ -101,8 +154,3 @@ body {
 .ticket-punch-right::after {
   right: -12px;
 }
-
-/* Barra di scorrimento su fondo chiaro */
-::-webkit-scrollbar { width: 8px; }
-::-webkit-scrollbar-track { background: #f7f7f7; }
-::-webkit-scrollbar-thumb { background: #000000; border-radius: 10px; }

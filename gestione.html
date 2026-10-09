@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CDL | Gestione</title>
+    <meta name="robots" content="noindex, nofollow">
+
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="icon" type="image/png" href="assets/img/brand/favicon.png">
+
+    <link rel="stylesheet" href="assets/css/base.css?v=2026-10-09-3">
+    <link rel="stylesheet" href="assets/css/components.css?v=2026-10-09-3">
+    <link rel="stylesheet" href="assets/css/pages/gestione.css?v=2026-10-09-3">
+</head>
+<body class="gestione">
+
+    <!-- Pagina riservata ai redattori: accesso con email e password, poi
+         modifica di opere ed eventi sul database. Le regole del database
+         impediscono comunque di scrivere a chi non è redattore: questa pagina
+         è solo l'interfaccia. -->
+
+    <header class="g-testata">
+        <a href="index.html" class="g-marchio" aria-label="Torna al sito">
+            <img src="assets/img/brand/logo-cdl.png" alt="CDL">
+            <span>Gestione</span>
+        </a>
+        <div id="utente" class="g-utente" hidden>
+            <span id="utente-email" class="g-utente-email"></span>
+            <button type="button" id="esci" class="btn">Esci</button>
+        </div>
+    </header>
+
+    <main class="sezione sezione--prima">
+
+        <p id="avviso" class="g-avviso" role="status" aria-live="polite" hidden></p>
+
+        <!-- ============================================================
+             ACCESSO
+             ============================================================ -->
+        <section data-vista="accesso" hidden>
+            <form id="modulo-accesso" class="scheda g-accesso">
+                <h1>Accedi</h1>
+                <p class="scheda-testo">Riservato a chi gestisce i contenuti del sito.</p>
+                <label class="g-campo">
+                    <span>Email</span>
+                    <input type="email" name="email" required autocomplete="username">
+                </label>
+                <label class="g-campo">
+                    <span>Password</span>
+                    <input type="password" name="password" required autocomplete="current-password">
+                </label>
+                <button type="submit" class="btn btn--pieno">Accedi</button>
+            </form>
+        </section>
+
+        <!-- Account valido ma non abilitato -->
+        <section data-vista="negato" hidden>
+            <div class="scheda g-accesso">
+                <h1>Account non abilitato</h1>
+                <p class="scheda-testo">Hai fatto l'accesso, ma questo account non è fra i redattori del sito. Chiedi a chi amministra il progetto Supabase di aggiungerti.</p>
+            </div>
+        </section>
+
+        <section data-vista="caricamento" hidden>
+            <p class="g-vuoto">Caricamento…</p>
+        </section>
+
+        <!-- ============================================================
+             ELENCO DI OPERE O EVENTI
+             ============================================================ -->
+        <section data-vista="elenco" hidden>
+            <div class="g-intestazione">
+                <div class="g-schede" role="tablist" aria-label="Contenuti">
+                    <button type="button" role="tab" class="g-scheda" data-scheda="opere">Opere</button>
+                    <button type="button" role="tab" class="g-scheda" data-scheda="eventi">Eventi</button>
+                </div>
+                <button type="button" id="nuovo" class="btn btn--pieno">Nuova opera</button>
+            </div>
+            <ul id="elenco" class="g-elenco"></ul>
+        </section>
+
+        <!-- ============================================================
+             MODULO OPERA
+             ============================================================ -->
+        <section data-vista="opera" hidden>
+            <form id="modulo-opera" class="g-modulo" novalidate>
+                <div class="g-intestazione">
+                    <h1 id="titolo-modulo-opera">Nuova opera</h1>
+                    <a id="vedi-opera" class="rimando" target="_blank" rel="noopener" hidden>Vedi sul sito</a>
+                </div>
+
+                <fieldset class="g-gruppo">
+                    <legend class="titoletto">Opera</legend>
+                    <div class="g-griglia">
+                        <label class="g-campo g-campo--largo">
+                            <span>Titolo *</span>
+                            <input type="text" name="titolo" required>
+                        </label>
+                        <label class="g-campo">
+                            <span>Codice *</span>
+                            <input type="text" name="codice" required pattern="[a-z0-9]+(-[a-z0-9]+)*" data-codice>
+                            <small>Compare nell'indirizzo della scheda (opera.html?film=…). Si genera dal titolo e non si cambia dopo il primo salvataggio.</small>
+                        </label>
+                        <label class="g-campo">
+                            <span>Anno *</span>
+                            <input type="number" name="anno" required min="1900" max="2100">
+                        </label>
+                        <label class="g-campo">
+                            <span>Regia *</span>
+                            <input type="text" name="regista" required>
+                        </label>
+                        <label class="g-campo">
+                            <span>Generi</span>
+                            <input type="text" name="generi" placeholder="thriller, mistero">
+                            <small>Separati da virgole.</small>
+                        </label>
+                        <label class="g-campo">
+                            <span>Produzione</span>
+                            <input type="text" name="produzione">
+                        </label>
+                        <label class="g-spunta">
+                            <input type="checkbox" name="produzione_cdl">
+                            <span>Prodotta da CDL <small>(logo sulla card, elenco Produzioni, casella in home)</small></span>
+                        </label>
+                        <label class="g-campo g-campo--largo">
+                            <span>Tagline</span>
+                            <input type="text" name="tagline">
+                        </label>
+                    </div>
+                </fieldset>
+
+                <fieldset class="g-gruppo">
+                    <legend class="titoletto">Testi</legend>
+                    <div class="g-griglia">
+                        <label class="g-campo g-campo--largo">
+                            <span>Sinossi</span>
+                            <textarea name="sinossi" rows="4"></textarea>
+                        </label>
+                        <label class="g-campo g-campo--largo">
+                            <span>Note di regia</span>
+                            <textarea name="note_regia" rows="6"></textarea>
+                        </label>
+                    </div>
+                </fieldset>
+
+                <fieldset class="g-gruppo">
+                    <legend class="titoletto">Immagine e collegamenti</legend>
+                    <div class="g-griglia">
+                        <div class="g-campo g-campo--largo g-immagine" data-campo="fotogramma" data-cartella="opere">
+                            <span>Fotogramma</span>
+                            <img class="g-anteprima" alt="" hidden>
+                            <div class="g-immagine-azioni">
+                                <label class="btn">Scegli immagine<input type="file" accept="image/*" hidden></label>
+                                <button type="button" class="btn g-togli" hidden>Togli</button>
+                            </div>
+                            <input type="hidden" name="fotogramma">
+                            <small>JPEG o PNG. Viene ridimensionata e convertita in automatico.</small>
+                        </div>
+                        <label class="g-campo">
+                            <span>Video (YouTube o Vimeo)</span>
+                            <input type="url" name="video_url" placeholder="https://">
+                            <small>Se vuoto, la scheda mostra "streaming in arrivo".</small>
+                        </label>
+                        <label class="g-campo">
+                            <span>Letterboxd</span>
+                            <input type="url" name="letterboxd_url" placeholder="https://letterboxd.com/film/…">
+                        </label>
+                    </div>
+                </fieldset>
+
+                <fieldset class="g-gruppo">
+                    <legend class="titoletto">Troupe</legend>
+                    <div class="g-griglia">
+                        <label class="g-campo"><span>Sceneggiatura</span><input type="text" name="sceneggiatura"></label>
+                        <label class="g-campo"><span>Produttore</span><input type="text" name="produttore"></label>
+                        <label class="g-campo"><span>Fotografia (DOP)</span><input type="text" name="fotografia"></label>
+                        <label class="g-campo"><span>Montaggio</span><input type="text" name="montaggio"></label>
+                        <label class="g-campo"><span>Colonna sonora</span><input type="text" name="colonna_sonora"></label>
+                        <label class="g-campo"><span>Scenografia</span><input type="text" name="scenografia"></label>
+                        <label class="g-campo"><span>Trucco</span><input type="text" name="trucco"></label>
+                        <label class="g-campo"><span>Costumi</span><input type="text" name="costumi"></label>
+                    </div>
+                </fieldset>
+
+                <fieldset class="g-gruppo">
+                    <legend class="titoletto">Cast</legend>
+                    <ol id="interpreti" class="g-interpreti"></ol>
+                    <button type="button" id="aggiungi-interprete" class="btn">Aggiungi interprete</button>
+                </fieldset>
+
+                <div class="g-piede-modulo">
+                    <label class="g-spunta">
+                        <input type="checkbox" name="pubblicata">
+                        <span>Pubblicata <small>(visibile sul sito)</small></span>
+                    </label>
+                    <div class="azioni">
+                        <button type="submit" class="btn btn--pieno">Salva</button>
+                        <button type="button" class="btn" data-annulla>Annulla</button>
+                        <button type="button" class="btn g-elimina" data-elimina hidden>Elimina</button>
+                    </div>
+                </div>
+            </form>
+        </section>
+
+        <!-- ============================================================
+             MODULO EVENTO
+             ============================================================ -->
+        <section data-vista="evento" hidden>
+            <form id="modulo-evento" class="g-modulo" novalidate>
+                <div class="g-intestazione">
+                    <h1 id="titolo-modulo-evento">Nuovo evento</h1>
+                </div>
+
+                <fieldset class="g-gruppo">
+                    <legend class="titoletto">Evento</legend>
+                    <div class="g-griglia">
+                        <label class="g-campo g-campo--largo">
+                            <span>Titolo *</span>
+                            <input type="text" name="titolo" required>
+                        </label>
+                        <label class="g-campo">
+                            <span>Codice *</span>
+                            <input type="text" name="codice" required pattern="[a-z0-9]+(-[a-z0-9]+)*" data-codice>
+                            <small>Identificativo interno. Si genera dal titolo e non si cambia dopo il primo salvataggio.</small>
+                        </label>
+                        <label class="g-campo">
+                            <span>Luogo</span>
+                            <input type="text" name="luogo">
+                        </label>
+                        <label class="g-campo">
+                            <span>Data di inizio *</span>
+                            <input type="date" name="data_inizio" required>
+                        </label>
+                        <label class="g-campo">
+                            <span>Data di fine</span>
+                            <input type="date" name="data_fine">
+                        </label>
+                        <label class="g-campo g-campo--largo">
+                            <span>Riassunto</span>
+                            <input type="text" name="riassunto" placeholder="Produzione dal 24 al 28 giugno • Serata finale 10 luglio, Cinema Teatro Tiberio">
+                            <small>Riga breve mostrata sotto il titolo in home e nella pagina Eventi.</small>
+                        </label>
+                        <label class="g-campo g-campo--largo">
+                            <span>Descrizione</span>
+                            <textarea name="descrizione" rows="4"></textarea>
+                        </label>
+                        <label class="g-campo g-campo--largo">
+                            <span>Pagina dedicata</span>
+                            <input type="text" name="pagina" placeholder="longstoryshort.html">
+                            <small>Se l'evento ha una pagina sul sito (o un indirizzo esterno), il riquadro porta lì.</small>
+                        </label>
+                    </div>
+                </fieldset>
+
+                <fieldset class="g-gruppo">
+                    <legend class="titoletto">Immagini</legend>
+                    <div class="g-griglia">
+                        <div class="g-campo g-immagine" data-campo="miniatura" data-cartella="eventi">
+                            <span>Miniatura (home ed Eventi)</span>
+                            <img class="g-anteprima" alt="" hidden>
+                            <div class="g-immagine-azioni">
+                                <label class="btn">Scegli immagine<input type="file" accept="image/*" hidden></label>
+                                <button type="button" class="btn g-togli" hidden>Togli</button>
+                            </div>
+                            <input type="hidden" name="miniatura">
+                        </div>
+                        <div class="g-campo g-immagine" data-campo="copertina" data-cartella="eventi">
+                            <span>Copertina</span>
+                            <img class="g-anteprima" alt="" hidden>
+                            <div class="g-immagine-azioni">
+                                <label class="btn">Scegli immagine<input type="file" accept="image/*" hidden></label>
+                                <button type="button" class="btn g-togli" hidden>Togli</button>
+                            </div>
+                            <input type="hidden" name="copertina">
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset class="g-gruppo">
+                    <legend class="titoletto">Corti nati dall'evento</legend>
+                    <div id="opere-collegate" class="g-collegate"></div>
+                </fieldset>
+
+                <div class="g-piede-modulo">
+                    <label class="g-spunta">
+                        <input type="checkbox" name="pubblicato">
+                        <span>Pubblicato <small>(visibile sul sito)</small></span>
+                    </label>
+                    <div class="azioni">
+                        <button type="submit" class="btn btn--pieno">Salva</button>
+                        <button type="button" class="btn" data-annulla>Annulla</button>
+                        <button type="button" class="btn g-elimina" data-elimina hidden>Elimina</button>
+                    </div>
+                </div>
+            </form>
+        </section>
+    </main>
+
+    <!-- Riga di un interprete, copiata dal JS per ogni voce del cast -->
+    <template id="modello-interprete">
+        <li class="g-interprete">
+            <input type="text" data-nome placeholder="Nome" aria-label="Nome dell'interprete">
+            <input type="text" data-ruolo placeholder="Ruolo" aria-label="Ruolo">
+            <button type="button" class="g-icona" data-su aria-label="Sposta su">↑</button>
+            <button type="button" class="g-icona" data-giu aria-label="Sposta giù">↓</button>
+            <button type="button" class="g-icona" data-togli aria-label="Togli">✕</button>
+        </li>
+    </template>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.3/dist/umd/supabase.min.js"></script>
+    <script src="assets/js/dati.js?v=2026-10-09-3"></script>
+    <script src="assets/js/gestione.js?v=2026-10-09-3"></script>
+</body>
+</html>

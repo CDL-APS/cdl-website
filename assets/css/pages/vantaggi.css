@@ -2,293 +2,77 @@
    VANTAGGI PER I SOCI (vantaggi-tesseramento.html)
    ========================================================================== */
 
-body {
-  font-family: 'Montserrat', sans-serif;
-  background-color: var(--cdl-dark);
-  color: var(--cdl-white);
-  letter-spacing: -0.03em;
-}
-
-@media (min-width: 1024px) {
-  body {
-    overflow-y: auto;
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-    padding: 3rem 2rem !important;
-  }
-  .content-wrapper {
-    max-width: 1100px;
-  }
-  .services-grid {
-    gap: 1.25rem !important;
-  }
-  .card {
-    min-height: 160px !important;
-    padding: 1.75rem !important;
-  }
-  .social-box {
-    margin-top: 2.5rem !important;
-  }
-  footer {
-    margin-top: 3rem !important;
-  }
-}
-
-.content-wrapper {
-  max-width: 1100px;
-  margin: auto;
-}
-
-h2 {
-  font-weight: 900;
-  text-transform: uppercase;
-  line-height: 1.1;
-  /* clamp() fa scalare il titolo con la larghezza della finestra restando
-     entro un minimo e un massimo, evitando sia titoli minuscoli sia a capo
-     sgradevoli */
-  font-size: clamp(1.2rem, 3.5vw, 1.6rem);
-  hyphens: auto;
-  word-wrap: break-word;
-  color: white;
-  transition: color 0.3s ease;
-}
-
 /* --------------------------------------------------------------------------
-   Intestazioni di sezione, con filetto sfumato a destra
+   Invito a iscriversi: tinta lavanda e tessera, come il riquadro del
+   tesseramento in home. Non è un collegamento unico ma porta due pulsanti,
+   quindi non cambia colore al passaggio del mouse.
    -------------------------------------------------------------------------- */
-.section-header {
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.3em;
-  font-size: 12px;
-  color: var(--cdl-lavender);
-  margin: 2.5rem 0 1.25rem 0;
+.invito {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  justify-content: space-between;
+  gap: clamp(1.25rem, 4vw, 3rem);
+  margin-top: clamp(2rem, 5vw, 3rem);
+  padding: clamp(1.5rem, 4vw, 2.75rem);
+  border-radius: var(--r-l);
+  corner-shape: squircle;
+  background: var(--cdl-lavender);
+  scroll-margin-top: calc(var(--barra-h) + var(--barra-top) * 2);
 }
 
-.section-header::after {
-  content: '';
-  flex: 1;
-  height: 1px;
-  background: linear-gradient(90deg, var(--cdl-lavender), transparent);
+.invito-testo { display: flex; flex-direction: column; gap: 0.6rem; }
+
+.invito h2 { font-size: clamp(1.85rem, 4.6vw, 3.25rem); }
+
+.invito .azioni { margin-top: 1rem; }
+
+.invito .tessera {
+  width: clamp(110px, 16vw, 200px);
+  height: auto;
+  flex: 0 0 auto;
+  border-radius: var(--r-s);
+  corner-shape: squircle;
+  transform: rotate(-5deg);
 }
 
 /* --------------------------------------------------------------------------
-   Griglia dei servizi
+   Griglie dei vantaggi
    -------------------------------------------------------------------------- */
-.services-grid {
+.griglia-vantaggi {
   display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  gap: 1.5rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--spazio);
 }
 
-.card {
-  padding: 1.5rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  min-height: 130px;
-  overflow: hidden;
-  border-left: 6px solid var(--cdl-lavender);
-  background-color: rgba(0, 0, 0, 0.65);
-  backdrop-filter: blur(8px);
-  transition: all 0.3s ease;
-}
+.vantaggio { min-height: 170px; }
 
-.card-minimal {
-  min-height: 80px !important;
-  padding: 1rem 1.5rem !important;
-  justify-content: center !important;
-}
+/* Il titolo non deve finire sotto la freccia nell'angolo */
+a.vantaggio .scheda-titolo { padding-right: 2.5rem; }
 
-.card-link:hover h2,
-.card-link:hover .desc-premium {
-  color: var(--cdl-lavender) !important;
-}
+.vantaggio-logo { margin-bottom: 0.4rem; }
 
-.desc-premium {
-  font-size: clamp(0.7rem, 1vw, 0.85rem);
-  font-weight: 400;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  opacity: 0.9;
-  line-height: 1.4;
-  color: white;
-  transition: color 0.3s ease;
-  margin-top: 1rem;
-}
-
-/* Pastiglia bianca con la freccia sui riquadri che portano fuori */
-.icon-link-filled {
-  background-color: white;
-  color: black;
-  padding: 4px;
-  border-radius: 4px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 26px;
-  height: 26px;
-  transition: all 0.3s ease;
-  flex-shrink: 0;
-}
-
-.card-link:hover .icon-link-filled {
-  background-color: var(--cdl-red);
-  color: white;
-}
-
-/* --------------------------------------------------------------------------
-   Loghi dei partner.
-   I loghi arrivano coi loro colori originali: il filtro li appiattisce in
-   bianco, e al passaggio del mouse li vira al lavanda del brand.
-   -------------------------------------------------------------------------- */
-.brand-logo-img {
-  max-height: 65px;
+/* I loghi dei partner arrivano coi loro colori: il filtro li porta a nero
+   pieno, come le icone dei vantaggi accanto */
+.vantaggio-logo {
   width: auto;
+  height: 46px;
   object-fit: contain;
-  filter: brightness(0) invert(1);
-  transition: all 0.3s ease;
-  flex-shrink: 0;
+  align-self: flex-start;
+  filter: brightness(0);
 }
 
-.card-link:hover .brand-logo-img {
-  filter: brightness(0) saturate(100%) invert(84%) sepia(21%) hue-rotate(202deg) brightness(98%) contrast(97%);
+.vantaggio--vuoto { min-height: 170px; flex-direction: row; }
+
+.vantaggio--vuoto svg { width: 18px; height: 18px; color: var(--testo-tenue); }
+
+@media (max-width: 760px) {
+  .griglia-vantaggi { grid-template-columns: 1fr; }
+  .vantaggio,
+  .vantaggio--vuoto { min-height: 0; }
 }
 
-/* --------------------------------------------------------------------------
-   Pulsante "diventa socio" e menu a comparsa
-   -------------------------------------------------------------------------- */
-.cta-banner {
-  background-color: var(--cdl-red);
-  color: white;
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  border: 2px solid white;
-  cursor: pointer;
-  position: relative;
-  /* visible, non hidden: la tessera deve poter debordare dal riquadro */
-  overflow: visible !important;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
+@media (max-width: 620px) {
+  /* La tessera passa sopra il testo invece di schiacciarlo */
+  .invito { flex-direction: column-reverse; align-items: flex-start; }
+  .invito .tessera { width: 96px; }
 }
-
-.cta-banner:hover {
-  transform: scale(1.02);
-  background-color: black;
-  color: white;
-  border-color: white;
-}
-
-#socio-menu {
-  display: none;
-  position: absolute;
-  top: 100%;
-  right: 0;
-  margin-top: 1.5rem;
-  width: 280px;
-  background-color: var(--cdl-dark);
-  border: 1px solid var(--cdl-lavender);
-  z-index: 100;
-  box-shadow: 20px 20px 0px rgba(0, 0, 0, 0.4);
-  overflow: hidden;
-}
-
-#socio-menu.active {
-  display: block;
-  animation: fadeIn 0.3s ease-out;
-}
-
-.socio-menu-item {
-  padding: 1.25rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  text-transform: uppercase;
-  font-size: 11px;
-  font-weight: 900;
-  letter-spacing: 0.15em;
-  color: white;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  transition: all 0.2s ease;
-}
-
-.socio-menu-item:last-child {
-  border-bottom: none;
-}
-
-.socio-menu-item:hover {
-  background-color: var(--cdl-lavender);
-  color: var(--cdl-dark);
-}
-
-/* Tessera inclinata che sporge dal pulsante */
-.tessera-img {
-  height: 150px;
-  width: auto;
-  position: absolute;
-  right: -10px;
-  top: 50%;
-  transform: translateY(-50%) rotate(10deg);
-  filter: drop-shadow(15px 15px 20px rgba(0, 0, 0, 0.8));
-  transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  z-index: 20;
-  pointer-events: none;
-}
-
-.cta-banner:hover .tessera-img {
-  transform: translateY(-55%) rotate(-5deg) scale(1.1);
-  filter: drop-shadow(20px 20px 30px rgba(0, 0, 0, 0.9));
-}
-
-/* --------------------------------------------------------------------------
-   Adattamento mobile
-   -------------------------------------------------------------------------- */
-@media (max-width: 768px) {
-  .services-grid {
-    grid-template-columns: 1fr;
-    gap: 1rem;
-    width: 100%;
-  }
-
-  .col-span-12,
-  .col-span-6 {
-    grid-column: span 1 / span 1 !important;
-  }
-
-  .card {
-    min-height: 120px;
-    padding: 1.25rem;
-  }
-
-  h2 {
-    font-size: 1.3rem;
-  }
-
-  .brand-logo-img {
-    max-height: 45px;
-  }
-
-  .section-header {
-    font-size: 10px;
-    letter-spacing: 0.2em;
-  }
-
-  .tessera-img {
-    height: 90px;
-    right: -25px;
-  }
-
-  #socio-menu {
-    right: -20px;
-    width: calc(100vw - 40px);
-    max-width: 300px;
-  }
-}
-
-/* Barra di scorrimento su fondo scuro */
-::-webkit-scrollbar-track { background: var(--cdl-dark); }
-::-webkit-scrollbar-thumb { background: var(--cdl-lavender); }

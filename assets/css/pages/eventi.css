@@ -1,0 +1,10 @@
+/* ==========================================================================
+   EVENTI (eventi.html) — elenco degli eventi organizzati da CDL
+   ========================================================================== */
+
+.griglia-eventi {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--spazio);
+  margin-top: clamp(2rem, 5vw, 3rem);
+}
