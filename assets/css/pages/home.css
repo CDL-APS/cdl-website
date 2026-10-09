@@ -253,22 +253,19 @@
 
 .notizia-tutti:hover { color: var(--cdl-red); }
 
-/* Casella pronta per l'ultima notizia, ancora vuota */
+/* Casella pronta per l'ultima notizia, ancora vuota: solo la sagoma */
+.notizia--vuota,
+.notizia--vuota:hover {
+  background: none;
+  cursor: default;
+}
+
 .notizia--vuota {
   flex: 1;
   align-items: center;
   justify-content: center;
   min-height: 180px;
   border: 2px dashed var(--riga);
-}
-
-.notizia--vuota span {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 9.5px;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.18em;
-  color: var(--testo-tenue);
 }
 
 /* --------------------------------------------------------------------------

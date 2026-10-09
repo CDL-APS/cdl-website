@@ -200,19 +200,12 @@
 
 .corpo--chiaro strong { color: var(--cdl-white); }
 
-/* Testo ancora da scrivere: si vede che è un promemoria, non copy */
+/* Posto di un testo ancora da scrivere: sagoma tratteggiata vuota, come le
+   caselle in attesa di contenuto. Il promemoria sta in un commento HTML. */
 .da-scrivere {
-  padding: 0.85rem 1.1rem;
+  min-height: 6.5rem;
   border-radius: var(--r-s);
-  background: rgba(185, 187, 248, 0.22);
-  font-size: 0.9rem !important;
-  font-style: italic;
-  color: var(--testo-tenue) !important;
-}
-
-.corpo--chiaro .da-scrivere {
-  background: rgba(185, 187, 248, 0.16);
-  color: rgba(247, 247, 247, 0.92) !important;
+  border: 2px dashed var(--riga);
 }
 
 /* Etichetta tecnica: maiuscoletto spaziato sopra titoli e dati */
