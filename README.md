@@ -12,9 +12,10 @@ Apri la cartella in VS Code, poi clic destro su `index.html` → **Open with Liv
 Server**. Il sito si apre su `http://localhost:5500` e si ricarica da solo a
 ogni salvataggio.
 
-> **Serve un server, non basta il doppio clic sul file.** Home, Cortoteca, Produzioni e schede
-> opera leggono `data/film.json` con una richiesta di rete, che i browser
-> bloccano quando la pagina è aperta come `file://`. Con Live Server funziona
+> **Serve un server, non basta il doppio clic sul file.** Le pagine leggono
+> opere ed eventi dal database con richieste di rete, e la copia di riserva
+> in `data/` con altre richieste che i browser bloccano quando la pagina è
+> aperta come `file://`. Con Live Server funziona
 > tutto. L'estensione è già fra quelle consigliate in `.vscode/extensions.json`:
 > VS Code te la propone da solo la prima volta che apri il progetto.
 
@@ -38,9 +39,13 @@ python3 -m http.server 5500
 ├── cortoteca.html             Archivio dei cortometraggi
 ├── opera.html                 Scheda di un singolo corto (opera.html?film=codice)
 ├── vantaggi-tesseramento.html Vantaggi per i soci
+├── gestione.html              Pagina riservata ai redattori (non indicizzata)
 │
-├── data/
-│   └── film.json              Il database dei cortometraggi
+├── data/                      Copie di riserva del database (vedi sotto)
+│   ├── opere.json
+│   └── eventi.json
+│
+├── supabase/migrations/       Struttura del database, un file SQL per modifica
 │
 ├── assets/
 │   ├── css/
@@ -49,9 +54,11 @@ python3 -m http.server 5500
 │   │   └── pages/             Uno per pagina, solo ciò che è specifico
 │   ├── js/
 │   │   ├── barra.js           Indicatore della barra, su tutte le pagine
-│   │   ├── opere.js           Lettura di data/film.json, comune a più pagine
-│   │   ├── home.js            Casella "L'ultima produzione CDL"
+│   │   ├── dati.js            Lettura di opere ed eventi, comune a più pagine
+│   │   ├── home.js            Caselle "ultimo evento" e "ultima produzione"
 │   │   ├── produzioni.js      Elenco delle produzioni CDL
+│   │   ├── eventi.js          Griglia degli eventi
+│   │   ├── gestione.js        Pagina dei redattori
 │   │   ├── cortoteca.js       Griglia, ricerca e ordinamento delle opere
 │   │   ├── opera.js           Riempimento della scheda opera
 │   │   └── cornice.js         Generatore del biglietto LSS
@@ -60,8 +67,8 @@ python3 -m http.server 5500
 │       ├── partner/           Loghi dei partner, tessera
 │       ├── nuvole/            Nuvolette della vecchia home (servono ai redirect)
 │       ├── sfondi/            Wallpaper della home
-│       ├── eventi/            Copertina e miniatura di LSS 2026, alleggerite
-│       └── film/              Fotogrammi dei corti
+│       ├── eventi/            Copertina e miniatura di LSS 2026 (copie locali)
+│       └── film/              Fotogrammi dei primi corti (copie locali)
 │
 ├── netlify.toml               Redirect dai vecchi indirizzi e cache
 └── robots.txt
@@ -73,39 +80,48 @@ python3 -m http.server 5500
 
 ---
 
-## Aggiungere un cortometraggio alla Cortoteca
+## Aggiungere o modificare opere ed eventi
 
-Non serve toccare l'HTML. Due passaggi:
+Opere ed eventi stanno in un database **Supabase**, nell'organizzazione *CDL
+APS* (account `ciao@cdlaps.com`). Non si modificano più file né si fa un push:
 
-1. Metti il fotogramma in `assets/img/film/` (formato `.jpg`, quadrato o 16:9,
-   possibilmente sotto 1 MB).
-2. Aggiungi una voce in `data/film.json` copiando una di quelle esistenti.
+1. Vai su `cdlaps.com/gestione.html` e accedi con email e password.
+2. Scegli *Opere* o *Eventi*, poi *Nuova opera* / *Nuovo evento*, oppure
+   clicca su una voce esistente per modificarla.
+3. Compila i campi e scegli l'immagine: viene ridimensionata e caricata da
+   sola.
+4. Spunta **Pubblicata** quando è pronta e salva. Senza spunta resta una
+   bozza, visibile solo nella pagina di gestione.
 
-Campi importanti:
+Le modifiche sono online subito, senza ripubblicare il sito. Alcune cose da
+sapere:
 
-| Campo | A cosa serve |
-|---|---|
-| `codice` | Identificativo nell'indirizzo: `opera.html?film=quartolivello`. Minuscolo, senza spazi né accenti |
-| `titolo`, `anno`, `regista`, `produzione` | Compaiono nella griglia e sono usati dalla ricerca |
-| `still` | Percorso del fotogramma, es. `assets/img/film/miofilm.jpg` |
-| `video_url` | Link YouTube o Vimeo. **Se lo lasci vuoto** la scheda mostra "streaming in arrivo" invece del player |
-| `cdl` | `true` se è una produzione CDL, altrimenti `false` (senza virgolette). Le produzioni CDL hanno il logo sulla card, compaiono in Produzioni e la più recente va in home |
-| `cast1`…`cast10` e `ruolo_cast1`…`ruolo_cast10` | Cast; le posizioni vuote vengono saltate |
-| `sinossi`, `note_regia`, `tagline`, `letterboxd` | Facoltativi: se vuoti, la sezione non appare |
+- Il **codice** è l'identificativo nell'indirizzo (`opera.html?film=codice`).
+  Si genera dal titolo e dopo il primo salvataggio non si cambia più, per non
+  rompere i link già condivisi.
+- Un'opera con **Prodotta da CDL** ha il logo sulla card, compare in
+  Produzioni e, se è la più recente, nella home. Fra due produzioni dello
+  stesso anno conta come più recente l'ultima inserita.
+- Se manca il **video**, la scheda mostra "streaming in arrivo".
+- Per togliere qualcosa dal sito senza perderlo, togli la spunta
+  *Pubblicata* invece di eliminarlo.
 
-Salva, ricarica la pagina, e il corto è nell'archivio. Se è una produzione CDL
-compare anche in Produzioni e, se è la più recente, nella casella "L'ultima
-produzione CDL" della home: non c'è altro da aggiornare. Fra due produzioni
-dello stesso anno conta come più recente quella più in alto nel file.
+### Chi può modificare
 
-**Attenzione al JSON**: virgole e virgolette devono essere esatte, un errore
-di battitura fa sparire l'intera Cortoteca. Prima di pubblicare, apri la
-Cortoteca in locale e controlla che il corto compaia. Se vuoi una verifica
-rapida del formato:
+Gli account si creano dalla dashboard di Supabase: *Authentication* → *Users*
+→ *Add user* → *Create new user*, con *Auto Confirm User* attivo. Un account
+da solo non basta: va anche aggiunto ai redattori, dal *Table Editor*, schema
+`privato`, tabella `redattori` (serve l'id dell'utente, che si copia dalla
+lista degli utenti). Le regole del database lasciano scrivere solo chi è in
+quella tabella.
 
-```bash
-python3 -m json.tool data/film.json > /dev/null && echo "JSON valido"
-```
+### Copie di riserva
+
+Se Supabase non risponde (per esempio perché il progetto gratuito è stato
+messo in pausa dopo una settimana senza attività), il sito ripiega su
+`data/opere.json` e `data/eventi.json` e sulle immagini in `assets/img/`.
+Sono copie del giorno della migrazione: quello che si aggiunge dopo dalla
+pagina di gestione non c'è.
 
 ---
 

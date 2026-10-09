@@ -41,6 +41,11 @@ com'è.
   `indirizzoSicuro()`.
 - Fra due produzioni CDL dello stesso anno conta come più recente quella
   inserita per ultima (id più alto).
+- `gestione.html` è la pagina dei redattori: accesso con email e password
+  via Supabase Auth, client `supabase-js` da CDN (versione fissata). Le
+  scritture sono protette dalla RLS, non dalla pagina. Le immagini caricate
+  vengono ridimensionate a 2000 px e salvate come
+  `<cartella>/<codice>-<campo>-<orario>.jpg` nel bucket `immagini`.
 - `opera.html` legge il codice dell'opera dalla query string (`?film=codice`).
   Senza parametro mostra "Opera non trovata".
 - `netlify.toml` mantiene in vita gli indirizzi precedenti alla
