@@ -8,8 +8,12 @@
 
 const LOGO_CDL = 'assets/img/brand/logo-cdl.png';
 
-const ICONA_FRECCIA =
-  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>';
+// Nell'angolo della card: play se il corto si può vedere sul sito, info se
+// la scheda ha solo le informazioni (streaming in arrivo)
+const ICONA_PLAY =
+  '<svg class="icona-stato--play" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.14v13.72L19 12 8 5.14Z"/></svg>';
+const ICONA_INFO =
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>';
 
 let allMovies = [];
 
@@ -68,12 +72,15 @@ function sortAndRender() {
         : '';
 
     const produzione = movie.produzione ? `<br>Produzione: ${esc(movie.produzione)}` : '';
+    const stato = streamingDisponibile(movie)
+      ? `<span class="freccia icona-stato" title="Streaming disponibile">${ICONA_PLAY}<span class="sr-only">Streaming disponibile</span></span>`
+      : `<span class="freccia icona-stato" title="Scheda informativa, streaming in arrivo">${ICONA_INFO}<span class="sr-only">Streaming in arrivo</span></span>`;
 
     // Se il fotogramma manca resta il fondo neutro del riquadro
     card.innerHTML = `
       <img class="foto" alt="" loading="lazy">
       ${bollino}
-      <span class="freccia" aria-hidden="true">${ICONA_FRECCIA}</span>
+      ${stato}
       <div class="chip">
         <p class="chip-etichetta">${esc(movie.anno)}</p>
         <h2 class="chip-titolo">${esc(movie.titolo)}</h2>

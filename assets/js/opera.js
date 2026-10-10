@@ -6,23 +6,6 @@
    dati.js) e riempie i campi. Una sola pagina serve tutte le opere.
    ========================================================================== */
 
-/* Trasforma un link YouTube o Vimeo nel corrispondente URL di embed.
-   Restituisce null se il campo è vuoto o non riconosciuto, ed è questo che
-   fa comparire il velo "streaming in arrivo". */
-function getEmbedUrl(url) {
-  if (!url || url.trim() === '') return null;
-
-  const ytRegex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|shorts\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/i;
-  const ytMatch = url.match(ytRegex);
-  if (ytMatch) return `https://www.youtube.com/embed/${ytMatch[1]}?autoplay=0&rel=0&modestbranding=1`;
-
-  const vimeoRegex = /(?:vimeo\.com\/|player\.vimeo\.com\/video\/)([0-9]+)/i;
-  const vimeoMatch = url.match(vimeoRegex);
-  if (vimeoMatch) return `https://player.vimeo.com/video/${vimeoMatch[1]}?badge=0&autopause=0&player_id=0&app_id=58479`;
-
-  return null;
-}
-
 /* Ruoli mostrati nella colonna troupe, nell'ordine in cui appaiono.
    La chiave è il nome della colonna nella tabella opere; i ruoli con campo
    vuoto vengono semplicemente saltati. */

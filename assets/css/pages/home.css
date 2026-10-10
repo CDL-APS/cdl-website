@@ -89,12 +89,16 @@
   filter: drop-shadow(10px 10px 0 #000);
 }
 
+/* Due righe: "Cinema giovane e" / "indipendente". La prima è larga circa 10
+   volte il corpo del carattere, e il titolo occupa al massimo il 58% del
+   riquadro: il corpo è calcolato perché la prima riga ci stia sempre. */
 .apertura h1 {
-  font-size: clamp(2.3rem, 6.2vw, 4.5rem);
+  font-size: clamp(1.6rem, 4.6vw, 3.7rem);
   color: var(--cdl-white);
 }
 
-/* Il wallpaper è in bianco e nero: il colore lo mettono le scritte */
+/* Il wallpaper è in bianco e nero: il colore lo mettono le scritte.
+   In lavanda solo "Cinema"; il resto va a capo dopo "e", nell'HTML. */
 .apertura h1 span { color: var(--cdl-lavender); }
 
 /* Con l'icona spostata a destra il "Ciao!" non le passa più sopra: può
@@ -377,7 +381,13 @@
     gap: 1.25rem;
     min-height: 0;
   }
-  .apertura > h1 { grid-area: titolo; max-width: 100%; }
+  /* Qui il titolo prende tutta la larghezza del riquadro, cioè la finestra
+     meno i margini della sezione e del riquadro (5.5rem in tutto) */
+  .apertura > h1 {
+    grid-area: titolo;
+    max-width: 100%;
+    font-size: calc((100vw - 5.5rem) / 10.4);
+  }
   .apertura > .corpo { grid-area: testo; max-width: 100%; }
   .icona {
     grid-area: icona;
