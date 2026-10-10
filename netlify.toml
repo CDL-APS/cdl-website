@@ -64,6 +64,32 @@
   status = 301
 
 # ---------------------------------------------------------------------------
+# FILE INTERNI
+#
+# Netlify pubblica tutta la radice del repository. La documentazione e gli
+# script del database servono a chi lavora sul sito, non devono essere
+# online: a questi indirizzi si risponde "pagina non trovata" (404.html).
+# ---------------------------------------------------------------------------
+
+[[redirects]]
+  from = "/README.md"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/CLAUDE.md"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/supabase/*"
+  to = "/404.html"
+  status = 404
+  force = true
+
+# ---------------------------------------------------------------------------
 # HEADER
 # ---------------------------------------------------------------------------
 
