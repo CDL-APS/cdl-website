@@ -48,6 +48,14 @@ com'è.
   `<cartella>/<codice>-<campo>-<orario>.jpg` nel bucket `immagini`.
 - `opera.html` legge il codice dell'opera dalla query string (`?film=codice`).
   Senza parametro mostra "Opera non trovata".
+- **Pubblicazione**: Netlify costruisce solo i commit il cui autore è membro
+  del team (l'account GitHub `cdl-aps`). Le pull request vanno unite da
+  GitHub con quell'account, con un merge commit; un'unione fatta da un
+  account personale blocca la pubblicazione di `main`. Le deploy preview
+  falliscono per lo stesso motivo: non è un errore del codice.
+- Netlify pubblica tutta la radice: `netlify.toml` risponde 404 a
+  `README.md`, `CLAUDE.md` e `supabase/`. Nuovi file interni vanno aggiunti
+  lì.
 - `netlify.toml` mantiene in vita gli indirizzi precedenti alla
   riorganizzazione (in particolare `/cortoteca/info_film2?film=...`, oggi
   `/opera.html?film=...`). Vanno conservati, e con loro i file a cui puntano

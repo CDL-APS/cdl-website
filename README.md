@@ -127,12 +127,28 @@ pagina di gestione non c'è.
 
 ## Pubblicazione
 
-Il sito è ospitato su Netlify e si aggiorna da solo: ogni push sul ramo `main`
-fa partire una nuova pubblicazione in un paio di minuti.
+Il sito è ospitato su Netlify e si aggiorna da solo: ogni commit sul ramo
+`main` fa partire una nuova pubblicazione in un paio di minuti.
 
-Per una modifica, meglio lavorare su un ramo dedicato e non direttamente su
-`main` — Netlify genera un'anteprima con un indirizzo suo, così puoi vedere il
-risultato prima che finisca sul sito pubblico.
+**Attenzione a chi firma il commit.** Con il piano Netlify attuale e il
+repository privato, Netlify costruisce solo i commit il cui autore è membro
+del team Netlify, cioè l'account GitHub `cdl-aps`. Gli altri vengono
+rifiutati ("Build blocked: Unrecognized Git contributor"), e da quel momento
+anche *Trigger deploy* fallisce, perché ricostruisce lo stesso commit.
+
+Il modo di lavorare quindi è:
+
+1. Le modifiche si fanno su un ramo dedicato, da qualsiasi account, e si apre
+   una pull request verso `main`.
+2. La pull request si unisce **da GitHub, con l'account `cdl-aps`**,
+   scegliendo *Create a merge commit*: il commit di unione è a nome
+   dell'associazione e la pubblicazione parte. Approvarla da un altro account
+   non basta, conta chi clicca *Merge*.
+
+Le anteprime delle pull request (deploy preview) falliscono per lo stesso
+motivo quando i commit del ramo sono di un account personale: è normale, non
+indica un errore nel codice. Per vedere le modifiche prima di pubblicarle si
+usa il server locale.
 
 `netlify.toml` contiene i redirect dai vecchi indirizzi: **non vanno rimossi**,
 servono a non rompere i link già condivisi su Instagram e nelle chat.
