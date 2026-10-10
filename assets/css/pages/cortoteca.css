@@ -133,6 +133,14 @@
 
 .bollino-cdl img { width: 31px; height: 12px; filter: brightness(0); }
 
+/* Play o info nell'angolo: la pastiglia della freccia, ferma al passaggio
+   del mouse perché non indica una direzione */
+a.riquadro:hover .icona-stato { transform: none; }
+
+/* Il triangolo, a parità di riquadro, sembra spostato a sinistra: lo si
+   accosta di poco al centro ottico */
+.icona-stato--play { transform: translateX(1px); }
+
 /* Riquadro "vuoi la tua opera qui?" sempre in coda */
 #add-card { order: 1; }
 

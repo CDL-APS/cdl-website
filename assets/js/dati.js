@@ -89,6 +89,28 @@ function produzioniCdl(opere) {
   return opere.filter((o) => o.produzione_cdl).sort((a, b) => b.anno - a.anno || b.id - a.id);
 }
 
+/* Trasforma un link YouTube o Vimeo nel corrispondente URL di embed.
+   Restituisce null se il campo è vuoto o non riconosciuto: la scheda opera
+   mostra allora "streaming in arrivo" e la Cortoteca l'icona info. */
+function getEmbedUrl(url) {
+  if (!url || url.trim() === '') return null;
+
+  const ytRegex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|shorts\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/i;
+  const ytMatch = url.match(ytRegex);
+  if (ytMatch) return `https://www.youtube.com/embed/${ytMatch[1]}?autoplay=0&rel=0&modestbranding=1`;
+
+  const vimeoRegex = /(?:vimeo\.com\/|player\.vimeo\.com\/video\/)([0-9]+)/i;
+  const vimeoMatch = url.match(vimeoRegex);
+  if (vimeoMatch) return `https://player.vimeo.com/video/${vimeoMatch[1]}?badge=0&autopause=0&player_id=0&app_id=58479`;
+
+  return null;
+}
+
+/* Vero se l'opera si può vedere in streaming sul sito */
+function streamingDisponibile(opera) {
+  return getEmbedUrl(opera.video_url) !== null;
+}
+
 /* Primo genere della lista, con l'iniziale maiuscola: ["thriller",
    "mistero"] diventa "Thriller" */
 function generePrincipale(opera) {
