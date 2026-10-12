@@ -195,6 +195,7 @@ body.gestione { padding-top: 0; }
 .g-spunta small { font-size: 0.78rem; line-height: 1.4; color: var(--testo-tenue); }
 
 .g-campo input,
+.g-campo select,
 .g-campo textarea,
 .g-interprete input {
   width: 100%;
@@ -212,6 +213,7 @@ body.gestione { padding-top: 0; }
 .g-campo textarea { resize: vertical; line-height: 1.55; }
 
 .g-campo input:focus,
+.g-campo select:focus,
 .g-campo textarea:focus,
 .g-interprete input:focus {
   outline: none;

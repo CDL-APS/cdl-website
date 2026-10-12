@@ -10,7 +10,8 @@
     "descrizione": "Long Story Short è una sfida a tempo di brevi opere cinematografiche organizzata dall'associazione riminese CDL APS. L'evento si colloca a metà tra un laboratorio collettivo e un tradizionale contest di cortometraggi a tempo.",
     "copertina": "eventi/lss-2026-copertina.jpg",
     "miniatura": "eventi/lss-2026-miniatura.jpg",
-    "pagina": "longstoryshort.html"
+    "pagina": "longstoryshort.html",
+    "serie": "long-story-short"
   },
   {
     "id": 2,
@@ -23,7 +24,8 @@
     "descrizione": "La prima edizione di Short Talks, il format di CDL che alterna la proiezione di cortometraggi al dialogo con gli autori. Una doppia visione a ingresso gratuito con Relatività di Francesco Pasquinelli, l'ultima produzione CDL, e Dettagli Temporanei di Christian Dei, seguiti dalla chiacchierata con i registi davanti a più di 120 spettatori.",
     "copertina": "eventi/short-talks-1-copertina-1791651702071.jpg",
     "miniatura": "eventi/short-talks-1-miniatura-1791651701597.jpg",
-    "pagina": "short-talks-1.html"
+    "pagina": "short-talks-1.html",
+    "serie": "short-talks"
   },
   {
     "id": 3,
@@ -36,7 +38,8 @@
     "descrizione": "Short Talks torna al C'entro Supercinema per la seconda edizione, con tre cortometraggi: Verso Mare di Gabriele Rattini, Un Giorno di Francesco Bortolan e Quarto Livello di Francesco Pasquinelli, produzione CDL. Dopo ogni proiezione autori, troupe e cast hanno raccontato il dietro le quinte dei loro progetti, davanti a oltre 180 spettatori paganti.",
     "copertina": "eventi/short-talks-2-copertina-1791651732405.jpg",
     "miniatura": "eventi/short-talks-2-miniatura-1791651731994.jpg",
-    "pagina": "short-talks-2.html"
+    "pagina": "short-talks-2.html",
+    "serie": "short-talks"
   },
   {
     "id": 4,
@@ -49,7 +52,8 @@
     "descrizione": "Lo spin-off di Short Talks, fuori dal cinema: quattro serate al centro polifunzionale Il Pallone di Bologna, tutte sold out, fra cinema, musica e condivisione. Ogni appuntamento aveva un tema e accostava tre cortometraggi, fra cui Il Martello e Quarto Livello di CDL, al dialogo con gli autori, con la musica a chiudere la serata.",
     "copertina": "eventi/short-talks-off-1-copertina-1791651765291.jpg",
     "miniatura": "eventi/short-talks-off-1-miniatura-1791651760306.jpg",
-    "pagina": "short-talks-off-1.html"
+    "pagina": "short-talks-off-1.html",
+    "serie": null
   },
   {
     "id": 5,
@@ -62,7 +66,8 @@
     "descrizione": "Una serata in spiaggia al Bagno 150 di Rimini, a ingresso libero: aperitivo con DJ set, le mostre fotografiche di Mariachiara Lorusso e Martina Giovanardi, l'esposizione di Provvisorio Clothing e, sul grande schermo allestito sulla sabbia, uno Short Talks OFF con tre cortometraggi e il dialogo con gli autori: Estate '05 di Francesco Pasquinelli, La Partenza di Alessio Petrillo e Movimento di Luca Canarecci.",
     "copertina": "eventi/blue-hour-copertina-1791651799903.jpg",
     "miniatura": "eventi/blue-hour-miniatura-1791651792910.jpg",
-    "pagina": "blue-hour.html"
+    "pagina": "blue-hour.html",
+    "serie": null
   },
   {
     "id": 6,
@@ -75,7 +80,8 @@
     "descrizione": "Al Nòt Film Fest 2025 Short Talks ha curato la presentazione della sezione Emilia-Romagna Filmmakers: sette cortometraggi in concorso di autori della regione, proiettati in tre blocchi e seguiti ciascuno dal dialogo con registi e troupe. In programma Andrea di Gabriele Rattini, La Blatta e la Formica di Marco La Ferrara, Previsioni di Tommaso Dondi, Hardcore di Francesco Barozzi, Non Puoi Capirmi di Christian Dei, Rapacità di Martina Mele e Little Bird di Sara Schiavone.",
     "copertina": "eventi/short-talks-al-not-2025-copertina-1791651828635.jpg",
     "miniatura": "eventi/short-talks-al-not-2025-miniatura-1791651826359.jpg",
-    "pagina": "short-talks-al-not-2025.html"
+    "pagina": "short-talks-al-not-2025.html",
+    "serie": "short-talks"
   },
   {
     "id": 7,
@@ -88,7 +94,8 @@
     "descrizione": "La terza edizione di Short Talks è stata la serata conclusiva di Luoghi dell'Anima – Italian Film Festival. Dopo il dialogo fra Steve Della Casa, direttore artistico del festival, Mario Martone e Ippolita Di Majo, Francesco Pasquinelli ha guidato il pubblico nell'incontro con tre registi: Giuseppe Fonti con Il Posto Vuoto, Alessio Petrillo con La Partenza, prodotto da CDL e Arkadia Studios, e Umberto Baldacci con Julián, alla sua prima proiezione pubblica.",
     "copertina": "eventi/short-talks-3-x-laiff-copertina-1791651855880.jpg",
     "miniatura": "eventi/short-talks-3-x-laiff-miniatura-1791651855529.jpg",
-    "pagina": "short-talks-3-x-laiff.html"
+    "pagina": "short-talks-3-x-laiff.html",
+    "serie": "short-talks"
   },
   {
     "id": 8,
@@ -101,6 +108,7 @@
     "descrizione": "Per il secondo anno Short Talks porta al Nòt Film Fest la sezione Emilia-Romagna Filmmakers: nove cortometraggi di autori della regione, alternati al dialogo con chi li ha realizzati. In programma Cose Particolari Durante Le Messe di Emma Gasparini Papotti, La Mancanza del Sedano di Tomas Leardini, Saluti da Rimini di Lorenzo Ferrero, Lighèia di Nicolò Ferrara, Songs of Salt di Isabella Bazoni, The Boy's Gaze di Niccolò Salvato, Destiny di Luca Canarecci, Migliori Amici di Lorenzo Dellapasqua e Agata's Pact di Alessio Petrillo.",
     "copertina": "eventi/short-talks-al-not-2026-copertina-1791651896765.jpg",
     "miniatura": "eventi/short-talks-al-not-2026-miniatura-1791651896478.jpg",
-    "pagina": "short-talks-al-not-2026.html"
+    "pagina": "short-talks-al-not-2026.html",
+    "serie": "short-talks"
   }
 ]

@@ -1,41 +1,69 @@
 /* ==========================================================================
-   EVENTI — griglia degli eventi organizzati da CDL.
+   EVENTI — gli eventi organizzati da CDL, divisi in blocchi per serie.
 
    Gli eventi pubblicati arrivano dal database (vedi dati.js), dal più
-   recente. Un evento con una pagina dedicata diventa un riquadro cliccabile;
-   gli altri restano riquadri informativi. In coda resta la sagoma del
-   prossimo evento, scritta nell'HTML.
+   recente. L'ultima edizione di Long Story Short sta in primo piano, a tutta
+   larghezza; le edizioni di Short Talks hanno un blocco loro; tutto il resto
+   (eventi senza serie, ed edizioni passate di Long Story Short quando ci
+   saranno) finisce in "Altri eventi". Un evento con una pagina dedicata
+   diventa un riquadro cliccabile. La serie si sceglie dal modulo di gestione.
    ========================================================================== */
 
 const ICONA_FRECCIA_EVENTO =
   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>';
 
-async function initEventi() {
-  const griglia = document.getElementById('griglia-eventi');
-  const sagoma = griglia.querySelector('.riquadro--vuoto');
+/* Riquadro di un evento: foto a piena superficie e lastra con anno, titolo
+   e riassunto */
+function riquadroEvento(evento) {
+  const pagina = indirizzoSicuro(evento.pagina);
+  const riquadro = document.createElement(pagina ? 'a' : 'div');
+  riquadro.className = 'riquadro';
+  if (pagina) riquadro.href = pagina;
 
+  riquadro.innerHTML = `
+    <img class="foto" alt="" loading="lazy">
+    ${pagina ? `<span class="freccia" aria-hidden="true">${ICONA_FRECCIA_EVENTO}</span>` : ''}
+    <div class="chip">
+      <p class="chip-etichetta">${esc(evento.data_inizio.slice(0, 4))}</p>
+      <p class="chip-titolo">${esc(evento.titolo)}</p>
+      ${evento.riassunto ? `<p class="chip-meta">${esc(evento.riassunto)}</p>` : ''}
+    </div>
+  `;
+  mostraImmagine(riquadro.querySelector('.foto'), evento.miniatura || evento.copertina);
+  return riquadro;
+}
+
+/* Mette gli eventi nella griglia del blocco; senza eventi resta nascosto */
+function riempiBlocco(id, eventi) {
+  const blocco = document.getElementById(id);
+  const griglia = blocco.querySelector('.griglia-eventi');
+  eventi.forEach((evento) => griglia.appendChild(riquadroEvento(evento)));
+  blocco.hidden = eventi.length === 0;
+}
+
+/* Long Story Short in primo piano. Titolo e marchio sono scritti nell'HTML:
+   qui arrivano copertina, anno, riassunto e pagina dell'ultima edizione. */
+function riempiPrimoPiano(evento) {
+  if (!evento) return;
+  const box = document.getElementById('primo-piano');
+  const pagina = indirizzoSicuro(evento.pagina);
+  if (pagina) box.href = pagina;
+  else box.querySelector('.freccia').remove();
+
+  box.querySelector('.chip-etichetta').textContent = 'Edizione ' + evento.data_inizio.slice(0, 4);
+  box.querySelector('.chip-meta').textContent = evento.riassunto || evento.luogo || '';
+  mostraImmagine(box.querySelector('.foto'), evento.copertina || evento.miniatura);
+  box.hidden = false;
+}
+
+async function initEventi() {
   try {
     const eventi = await caricaEventi();
+    const primoPiano = eventi.find((e) => e.serie === 'long-story-short');
 
-    eventi.forEach((evento, indice) => {
-      const pagina = indirizzoSicuro(evento.pagina);
-      const riquadro = document.createElement(pagina ? 'a' : 'div');
-      riquadro.className = 'riquadro';
-      if (pagina) riquadro.href = pagina;
-
-      const etichetta = indice === 0 ? 'Ultimo evento' : evento.data_inizio.slice(0, 4);
-      riquadro.innerHTML = `
-        <img class="foto" alt="" loading="lazy">
-        ${pagina ? `<span class="freccia" aria-hidden="true">${ICONA_FRECCIA_EVENTO}</span>` : ''}
-        <div class="chip">
-          <p class="chip-etichetta">${esc(etichetta)}</p>
-          <p class="chip-titolo">${esc(evento.titolo)}</p>
-          ${evento.riassunto ? `<p class="chip-meta">${esc(evento.riassunto)}</p>` : ''}
-        </div>
-      `;
-      mostraImmagine(riquadro.querySelector('.foto'), evento.miniatura || evento.copertina);
-      griglia.insertBefore(riquadro, sagoma);
-    });
+    riempiPrimoPiano(primoPiano);
+    riempiBlocco('blocco-short-talks', eventi.filter((e) => e.serie === 'short-talks'));
+    riempiBlocco('blocco-altri', eventi.filter((e) => e !== primoPiano && e.serie !== 'short-talks'));
   } catch (error) {
     console.error(error);
   }

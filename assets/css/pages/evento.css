@@ -1,9 +1,9 @@
 /* ==========================================================================
    EVENTO — pagine dei singoli eventi (short-talks-1.html, blue-hour.html…).
    Hanno tutte la stessa impostazione, presa da Long Story Short: copertina,
-   testo, dati della serata, programma con la locandina, foto. Come opera.css
-   serve ogni scheda opera, questo foglio serve ogni pagina evento; cambia
-   solo il colore d'accento, preso dalla grafica di ciascun evento.
+   testo, programma con la locandina, galleria (in components.css). Come
+   opera.css serve ogni scheda opera, questo foglio serve ogni pagina evento;
+   cambia solo il colore d'accento, preso dalla grafica di ciascun evento.
    ========================================================================== */
 
 /* Colore d'accento di ogni evento: sta sulla classe del <body> */
@@ -38,37 +38,6 @@
 .copertina--intera .foto {
   position: static;
   height: auto;
-}
-
-/* --------------------------------------------------------------------------
-   Dati della serata: quando, dove, ingresso, pubblico
-   -------------------------------------------------------------------------- */
-.dati-evento {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 210px), 1fr));
-  gap: var(--spazio);
-}
-
-.dati-evento div {
-  padding-top: 0.85rem;
-  border-top: 3px solid var(--accento);
-}
-
-.dati-evento dt {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 9px;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.2em;
-  color: var(--testo-medio);
-}
-
-.dati-evento dd {
-  margin-top: 0.5rem;
-  font-family: 'Montserrat', sans-serif;
-  font-size: 0.95rem;
-  font-weight: 700;
-  line-height: 1.35;
 }
 
 /* --------------------------------------------------------------------------
@@ -193,31 +162,6 @@ a.programma-voce:hover {
   border-radius: var(--r-m);
   corner-shape: squircle;
   box-shadow: 0 16px 40px rgba(29, 29, 27, 0.12);
-}
-
-/* --------------------------------------------------------------------------
-   Foto: colonne ad altezza libera, così orizzontali e verticali stanno
-   insieme senza ritagli
-   -------------------------------------------------------------------------- */
-.galleria {
-  columns: 3 240px;
-  column-gap: var(--spazio);
-}
-
-.galleria img {
-  width: 100%;
-  height: auto;
-  margin-bottom: var(--spazio);
-  break-inside: avoid;
-  border-radius: var(--r-m);
-  corner-shape: squircle;
-  background: rgba(29, 29, 27, 0.06);
-}
-
-.galleria-crediti {
-  font-size: 0.8rem;
-  line-height: 1.5;
-  color: var(--testo-tenue);
 }
 
 @media (max-width: 760px) {

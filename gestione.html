@@ -9,9 +9,9 @@
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link rel="icon" type="image/png" href="assets/img/brand/favicon.png">
 
-    <link rel="stylesheet" href="assets/css/base.css?v=2026-10-12">
-    <link rel="stylesheet" href="assets/css/components.css?v=2026-10-12">
-    <link rel="stylesheet" href="assets/css/pages/gestione.css?v=2026-10-12">
+    <link rel="stylesheet" href="assets/css/base.css?v=2026-10-12-2">
+    <link rel="stylesheet" href="assets/css/components.css?v=2026-10-12-2">
+    <link rel="stylesheet" href="assets/css/pages/gestione.css?v=2026-10-12-2">
 </head>
 <body class="gestione">
 
@@ -225,6 +225,15 @@
                             <small>Identificativo interno. Si genera dal titolo e non si cambia dopo il primo salvataggio.</small>
                         </label>
                         <label class="g-campo">
+                            <span>Serie</span>
+                            <select name="serie">
+                                <option value="">Nessuna (altri eventi)</option>
+                                <option value="long-story-short">Long Story Short</option>
+                                <option value="short-talks">Short Talks</option>
+                            </select>
+                            <small>Decide il blocco della pagina Eventi: l'ultimo Long Story Short va in primo piano, Short Talks ha un blocco suo.</small>
+                        </label>
+                        <label class="g-campo g-campo--largo">
                             <span>Luogo</span>
                             <input type="text" name="luogo">
                         </label>
@@ -309,7 +318,7 @@
     </template>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.3/dist/umd/supabase.min.js"></script>
-    <script src="assets/js/dati.js?v=2026-10-12"></script>
-    <script src="assets/js/gestione.js?v=2026-10-12"></script>
+    <script src="assets/js/dati.js?v=2026-10-12-2"></script>
+    <script src="assets/js/gestione.js?v=2026-10-12-2"></script>
 </body>
 </html>

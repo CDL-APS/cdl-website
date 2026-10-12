@@ -54,6 +54,10 @@ com'è.
   sul `<body>`). Il riquadro dell'evento porta lì solo se il campo `pagina`
   del database contiene il nome del file: si compila quando la pagina è già
   online.
+- La pagina Eventi divide gli eventi per `serie` (colonna di `eventi`, scelta
+  dal modulo di gestione): l'ultima edizione con `long-story-short` va in
+  primo piano col marchio, `short-talks` ha un blocco col suo lettering, gli
+  eventi senza serie finiscono in "Altri eventi".
 - **Pubblicazione**: Netlify costruisce solo i commit il cui autore è membro
   del team (l'account GitHub `cdl-aps`). Le pull request vanno unite da
   GitHub con quell'account, con un merge commit; un'unione fatta da un

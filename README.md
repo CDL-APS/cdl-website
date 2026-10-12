@@ -32,8 +32,8 @@ python3 -m http.server 5500
 ```
 .
 ├── index.html                 Home
-├── produzioni.html            Le produzioni CDL (testo da scrivere)
-├── eventi.html                Gli eventi CDL (da sviluppare)
+├── produzioni.html            Le produzioni CDL
+├── eventi.html                Gli eventi CDL, divisi in blocchi per serie
 ├── longstoryshort.html        Pagina dell'evento Long Story Short
 ├── short-talks-1.html, …      Pagine degli altri eventi, una per evento (vedi sotto)
 ├── cornicenarrativa.html      Generatore del "biglietto" di LSS 2026
@@ -58,13 +58,13 @@ python3 -m http.server 5500
 │   │   ├── dati.js            Lettura di opere ed eventi, comune a più pagine
 │   │   ├── home.js            Caselle "ultimo evento" e "ultima produzione"
 │   │   ├── produzioni.js      Elenco delle produzioni CDL
-│   │   ├── eventi.js          Griglia degli eventi
+│   │   ├── eventi.js          Blocchi della pagina Eventi
 │   │   ├── gestione.js        Pagina dei redattori
 │   │   ├── cortoteca.js       Griglia, ricerca e ordinamento delle opere
 │   │   ├── opera.js           Riempimento della scheda opera
 │   │   └── cornice.js         Generatore del biglietto LSS
 │   └── img/
-│       ├── brand/             Logo, icona, favicon
+│       ├── brand/             Logo, icona, favicon, marchi di LSS e Short Talks
 │       ├── partner/           Loghi dei partner, tessera
 │       ├── nuvole/            Nuvolette della vecchia home (servono ai redirect)
 │       ├── sfondi/            Wallpaper della home
@@ -101,6 +101,10 @@ sapere:
 - Il **codice** è l'identificativo nell'indirizzo (`opera.html?film=codice`).
   Si genera dal titolo e dopo il primo salvataggio non si cambia più, per non
   rompere i link già condivisi.
+- La **serie** di un evento decide dove compare nella pagina Eventi:
+  l'ultima edizione di Long Story Short sta in primo piano, le edizioni di
+  Short Talks hanno un blocco loro, gli eventi senza serie finiscono fra gli
+  altri eventi.
 - Un'opera con **Prodotta da CDL** ha il logo sulla card, compare in
   Produzioni e, se è la più recente, nella home. Fra due produzioni dello
   stesso anno conta come più recente l'ultima inserita.
@@ -144,7 +148,7 @@ si scaricano le righe pubblicate dalla Data API, con la chiave pubblica di
 stesso nome che hanno nel bucket:
 
 ```bash
-curl -s "https://rsspmqhhrykbmrkmwqcg.supabase.co/rest/v1/eventi?select=id,codice,titolo,data_inizio,data_fine,luogo,riassunto,descrizione,copertina,miniatura,pagina&pubblicato=eq.true&order=id" -H "apikey: $(grep -o 'sb_publishable_[A-Za-z0-9_]*' assets/js/dati.js)" | python3 -m json.tool --indent 2 --no-ensure-ascii > data/eventi.json
+curl -s "https://rsspmqhhrykbmrkmwqcg.supabase.co/rest/v1/eventi?select=id,codice,titolo,data_inizio,data_fine,luogo,riassunto,descrizione,copertina,miniatura,pagina,serie&pubblicato=eq.true&order=id" -H "apikey: $(grep -o 'sb_publishable_[A-Za-z0-9_]*' assets/js/dati.js)" | python3 -m json.tool --indent 2 --no-ensure-ascii > data/eventi.json
 ```
 
 ---

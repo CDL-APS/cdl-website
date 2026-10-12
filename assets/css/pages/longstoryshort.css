@@ -3,10 +3,9 @@
    ========================================================================== */
 
 :root {
-  /* Colori delle tre linee della metro, gli stessi di cornice.css */
+  /* Colori di due linee della metro, gli stessi di cornice.css */
   --linea-ciano: #00c8d4;
   --linea-magenta: #cc00a0;
-  --linea-giallo: #d4b800;
 }
 
 /* --------------------------------------------------------------------------
@@ -20,11 +19,11 @@
 }
 
 /* --------------------------------------------------------------------------
-   Materiali: tre schede, ognuna col colore di una linea
+   Materiali: due schede, ognuna col colore di una linea
    -------------------------------------------------------------------------- */
 .materiali {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: var(--spazio);
 }
 
@@ -32,22 +31,11 @@
 
 .materiale--magenta { --colore: var(--linea-magenta); }
 
-.materiale--giallo { --colore: var(--linea-giallo); }
-
 .materiale .scheda-icona { margin-bottom: auto; }
 
 .materiale .scheda-icona svg { width: 30px; height: 30px; stroke-width: 1.6; color: var(--colore); }
 
 .materiale .scheda-titolo { font-size: clamp(1.15rem, 2.2vw, 1.5rem); }
-
-/* Pallino della linea, come nei pulsanti della cornice */
-.linea {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  border: 1px solid var(--cdl-dark);
-  background: var(--colore);
-}
 
 a.materiale:hover { background: color-mix(in srgb, var(--colore) 22%, transparent); }
 

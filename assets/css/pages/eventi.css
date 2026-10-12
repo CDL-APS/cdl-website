@@ -1,10 +1,65 @@
 /* ==========================================================================
-   EVENTI (eventi.html) — elenco degli eventi organizzati da CDL
+   EVENTI (eventi.html) — gli eventi organizzati da CDL, divisi in blocchi:
+   Long Story Short in primo piano, le edizioni di Short Talks, gli altri
    ========================================================================== */
 
+/* --------------------------------------------------------------------------
+   Long Story Short in primo piano, a tutta larghezza. La copertina è quasi
+   tutta bianca: il marchio nero ci sta sopra senza velo, come nella pagina
+   dell'evento, e la lastra con i dati va a destra.
+   -------------------------------------------------------------------------- */
+.primo-piano {
+  min-height: clamp(340px, 46vw, 560px);
+  background: #fff;
+}
+
+.primo-piano-marchio {
+  position: absolute;
+  z-index: 1;
+  left: clamp(1.25rem, 3.5vw, 2.75rem);
+  bottom: clamp(1.25rem, 3.5vw, 2.75rem);
+  width: clamp(150px, 26vw, 330px);
+  height: auto;
+}
+
+.primo-piano .chip {
+  align-self: flex-end;
+  width: min(25rem, calc(100% - 24px));
+}
+
+/* --------------------------------------------------------------------------
+   Blocchi: Short Talks si presenta col suo lettering, gli altri eventi col
+   titoletto. Il filetto corre fino al margine come nei titoletti.
+   -------------------------------------------------------------------------- */
+.blocco-marchio {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  margin: clamp(2.5rem, 5vw, 3.5rem) 0 calc(var(--spazio) * 1.5);
+}
+
+.blocco-marchio::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--riga);
+}
+
+.blocco-marchio img {
+  width: auto;
+  height: clamp(54px, 7vw, 84px);
+}
+
+/* auto-fill e non auto-fit: un blocco con due soli eventi tiene i riquadri
+   della stessa misura degli altri, invece di allargarli a tutta riga */
 .griglia-eventi {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: var(--spazio);
-  margin-top: clamp(2rem, 5vw, 3rem);
+}
+
+/* Sul telefono il marchio sale in alto e la lastra resta sotto, larga */
+@media (max-width: 760px) {
+  .primo-piano-marchio { top: 1.25rem; bottom: auto; }
+  .primo-piano .chip { align-self: stretch; width: auto; }
 }

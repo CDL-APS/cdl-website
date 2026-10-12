@@ -18,7 +18,6 @@
 .freccia,
 .btn,
 .rimando,
-.da-scrivere,
 .scheda,
 .campo,
 .scelta,
@@ -201,14 +200,6 @@
 
 .corpo--chiaro strong { color: var(--cdl-white); }
 
-/* Posto di un testo ancora da scrivere: sagoma tratteggiata vuota, come le
-   caselle in attesa di contenuto. Il promemoria sta in un commento HTML. */
-.da-scrivere {
-  min-height: 6.5rem;
-  border-radius: var(--r-s);
-  border: 2px dashed var(--riga);
-}
-
 /* Etichetta tecnica: maiuscoletto spaziato sopra titoli e dati */
 .etichetta {
   display: flex;
@@ -300,6 +291,29 @@
 /* Accanto al titolo, in grigio, ciò che distingue l'edizione: l'anno o il
    numero */
 .due-colonne h1 span { color: var(--testo-tenue); }
+
+/* Galleria di un evento: colonne ad altezza libera, così foto orizzontali e
+   verticali stanno insieme senza ritagli */
+.galleria {
+  columns: 3 240px;
+  column-gap: var(--spazio);
+}
+
+.galleria img {
+  width: 100%;
+  height: auto;
+  margin-bottom: var(--spazio);
+  break-inside: avoid;
+  border-radius: var(--r-m);
+  corner-shape: squircle;
+  background: rgba(29, 29, 27, 0.06);
+}
+
+.galleria-crediti {
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: var(--testo-tenue);
+}
 
 /* --------------------------------------------------------------------------
    Pulsanti

@@ -44,7 +44,9 @@
   color: var(--testo-tenue);
 }
 
-.elenco-freccia { grid-row: 1 / span 2; align-self: center; width: 20px; height: 20px; }
+/* Colonna esplicita: con la sola riga fissata la griglia metterebbe la
+   freccia nella prima colonna, spingendo il titolo a destra */
+.elenco-freccia { grid-column: 2; grid-row: 1 / span 2; align-self: center; width: 20px; height: 20px; }
 
 .riga-altrove {
   display: inline-flex;
