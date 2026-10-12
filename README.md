@@ -57,7 +57,7 @@ python3 -m http.server 5500
 │   │   ├── barra.js           Indicatore della barra, su tutte le pagine
 │   │   ├── dati.js            Lettura di opere ed eventi, comune a più pagine
 │   │   ├── home.js            Caselle "ultimo evento" e "ultima produzione"
-│   │   ├── produzioni.js      Elenco delle produzioni CDL
+│   │   ├── produzioni.js      Produzioni e collaborazioni CDL
 │   │   ├── eventi.js          Blocchi della pagina Eventi
 │   │   ├── gestione.js        Pagina dei redattori
 │   │   ├── cortoteca.js       Griglia, ricerca e ordinamento delle opere
@@ -105,9 +105,15 @@ sapere:
   l'ultima edizione di Long Story Short sta in primo piano, le edizioni di
   Short Talks hanno un blocco loro, gli eventi senza serie finiscono fra gli
   altri eventi.
-- Un'opera con **Prodotta da CDL** ha il logo sulla card, compare in
-  Produzioni e, se è la più recente, nella home. Fra due produzioni dello
-  stesso anno conta come più recente l'ultima inserita.
+- Un'opera con **Prodotta da CDL** ha il logo sulla card, compare fra le
+  produzioni originali della pagina Produzioni e, se è la più recente, nella
+  home. Fra due produzioni dello stesso anno conta come più recente l'ultima
+  inserita.
+- Un'opera con **Collaborazione CDL** (non prodotta da CDL, ma con il suo
+  contributo) va nel blocco Collaborazioni della pagina Produzioni, che
+  compare solo quando ce n'è almeno una. Le due spunte si escludono.
+- In testa alla pagina Produzioni, a tutta larghezza, c'è il lavoro più
+  recente fra produzioni e collaborazioni.
 - Se manca il **video**, la scheda mostra "streaming in arrivo".
 - Per togliere qualcosa dal sito senza perderlo, togli la spunta
   *Pubblicata* invece di eliminarlo.

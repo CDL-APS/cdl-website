@@ -4,40 +4,11 @@
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
-   Long Story Short in primo piano, a tutta larghezza: la copertina sui due
-   terzi di sinistra, intera alla sua proporzione, con il marchio nero sopra
-   come nella pagina dell'evento (la copertina è quasi tutta bianca, non
-   serve velo); sul terzo di destra titolo, edizione e riassunto.
+   Long Story Short in primo piano (la struttura è in components.css): la
+   copertina è quasi tutta bianca, e sopra c'è il marchio nero come nella
+   pagina dell'evento, senza velo.
    -------------------------------------------------------------------------- */
-.primo-piano {
-  display: grid;
-  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
-  gap: var(--spazio);
-}
-
-.primo-piano-copertina,
-.primo-piano-testo {
-  border-radius: var(--r-l);
-  corner-shape: squircle;
-}
-
-.primo-piano-copertina {
-  position: relative;
-  aspect-ratio: 16 / 9;
-  overflow: hidden;
-  background: #fff;
-}
-
-.primo-piano-copertina .foto {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  max-width: none;
-  object-fit: cover;
-  transform: scale(1.02);
-  transition: transform 0.7s var(--ease-out);
-}
+.primo-piano-copertina { background: #fff; }
 
 .primo-piano-marchio {
   position: absolute;
@@ -48,43 +19,9 @@
   height: auto;
 }
 
-/* La scheda di destra, come le altre schede del sito: freccia in alto, testo
-   in basso */
-.primo-piano-testo {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  gap: 0.6rem;
-  padding: clamp(1.25rem, 2.5vw, 2rem);
-  border: 1px solid var(--riga);
-  background: rgba(29, 29, 27, 0.025);
-  transition: background-color 0.3s var(--ease-out), border-color 0.3s var(--ease-out);
-}
-
-.primo-piano-titolo { font-size: clamp(1.6rem, 3.2vw, 2.4rem); }
-
-.primo-piano-riassunto {
-  font-size: 0.95rem;
-  line-height: 1.55;
-  color: var(--testo-tenue);
-}
-
-a.primo-piano:hover .foto { transform: scale(1.06); }
-
-a.primo-piano:hover .primo-piano-testo {
-  background: rgba(185, 187, 248, 0.28);
-  border-color: transparent;
-}
-
-a.primo-piano:hover .freccia {
-  transform: translate(2px, -2px);
-  background: var(--cdl-white);
-}
-
 /* --------------------------------------------------------------------------
-   Blocchi: Short Talks si presenta col suo lettering, gli altri eventi col
-   titoletto. Il filetto corre fino al margine come nei titoletti.
+   Short Talks si presenta col suo lettering invece che col titoletto del
+   blocco. Il filetto corre fino al margine come nei titoletti.
    -------------------------------------------------------------------------- */
 .blocco-marchio {
   display: flex;
@@ -103,25 +40,4 @@ a.primo-piano:hover .freccia {
 .blocco-marchio img {
   width: auto;
   height: clamp(54px, 7vw, 84px);
-}
-
-/* Titolo dei blocchi senza lettering ("Altri eventi"): più grande e pieno
-   del titoletto, per reggere il confronto con il marchio di Short Talks */
-.titoletto--blocco {
-  font-size: clamp(13px, 1.4vw, 17px);
-  color: var(--cdl-dark);
-}
-
-/* auto-fill e non auto-fit: un blocco con due soli eventi tiene i riquadri
-   della stessa misura degli altri, invece di allargarli a tutta riga */
-.griglia-eventi {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: var(--spazio);
-}
-
-/* Sul telefono la scheda va sotto la copertina */
-@media (max-width: 760px) {
-  .primo-piano { grid-template-columns: 1fr; }
-  .primo-piano-testo { min-height: 9rem; }
 }

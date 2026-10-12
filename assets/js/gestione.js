@@ -133,7 +133,7 @@ async function mostraElenco() {
 
   const richiesta = stato.scheda === 'opere'
     ? client.from('opere')
-        .select('id, titolo, anno, regista, produzione_cdl, pubblicata')
+        .select('id, titolo, anno, regista, produzione_cdl, collaborazione_cdl, pubblicata')
         .order('anno', { ascending: false })
         .order('id', { ascending: false })
     : client.from('eventi')
@@ -157,6 +157,7 @@ async function mostraElenco() {
       : [formattaData(r.data_inizio), r.luogo].filter(Boolean).map(esc).join(' · ');
     const segni = [
       r.produzione_cdl ? '<span class="g-segno">CDL</span>' : '',
+      r.collaborazione_cdl ? '<span class="g-segno">Collab.</span>' : '',
       pubblicato
         ? '<span class="g-segno g-segno--pubblicata">Pubblicata</span>'
         : '<span class="g-segno g-segno--bozza">Bozza</span>'
@@ -405,6 +406,16 @@ async function apriOpera(id) {
   stato.modificato = false;
   mostraVista('opera');
 }
+
+/* Un'opera è o una produzione CDL o una collaborazione, non entrambe (lo
+   impone anche il database): spuntarne una toglie l'altra */
+['produzione_cdl', 'collaborazione_cdl'].forEach((nome, i, coppia) => {
+  const casella = $('modulo-opera')[nome];
+  const altra = $('modulo-opera')[coppia[1 - i]];
+  casella.addEventListener('change', () => {
+    if (casella.checked) altra.checked = false;
+  });
+});
 
 $('modulo-opera').addEventListener('submit', async (e) => {
   e.preventDefault();

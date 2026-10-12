@@ -9,14 +9,11 @@
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link rel="icon" type="image/png" href="assets/img/brand/favicon.png">
 
-    <link rel="stylesheet" href="assets/css/base.css?v=2026-10-12-2">
-    <link rel="stylesheet" href="assets/css/components.css?v=2026-10-12-2">
-    <link rel="stylesheet" href="assets/css/pages/produzioni.css?v=2026-10-12-2">
+    <link rel="stylesheet" href="assets/css/base.css?v=2026-10-12-3">
+    <link rel="stylesheet" href="assets/css/components.css?v=2026-10-12-3">
+    <link rel="stylesheet" href="assets/css/pages/produzioni.css?v=2026-10-12-3">
 </head>
 <body>
-
-    <!-- Guscio da sviluppare: per ora serve a far funzionare la voce
-         "Produzioni" dello slider. -->
 
     <nav class="barra" aria-label="Navigazione principale">
         <div class="barra-gruppo">
@@ -38,17 +35,47 @@
 
     <main>
         <section class="sezione sezione--prima">
-            <div class="due-colonne">
-                <h1>Produzioni</h1>
+            <!-- Niente titolo visibile: in testa c'è l'ultimo lavoro. Il
+                 titolo resta per i lettori di schermo. -->
+            <h1 class="sr-only">Produzioni</h1>
+
+            <!-- Tutto lo riempie assets/js/produzioni.js dal database; un
+                 blocco senza opere resta nascosto. In primo piano il lavoro
+                 più recente, produzione o collaborazione: a sinistra il
+                 fotogramma, a destra titolo, tagline e dati essenziali. -->
+            <a id="primo-piano" class="primo-piano" hidden>
+                <div class="primo-piano-copertina">
+                    <img class="foto" alt="">
+                </div>
+                <div class="primo-piano-testo">
+                    <span class="freccia" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+                    </span>
+                    <p class="etichetta primo-piano-etichetta"></p>
+                    <h2 class="primo-piano-titolo"></h2>
+                    <p class="primo-piano-riassunto"></p>
+                    <dl class="primo-piano-dati"></dl>
+                </div>
+            </a>
+
+            <!-- Le opere prodotte da CDL (produzione_cdl), dalla più recente -->
+            <div id="blocco-produzioni" class="blocco" hidden>
+                <h2 class="titoletto titoletto--blocco">Produzioni originali CDL</h2>
+                <div class="griglia-riquadri"></div>
             </div>
 
-            <!-- Le opere prodotte da CDL, dalla più recente.
-                 Le costruisce assets/js/produzioni.js; le altre opere dei soci
-                 stanno in Cortoteca. -->
-            <ul id="elenco-produzioni" class="elenco"></ul>
+            <!-- Le opere a cui CDL ha collaborato (collaborazione_cdl): il
+                 blocco compare con la prima -->
+            <div id="blocco-collaborazioni" class="blocco" hidden>
+                <h2 class="titoletto titoletto--blocco">Collaborazioni</h2>
+                <div class="griglia-riquadri"></div>
+            </div>
+
+            <!-- Database non raggiungibile o nessuna opera -->
+            <p id="avviso-produzioni" class="avviso" hidden></p>
 
             <a href="cortoteca.html" class="riga-altrove">
-                <span>In Cortoteca ci sono anche le opere dei soci</span>
+                <span>Scopri i corti dei soci in Cortoteca</span>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h6"/></svg>
             </a>
         </section>
@@ -74,8 +101,8 @@
         CDL APS &bull; Viale Laurana 13, Rimini, 47921 &bull; CF: 91200080405</p>
     </footer>
 
-    <script src="assets/js/barra.js?v=2026-10-12-2"></script>
-    <script src="assets/js/dati.js?v=2026-10-12-2"></script>
-    <script src="assets/js/produzioni.js?v=2026-10-12-2"></script>
+    <script src="assets/js/barra.js?v=2026-10-12-3"></script>
+    <script src="assets/js/dati.js?v=2026-10-12-3"></script>
+    <script src="assets/js/produzioni.js?v=2026-10-12-3"></script>
 </body>
 </html>
