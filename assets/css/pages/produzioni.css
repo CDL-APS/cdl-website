@@ -1,58 +1,42 @@
 /* ==========================================================================
-   PRODUZIONI (produzioni.html) — elenco delle opere prodotte da CDL
+   PRODUZIONI (produzioni.html) — i lavori di CDL, divisi in blocchi: il più
+   recente in primo piano, le produzioni originali, le collaborazioni.
+   Primo piano, titoli dei blocchi e griglia sono in components.css.
    ========================================================================== */
 
-.elenco {
-  list-style: none;
-  margin-top: clamp(2rem, 5vw, 3rem);
+/* Dati essenziali dell'opera in primo piano, in coppie voce / valore come la
+   troupe della scheda opera */
+.primo-piano-dati {
+  display: grid;
+  gap: 0.55rem;
+  margin-top: 0.4rem;
+  padding-top: 0.9rem;
   border-top: 1px solid var(--riga);
 }
 
-.elenco a {
+.primo-piano-dati div {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-columns: 6.5rem minmax(0, 1fr);
+  gap: 0.75rem;
   align-items: baseline;
-  gap: 0.35rem 1.5rem;
-  padding: 1.1rem 0.5rem;
-  border-radius: var(--r-s);
-  border-bottom: 1px solid var(--riga);
-  transition: padding-left 0.3s var(--ease-out), color 0.3s var(--ease-out),
-    background-color 0.3s var(--ease-out);
 }
 
-.elenco a:hover {
-  color: var(--cdl-red);
-  padding-left: 1rem;
-  background: rgba(185, 187, 248, 0.16);
-}
-
-.elenco-titolo {
+.primo-piano-dati dt {
   font-family: 'Montserrat', sans-serif;
-  font-size: clamp(1.15rem, 2.6vw, 1.75rem);
+  font-size: 9px;
   font-weight: 900;
   text-transform: uppercase;
-  letter-spacing: -0.03em;
-  line-height: 1;
+  letter-spacing: 0.2em;
+  color: var(--testo-medio);
 }
 
-.elenco-dati {
-  grid-column: 1;
-  font-size: 10px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-  color: var(--testo-tenue);
-}
-
-/* Colonna esplicita: con la sola riga fissata la griglia metterebbe la
-   freccia nella prima colonna, spingendo il titolo a destra */
-.elenco-freccia { grid-column: 2; grid-row: 1 / span 2; align-self: center; width: 20px; height: 20px; }
+.primo-piano-dati dd { font-size: 0.9rem; line-height: 1.4; }
 
 .riga-altrove {
   display: inline-flex;
   align-items: center;
   gap: 0.6rem;
-  margin-top: 1.5rem;
+  margin-top: clamp(2.5rem, 5vw, 3.5rem);
   padding: 0.8rem 1.2rem;
   border-radius: var(--r-s);
   corner-shape: squircle;
@@ -68,8 +52,8 @@
 
 .riga-altrove:hover { background: var(--cdl-red); }
 
-/* Database non raggiungibile o nessuna produzione */
-.elenco-avviso {
+/* Database non raggiungibile o nessuna opera */
+.avviso {
   padding: 2rem 0.5rem;
   border-bottom: 1px solid var(--riga);
   font-family: 'Montserrat', sans-serif;

@@ -58,6 +58,12 @@ com'è.
   dal modulo di gestione): l'ultima edizione con `long-story-short` va in
   primo piano col marchio, `short-talks` ha un blocco col suo lettering, gli
   eventi senza serie finiscono in "Altri eventi".
+- La pagina Produzioni mette in primo piano il lavoro più recente, poi il
+  blocco delle produzioni originali (`produzione_cdl`) e quello delle
+  collaborazioni (`collaborazione_cdl`, nascosto finché è vuoto). Le due
+  colonne di `opere` si escludono (vincolo nel database). Primo piano,
+  titoli dei blocchi e griglia stanno in `components.css`, condivisi con
+  Eventi.
 - **Pubblicazione**: Netlify costruisce solo i commit il cui autore è membro
   del team (l'account GitHub `cdl-aps`). Le pull request vanno unite da
   GitHub con quell'account, con un merge commit; un'unione fatta da un

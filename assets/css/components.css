@@ -512,6 +512,89 @@ a.riquadro--vuoto:hover {
 }
 
 /* --------------------------------------------------------------------------
+   Primo piano: il lavoro più recente in testa alla pagina (Eventi,
+   Produzioni), a tutta larghezza. L'immagine sui due terzi di sinistra; sul
+   terzo di destra una scheda, come le altre del sito: freccia in alto, testo
+   in basso.
+   -------------------------------------------------------------------------- */
+.primo-piano {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  gap: var(--spazio);
+}
+
+.primo-piano-copertina,
+.primo-piano-testo {
+  border-radius: var(--r-l);
+  corner-shape: squircle;
+}
+
+.primo-piano-copertina {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: rgba(29, 29, 27, 0.06);
+}
+
+.primo-piano-copertina .foto {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+  transform: scale(1.02);
+  transition: transform 0.7s var(--ease-out);
+}
+
+.primo-piano-testo {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 0.6rem;
+  padding: clamp(1.25rem, 2.5vw, 2rem);
+  border: 1px solid var(--riga);
+  background: rgba(29, 29, 27, 0.025);
+  transition: background-color 0.3s var(--ease-out), border-color 0.3s var(--ease-out);
+}
+
+.primo-piano-titolo { font-size: clamp(1.6rem, 3.2vw, 2.4rem); }
+
+.primo-piano-riassunto {
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: var(--testo-tenue);
+}
+
+a.primo-piano:hover .foto { transform: scale(1.06); }
+
+a.primo-piano:hover .primo-piano-testo {
+  background: rgba(185, 187, 248, 0.28);
+  border-color: transparent;
+}
+
+a.primo-piano:hover .freccia {
+  transform: translate(2px, -2px);
+  background: var(--cdl-white);
+}
+
+/* Blocchi sotto il primo piano. Il titolo è più grande e pieno del
+   titoletto, per reggere il confronto con i lettering (Short Talks). */
+.titoletto--blocco {
+  font-size: clamp(13px, 1.4vw, 17px);
+  color: var(--cdl-dark);
+}
+
+/* auto-fill e non auto-fit: un blocco con due soli riquadri li tiene della
+   stessa misura degli altri, invece di allargarli a tutta riga */
+.griglia-riquadri {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--spazio);
+}
+
+/* --------------------------------------------------------------------------
    Scheda: superficie piatta per testo e dati, senza fotografia. È il
    fratello del riquadro quando non c'è un'immagine da mostrare.
    -------------------------------------------------------------------------- */
@@ -630,6 +713,12 @@ a.scheda:hover {
    -------------------------------------------------------------------------- */
 @media (max-width: 1000px) {
   .due-colonne { grid-template-columns: 1fr; }
+}
+
+/* Sul telefono la scheda del primo piano va sotto l'immagine */
+@media (max-width: 760px) {
+  .primo-piano { grid-template-columns: 1fr; }
+  .primo-piano-testo { min-height: 9rem; }
 }
 
 @media (max-width: 620px) {

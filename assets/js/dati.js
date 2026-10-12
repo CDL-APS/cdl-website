@@ -83,10 +83,20 @@ async function caricaEventi() {
   return eventi.sort((a, b) => b.data_inizio.localeCompare(a.data_inizio));
 }
 
-/* Le opere prodotte da CDL, dalla più recente. A parità di anno conta come
-   più recente quella inserita per ultima, cioè con l'id più alto. */
+/* Ordine dalla più recente. A parità di anno conta come più recente l'opera
+   inserita per ultima, cioè con l'id più alto. */
+function dallaPiuRecente(a, b) {
+  return b.anno - a.anno || b.id - a.id;
+}
+
+/* Le opere prodotte da CDL, dalla più recente */
 function produzioniCdl(opere) {
-  return opere.filter((o) => o.produzione_cdl).sort((a, b) => b.anno - a.anno || b.id - a.id);
+  return opere.filter((o) => o.produzione_cdl).sort(dallaPiuRecente);
+}
+
+/* Le opere a cui CDL ha collaborato senza produrle, dalla più recente */
+function collaborazioniCdl(opere) {
+  return opere.filter((o) => o.collaborazione_cdl).sort(dallaPiuRecente);
 }
 
 /* Trasforma un link YouTube o Vimeo nel corrispondente URL di embed.

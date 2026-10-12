@@ -7,6 +7,7 @@
     "regista": "Francesco Pasquinelli",
     "produzione": "CDL",
     "produzione_cdl": true,
+    "collaborazione_cdl": false,
     "generi": [
       "thriller"
     ],
@@ -26,19 +27,19 @@
     "costumi": "Elena Piccari, Simone Ruvioli",
     "interpreti": [
       {
-        "posizione": 1,
         "nome": "Luca Canarecci",
-        "ruolo": "Alberto"
+        "ruolo": "Alberto",
+        "posizione": 1
       },
       {
-        "posizione": 2,
         "nome": "Eleonora Casoni",
-        "ruolo": "Caterina"
+        "ruolo": "Caterina",
+        "posizione": 2
       },
       {
-        "posizione": 3,
         "nome": "Enea Maestri",
-        "ruolo": "Claudio"
+        "ruolo": "Claudio",
+        "posizione": 3
       }
     ]
   },
@@ -50,6 +51,7 @@
     "regista": "Francesco Pasquinelli",
     "produzione": "CDL, Arkadia Studios",
     "produzione_cdl": true,
+    "collaborazione_cdl": false,
     "generi": [
       "thriller",
       "mistero"
@@ -70,39 +72,39 @@
     "costumi": null,
     "interpreti": [
       {
-        "posizione": 1,
         "nome": "Luca Canarecci",
-        "ruolo": "Regista, Alberto di Lucca"
+        "ruolo": "Regista, Alberto di Lucca",
+        "posizione": 1
       },
       {
-        "posizione": 2,
         "nome": "Angelica Giulianelli",
-        "ruolo": "Aiuto regia, Chiara Diavoletti"
+        "ruolo": "Aiuto regia, Chiara Diavoletti",
+        "posizione": 2
       },
       {
-        "posizione": 3,
         "nome": "Nicolò Gorza",
-        "ruolo": "Poliziotto"
+        "ruolo": "Poliziotto",
+        "posizione": 3
       },
       {
-        "posizione": 4,
         "nome": "Andrea Bombardi",
-        "ruolo": "Poliziotto"
+        "ruolo": "Poliziotto",
+        "posizione": 4
       },
       {
-        "posizione": 5,
         "nome": "Gian Luca Neri",
-        "ruolo": "Locatore"
+        "ruolo": "Locatore",
+        "posizione": 5
       },
       {
-        "posizione": 6,
         "nome": "Gianmarco Pironi",
-        "ruolo": "Attore"
+        "ruolo": "Attore",
+        "posizione": 6
       },
       {
-        "posizione": 7,
         "nome": "Alice Ronci",
-        "ruolo": "Attrice"
+        "ruolo": "Attrice",
+        "posizione": 7
       }
     ]
   },
@@ -114,6 +116,7 @@
     "regista": "Gabriele Rattini",
     "produzione": "Gabriele Rattini",
     "produzione_cdl": false,
+    "collaborazione_cdl": false,
     "generi": [
       "drammatico"
     ],
@@ -133,14 +136,14 @@
     "costumi": null,
     "interpreti": [
       {
-        "posizione": 1,
         "nome": "Luca Canarecci",
-        "ruolo": "Ragazzo"
+        "ruolo": "Ragazzo",
+        "posizione": 1
       },
       {
-        "posizione": 2,
         "nome": "Viola Dini",
-        "ruolo": "Ragazza"
+        "ruolo": "Ragazza",
+        "posizione": 2
       }
     ]
   },
@@ -152,6 +155,7 @@
     "regista": "Gabriele Rattini",
     "produzione": null,
     "produzione_cdl": false,
+    "collaborazione_cdl": false,
     "generi": [
       "thriller"
     ],
@@ -171,14 +175,14 @@
     "costumi": null,
     "interpreti": [
       {
-        "posizione": 1,
         "nome": "Luca Canarecci",
-        "ruolo": "Criminale giovane"
+        "ruolo": "Criminale giovane",
+        "posizione": 1
       },
       {
-        "posizione": 2,
         "nome": "Andrea Bombardi",
-        "ruolo": "Criminale adulto"
+        "ruolo": "Criminale adulto",
+        "posizione": 2
       }
     ]
   },
@@ -190,6 +194,7 @@
     "regista": "Gabriele Rattini",
     "produzione": "LVDA Film",
     "produzione_cdl": false,
+    "collaborazione_cdl": false,
     "generi": [
       "drammatico"
     ],
@@ -209,24 +214,202 @@
     "costumi": "Rebecca Renzi, Simona Bussi",
     "interpreti": [
       {
-        "posizione": 1,
         "nome": "Andrea Bombardi",
-        "ruolo": "Andrea"
+        "ruolo": "Andrea",
+        "posizione": 1
       },
       {
-        "posizione": 2,
         "nome": "Laura Caminati",
-        "ruolo": "Mamma"
+        "ruolo": "Mamma",
+        "posizione": 2
       },
       {
-        "posizione": 3,
         "nome": "Myriam Mosca",
-        "ruolo": "Ragazza della città"
+        "ruolo": "Ragazza della città",
+        "posizione": 3
       },
       {
-        "posizione": 4,
         "nome": "Thomas Calisesi",
-        "ruolo": "Andrea da ragazzo"
+        "ruolo": "Andrea da ragazzo",
+        "posizione": 4
+      }
+    ]
+  },
+  {
+    "id": 8,
+    "codice": "vivarevolution",
+    "titolo": "Viva Revolution",
+    "anno": 2025,
+    "regista": "Alessio Petrillo",
+    "produzione": "CDL",
+    "produzione_cdl": true,
+    "collaborazione_cdl": false,
+    "generi": [
+      "commedia"
+    ],
+    "tagline": "Ricreazione o rivoluzione!",
+    "sinossi": "Con l'abolizione della ricreazione, un gruppo di studenti organizza una ribellione per riconquistare la propria libertà.",
+    "note_regia": "Viva Revolution nasce al Nòt Film Fest 2025, nel contest \"Nòt a Chance\". Dopo Santarcangelo di Romagna, è stato in selezione ufficiale all'Amarcort Film Festival di Rimini, per poi essere proiettato al Cinema Nuovo Sacher a Roma. Un progetto super indipendente che ha saputo dire la sua!",
+    "fotogramma": "opere/vivarevolution-fotogramma-1791649391496.jpg",
+    "video_url": "https://youtu.be/QfJUbuuthuI",
+    "letterboxd_url": "https://letterboxd.com/film/viva-revolution/",
+    "sceneggiatura": "Zaccaria Nadifi, Alessio Petrillo",
+    "produttore": "Alessio Petrillo, Francesco Pasquinelli, Elena Piccari, Matteo Giacomo Bernardi",
+    "fotografia": "Jacopo Todoli",
+    "montaggio": "Gabriele Rattini",
+    "colonna_sonora": "Zaccaria Nadifi",
+    "scenografia": null,
+    "trucco": null,
+    "costumi": null,
+    "interpreti": [
+      {
+        "nome": "Elisabetta Fantoni",
+        "ruolo": "Betta",
+        "posizione": 1
+      },
+      {
+        "nome": "Laura Caminati",
+        "ruolo": "Preside",
+        "posizione": 2
+      },
+      {
+        "nome": "Giulia Conti",
+        "ruolo": "Studentessa vanitosa",
+        "posizione": 3
+      },
+      {
+        "nome": "Liam Drudi",
+        "ruolo": "Studente",
+        "posizione": 4
+      },
+      {
+        "nome": "Marco Francisconi",
+        "ruolo": "Studente rivoluzionario",
+        "posizione": 5
+      },
+      {
+        "nome": "Leonardo Maltese",
+        "ruolo": "Bidello Gianni",
+        "posizione": 6
+      },
+      {
+        "nome": "Brando Pacitto",
+        "ruolo": "L'altro bidello",
+        "posizione": 7
+      },
+      {
+        "nome": "Giulia Ricci",
+        "ruolo": "L'altra studentessa vanitosa",
+        "posizione": 8
+      },
+      {
+        "nome": "Giorgia Venturi",
+        "ruolo": "Studentessa",
+        "posizione": 9
+      },
+      {
+        "nome": "Leon Zamagni",
+        "ruolo": "Piccolo studente",
+        "posizione": 10
+      }
+    ]
+  },
+  {
+    "id": 9,
+    "codice": "interzona",
+    "titolo": "Interzona",
+    "anno": 2026,
+    "regista": "Francesco Pasquinelli",
+    "produzione": "CDL",
+    "produzione_cdl": true,
+    "collaborazione_cdl": false,
+    "generi": [
+      "thriller psicologico metafisico"
+    ],
+    "tagline": "Non c'eri per l'inizio, non ci sarai per la fine",
+    "sinossi": "Perso nel vuoto di un viaggio notturno, i pensieri di Tommaso si trasformano in un’ossessione che trasforma la strada in un labirinto mentale. Quando un messaggio enigmatico rompe la monotonia del viaggio, la sua ricerca di un senso devia verso l’ignoto, trascinandolo in un abisso metafisico dove il tempo si ripiega su se stesso. Qui, rivivere il passato non è più un ricordo ossessivo, ma una scelta.",
+    "note_regia": null,
+    "fotogramma": "opere/interzona-fotogramma-1791650175075.jpg",
+    "video_url": null,
+    "letterboxd_url": "https://letterboxd.com/film/interzone-2/",
+    "sceneggiatura": "Francesco Pasquinelli",
+    "produttore": "Francesco Pasquinelli, Matteo Giacomo Bernardi, Elena Piccari",
+    "fotografia": "Matteo Cucci",
+    "montaggio": "Christian Dei, Francesco Pasquinelli",
+    "colonna_sonora": "Matteo Giacomo Bernardi",
+    "scenografia": "Elena Piccari",
+    "trucco": "Arianna Ceccarelli",
+    "costumi": "Elena Piccari, Arianna Ceccarelli",
+    "interpreti": [
+      {
+        "nome": "Andrea Bombaardi",
+        "ruolo": "Tommaso",
+        "posizione": 1
+      },
+      {
+        "nome": "Luca Canarecci",
+        "ruolo": "Enea",
+        "posizione": 2
+      },
+      {
+        "nome": "Pietro Piastra",
+        "ruolo": "Amico di Enea",
+        "posizione": 3
+      },
+      {
+        "nome": "Andrea Luti",
+        "ruolo": "Amico di Tommaso",
+        "posizione": 4
+      },
+      {
+        "nome": "Pia Morri",
+        "ruolo": "Nonna di Enea / Nonna di Tommaso",
+        "posizione": 5
+      },
+      {
+        "nome": "Alice Ronci",
+        "ruolo": "Compagna di Tommaso",
+        "posizione": 6
+      },
+      {
+        "nome": "Gabriele Rattini",
+        "ruolo": "Figura elegante #1",
+        "posizione": 7
+      },
+      {
+        "nome": "Francesco Gherardi",
+        "ruolo": "Figura elegante #2",
+        "posizione": 8
+      },
+      {
+        "nome": "Edoardo Carminucci",
+        "ruolo": "Figura elegante #3",
+        "posizione": 9
+      },
+      {
+        "nome": "Thomas Calisesi",
+        "ruolo": "Figura elegante #4",
+        "posizione": 10
+      },
+      {
+        "nome": "Giovanni Marchetti Vivoli",
+        "ruolo": "Figura elegante #5",
+        "posizione": 11
+      },
+      {
+        "nome": "Marco Francisconi",
+        "ruolo": "Figura elegante #6",
+        "posizione": 12
+      },
+      {
+        "nome": "Leonardo Paganelli",
+        "ruolo": "Figura elegante #7",
+        "posizione": 13
+      },
+      {
+        "nome": "Luca Fraternali",
+        "ruolo": "Figura elegante #8",
+        "posizione": 14
       }
     ]
   }

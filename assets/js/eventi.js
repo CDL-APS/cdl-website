@@ -36,7 +36,7 @@ function riquadroEvento(evento) {
 /* Mette gli eventi nella griglia del blocco; senza eventi resta nascosto */
 function riempiBlocco(id, eventi) {
   const blocco = document.getElementById(id);
-  const griglia = blocco.querySelector('.griglia-eventi');
+  const griglia = blocco.querySelector('.griglia-riquadri');
   eventi.forEach((evento) => griglia.appendChild(riquadroEvento(evento)));
   blocco.hidden = eventi.length === 0;
 }
