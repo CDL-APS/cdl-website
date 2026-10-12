@@ -10,37 +10,14 @@
 }
 
 /* --------------------------------------------------------------------------
-   Copertina: la grafica dell'edizione con il marchio sopra
+   Marchio sopra la copertina dell'edizione (la copertina sta in
+   components.css, condivisa con le pagine degli altri eventi)
    -------------------------------------------------------------------------- */
-.copertina {
-  position: relative;
-  display: flex;
-  align-items: flex-end;
-  min-height: clamp(260px, 40vw, 480px);
-  margin-bottom: clamp(2rem, 5vw, 3.5rem);
-  padding: clamp(1.25rem, 3.5vw, 2.75rem);
-  overflow: hidden;
-  border-radius: var(--r-l);
-  corner-shape: squircle;
-  background: #fff;
-}
-
-.copertina .foto {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  max-width: none;
-  object-fit: cover;
-}
-
 .copertina-marchio {
   position: relative;
   width: clamp(170px, 30vw, 360px);
   height: auto;
 }
-
-.due-colonne h1 span { color: var(--testo-tenue); }
 
 /* --------------------------------------------------------------------------
    Materiali: tre schede, ognuna col colore di una linea

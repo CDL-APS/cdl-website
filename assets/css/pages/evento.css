@@ -1,0 +1,228 @@
+/* ==========================================================================
+   EVENTO — pagine dei singoli eventi (short-talks-1.html, blue-hour.html…).
+   Hanno tutte la stessa impostazione, presa da Long Story Short: copertina,
+   testo, dati della serata, programma con la locandina, foto. Come opera.css
+   serve ogni scheda opera, questo foglio serve ogni pagina evento; cambia
+   solo il colore d'accento, preso dalla grafica di ciascun evento.
+   ========================================================================== */
+
+/* Colore d'accento di ogni evento: sta sulla classe del <body> */
+.evento { --accento: var(--cdl-dark); }
+
+.evento--short-talks-1 { --accento: #ff7a41; }
+
+.evento--short-talks-2,
+.evento--short-talks-off-1 { --accento: #ff0000; }
+
+.evento--blue-hour { --accento: #0a1256; }
+
+.evento--short-talks-al-not-2025 { --accento: #e47800; }
+
+.evento--short-talks-3-x-laiff { --accento: #f00084; }
+
+.evento--short-talks-al-not-2026 { --accento: #0c7830; }
+
+/* --------------------------------------------------------------------------
+   Copertina: la grafica si vede intera, alla sua proporzione, perché porta
+   scritte (titolo, date, programma) che un ritaglio taglierebbe
+   -------------------------------------------------------------------------- */
+/* Il filetto stacca dalla pagina le grafiche su fondo bianco */
+.copertina--intera {
+  display: block;
+  min-height: 0;
+  padding: 0;
+  border: 1px solid var(--riga);
+  background: rgba(29, 29, 27, 0.06);
+}
+
+.copertina--intera .foto {
+  position: static;
+  height: auto;
+}
+
+/* --------------------------------------------------------------------------
+   Dati della serata: quando, dove, ingresso, pubblico
+   -------------------------------------------------------------------------- */
+.dati-evento {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 210px), 1fr));
+  gap: var(--spazio);
+}
+
+.dati-evento div {
+  padding-top: 0.85rem;
+  border-top: 3px solid var(--accento);
+}
+
+.dati-evento dt {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 9px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--testo-medio);
+}
+
+.dati-evento dd {
+  margin-top: 0.5rem;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+/* --------------------------------------------------------------------------
+   Programma: i corti a sinistra, la locandina a destra. Senza locandina il
+   programma prende tutta la riga.
+   -------------------------------------------------------------------------- */
+.programma-griglia {
+  display: grid;
+  grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);
+  gap: clamp(1.5rem, 4vw, 3rem);
+  align-items: start;
+}
+
+.programma-griglia > :only-child { grid-column: 1 / -1; }
+
+.programma {
+  display: grid;
+  gap: clamp(1.75rem, 3vw, 2.5rem) clamp(1.5rem, 3vw, 2.5rem);
+}
+
+/* Più serate o più blocchi, affiancati quando c'è spazio */
+.programma--gruppi { grid-template-columns: repeat(auto-fit, minmax(min(100%, 330px), 1fr)); }
+
+/* Quattro serate: due per riga, non tre più una */
+.programma--serate { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+.programma-gruppo-titolo {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+/* Pallino nel colore dell'evento, come le linee di Long Story Short */
+.programma-gruppo-titolo::before {
+  content: '';
+  flex: 0 0 auto;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--accento);
+}
+
+.programma-gruppo-nota {
+  margin-top: 0.3rem;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--testo-tenue);
+}
+
+.programma-lista {
+  list-style: none;
+  margin-top: 0.75rem;
+  border-top: 1px solid var(--riga);
+}
+
+.programma-voce {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.3rem 1rem;
+  padding: 0.95rem 0.5rem;
+  border-bottom: 1px solid var(--riga);
+}
+
+a.programma-voce {
+  border-radius: var(--r-s);
+  corner-shape: squircle;
+  transition: background-color 0.3s var(--ease-out), padding-left 0.3s var(--ease-out);
+}
+
+a.programma-voce:hover {
+  padding-left: 0.9rem;
+  background: color-mix(in srgb, var(--accento) 14%, transparent);
+}
+
+.programma-titolo {
+  font-family: 'Montserrat', sans-serif;
+  font-size: clamp(1.05rem, 2.2vw, 1.35rem);
+  font-weight: 900;
+  text-transform: uppercase;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+}
+
+.programma-dati {
+  grid-column: 1;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1.5;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--testo-tenue);
+}
+
+/* Corto presente nella Cortoteca: rimando sulla destra della riga */
+.programma-cortoteca {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 9px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  white-space: nowrap;
+}
+
+.programma-cortoteca svg { width: 13px; height: 13px; }
+
+.locandina { margin: 0; }
+
+.locandina img {
+  width: 100%;
+  height: auto;
+  border-radius: var(--r-m);
+  corner-shape: squircle;
+  box-shadow: 0 16px 40px rgba(29, 29, 27, 0.12);
+}
+
+/* --------------------------------------------------------------------------
+   Foto: colonne ad altezza libera, così orizzontali e verticali stanno
+   insieme senza ritagli
+   -------------------------------------------------------------------------- */
+.galleria {
+  columns: 3 240px;
+  column-gap: var(--spazio);
+}
+
+.galleria img {
+  width: 100%;
+  height: auto;
+  margin-bottom: var(--spazio);
+  break-inside: avoid;
+  border-radius: var(--r-m);
+  corner-shape: squircle;
+  background: rgba(29, 29, 27, 0.06);
+}
+
+.galleria-crediti {
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: var(--testo-tenue);
+}
+
+@media (max-width: 760px) {
+  .programma-griglia,
+  .programma--serate { grid-template-columns: 1fr; }
+  .locandina { max-width: 420px; }
+  .programma-cortoteca span { display: none; }
+}

@@ -35,6 +35,7 @@ python3 -m http.server 5500
 ├── produzioni.html            Le produzioni CDL (testo da scrivere)
 ├── eventi.html                Gli eventi CDL (da sviluppare)
 ├── longstoryshort.html        Pagina dell'evento Long Story Short
+├── short-talks-1.html, …      Pagine degli altri eventi, una per evento (vedi sotto)
 ├── cornicenarrativa.html      Generatore del "biglietto" di LSS 2026
 ├── cortoteca.html             Archivio dei cortometraggi
 ├── opera.html                 Scheda di un singolo corto (opera.html?film=codice)
@@ -67,7 +68,8 @@ python3 -m http.server 5500
 │       ├── partner/           Loghi dei partner, tessera
 │       ├── nuvole/            Nuvolette della vecchia home (servono ai redirect)
 │       ├── sfondi/            Wallpaper della home
-│       ├── eventi/            Copertina e miniatura di LSS 2026 (copie locali)
+│       ├── eventi/            Copertine e miniature (copie locali); foto e
+│       │                      locandine delle pagine evento, una cartella per evento
 │       └── film/              Fotogrammi dei primi corti (copie locali)
 │
 ├── netlify.toml               Redirect dai vecchi indirizzi e cache
@@ -106,6 +108,20 @@ sapere:
 - Per togliere qualcosa dal sito senza perderlo, togli la spunta
   *Pubblicata* invece di eliminarlo.
 
+### Pagine dei singoli eventi
+
+Un evento diventa cliccabile, nella pagina Eventi e nella casella della home,
+quando ha una **pagina dedicata**: il campo *Pagina dedicata* del modulo
+contiene il nome del file, per esempio `short-talks-1.html`.
+
+Le pagine degli eventi sono file HTML nella radice, tutte sullo stesso modello
+(per una nuova si parte da una esistente): lo stile è in
+`assets/css/pages/evento.css`, dove sta anche il colore d'accento di ogni
+evento, mentre foto e locandina stanno in `assets/img/eventi/<codice>/`. Una
+pagina nuova va online con una pull request, come il resto del sito; il campo
+*Pagina dedicata* si compila solo dopo, altrimenti il riquadro porta a una
+pagina che non c'è ancora.
+
 ### Chi può modificare
 
 Gli account si creano dalla dashboard di Supabase: *Authentication* → *Users*
@@ -120,8 +136,16 @@ quella tabella.
 Se Supabase non risponde (per esempio perché il progetto gratuito è stato
 messo in pausa dopo una settimana senza attività), il sito ripiega su
 `data/opere.json` e `data/eventi.json` e sulle immagini in `assets/img/`.
-Sono copie del giorno della migrazione: quello che si aggiunge dopo dalla
-pagina di gestione non c'è.
+
+Le copie non si aggiornano da sole: `data/opere.json` è ferma al giorno della
+migrazione, `data/eventi.json` al 10 ottobre 2026. Per rinfrescare gli eventi
+si scaricano le righe pubblicate dalla Data API, con la chiave pubblica di
+`dati.js`, e si copiano in `assets/img/eventi/` le immagini nuove con lo
+stesso nome che hanno nel bucket:
+
+```bash
+curl -s "https://rsspmqhhrykbmrkmwqcg.supabase.co/rest/v1/eventi?select=id,codice,titolo,data_inizio,data_fine,luogo,riassunto,descrizione,copertina,miniatura,pagina&pubblicato=eq.true&order=id" -H "apikey: $(grep -o 'sb_publishable_[A-Za-z0-9_]*' assets/js/dati.js)" | python3 -m json.tool --indent 2 --no-ensure-ascii > data/eventi.json
+```
 
 ---
 
