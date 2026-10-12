@@ -50,8 +50,8 @@ function riempiPrimoPiano(evento) {
   if (pagina) box.href = pagina;
   else box.querySelector('.freccia').remove();
 
-  box.querySelector('.chip-etichetta').textContent = 'Edizione ' + evento.data_inizio.slice(0, 4);
-  box.querySelector('.chip-meta').textContent = evento.riassunto || evento.luogo || '';
+  box.querySelector('.primo-piano-edizione').textContent = 'Edizione ' + evento.data_inizio.slice(0, 4);
+  box.querySelector('.primo-piano-riassunto').textContent = evento.riassunto || evento.luogo || '';
   mostraImmagine(box.querySelector('.foto'), evento.copertina || evento.miniatura);
   box.hidden = false;
 }

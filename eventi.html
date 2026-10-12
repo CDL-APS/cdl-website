@@ -42,18 +42,21 @@
             <!-- I blocchi li riempie assets/js/eventi.js dal database, in base
                  alla serie di ogni evento; un blocco senza eventi resta
                  nascosto. In primo piano l'ultima edizione di Long Story
-                 Short: copertina con il marchio a tre righe sopra, come nella
-                 pagina dell'evento. -->
-            <a id="primo-piano" class="riquadro primo-piano" hidden>
-                <img class="foto" alt="">
-                <img class="primo-piano-marchio" src="assets/img/brand/long-story-short.png" alt="" width="1777" height="1263">
-                <span class="freccia" aria-hidden="true">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
-                </span>
-                <div class="chip">
-                    <p class="chip-etichetta"></p>
-                    <p class="chip-titolo">Long Story Short</p>
-                    <p class="chip-meta"></p>
+                 Short: a sinistra la copertina con il marchio a tre righe
+                 sopra, come nella pagina dell'evento; a destra titolo,
+                 edizione e riassunto. -->
+            <a id="primo-piano" class="primo-piano" hidden>
+                <div class="primo-piano-copertina">
+                    <img class="foto" alt="">
+                    <img class="primo-piano-marchio" src="assets/img/brand/long-story-short.png" alt="" width="1777" height="1263">
+                </div>
+                <div class="primo-piano-testo">
+                    <span class="freccia" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+                    </span>
+                    <p class="etichetta primo-piano-edizione"></p>
+                    <h2 class="primo-piano-titolo">Long Story Short</h2>
+                    <p class="primo-piano-riassunto"></p>
                 </div>
             </a>
 
@@ -67,7 +70,7 @@
 
             <!-- Tutto il resto: gli eventi senza serie -->
             <div id="blocco-altri" class="blocco-eventi" hidden>
-                <h2 class="titoletto">Altri eventi</h2>
+                <h2 class="titoletto titoletto--blocco">Altri eventi</h2>
                 <div class="griglia-eventi"></div>
             </div>
         </section>
