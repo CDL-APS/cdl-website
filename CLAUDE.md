@@ -48,6 +48,12 @@ com'è.
   `<cartella>/<codice>-<campo>-<orario>.jpg` nel bucket `immagini`.
 - `opera.html` legge il codice dell'opera dalla query string (`?film=codice`).
   Senza parametro mostra "Opera non trovata".
+- Le pagine dei singoli eventi (`short-talks-1.html`, `blue-hour.html`…) sono
+  statiche, sul modello di `longstoryshort.html`, e condividono
+  `pages/evento.css`, dove sta anche il colore d'accento di ciascuna (classe
+  sul `<body>`). Il riquadro dell'evento porta lì solo se il campo `pagina`
+  del database contiene il nome del file: si compila quando la pagina è già
+  online.
 - **Pubblicazione**: Netlify costruisce solo i commit il cui autore è membro
   del team (l'account GitHub `cdl-aps`). Le pull request vanno unite da
   GitHub con quell'account, con un merge commit; un'unione fatta da un
@@ -72,7 +78,8 @@ com'è.
 ## Verifica prima di pubblicare
 
 ```bash
-python3 -m json.tool data/opere.json > /dev/null  # la copia di riserva è valida
+python3 -m json.tool data/opere.json > /dev/null  # le copie di riserva sono valide
+python3 -m json.tool data/eventi.json > /dev/null
 python3 -m http.server 5500                        # poi controlla le pagine
 ```
 
