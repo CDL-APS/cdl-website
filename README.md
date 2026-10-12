@@ -178,6 +178,12 @@ motivo quando i commit del ramo sono di un account personale: è normale, non
 indica un errore nel codice. Per vedere le modifiche prima di pubblicarle si
 usa il server locale.
 
+Netlify guarda l'autore dell'**ultimo commit di `main`**: se è un account
+personale, per esempio dopo un push diretto, resta tutto bloccato, compreso
+un deploy caricato a mano dal connettore o dalla CLI di Netlify. Per
+sbloccare basta unire con `cdl-aps` una pull request qualsiasi: il commit di
+unione pubblica `main` così com'è, compresi i commit precedenti.
+
 `netlify.toml` contiene i redirect dai vecchi indirizzi: **non vanno rimossi**,
 servono a non rompere i link già condivisi su Instagram e nelle chat.
 

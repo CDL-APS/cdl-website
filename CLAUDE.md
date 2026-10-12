@@ -62,7 +62,10 @@ com'è.
   del team (l'account GitHub `cdl-aps`). Le pull request vanno unite da
   GitHub con quell'account, con un merge commit; un'unione fatta da un
   account personale blocca la pubblicazione di `main`. Le deploy preview
-  falliscono per lo stesso motivo: non è un errore del codice.
+  falliscono per lo stesso motivo: non è un errore del codice. Conta l'autore
+  dell'ultimo commit di `main`: dopo un push diretto da un account personale
+  è bloccato anche un deploy caricato a mano (connettore o CLI). Si sblocca
+  unendo con `cdl-aps` una pull request qualsiasi.
 - Netlify pubblica tutta la radice: `netlify.toml` risponde 404 a
   `README.md`, `CLAUDE.md` e `supabase/`. Nuovi file interni vanno aggiunti
   lì.
