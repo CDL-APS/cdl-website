@@ -1,0 +1,59 @@
+# Tiene sveglio il database.
+#
+# Il progetto Supabase di CDL è sul piano gratuito, che va in pausa dopo 7
+# giorni senza attività sul database. Le pagine del sito leggono Supabase dal
+# browser, quindi di solito bastano i visitatori; ma in una settimana morta
+# il progetto si ferma, e il sito ripiega sulle copie di riserva in data/
+# (dati vecchi, e gestione.html non funziona più). Questa azione fa una
+# lettura al posto dei visitatori, due volte a settimana.
+#
+# Due volte e non una perché il cron di GitHub non è puntuale né garantito:
+# con lunedì e giovedì il buco più lungo resta di 4 giorni, quindi si può
+# perdere un'esecuzione senza conseguenze.
+#
+# Se il database è già in pausa, o la chiave non vale più, la richiesta
+# fallisce e GitHub manda una mail: è il segnale per andare sulla dashboard
+# Supabase (Resume project).
+#
+# Niente commit automatici: il repository è privato, quindi GitHub non
+# disattiva le azioni programmate per inattività; e un commit di un bot su
+# main bloccherebbe la pubblicazione su Netlify (vedi CLAUDE.md).
+
+name: Sveglia Supabase
+
+on:
+  schedule:
+    # 06:17 UTC del lunedì e del giovedì. Il minuto dispari è voluto: le
+    # esecuzioni allo scoccare dell'ora sono quelle che GitHub ritarda di più.
+    - cron: "17 6 * * 1,4"
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  sveglia:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Interroga il database
+        env:
+          # La chiave pubblicabile, la stessa di assets/js/dati.js: identifica
+          # il progetto, non autorizza niente oltre la lettura di ciò che è
+          # pubblicato. La chiave segreta non deve comparire qui.
+          URL: https://rsspmqhhrykbmrkmwqcg.supabase.co
+          KEY: sb_publishable_GL627ST9nccoDrMVDhsxAQ_dUpRdVmh
+        run: |
+          set -u
+          for tentativo in 1 2 3; do
+            codice=$(curl -sS --max-time 30 -o risposta.json -w '%{http_code}' \
+              "$URL/rest/v1/eventi?select=id&limit=1" \
+              -H "apikey: $KEY" || echo 000)
+            echo "Tentativo $tentativo: HTTP $codice — $(head -c 200 risposta.json 2>/dev/null)"
+            if [ "$codice" = "200" ]; then
+              echo "Database sveglio."
+              exit 0
+            fi
+            sleep 20
+          done
+          echo "::error::Il database non risponde. Se il progetto è in pausa, va ripristinato dalla dashboard Supabase (Resume project)."
+          exit 1

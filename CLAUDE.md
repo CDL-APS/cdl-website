@@ -30,6 +30,18 @@ com'è.
   allo schema va aggiunta lì come nuovo file, oltre che applicata. Le regole
   di accesso (RLS) danno a chiunque la sola lettura di ciò che è pubblicato;
   scrive solo chi è in `privato.redattori`.
+- **Tabelle nuove in `public`**: dal 30 ottobre 2026 Supabase non dà più in
+  automatico l'accesso della Data API alle tabelle create da quel giorno.
+  La migrazione che crea una tabella deve contenere anche i suoi `grant`:
+  `select` ad `anon` (se il sito la legge), `select, insert, update, delete`
+  ad `authenticated` e `service_role`, come nello schema iniziale e in
+  `20261021120000_permessi_service_role.sql`. Senza, la Data API risponde
+  "permission denied".
+- **Il progetto Supabase è sul piano gratuito** e va in pausa dopo 7 giorni
+  senza attività. Lo tiene sveglio `.github/workflows/sveglia-supabase.yml`,
+  una lettura il lunedì e il giovedì con la chiave pubblica. Se fallisce,
+  GitHub manda una mail: il progetto va ripreso dalla dashboard (*Resume
+  project*). Funziona solo da `main`.
 - `dati.js` legge dalla Data API con la chiave pubblica (sta nel sito
   apposta). Se Supabase non risponde, ripiega su `data/opere.json` e
   `data/eventi.json`, copie di riserva con la stessa forma delle tabelle; le
@@ -73,7 +85,7 @@ com'è.
   è bloccato anche un deploy caricato a mano (connettore o CLI). Si sblocca
   unendo con `cdl-aps` una pull request qualsiasi.
 - Netlify pubblica tutta la radice: `netlify.toml` risponde 404 a
-  `README.md`, `CLAUDE.md` e `supabase/`. Nuovi file interni vanno aggiunti
+  `README.md`, `CLAUDE.md`, `supabase/` e `.github/`. Nuovi file interni vanno aggiunti
   lì.
 - `netlify.toml` mantiene in vita gli indirizzi precedenti alla
   riorganizzazione (in particolare `/cortoteca/info_film2?film=...`, oggi
