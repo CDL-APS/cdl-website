@@ -8,11 +8,27 @@
    rimando all'elenco completo.
    ========================================================================== */
 
+/* Il riassunto va a capo solo dopo una virgola: ogni pezzo fra due virgole
+   è uno span che non si spezza. Così una tagline come "Non c'eri per
+   l'inizio, non ci sarai per la fine" si divide nei suoi due versi invece
+   che a metà frase. Un pezzo troppo lungo per la riga va a capo comunque
+   (vedi home.css). */
+function scriviRiassunto(elemento, testo) {
+  elemento.replaceChildren();
+  testo.split(/(?<=,)\s+/).forEach((pezzo, i) => {
+    if (i > 0) elemento.append(' ');
+    const span = document.createElement('span');
+    span.className = 'riassunto-pezzo';
+    span.textContent = pezzo;
+    elemento.append(span);
+  });
+}
+
 function riempiRiquadro(box, { href, immagine, titolo, riassunto }) {
   box.href = href;
   mostraImmagine(box.querySelector('.foto'), immagine);
   box.querySelector('.primo-piano-titolo').textContent = titolo;
-  box.querySelector('.primo-piano-riassunto').textContent = riassunto;
+  scriviRiassunto(box.querySelector('.primo-piano-riassunto'), riassunto);
   box.hidden = false;
 }
 

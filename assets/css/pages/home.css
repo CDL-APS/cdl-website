@@ -138,6 +138,13 @@
   text-wrap: balance;
 }
 
+/* Il riassunto va a capo solo fra un pezzo e l'altro (home.js lo divide
+   alle virgole); un pezzo più largo della scheda si spezza comunque. */
+.riassunto-pezzo {
+  display: inline-block;
+  max-width: 100%;
+}
+
 /* Il rimando non è un riquadro: una riga sotto la scheda, allineata al
    fondo dell'immagine, con il testo a sinistra e a destra una pastiglia con
    la freccia, sorella di quella in cima alla scheda. Il filetto sopra la
