@@ -538,6 +538,14 @@ a.scheda:hover .freccia {
   color: var(--testo-tenue);
 }
 
+/* Il riassunto va a capo solo fra un pezzo e l'altro (scriviRiassunto in
+   dati.js lo divide alle virgole); un pezzo più largo della scheda si
+   spezza comunque. */
+.riassunto-pezzo {
+  display: inline-block;
+  max-width: 100%;
+}
+
 a.primo-piano:hover .foto { transform: scale(1.06); }
 
 a.primo-piano:hover .primo-piano-testo {
