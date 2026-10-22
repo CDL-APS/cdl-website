@@ -1,6 +1,7 @@
 /* ==========================================================================
-   HOME (index.html) — apertura sul wallpaper, ultime notizie,
-   tesseramento e fascia Sostieni.
+   HOME (index.html) — apertura sul wallpaper, attività recenti (l'ultimo
+   evento e l'ultima produzione a tutta larghezza), e sulla stessa riga
+   Sostieni CDL e il tesseramento.
 
    Barra, riquadri, pulsanti e piede sono in components.css: qui resta solo
    quello che esiste su questa pagina.
@@ -8,14 +9,14 @@
 
 /* La prima sezione parte subito sotto la barra: il corpo pagina ha già lo
    spazio della capsula galleggiante, sommarci il respiro di sezione lasciava
-   un vuoto di 158px. Sotto lascia la distanza standard verso Sostieni. */
+   un vuoto di 158px. */
 #home {
   padding-top: var(--spazio);
   padding-bottom: var(--spazio);
 }
 
 /* --------------------------------------------------------------------------
-   Apertura: presentazione e "Ciao!" su wallpaperCDL, che è in bianco e nero.
+   Apertura: la frase di presentazione su wallpaperCDL, che è in bianco e nero.
 
    Il wallpaper è molto scuro (luminanza media 0,03 su 1): il testo bianco ci
    sta sopra senza bisogno di mascheroni. Il velo obliquo serve solo a coprire
@@ -23,7 +24,7 @@
    vede, ma porta il caso peggiore da 3,4:1 a 5,7:1. A destra si dirada e il
    wallpaper resta pulito.
 
-   È l'unico blocco statico della parte alta, e lo dice con l'assenza: nessuna
+   È l'unico blocco statico della pagina, e lo dice con l'assenza: nessuna
    freccia, nessuna reazione al passaggio del mouse.
    -------------------------------------------------------------------------- */
 .apertura {
@@ -31,8 +32,7 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   align-content: center;
-  gap: clamp(1.25rem, 3vw, 2rem);
-  min-height: clamp(430px, 56vh, 600px);
+  min-height: clamp(340px, 48vh, 520px);
   margin-bottom: var(--spazio);
   padding: clamp(1.75rem, 4vw, 3.25rem);
   overflow: hidden;
@@ -40,15 +40,6 @@
   corner-shape: squircle;
   background: var(--cdl-dark);
   cursor: default;
-}
-
-/* Titolo e descrizione restano nella metà sinistra, dove il velo è carico;
-   l'icona sta a destra, posizionata a parte. */
-.apertura > h1,
-.apertura > .corpo {
-  position: relative;
-  z-index: 3;
-  max-width: min(52ch, 58%);
 }
 
 .apertura .foto {
@@ -75,9 +66,28 @@
   );
 }
 
+/* La frase sta da sola: grande, nella metà sinistra dove il velo è carico.
+   "CDL" in lavanda, che sul velo scuro sta a 8,6:1. */
+.apertura-frase {
+  position: relative;
+  z-index: 3;
+  max-width: min(30ch, 58%);
+  margin: 0;
+  font-size: clamp(1.2rem, 2.3vw, 1.85rem);
+  font-weight: 500;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+  color: var(--cdl-white);
+}
+
+.apertura-frase strong {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 900;
+  color: var(--cdl-lavender);
+}
+
 /* L'icona sta a destra, dove il velo si dirada e il wallpaper è pulito. Non
-   incrocia il testo, che resta nella metà sinistra: può quindi stare a piena
-   intensità, senza le attenuazioni che servivano quando le si passava sopra. */
+   incrocia il testo, che resta nella metà sinistra. */
 .icona {
   position: absolute;
   z-index: 2;
@@ -89,45 +99,122 @@
   filter: drop-shadow(10px 10px 0 #000);
 }
 
-/* Due righe: "Cinema giovane e" / "indipendente". La prima è larga circa 10
-   volte il corpo del carattere, e il titolo occupa al massimo il 58% del
-   riquadro: il corpo è calcolato perché la prima riga ci stia sempre. */
-.apertura h1 {
-  font-size: clamp(1.6rem, 4.6vw, 3.7rem);
-  color: var(--cdl-white);
+/* --------------------------------------------------------------------------
+   Attività recenti: l'ultimo evento e l'ultima produzione, uno sotto l'altro,
+   a tutta larghezza. Il riquadro è il primo piano di components.css.
+
+   Il rimando all'elenco completo sta sotto la scheda di destra, accanto alla parte bassa dell'immagine. Per metterlo lì
+   il contenitore ha due colonne e due righe; il primo piano le occupa tutte
+   e le eredita (subgrid): l'immagine scende per entrambe le righe, la scheda
+   resta nella prima, e la cella in basso a destra la prende il rimando.
+   -------------------------------------------------------------------------- */
+.ultimo {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  grid-template-rows: 1fr auto;
+  gap: var(--spazio);
 }
 
-/* Il wallpaper è in bianco e nero: il colore lo mettono le scritte.
-   In lavanda solo "Cinema"; il resto va a capo dopo "e", nell'HTML. */
-.apertura h1 span { color: var(--cdl-lavender); }
+.ultimo + .ultimo { margin-top: var(--spazio); }
 
-/* Con l'icona spostata a destra il "Ciao!" non le passa più sopra: può
-   tornare lavanda, che sul velo scuro sta a 8,6:1. */
-.apertura .corpo p:first-child strong {
+.ultimo .primo-piano {
+  grid-column: 1 / -1;
+  grid-row: 1 / -1;
+  grid-template-columns: subgrid;
+  grid-template-rows: subgrid;
+}
+
+.ultimo .primo-piano-copertina { grid-row: 1 / -1; }
+
+.ultimo .primo-piano-testo { grid-row: 1; }
+
+/* Il titolo è un h3 sotto quello del blocco, ma ha l'aspetto dei titoli */
+.ultimo .primo-piano-titolo {
   font-family: 'Montserrat', sans-serif;
   font-weight: 900;
   text-transform: uppercase;
-  letter-spacing: -0.02em;
-  color: var(--cdl-lavender);
+  line-height: 0.94;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+
+/* Il rimando non è un riquadro: una riga sotto la scheda, allineata al
+   fondo dell'immagine, con il testo a sinistra e a destra una pastiglia con
+   la freccia, sorella di quella in cima alla scheda. Il filetto sopra la
+   lega alla scheda. Al passaggio la pastiglia si riempie di nero e la
+   freccia avanza. */
+.ultimo-tutti {
+  grid-column: 2;
+  grid-row: 2;
+  align-self: end;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.85rem 0 0 clamp(1.25rem, 2.5vw, 2rem);
+  border-top: 1px solid var(--riga);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--testo-medio);
+  transition: color 0.3s var(--ease-out);
+}
+
+.ultimo-tutti-icona {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 38px;
+  height: 38px;
+  border-radius: 999px;
+  corner-shape: squircle;
+  border: 1px solid var(--riga);
+  color: var(--cdl-dark);
+  transition: background-color 0.3s var(--ease-out), border-color 0.3s var(--ease-out),
+    color 0.3s var(--ease-out);
+}
+
+.ultimo-tutti-icona svg {
+  width: 16px;
+  height: 16px;
+  transition: transform 0.35s var(--ease-out);
+}
+
+.ultimo-tutti:hover { color: var(--cdl-dark); }
+
+.ultimo-tutti:hover .ultimo-tutti-icona {
+  border-color: var(--cdl-dark);
+  background: var(--cdl-dark);
+  color: var(--cdl-white);
+}
+
+.ultimo-tutti:hover .ultimo-tutti-icona svg { transform: translateX(3px); }
+
+/* Se il riquadro non si riempie (dati non letti), il rimando resta da solo */
+.ultimo .primo-piano[hidden] + .ultimo-tutti { grid-row: 1 / -1; }
+
+/* Separatore fra le attività recenti e il sostegno */
+.separatore {
+  margin: clamp(2rem, 4.5vw, 3.25rem) 0;
+  border: 0;
+  border-top: 1px solid var(--riga);
 }
 
 /* --------------------------------------------------------------------------
-   Griglia sotto l'apertura.
-   Quattro colonne: tre al pannello notizie, una al tesseramento. Con tre
-   colonne le caselle delle notizie restavano troppo strette per ospitarne
-   una terza.
+   Sostegno: Sostieni CDL e il tesseramento sulla stessa riga, tre quarti e
+   un quarto.
    -------------------------------------------------------------------------- */
-.griglia-home {
+.sostegno {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 3fr) minmax(0, 1fr);
   gap: var(--spazio);
-  align-items: stretch;
 }
 
-/* Riquadro del tesseramento: tinta unita lavanda, tessera dentro al riquadro.
-   Su schermo largo si allunga fino all'altezza del pannello notizie, con la
-   tessera in cima e il testo in fondo. Su schermo stretto diventa una fascia
-   bassa (vedi il blocco a 620px). */
+/* Riquadro del tesseramento: tinta unita lavanda, tessera dentro al riquadro,
+   in cima la tessera e in fondo il testo. Su schermo stretto diventa una
+   fascia bassa (vedi gli adattamenti). */
 .riquadro--tessera {
   flex-direction: column;
   justify-content: space-between;
@@ -138,15 +225,25 @@
   overflow: hidden;
   background: var(--cdl-lavender);
   color: var(--cdl-dark);
-  transition: background-color 0.35s var(--ease-out), box-shadow 0.4s var(--ease-out);
+  transition: background-color 0.35s var(--ease-out), color 0.35s var(--ease-out),
+    box-shadow 0.4s var(--ease-out);
 }
 
-.riquadro--tessera:hover { background: var(--cdl-red); color: var(--cdl-white); }
+/* Si accende di rosso al passaggio sul riquadro, e anche sui pulsanti di
+   Sostieni accanto: sono due ingressi alla stessa cosa. */
+.riquadro--tessera:hover,
+.sostegno:has(.sostieni .btn:hover) .riquadro--tessera {
+  background: var(--cdl-red);
+  color: var(--cdl-white);
+}
 
 /* Sul rosso il bianco pieno è il massimo contrasto ottenibile: niente
    trasparenze, che lo abbasserebbero ancora */
 .riquadro--tessera:hover .chip-etichetta,
-.riquadro--tessera:hover .chip-meta { color: var(--cdl-white); }
+.riquadro--tessera:hover .chip-meta,
+.sostegno:has(.sostieni .btn:hover) .riquadro--tessera :is(.chip-etichetta, .chip-meta) {
+  color: var(--cdl-white);
+}
 
 .tessera {
   width: clamp(96px, 11vw, 150px);
@@ -158,9 +255,13 @@
   transition: transform 0.4s var(--ease-out);
 }
 
-.riquadro--tessera:hover .tessera { transform: rotate(-2deg); }
+.riquadro--tessera:hover .tessera,
+.sostegno:has(.sostieni .btn:hover) .tessera { transform: rotate(-2deg); }
 
 .tessera-testo { display: flex; flex-direction: column; gap: 0.4rem; }
+
+.tessera-testo .chip-etichetta,
+.tessera-testo .chip-meta { transition: color 0.35s var(--ease-out); }
 
 .tessera-testo .chip-meta {
   display: inline-flex;
@@ -177,102 +278,6 @@
 .tessera-testo .chip-meta svg { width: 13px; height: 13px; }
 
 /* --------------------------------------------------------------------------
-   Ultime notizie: evento a sinistra, produzione a destra, e sotto ognuna il
-   rimando al proprio elenco completo.
-   -------------------------------------------------------------------------- */
-.notizie {
-  grid-column: span 3;
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: var(--spazio);
-  padding: var(--spazio);
-  border-radius: var(--r-l);
-  corner-shape: squircle;
-  border: 1px solid var(--riga);
-  background: rgba(29, 29, 27, 0.025);
-}
-
-.notizie-colonna { display: flex; flex-direction: column; }
-
-.notizia {
-  display: flex;
-  flex-direction: column;
-  gap: 0.35rem;
-  padding: 0.6rem;
-  border-radius: var(--r-m);
-  corner-shape: squircle;
-  transition: background-color 0.3s var(--ease-out), color 0.3s var(--ease-out);
-}
-
-.notizia:hover { background: rgba(185, 187, 248, 0.28); }
-
-.notizia-foto {
-  width: 100%;
-  aspect-ratio: 16 / 10;
-  object-fit: cover;
-  border-radius: var(--r-s);
-  corner-shape: squircle;
-  margin-bottom: 0.5rem;
-}
-
-.notizia-etichetta {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 9px;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.2em;
-  color: var(--testo-medio);
-}
-
-.notizia-titolo {
-  font-family: 'Montserrat', sans-serif;
-  font-size: clamp(1rem, 1.9vw, 1.3rem);
-  font-weight: 900;
-  text-transform: uppercase;
-  line-height: 1;
-  letter-spacing: -0.03em;
-}
-
-.notizia-meta { font-size: 0.78rem; line-height: 1.35; color: var(--testo-tenue); }
-
-/* Rimando all'elenco completo: sotto la notizia, con l'icona del
-   reindirizzamento perché porta su un'altra pagina */
-.notizia-tutti {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  align-self: flex-start;
-  margin-top: auto;
-  padding: 0.7rem 0.6rem 0.2rem;
-  font-family: 'Montserrat', sans-serif;
-  font-size: 9.5px;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.16em;
-  color: var(--testo-medio);
-  transition: color 0.25s var(--ease-out);
-}
-
-.notizia-tutti svg { width: 13px; height: 13px; }
-
-.notizia-tutti:hover { color: var(--cdl-red); }
-
-/* Casella pronta per l'ultima notizia, ancora vuota: solo la sagoma */
-.notizia--vuota,
-.notizia--vuota:hover {
-  background: none;
-  cursor: default;
-}
-
-.notizia--vuota {
-  flex: 1;
-  align-items: center;
-  justify-content: center;
-  min-height: 180px;
-  border: 2px dashed var(--riga);
-}
-
-/* --------------------------------------------------------------------------
    Sostieni CDL — nessun pannello sotto il testo.
 
    La fotografia precedente (Verso Mare) era troppo chiara: luminanza media
@@ -282,15 +287,11 @@
    punto più chiaro 0,28: il bianco ci sta sopra da solo. Resta solo un velo
    leggerissimo, che sul punto peggiore porta il contrasto a 5,4:1.
 
-   Larghezza e forma degli altri riquadri: la pagina resta una pila di blocchi
-   della stessa misura, separati sempre da --spazio. 3rem è il doppio del
-   respiro laterale di .sezione, così i bordi combaciano.
+   Il titolo sopra e il testo sotto: accanto al tesseramento lo spazio non
+   basta per le due colonne.
    -------------------------------------------------------------------------- */
 .sostieni {
   position: relative;
-  width: calc(100% - 3rem);
-  max-width: 1132px;
-  margin: 0 auto var(--spazio);
   overflow: hidden;
   border-radius: var(--r-l);
   corner-shape: squircle;
@@ -318,10 +319,15 @@
 .sostieni-interno {
   position: relative;
   z-index: 2;
+  display: grid;
+  gap: clamp(1.25rem, 3vw, 2rem);
   padding: clamp(1.75rem, 4vw, 3.25rem);
 }
 
-.sostieni h2 { color: var(--cdl-white); }
+.sostieni h2 {
+  font-size: clamp(1.85rem, 4.6vw, 3.25rem);
+  color: var(--cdl-white);
+}
 
 /* "Sostieni" e sotto il marchio, invece della parola CDL scritta. Il logo è a
    colori nel file: il filtro lo porta a bianco pieno. */
@@ -342,14 +348,10 @@
    Adattamenti
    -------------------------------------------------------------------------- */
 @media (max-width: 1000px) {
-  /* Il pannello notizie prende la riga intera, il tesseramento quella dopo */
-  .griglia-home { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .griglia-home > .notizie,
-  .griglia-home > :last-child { grid-column: span 2; }
+  /* Sostieni prende la riga intera, il tesseramento quella dopo, come
+     fascia larga: testo a sinistra e tessera a destra. */
+  .sostegno { grid-template-columns: minmax(0, 1fr); }
 
-  /* Non è più una colonna accanto alle notizie ma una fascia larga: gli
-     elementi si dispongono ai due capi, testo a sinistra e tessera a destra,
-     invece di impilarsi tutti sul lato sinistro. */
   .riquadro--tessera {
     flex-direction: row-reverse;
     align-items: center;
@@ -357,38 +359,31 @@
   }
 }
 
+/* Sul telefono il primo piano va in colonna (components.css): immagine,
+   scheda e rimando uno sotto l'altro */
 @media (max-width: 760px) {
-  /* Le tre caselle delle notizie su due colonne, la terza a riga intera */
-  .notizie { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .notizie > :last-child { grid-column: span 2; }
+  .ultimo { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; }
+  .ultimo .primo-piano,
+  .ultimo .primo-piano-copertina,
+  .ultimo .primo-piano-testo,
+  .ultimo-tutti,
+  .ultimo .primo-piano[hidden] + .ultimo-tutti { grid-column: auto; grid-row: auto; }
+  .ultimo .primo-piano { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; }
+  .ultimo-tutti { padding-left: 0; }
 }
 
 @media (max-width: 620px) {
-  /* La sezione stringe i margini a 1rem: Sostieni li segue */
-  .sostieni { width: calc(100% - 2rem); }
-
-  /* Apertura: icona in alto, poi titolo e descrizione a tutta larghezza.
-     Accanto al titolo l'icona non ci sta: "INDIPENDENTE" occupa da solo
-     tutta la riga e le finiva sotto. Titolo, icona e descrizione sono
-     fratelli nell'HTML proprio per poterli disporre così. */
+  /* Apertura: icona in alto, poi la frase a tutta larghezza. Icona e frase
+     sono fratelli nell'HTML proprio per poterli disporre così. */
   .apertura {
-    grid-template-columns: minmax(0, 1fr);
     grid-template-areas:
       'icona'
-      'titolo'
-      'testo';
+      'frase';
     align-content: start;
     gap: 1.25rem;
     min-height: 0;
   }
-  /* Qui il titolo prende tutta la larghezza del riquadro, cioè la finestra
-     meno i margini della sezione e del riquadro (5.5rem in tutto) */
-  .apertura > h1 {
-    grid-area: titolo;
-    max-width: 100%;
-    font-size: calc((100vw - 5.5rem) / 10.4);
-  }
-  .apertura > .corpo { grid-area: testo; max-width: 100%; }
+  .apertura-frase { grid-area: frase; max-width: 100%; }
   .icona {
     grid-area: icona;
     position: relative;
@@ -400,16 +395,7 @@
     filter: drop-shadow(6px 6px 0 #000);
   }
 
-  /* Su una griglia a colonna sola uno "span 2" crea una seconda colonna
-     implicita: va azzerato in tutti i punti in cui è dichiarato. */
-  .griglia-home { grid-template-columns: 1fr; }
-  .griglia-home > .notizie,
-  .griglia-home > :last-child { grid-column: auto; }
-
-  /* Il tesseramento passa sopra le ultime notizie */
+  /* Il tesseramento passa sopra Sostieni */
   .riquadro--tessera { order: -1; }
   .tessera { width: clamp(74px, 22vw, 96px); }
-
-  .notizie { grid-template-columns: 1fr; }
-  .notizie > :last-child { grid-column: auto; }
 }

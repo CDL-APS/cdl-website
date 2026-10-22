@@ -482,35 +482,6 @@ a.scheda:hover .freccia {
   color: var(--testo-chip);
 }
 
-/* Riquadro ancora da riempire: cornice tratteggiata, nessuna foto */
-.riquadro--vuoto {
-  align-items: center;
-  justify-content: center;
-  gap: 0.6rem;
-  min-height: 260px;
-  padding: 1.5rem;
-  text-align: center;
-  background: none;
-  border: 2px dashed var(--riga);
-}
-
-.riquadro--vuoto span {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 9.5px;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.18em;
-  color: var(--testo-tenue);
-}
-
-a.riquadro--vuoto { transition: border-color 0.3s var(--ease-out), background-color 0.3s var(--ease-out); }
-
-a.riquadro--vuoto:hover {
-  border-color: var(--cdl-lavender);
-  background: rgba(185, 187, 248, 0.16);
-  box-shadow: none;
-}
-
 /* --------------------------------------------------------------------------
    Primo piano: il lavoro più recente in testa alla pagina (Eventi,
    Produzioni), a tutta larghezza. L'immagine sui due terzi di sinistra; sul

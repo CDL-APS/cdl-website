@@ -61,14 +61,9 @@ a.vantaggio .scheda-titolo { padding-right: 2.5rem; }
   filter: brightness(0);
 }
 
-.vantaggio--vuoto { min-height: 170px; flex-direction: row; }
-
-.vantaggio--vuoto svg { width: 18px; height: 18px; color: var(--testo-tenue); }
-
 @media (max-width: 760px) {
   .griglia-vantaggi { grid-template-columns: 1fr; }
-  .vantaggio,
-  .vantaggio--vuoto { min-height: 0; }
+  .vantaggio { min-height: 0; }
 }
 
 @media (max-width: 620px) {

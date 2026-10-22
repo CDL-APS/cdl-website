@@ -4,18 +4,11 @@
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
-   Long Story Short in primo piano (la struttura è in components.css): la
-   copertina è quasi tutta bianca, e sopra c'è il marchio nero come nella
-   pagina dell'evento, senza velo.
+   Long Story Short in primo piano (la struttura è in components.css): nella
+   scheda di destra il marchio a tre righe prende il posto del titolo.
    -------------------------------------------------------------------------- */
-.primo-piano-copertina { background: #fff; }
-
-.primo-piano-marchio {
-  position: absolute;
-  z-index: 1;
-  left: clamp(1rem, 2.5vw, 2rem);
-  bottom: clamp(1rem, 2.5vw, 2rem);
-  width: clamp(120px, 19vw, 250px);
+.primo-piano-marchio img {
+  width: clamp(130px, 15vw, 200px);
   height: auto;
 }
 
