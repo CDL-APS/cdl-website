@@ -56,7 +56,7 @@ function riempiPrimoPiano(opera) {
   const tipo = opera.collaborazione_cdl ? 'Ultima collaborazione' : 'Ultima produzione';
   box.querySelector('.primo-piano-etichetta').textContent = tipo + ' · ' + opera.anno;
   box.querySelector('.primo-piano-titolo').textContent = opera.titolo;
-  box.querySelector('.primo-piano-riassunto').textContent = opera.tagline || opera.sinossi || '';
+  scriviRiassunto(box.querySelector('.primo-piano-riassunto'), opera.tagline || opera.sinossi || '');
 
   const dati = [
     ['Regia', opera.regista],

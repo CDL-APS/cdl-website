@@ -32,12 +32,11 @@ function mostraAvviso(testo) {
   const avviso = document.createElement('p');
   avviso.className = 'avviso';
   avviso.textContent = testo;
-  grid.insertBefore(avviso, document.getElementById('add-card'));
+  grid.appendChild(avviso);
 }
 
 function sortAndRender() {
   const grid = document.getElementById('movie-grid');
-  const addCard = document.getElementById('add-card');
   const sortByDate = document.getElementById('ordine-anno').checked;
   const searchTerm = document.getElementById('db-search').value.toLowerCase().trim();
 
@@ -89,15 +88,11 @@ function sortAndRender() {
     `;
     mostraImmagine(card.querySelector('.foto'), movie.fotogramma);
 
-    grid.insertBefore(card, addCard);
+    grid.appendChild(card);
     setTimeout(() => card.classList.add('is-visibile'), 50);
   });
 
   if (filtered.length === 0) mostraAvviso('Nessuna opera trovata');
-
-  // Il riquadro tratteggiato "vuoi la tua opera qui?" sparisce durante una
-  // ricerca, dove sarebbe solo rumore
-  addCard.style.display = searchTerm.length > 0 ? 'none' : '';
 }
 
 document.querySelectorAll('input[name="ordine"]').forEach((r) => r.addEventListener('change', sortAndRender));

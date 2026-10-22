@@ -1,45 +1,45 @@
 /* ==========================================================================
-   HOME — caselle "L'ultimo evento CDL" e "L'ultima produzione CDL".
+   HOME — riquadri "L'ultimo evento CDL" e "L'ultima produzione CDL".
 
-   Entrambe vengono dal database (vedi dati.js): l'evento è il più recente fra
+   Entrambi vengono dal database (vedi dati.js): l'evento è il più recente fra
    quelli pubblicati, la produzione la più recente fra le opere prodotte da
    CDL. Quando ne arriva uno nuovo basta pubblicarlo dalla pagina di gestione.
-   Se i dati non si leggono, la casella resta nascosta e sotto rimane il
+   Se i dati non si leggono, il riquadro resta nascosto e sotto rimane il
    rimando all'elenco completo.
    ========================================================================== */
 
-function riempiCasella(casella, { href, immagine, titolo, meta }) {
-  casella.href = href;
-  mostraImmagine(casella.querySelector('.notizia-foto'), immagine);
-  casella.querySelector('.notizia-titolo').textContent = titolo;
-  casella.querySelector('.notizia-meta').textContent = meta;
-  casella.hidden = false;
+function riempiRiquadro(box, { href, immagine, titolo, riassunto }) {
+  box.href = href;
+  mostraImmagine(box.querySelector('.foto'), immagine);
+  box.querySelector('.primo-piano-titolo').textContent = titolo;
+  scriviRiassunto(box.querySelector('.primo-piano-riassunto'), riassunto);
+  box.hidden = false;
 }
 
 async function ultimoEvento() {
-  const casella = document.getElementById('ultimo-evento');
+  const box = document.getElementById('ultimo-evento');
   const [evento] = await caricaEventi();
-  if (!casella || !evento) return;
+  if (!box || !evento) return;
 
-  riempiCasella(casella, {
+  riempiRiquadro(box, {
     href: indirizzoSicuro(evento.pagina) || 'eventi.html',
-    immagine: evento.miniatura || evento.copertina,
+    immagine: evento.copertina || evento.miniatura,
     titolo: evento.titolo,
-    meta: evento.riassunto || evento.luogo || ''
+    riassunto: evento.riassunto || evento.luogo || ''
   });
 }
 
 async function ultimaProduzione() {
-  const casella = document.getElementById('ultima-produzione');
+  const box = document.getElementById('ultima-produzione');
   const [opera] = produzioniCdl(await caricaOpere());
-  if (!casella || !opera) return;
+  if (!box || !opera) return;
 
   const genere = generePrincipale(opera);
-  riempiCasella(casella, {
+  riempiRiquadro(box, {
     href: 'opera.html?film=' + encodeURIComponent(opera.codice),
     immagine: opera.fotogramma,
     titolo: opera.titolo,
-    meta: opera.anno + (genere ? ' • ' + genere : '')
+    riassunto: opera.tagline || [opera.anno, genere].filter(Boolean).join(' • ')
   });
 }
 

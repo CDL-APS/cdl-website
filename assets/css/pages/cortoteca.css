@@ -141,15 +141,6 @@ a.riquadro:hover .icona-stato { transform: none; }
    accosta di poco al centro ottico */
 .icona-stato--play { transform: translateX(1px); }
 
-/* Riquadro "vuoi la tua opera qui?" sempre in coda */
-#add-card { order: 1; }
-
-#add-card svg { width: 26px; height: 26px; color: var(--testo-medio); transition: transform 0.4s var(--ease-out); }
-
-#add-card:hover svg { transform: rotate(90deg); }
-
-#add-card .invito { color: var(--cdl-dark); }
-
 /* Ricerca senza risultati o database non raggiungibile */
 .avviso {
   grid-column: 1 / -1;
