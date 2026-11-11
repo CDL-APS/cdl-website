@@ -279,10 +279,9 @@ g_home = f'''
             <img class="hero__foto" src="assets/img/sfondi/wallpaper-cdl.jpg" alt="" width="2400" height="1601" fetchpriority="high">
             <div class="hero__buio" aria-hidden="true"></div>
             <div class="wrap">
-                <div class="marchio" role="img" aria-label="CDL">
-                    <span class="lettera"></span><span class="lettera"></span><span class="lettera"></span>
-                </div>
-                <h1 class="claim">Cinema giovane e indipendente</h1>
+                <h1 class="marchio">
+                    <span class="lettera" aria-hidden="true"></span><span class="lettera" aria-hidden="true"></span><span class="lettera" aria-hidden="true"></span><span class="sr-only">CDL APS</span>
+                </h1>
                 <p class="lead">{FRASE}</p>
                 <!-- Sul computer l'invito ai soci è già nella barra: qui compare solo su telefono -->
                 <div class="btn-riga">
@@ -534,18 +533,36 @@ print('pagina del corto scritta')
 # meta della voce "Contatti" (#contatti). Il modulo è una prima proposta: per
 # l'invio si appoggia a Netlify Forms (data-netlify), che funziona solo sul
 # sito pubblicato.
+#
+# Il destinatario dipende dal motivo. Netlify manda le notifiche per modulo,
+# non per campo: ci sono quindi tre moduli, uno per indirizzo, e g.js cambia
+# il form-name del modulo visibile secondo il motivo scelto. L'indirizzo di
+# ciascuno si imposta su Netlify (Forms → Form notifications):
+#   contatti             → ciao@cdlaps.com (anche senza JavaScript)
+#   contatti-eventi      → eventi@cdlaps.com
+#   contatti-produzione  → produzione@cdlaps.com
+# L'oggetto della mail è il campo nascosto "subject", che Netlify usa per le
+# notifiche: g.js lo compone col motivo e il nome di chi scrive.
+# (codice, testo del bottone, modulo, oggetto della mail)
 MOTIVI = [
-    ('informazioni', 'Informazioni'),
-    ('socio', 'Diventare socio'),
-    ('short-talks', 'Short Talks nel tuo cinema'),
-    ('cortoteca', 'Un corto per la Cortoteca'),
-    ('collaborazione', 'Collaborare a una produzione'),
-    ('altro', 'Altro'),
+    ('informazioni', 'Informazioni', 'contatti', 'Richiesta di informazioni'),
+    ('socio', 'Diventare socio', 'contatti', 'Richiesta di tesseramento'),
+    ('short-talks', 'Short Talks nel tuo cinema', 'contatti-eventi', 'Short Talks nel tuo cinema'),
+    ('cortoteca', 'Un corto per la Cortoteca', 'contatti', 'Proposta di un corto per la Cortoteca'),
+    ('collaborazione', 'Collaborare a una produzione', 'contatti-produzione', 'Proposta di produzione in collaborazione'),
+    ('altro', 'Altro', 'contatti', 'Messaggio dal sito'),
 ]
 scelte_motivo = '\n'.join(
-    f'''                            <input type="radio" name="motivo" id="motivo-{v}" value="{t}"{' checked' if i == 0 else ''}>
+    f'''                            <input type="radio" name="motivo" id="motivo-{v}" value="{t}" data-modulo="{m}" data-oggetto="{o}"{' checked' if i == 0 else ''}>
                             <label for="motivo-{v}" class="scelta">{t}</label>'''
-    for i, (v, t) in enumerate(MOTIVI))
+    for i, (v, t, m, o) in enumerate(MOTIVI))
+# Gli altri due moduli esistono solo perché Netlify li riconosca al deploy:
+# stessi campi, nascosti, mai compilati
+moduli_gemelli = '\n'.join(
+    f'''                <form name="{m}" data-netlify="true" netlify-honeypot="campo-trappola" hidden>
+                    <input name="campo-trappola"><input name="subject"><input name="motivo"><input name="nome"><input name="email"><textarea name="messaggio"></textarea><input name="consenso">
+                </form>'''
+    for m in ('contatti-eventi', 'contatti-produzione'))
 
 g_contatti = f'''
     <main id="top">
@@ -584,6 +601,7 @@ g_contatti = f'''
 
                 <form class="modulo" name="contatti" method="POST" action="anteprime/contatti.html#grazie" data-netlify="true" netlify-honeypot="campo-trappola">
                     <input type="hidden" name="form-name" value="contatti">
+                    <input type="hidden" name="subject" value="[Sito CDL] Messaggio dal sito">
                     <p class="sr-only"><label>Non compilare questo campo: <input name="campo-trappola" tabindex="-1" autocomplete="off"></label></p>
 
                     <fieldset class="modulo__gruppo">
@@ -615,6 +633,7 @@ g_contatti = f'''
                         <button class="btn btn--pieno" type="submit">Invia il messaggio {FRECCIA}</button>
                     </div>
                 </form>
+{moduli_gemelli}
             </div>
         </section>
     </main>
@@ -654,6 +673,7 @@ scrivi('cortoteca.html',
 # Il contenuto si legge dalle pagine attuali, così resta uno solo.
 import json
 import re
+import struct
 
 EVENTI_DB = {e['pagina']: e for e in json.loads((QUI.parent / 'data/eventi.json').read_text(encoding='utf-8'))}
 PAGINE_EVENTO = ['longstoryshort.html', 'short-talks-1.html', 'short-talks-2.html', 'short-talks-off-1.html',
@@ -828,13 +848,20 @@ def pagina_evento(nome):
     evento = EVENTI_DB.get(nome)
     base = nome.removesuffix('.html')
 
-    # In cima la grafica dell'evento (Long Story Short non ne ha una: apre
-    # col suo lettering)
-    grafica = QUI.parent / f'assets/img/eventi/copertine/{base}.svg'
-    if grafica.exists():
-        copertina = f'<img src="assets/img/eventi/copertine/{base}.svg" alt="La grafica di {re.sub("<[^>]+>", "", titolo)}" width="1600" height="1000">'
+    # In cima il logo dell'evento (un PNG senza fondo), nel colore
+    # dell'evento come il lettering di Long Story Short. Senza logo il nome
+    # resta il titolo della pagina.
+    titolo_testo = re.sub("<[^>]+>", "", titolo)
+    logo = QUI.parent / f'assets/img/eventi/loghi/{base}.png'
+    if logo.exists():
+        larghezza, altezza = struct.unpack('>II', logo.read_bytes()[16:24])
+        marchio = (f'<h1 class="evento-g__marchio" id="titolo-evento"><span class="sr-only">{titolo_testo}</span>'
+                   f'<span class="marchio-serie marchio-serie--evento" data-arrivo aria-hidden="true" '
+                   f'style="--marchio: url(/assets/img/eventi/loghi/{base}.png); --ar: {larghezza / altezza:.4f}"></span></h1>')
+        nome_evento = f'<h2 class="evento-g__titolo">{titolo}</h2>'
     else:
-        copertina = ''
+        marchio = ''
+        nome_evento = f'<h1 class="evento-g__titolo" id="titolo-evento">{titolo}</h1>'
 
     dati = ''
     if evento:
@@ -878,18 +905,18 @@ def pagina_evento(nome):
     else:
         corpo_html = f'''
     <main id="top">
-        <!-- La grafica dell'evento: stessa misura e stesso posto in cui la
-             lascia il passaggio dalla scheda di Eventi -->
+        <!-- Il logo dell'evento: è qui che arriva quello della scheda di
+             Eventi -->
         <section class="hero hero--evento">
             <div class="wrap">
-                <div class="cornice locandina-g" data-arrivo>{copertina}</div>
+                {marchio}
             </div>
         </section>
 
         <section class="blocco-pagina entra" aria-labelledby="titolo-evento">
             <div class="wrap grid evento-g">
                 <div class="span-7">
-                    <h1 class="evento-g__titolo" id="titolo-evento">{titolo}</h1>
+                    {nome_evento}
                     <div class="evento-g__corpo">
                         {corpo}
                     </div>

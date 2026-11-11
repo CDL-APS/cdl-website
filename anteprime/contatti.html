@@ -65,22 +65,23 @@
 
                 <form class="modulo" name="contatti" method="POST" action="anteprime/contatti.html#grazie" data-netlify="true" netlify-honeypot="campo-trappola">
                     <input type="hidden" name="form-name" value="contatti">
+                    <input type="hidden" name="subject" value="[Sito CDL] Messaggio dal sito">
                     <p class="sr-only"><label>Non compilare questo campo: <input name="campo-trappola" tabindex="-1" autocomplete="off"></label></p>
 
                     <fieldset class="modulo__gruppo">
                         <legend>Di che cosa vuoi parlarci?</legend>
                         <div class="modulo__motivi">
-                            <input type="radio" name="motivo" id="motivo-informazioni" value="Informazioni" checked>
+                            <input type="radio" name="motivo" id="motivo-informazioni" value="Informazioni" data-modulo="contatti" data-oggetto="Richiesta di informazioni" checked>
                             <label for="motivo-informazioni" class="scelta">Informazioni</label>
-                            <input type="radio" name="motivo" id="motivo-socio" value="Diventare socio">
+                            <input type="radio" name="motivo" id="motivo-socio" value="Diventare socio" data-modulo="contatti" data-oggetto="Richiesta di tesseramento">
                             <label for="motivo-socio" class="scelta">Diventare socio</label>
-                            <input type="radio" name="motivo" id="motivo-short-talks" value="Short Talks nel tuo cinema">
+                            <input type="radio" name="motivo" id="motivo-short-talks" value="Short Talks nel tuo cinema" data-modulo="contatti-eventi" data-oggetto="Short Talks nel tuo cinema">
                             <label for="motivo-short-talks" class="scelta">Short Talks nel tuo cinema</label>
-                            <input type="radio" name="motivo" id="motivo-cortoteca" value="Un corto per la Cortoteca">
+                            <input type="radio" name="motivo" id="motivo-cortoteca" value="Un corto per la Cortoteca" data-modulo="contatti" data-oggetto="Proposta di un corto per la Cortoteca">
                             <label for="motivo-cortoteca" class="scelta">Un corto per la Cortoteca</label>
-                            <input type="radio" name="motivo" id="motivo-collaborazione" value="Collaborare a una produzione">
+                            <input type="radio" name="motivo" id="motivo-collaborazione" value="Collaborare a una produzione" data-modulo="contatti-produzione" data-oggetto="Proposta di produzione in collaborazione">
                             <label for="motivo-collaborazione" class="scelta">Collaborare a una produzione</label>
-                            <input type="radio" name="motivo" id="motivo-altro" value="Altro">
+                            <input type="radio" name="motivo" id="motivo-altro" value="Altro" data-modulo="contatti" data-oggetto="Messaggio dal sito">
                             <label for="motivo-altro" class="scelta">Altro</label>
                         </div>
                     </fieldset>
@@ -106,6 +107,12 @@
                         </label>
                         <button class="btn btn--pieno" type="submit">Invia il messaggio <svg class="freccia" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h15"/><path d="m13 6 6 6-6 6"/></svg></button>
                     </div>
+                </form>
+                <form name="contatti-eventi" data-netlify="true" netlify-honeypot="campo-trappola" hidden>
+                    <input name="campo-trappola"><input name="subject"><input name="motivo"><input name="nome"><input name="email"><textarea name="messaggio"></textarea><input name="consenso">
+                </form>
+                <form name="contatti-produzione" data-netlify="true" netlify-honeypot="campo-trappola" hidden>
+                    <input name="campo-trappola"><input name="subject"><input name="motivo"><input name="nome"><input name="email"><textarea name="messaggio"></textarea><input name="consenso">
                 </form>
             </div>
         </section>

@@ -38,8 +38,7 @@
 .hero--sala .wrap { position: relative; z-index: 1; }
 /* Il marchio sta un passo indietro rispetto al titolo, soprattutto su telefono */
 .hero--sala .marchio { width: clamp(180px, 26vw, 380px); color: var(--lilla); }
-.claim { margin-top: clamp(20px, 2.4vw, 32px); max-width: 14ch; font-size: clamp(30px, 3.4vw, 50px); }
-.hero--sala .lead { margin-top: 16px; max-width: 52ch; }
+.hero--sala .lead { margin-top: clamp(24px, 2.8vw, 40px); max-width: 44ch; font-size: clamp(19px, 1.75vw, 25px); font-weight: 500; line-height: 1.42; }
 .hero--sala .btn-riga { margin-top: 24px; }
 
 /* Il nastro: le ultime notizie scorrono al piede dell'apertura, separate dal
@@ -303,6 +302,9 @@ html:has(.pagina-produzioni) { background: var(--lilla); }
 }
 .marchio-serie--lss { --marchio: url(../assets/img/brand/long-story-short.png); aspect-ratio: 1777 / 1263; width: min(100%, 260px); }
 .marchio-serie--st { --marchio: url(../assets/img/brand/short-talks.png); aspect-ratio: 1000 / 298; height: clamp(44px, 4.6vw, 66px); }
+/* Il logo di un singolo evento: --marchio e --ar (larghezza / altezza) li
+   mettono g.js e le pagine degli eventi */
+.marchio-serie--evento { aspect-ratio: var(--ar); }
 
 /* Primo piano: la foto grande e, a fianco, quel che serve sapere */
 .primo-piano { align-items: stretch; }
@@ -319,6 +321,20 @@ html:has(.pagina-produzioni) { background: var(--lilla); }
 .schede { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(28px, 3vw, 44px) var(--gap); }
 .scheda-g { display: block; transition: opacity 0.25s var(--ease); }
 .scheda-g .cornice { aspect-ratio: 16 / 10; border-radius: 0; }
+/* Scheda di un evento col suo logo: niente fondo, il logo in azzurro
+   appoggiato al filo, a sinistra, con un'area simile per tutti (la larghezza
+   cresce con la radice delle proporzioni, vedi la pagina dell'evento) */
+.scheda-g .cornice--logo {
+  display: flex; align-items: flex-end; overflow: visible;
+  background: none; container-type: size;
+}
+.cornice--logo .marchio-serie--evento {
+  flex: 0 0 auto;
+  width: min(100cqw, 100cqh * var(--ar));
+  width: min(100cqw, 100cqh * var(--ar), 80cqh * sqrt(var(--ar)));
+  transition: transform 0.6s var(--ease); transform-origin: left bottom;
+}
+a.scheda-g:hover .cornice--logo .marchio-serie--evento { transform: scale(1.025); }
 .scheda-g__testo { display: grid; gap: 4px; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--filo); }
 .scheda-g__titolo { font-family: var(--f-titoli); font-weight: 900; text-transform: uppercase; font-size: clamp(19px, 1.7vw, 24px); line-height: 1; letter-spacing: var(--titoli-spazio); }
 .scheda-g__dati { font-size: 14px; line-height: 1.4; color: var(--tenue); }
@@ -567,8 +583,9 @@ html.sala-aperta { overflow: hidden; }
    LE PAGINE DEGLI EVENTI
    Carta, scritte nere; il colore dell'evento (quello della sua grafica) va
    sulle piccole intestazioni e sui fili, come quello del titolo nella
-   pagina del corto. In cima la grafica a tutta larghezza, a spigolo vivo:
-   è la stessa della scheda in Eventi, che al clic cresce fin qui.
+   pagina del corto. In cima il logo dell'evento nel suo colore, come il
+   lettering di Long Story Short: è lo stesso della scheda in Eventi, che al
+   clic sale fin qui.
    ========================================================================== */
 .pagina-evento {
   --evento: var(--nero);
@@ -589,14 +606,18 @@ html.sala-aperta { overflow: hidden; }
 .pagina-evento main { padding-bottom: clamp(96px, 11vw, 168px); }
 
 .hero--evento { padding-bottom: 0; }
-.locandina-g { aspect-ratio: 16 / 10; border-radius: 0; background: var(--evento); }
-/* Un filo nero la chiude, come le still di Produzioni: le grafiche chiare
-   non si perdono nella carta */
-.locandina-g::after { content: ''; position: absolute; inset: 0; border: 2px solid var(--nero); pointer-events: none; }
+/* Il logo in cima. I loghi hanno proporzioni molto diverse (Blue Hour è
+   quasi quadrato, Short Talks OFF una riga sola): la larghezza cresce con la
+   radice delle proporzioni, così occupano tutti più o meno la stessa area */
+.evento-g__marchio .marchio-serie--evento {
+  width: min(100%, clamp(200px, 38vw, 520px) * 1.2);
+  width: min(100%, clamp(200px, 38vw, 520px) * sqrt(var(--ar)));
+}
 
-/* Nome, racconto e dati: come la pagina del corto */
+/* Nome, racconto e dati: come la pagina del corto. Il nome sta sotto il
+   logo, più piccolo: porta l'edizione, che il logo non dice */
 .evento-g { align-items: start; }
-.evento-g__titolo { font-size: clamp(44px, 6.4vw, 104px); line-height: 0.86; }
+.evento-g__titolo { font-size: clamp(30px, 3.6vw, 56px); line-height: 0.9; }
 .evento-g__titolo span { color: var(--evento-testo); }
 .evento-g__corpo { margin-top: clamp(22px, 2.4vw, 34px); display: grid; gap: 1em; max-width: 62ch; font-size: clamp(17px, 1.3vw, 19px); line-height: 1.6; }
 .evento-g__corpo strong { font-weight: 700; }

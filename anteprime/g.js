@@ -175,7 +175,7 @@ function dataBreve(giorno) {
 
 /* Una scheda: foto, e sotto il filo titolo e dati. Diventa un collegamento
    solo se ha un indirizzo. */
-function schedaG({ titolo, dati, immagine, grafica, href }) {
+function schedaG({ titolo, dati, immagine, logo, href }) {
   const li = document.createElement('li');
   li.innerHTML = `
     <${href ? 'a' : 'div'} class="scheda-g"${href ? ` href="${esc(href)}"` : ''}>
@@ -186,18 +186,33 @@ function schedaG({ titolo, dati, immagine, grafica, href }) {
       </span>
     </${href ? 'a' : 'div'}>`;
   const cornice = li.querySelector('.cornice');
-  if (grafica) {
-    // La grafica dell'evento, in vettoriale; se non c'è, la fotografia
-    const img = document.createElement('img');
-    img.alt = '';
-    img.src = grafica;
-    img.onerror = () => img.replaceWith(nuovaImmagine(immagine));
-    cornice.classList.add('cornice--grafica');
-    cornice.append(img);
+  if (logo) {
+    // Il logo dell'evento, senza fondo e nel colore della pagina, come il
+    // lettering di Long Story Short; se non c'è, la fotografia
+    cornice.classList.add('cornice--logo');
+    const prova = new Image();
+    prova.onload = () => cornice.append(marchioEvento(logo, prova.naturalWidth / prova.naturalHeight));
+    prova.onerror = () => {
+      cornice.classList.remove('cornice--logo');
+      cornice.append(nuovaImmagine(immagine));
+    };
+    prova.src = logo;
   } else {
     cornice.append(nuovaImmagine(immagine));
   }
   return li;
+}
+
+/* Il logo di un evento come marchio: la sagoma del PNG, ricolorata col
+   colore del testo. --ar (larghezza / altezza) ne fissa le proporzioni, così
+   il passaggio verso la pagina dell'evento è solo un ingrandimento. */
+function marchioEvento(logo, proporzioni) {
+  const marchio = document.createElement('span');
+  marchio.className = 'marchio-serie marchio-serie--evento';
+  marchio.setAttribute('aria-hidden', 'true');
+  marchio.style.setProperty('--marchio', `url("/${logo}")`);
+  marchio.style.setProperty('--ar', proporzioni.toFixed(4));
+  return marchio;
 }
 
 /* Riempie un blocco di schede; senza schede il blocco resta nascosto */
@@ -212,12 +227,11 @@ function luogoBreve(evento) {
   return (evento.luogo || '').split(',')[0].trim();
 }
 
-/* La copertina di un evento è la grafica della sua identità, ridisegnata in
-   vettoriale e salvata col nome della sua pagina:
-   short-talks-1.html → assets/img/eventi/copertine/short-talks-1.svg */
-function graficaEvento(evento) {
+/* Il logo di un evento è un PNG senza fondo, salvato col nome della sua
+   pagina: short-talks-1.html → assets/img/eventi/loghi/short-talks-1.png */
+function logoEvento(evento) {
   const pagina = (evento.pagina || '').replace(/\.html$/, '');
-  return /^[a-z0-9-]+$/.test(pagina) ? `assets/img/eventi/copertine/${pagina}.svg` : null;
+  return /^[a-z0-9-]+$/.test(pagina) ? `assets/img/eventi/loghi/${pagina}.png` : null;
 }
 
 async function paginaEventi() {
@@ -237,16 +251,17 @@ async function paginaEventi() {
     titolo: e.titolo,
     dati: [dataBreve(e.data_inizio), luogoBreve(e)].filter(Boolean).join(' · '),
     immagine: e.miniatura || e.copertina,
-    grafica: graficaEvento(e),
+    logo: logoEvento(e),
     href: indirizzoEvento(e),
   });
   riempiSchede('blocco-short-talks', eventi.filter((e) => e.serie === 'short-talks').map(scheda));
   riempiSchede('blocco-altri', eventi.filter((e) => e !== lss && e.serie !== 'short-talks').map(scheda));
 
-  // Ogni evento si apre qui, sopra la pagina: dalla scheda cresce la sua
-  // grafica, da In evidenza sale il lettering di Long Story Short
+  // Ogni evento si apre qui, sopra la pagina: dalla scheda sale il logo
+  // dell'evento (o, senza logo, cresce la foto), da In evidenza il lettering
+  // di Long Story Short
   preparaEvento(document.getElementById('evidenza'), '.marchio-serie');
-  document.querySelectorAll('a.scheda-g').forEach((scheda) => preparaEvento(scheda, '.cornice'));
+  document.querySelectorAll('a.scheda-g').forEach((scheda) => preparaEvento(scheda, '.marchio-serie', '.cornice'));
 }
 
 /* Le pagine degli eventi hanno la loro anteprima G, col nome del file
@@ -619,14 +634,15 @@ function chiudiEvento() {
 }
 
 // Al passaggio del puntatore la pagina dell'evento si comincia a leggere; al
-// clic si apre qui (con un tasto premuto, il browser fa come sempre)
-function preparaEvento(link, selettore) {
+// clic si apre qui (con un tasto premuto, il browser fa come sempre). Sale
+// il primo elemento trovato fra i selettori, nell'ordine dato.
+function preparaEvento(link, ...selettori) {
   if (!link || !link.getAttribute('href')) return;
   link.addEventListener('pointerenter', () => leggiEvento(link.getAttribute('href')).catch(() => {}), { once: true });
   link.addEventListener('click', (e) => {
     if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
     e.preventDefault();
-    apriEvento(link, link.querySelector(selettore));
+    apriEvento(link, selettori.map((s) => link.querySelector(s)).find(Boolean));
   });
 }
 
@@ -819,7 +835,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const motivo = new URLSearchParams(location.search).get('motivo');
     const scelta = motivo && document.getElementById('motivo-' + motivo);
     if (scelta) scelta.checked = true;
+    // Il motivo sceglie il modulo Netlify (e quindi l'indirizzo che riceve la
+    // mail) e l'oggetto: "[Sito CDL] <oggetto> – <nome>". Vedi genera.py.
+    const aggiornaInvio = () => {
+      const scelto = modulo.querySelector('input[name="motivo"]:checked');
+      const nome = modulo.elements.nome.value.trim();
+      modulo.elements['form-name'].value = scelto?.dataset.modulo || 'contatti';
+      modulo.elements.subject.value = `[Sito CDL] ${scelto?.dataset.oggetto || 'Messaggio dal sito'}${nome ? ' – ' + nome : ''}`;
+    };
+    modulo.addEventListener('change', aggiornaInvio);
+    modulo.addEventListener('input', aggiornaInvio);
+    aggiornaInvio();
     modulo.addEventListener('submit', () => {
+      aggiornaInvio();
       const invia = modulo.querySelector('button[type="submit"]');
       invia.classList.add('is-inviato');
       invia.textContent = 'Invio in corso…';
