@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Contatti – CDL APS (anteprima)</title>
+    <meta name="description" content="Come diventare socio di CDL APS e come scriverci.">
+    <meta name="robots" content="noindex">
+    <!-- Anteprima: gli indirizzi relativi partono dalla radice del sito -->
+    <base href="/">
+    <link rel="icon" type="image/png" href="assets/img/brand/favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;900&display=swap">
+    <link rel="stylesheet" href="anteprime/comune.css">
+    <link rel="stylesheet" href="anteprime/g.css">
+</head>
+<body class="pagina-contatti">
+
+    <header class="nav">
+        <div class="wrap nav__riga">
+            <a class="skip-link" href="anteprime/contatti.html#top">Vai al contenuto</a>
+            <a class="nav__logo" href="anteprime/home.html" aria-label="CDL, pagina iniziale"><span class="logo"></span></a>
+            <a class="nav__voce" href="anteprime/eventi.html" style="--punto: var(--blu)">Eventi</a>
+            <a class="nav__voce" href="anteprime/produzioni.html" style="--punto: var(--lilla)">Produzioni</a>
+            <a class="nav__voce nav__voce--contatti" href="anteprime/contatti.html#contatti" aria-current="page" style="--punto: var(--arancio)">Contatti</a>
+            <a class="nav__cortoteca" href="anteprime/cortoteca.html"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.14v13.72L19 12 8 5.14Z"/></svg>Cortoteca</a>
+            <a class="btn btn--pieno nav__socio" href="anteprime/contatti.html">Diventa socio</a>
+        </div>
+    </header>
+
+    <main id="top">
+        <!-- SOSTIENI: lo stesso invito che chiude la home, qui in apertura -->
+        <section class="closing fondo-arancio contatti-testa" id="socio">
+            <div class="wrap sostieni">
+                <h1>
+                    <span class="sr-only">Sostieni CDL</span>
+                    <span class="fit" aria-hidden="true"><span class="fit-testo">Sostieni<span class="logo"></span></span></span>
+                </h1>
+                <div class="grid sostieni__corpo">
+                    <div class="span-7">
+                        <p class="sostieni__frase">Associarti a CDL significa contribuire attivamente al nostro progetto di diffusione della cultura cinematografica indipendente.</p>
+                        <p class="sostieni__stato"><span class="rec"></span>La quota associativa &egrave; stata ridotta per gli ultimi mesi del 2026.</p>
+                        <div class="btn-riga">
+                            <a class="btn btn--pieno" href="anteprime/contatti.html?motivo=socio#contatti">Diventa socio</a>
+                            <a class="btn" href="anteprime/contatti.html#contatti">Scrivici</a>
+                        </div>
+                        <a class="link" href="anteprime/vantaggi.html">Tutti i vantaggi per i soci <svg class="freccia" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h15"/><path d="m13 6 6 6-6 6"/></svg></a>
+                    </div>
+                    <a class="span-4 start-9 sostieni__tessera" href="anteprime/vantaggi.html" aria-label="I vantaggi per i soci">
+                        <img src="assets/img/partner/tessera-cdl.png" alt="" width="1080" height="1080">
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- CONTATTI: si scrive solo dal modulo, che arriva per email. In alto
+             il titolo con una riga, sotto il modulo a tutta larghezza -->
+        <section class="contatti" id="contatti" aria-labelledby="titolo-contatti">
+            <div class="wrap">
+                <div class="contatti__testa">
+                    <h2 id="titolo-contatti">Scrivici</h2>
+                    <p class="contatti__frase">Per una domanda, un'idea, un corto da proporre o una sala che vorrebbe ospitare Short Talks: scrivici qui, ti rispondiamo per email.</p>
+                </div>
+
+                <form class="modulo" name="contatti" method="POST" action="anteprime/contatti.html#grazie" data-netlify="true" netlify-honeypot="campo-trappola">
+                    <input type="hidden" name="form-name" value="contatti">
+                    <p class="sr-only"><label>Non compilare questo campo: <input name="campo-trappola" tabindex="-1" autocomplete="off"></label></p>
+
+                    <fieldset class="modulo__gruppo">
+                        <legend>Di che cosa vuoi parlarci?</legend>
+                        <div class="modulo__motivi">
+                            <input type="radio" name="motivo" id="motivo-informazioni" value="Informazioni" checked>
+                            <label for="motivo-informazioni" class="scelta">Informazioni</label>
+                            <input type="radio" name="motivo" id="motivo-socio" value="Diventare socio">
+                            <label for="motivo-socio" class="scelta">Diventare socio</label>
+                            <input type="radio" name="motivo" id="motivo-short-talks" value="Short Talks nel tuo cinema">
+                            <label for="motivo-short-talks" class="scelta">Short Talks nel tuo cinema</label>
+                            <input type="radio" name="motivo" id="motivo-cortoteca" value="Un corto per la Cortoteca">
+                            <label for="motivo-cortoteca" class="scelta">Un corto per la Cortoteca</label>
+                            <input type="radio" name="motivo" id="motivo-collaborazione" value="Collaborare a una produzione">
+                            <label for="motivo-collaborazione" class="scelta">Collaborare a una produzione</label>
+                            <input type="radio" name="motivo" id="motivo-altro" value="Altro">
+                            <label for="motivo-altro" class="scelta">Altro</label>
+                        </div>
+                    </fieldset>
+
+                    <div class="modulo__coppia">
+                        <label class="modulo__campo">
+                            <span>Nome</span>
+                            <input type="text" name="nome" autocomplete="name" required>
+                        </label>
+                        <label class="modulo__campo">
+                            <span>Email</span>
+                            <input type="email" name="email" autocomplete="email" required>
+                        </label>
+                    </div>
+                    <label class="modulo__campo">
+                        <span>Messaggio</span>
+                        <textarea name="messaggio" rows="6" required></textarea>
+                    </label>
+                    <div class="modulo__piede">
+                        <label class="modulo__consenso">
+                            <input type="checkbox" name="consenso" required>
+                            <span>Acconsento al trattamento dei dati per ricevere una risposta.</span>
+                        </label>
+                        <button class="btn btn--pieno" type="submit">Invia il messaggio <svg class="freccia" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h15"/><path d="m13 6 6 6-6 6"/></svg></button>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="piede">
+            <div class="wrap piede__riga">
+                <a href="anteprime/home.html" aria-label="CDL, pagina iniziale"><span class="logo"></span></a>
+                <nav class="piede__elenchi" aria-label="Pagine e contatti">
+                    <ul>
+                        <li><a href="anteprime/eventi.html">Eventi</a></li>
+                        <li><a href="anteprime/produzioni.html">Produzioni</a></li>
+                        <li><a href="anteprime/cortoteca.html">Cortoteca</a></li>
+                        <li><a href="anteprime/vantaggi.html">Vantaggi per i soci</a></li>
+                    </ul>
+                    <ul id="contatti">
+                        <li><a href="https://instagram.com/cdl_aps" target="_blank" rel="noopener">Instagram</a></li>
+                        <li><a href="https://www.youtube.com/@cdl_aps" target="_blank" rel="noopener">YouTube</a></li>
+                        <li><a href="mailto:ciao@cdlaps.com">ciao@cdlaps.com</a></li>
+                    </ul>
+                </nav>
+                <p class="piede__dati">Associazione di promozione del cinema giovane e indipendente<br>
+                CDL APS &bull; Viale Laurana 13, Rimini, 47921 &bull; CF: 91200080405 &bull; 2026</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="assets/js/dati.js"></script>
+    <script src="anteprime/comune.js"></script>
+    <script src="anteprime/g.js"></script>
+</body>
+</html>

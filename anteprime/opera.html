@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Opera – CDL APS (anteprima)</title>
+    <meta name="description" content="Un cortometraggio della Cortoteca di CDL APS.">
+    <meta name="robots" content="noindex">
+    <!-- Anteprima: gli indirizzi relativi partono dalla radice del sito -->
+    <base href="/">
+    <link rel="icon" type="image/png" href="assets/img/brand/favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;900&display=swap">
+    <link rel="stylesheet" href="anteprime/comune.css">
+    <link rel="stylesheet" href="anteprime/g.css">
+</head>
+<body class="pagina-corto">
+
+    <header class="nav">
+        <div class="wrap nav__riga">
+            <a class="skip-link" href="anteprime/opera.html#top">Vai al contenuto</a>
+            <a class="nav__logo" href="anteprime/home.html" aria-label="CDL, pagina iniziale"><span class="logo"></span></a>
+            <a class="nav__voce" href="anteprime/eventi.html" style="--punto: var(--blu)">Eventi</a>
+            <a class="nav__voce" href="anteprime/produzioni.html" style="--punto: var(--lilla)">Produzioni</a>
+            <a class="nav__voce nav__voce--contatti" href="anteprime/contatti.html#contatti" style="--punto: var(--arancio)">Contatti</a>
+            <a class="nav__cortoteca" href="anteprime/cortoteca.html"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.14v13.72L19 12 8 5.14Z"/></svg>Cortoteca</a>
+            <a class="btn btn--pieno nav__socio" href="anteprime/contatti.html">Diventa socio</a>
+        </div>
+    </header>
+
+    <main id="top">
+
+        <section class="hero hero--corto">
+            <div class="wrap">
+                <h1 class="sr-only" id="titolo-corto">Opera</h1>
+                <div class="still schermo" id="schermo">
+                    <span class="cornice"></span>
+                    <span class="targa" id="schermo-titolo"></span>
+                </div>
+            </div>
+        </section>
+
+        <section class="blocco-pagina entra" aria-label="Il corto">
+            <div class="wrap grid corto" id="corto" hidden>
+                <div class="corto__testo span-7">
+                    <p class="corto__frase" id="corto-frase"></p>
+                    <p class="corto__sinossi" id="corto-sinossi"></p>
+                </div>
+                <dl class="corto__dati span-4 start-9" id="corto-dati"></dl>
+            </div>
+            <div class="wrap">
+                <p class="avviso" id="corto-avviso" hidden>Opera non trovata.</p>
+            </div>
+        </section>
+
+        <section class="blocco-pagina blocco-pagina--diviso entra" aria-labelledby="titolo-crediti" id="blocco-crediti" hidden>
+            <div class="wrap">
+                <h2 class="blocco-pagina__testa" id="titolo-crediti">Crediti</h2>
+                <dl class="crediti" id="crediti"></dl>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="piede">
+            <div class="wrap piede__riga">
+                <a href="anteprime/home.html" aria-label="CDL, pagina iniziale"><span class="logo"></span></a>
+                <nav class="piede__elenchi" aria-label="Pagine e contatti">
+                    <ul>
+                        <li><a href="anteprime/eventi.html">Eventi</a></li>
+                        <li><a href="anteprime/produzioni.html">Produzioni</a></li>
+                        <li><a href="anteprime/cortoteca.html">Cortoteca</a></li>
+                        <li><a href="anteprime/vantaggi.html">Vantaggi per i soci</a></li>
+                    </ul>
+                    <ul id="contatti">
+                        <li><a href="https://instagram.com/cdl_aps" target="_blank" rel="noopener">Instagram</a></li>
+                        <li><a href="https://www.youtube.com/@cdl_aps" target="_blank" rel="noopener">YouTube</a></li>
+                        <li><a href="mailto:ciao@cdlaps.com">ciao@cdlaps.com</a></li>
+                    </ul>
+                </nav>
+                <p class="piede__dati">Associazione di promozione del cinema giovane e indipendente<br>
+                CDL APS &bull; Viale Laurana 13, Rimini, 47921 &bull; CF: 91200080405 &bull; 2026</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="assets/js/dati.js"></script>
+    <script src="anteprime/comune.js"></script>
+    <script src="anteprime/g.js"></script>
+</body>
+</html>

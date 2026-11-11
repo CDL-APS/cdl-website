@@ -1,4 +1,4 @@
-/* ANTEPRIME E e F — funzioni comuni: scritte adattate alla larghezza, occhi
+/* ANTEPRIMA DEL NUOVO SITO — funzioni comuni: scritte adattate alla larghezza, occhi
    che seguono il puntatore e sbattono le palpebre, disco che accompagna il
    puntatore sulle fotografie, strisce che scorrono, e il motore della
    Cortoteca (ricerca, ordine, vista a lista o a galleria).
@@ -16,7 +16,8 @@ const PUNTATORE = window.matchMedia('(hover: hover) and (pointer: fine)').matche
 function adatta() {
   document.querySelectorAll('.fit').forEach((riga) => {
     const testo = riga.querySelector('.fit-testo');
-    if (!testo || !riga.clientWidth) return;
+    // data-fermo: il corpo è già quello giusto (arriva da un'altra pagina)
+    if (!testo || !riga.clientWidth || riga.dataset.fermo) return;
     riga.style.fontSize = '100px';
     const largo = testo.getBoundingClientRect().width;
     if (largo) riga.style.fontSize = (99.4 * riga.clientWidth / largo).toFixed(2) + 'px';

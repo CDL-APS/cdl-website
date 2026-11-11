@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
-"""Scrive le pagine delle anteprime E e F: barra e piede sono uguali in tutte,
-quindi stanno qui una volta sola. File di prova, non fa parte del sito."""
+"""Scrive le pagine dell'anteprima del nuovo sito: barra e piede sono uguali
+in tutte, quindi stanno qui una volta sola. Le pagine degli eventi si leggono
+da quelle attuali del sito. File di prova, non fa parte del sito."""
 import pathlib
 
 QUI = pathlib.Path(__file__).parent
@@ -32,12 +33,18 @@ def occhi(elenco, rientro=20):
 
 def voci_barra(p, solo_socio):
     """Le voci della barra. Con solo_socio restano il marchio e l'invito ad
-    associarsi (per ora così sulla Cortoteca della proposta G)."""
+    associarsi (per ora così sulla Cortoteca)."""
     if solo_socio:
         return '            <!-- Per ora la barra della Cortoteca porta solo l\'invito ad associarsi -->'
+    if p == 'g':
+        # Le voci accanto al marchio, Cortoteca e socio a destra
+        return f'''            <a class="nav__voce" href="eventi.html" style="--punto: var(--blu)">Eventi</a>
+            <a class="nav__voce" href="produzioni.html" style="--punto: var(--lilla)">Produzioni</a>
+            <a class="nav__voce nav__voce--contatti" href="anteprime/contatti.html#contatti" style="--punto: var(--arancio)">Contatti</a>
+            <a class="nav__cortoteca" href="anteprime/cortoteca.html"{{corrente}}>{PLAY}Cortoteca</a>'''
     return f'''            <a class="nav__voce" href="eventi.html" style="--punto: var(--blu)">Eventi</a>
             <a class="nav__voce" href="produzioni.html" style="--punto: var(--lilla)">Produzioni</a>
-            <a class="nav__cortoteca" href="anteprime/{p}-cortoteca.html"{{corrente}}>{PLAY}Cortoteca</a>'''
+            <a class="nav__cortoteca" href="anteprime/cortoteca.html"{{corrente}}>{PLAY}Cortoteca</a>'''
 
 
 def testa(p, titolo, descrizione, corpo='', solo_socio=False):
@@ -62,10 +69,10 @@ def testa(p, titolo, descrizione, corpo='', solo_socio=False):
 
     <header class="nav">
         <div class="wrap nav__riga">
-            <a class="skip-link" href="anteprime/{p}-{{pagina}}.html#top">Vai al contenuto</a>
-            <a class="nav__logo" href="anteprime/{p}-home.html" aria-label="CDL, pagina iniziale"><span class="logo"></span></a>
+            <a class="skip-link" href="anteprime/{{pagina}}.html#top">Vai al contenuto</a>
+            <a class="nav__logo" href="anteprime/home.html" aria-label="CDL, pagina iniziale"><span class="logo"></span></a>
 {voci_barra(p, solo_socio)}
-            <a class="btn btn--pieno nav__socio" href="anteprime/{p}-home.html#socio">Diventa socio</a>
+            <a class="btn btn--pieno nav__socio" href="anteprime/home.html#socio">Diventa socio</a>
         </div>
     </header>
 '''
@@ -75,12 +82,12 @@ def piede(p, classe=''):
     return f'''
         <div class="piede{classe}">
             <div class="wrap piede__riga">
-                <a href="anteprime/{p}-home.html" aria-label="CDL, pagina iniziale"><span class="logo"></span></a>
+                <a href="anteprime/home.html" aria-label="CDL, pagina iniziale"><span class="logo"></span></a>
                 <nav class="piede__elenchi" aria-label="Pagine e contatti">
                     <ul>
                         <li><a href="eventi.html">Eventi</a></li>
                         <li><a href="produzioni.html">Produzioni</a></li>
-                        <li><a href="anteprime/{p}-cortoteca.html">Cortoteca</a></li>
+                        <li><a href="anteprime/cortoteca.html">Cortoteca</a></li>
                         <li><a href="vantaggi-tesseramento.html">Vantaggi per i soci</a></li>
                     </ul>
                     <ul>
@@ -126,22 +133,6 @@ def sostieni(p, titolo, stato='Il tesseramento 2026 &egrave; aperto.'):
         </div>''' + piede(p)
 
 
-def chiusura_cortoteca(p, classe, elenco):
-    """Chiusura della Cortoteca: che cos'è, l'invito ad associarsi e, nella
-    colonna libera a destra, i suoi occhi."""
-    return f'''
-    <footer class="closing closing--breve">
-        <div class="wrap grid">
-            <div class="span-8">
-                <p class="lead">{CORTOTECA}</p>
-                <a class="btn btn--pieno" href="anteprime/{p}-home.html#socio">Diventa socio</a>
-            </div>
-            <div class="span-3 start-10 occhi-chiusura{classe}" aria-hidden="true">
-{occhi(elenco, 16)}
-            </div>
-        </div>''' + piede(p, ' piede--lilla')
-
-
 def strumenti(prima_galleria=False):
     """Ricerca, vista e ordine. Con prima_galleria la galleria è la vista
     predefinita e viene per prima; la lista si chiede con ?vista=lista."""
@@ -170,10 +161,37 @@ def strumenti(prima_galleria=False):
 
 def scrivi(nome, *pezzi, pagina, corrente=''):
     html = ''.join(pezzi).replace('{pagina}', pagina).replace('{corrente}', corrente)
+    # I contatti del piede sono la meta della voce Contatti della barra
+    html = html.replace('<ul>\n                        <li><a href="https://instagram.com',
+                        '<ul id="contatti">\n                        <li><a href="https://instagram.com')
+    # Ogni pagina del sito che ha la sua anteprima porta a quella
+    html = (html.replace('href="eventi.html"', 'href="anteprime/eventi.html"')
+                .replace('href="produzioni.html"', 'href="anteprime/produzioni.html"'))
+    # Diventa socio porta in cima alla pagina Contatti
+    html = html.replace('href="anteprime/home.html#socio"', 'href="anteprime/contatti.html"')
+    # Nell'invito arancio si scrive solo dal modulo di Contatti
+    html = (html.replace('href="https://wa.me/393493290864?text=Ciao,%20vorrei%20diventare%20socio%20di%20CDL%20APS" target="_blank" rel="noopener"',
+                         'href="anteprime/contatti.html?motivo=socio#contatti"')
+                .replace('href="mailto:ciao@cdlaps.com?subject=Richiesta%20Diventare%20Socio"',
+                         'href="anteprime/contatti.html#contatti"'))
+    # Pagine degli eventi, vantaggi e corti
+    for evento in ('longstoryshort', 'short-talks-1', 'short-talks-2', 'short-talks-off-1', 'blue-hour',
+                   'short-talks-al-not-2025', 'short-talks-3-x-laiff', 'short-talks-al-not-2026'):
+        html = html.replace(f'href="{evento}.html"', f'href="anteprime/{evento}.html"')
+    html = (html.replace('href="vantaggi-tesseramento.html"', 'href="anteprime/vantaggi.html"')
+                .replace('href="opera.html?film=', 'href="anteprime/opera.html?film='))
+    if pagina == 'contatti':
+        html = html.replace('<a class="nav__voce nav__voce--contatti" href="anteprime/contatti.html#contatti"',
+                            '<a class="nav__voce nav__voce--contatti" href="anteprime/contatti.html#contatti" aria-current="page"')
+    voce = ({'eventi': 'eventi', 'produzioni': 'produzioni'}.get(pagina)
+            or ('eventi' if 'class="pagina-evento' in html else None))
+    if voce:
+        html = html.replace(f'<a class="nav__voce" href="anteprime/{voce}.html"',
+                            f'<a class="nav__voce" href="anteprime/{voce}.html" aria-current="page"')
     (QUI / nome).write_text(html, encoding='utf-8')
 
 
-# -------------------------------------------------------- E · Indice grande
+# ------------------------------------------------------ Il rullino della home
 RULLINO = [
     ('short-talks-al-not-2026.html', 'short-talks-al-not-2026/foto-6.jpg', 'Spettatori fra le poltrone del Supercinema'),
     ('longstoryshort.html', 'long-story-short-2026/foto-3.jpg', 'Una troupe al tramonto in riva al mare'),
@@ -192,195 +210,45 @@ def rullino(cursore=''):
         for h, f, a in RULLINO)
 
 
-def portone(ident, nome, pagina, colore, scritta):
-    return f'''<li>
-                        <a class="portone" href="{pagina}" style="--colore: var(--{colore}); --scritta: var(--{scritta})">
-                            <h2 class="portone__nome"><span class="sr-only">{nome}</span>{fit(nome)}</h2>
-                            <span class="portone__riga">
-                                <span class="portone__nota" id="nota-{ident}"></span>
-                                <span class="portone__freccia">{FRECCIA}</span>
-                            </span>
-                        </a>
-                    </li>'''
-
-
-e_home = f'''
-    <main id="top">
-        <!-- APERTURA: il marchio a tutta larghezza, la frase su una riga, e al
-             piede il nastro delle ultime notizie -->
-        <section class="hero hero--home">
-            <div class="wrap">
-                <div class="marchio" role="img" aria-label="CDL">
-                    <span class="lettera"></span><span class="lettera"></span><span class="lettera"></span>
-                </div>
-                <h1 class="claim">
-                    <span class="sr-only">Cinema giovane e indipendente</span>
-                    {fit('Cinema giovane e indipendente', ' solo-largo')}
-                    {fit('Cinema giovane', ' solo-stretto')}
-                    {fit('e indipendente', ' solo-stretto')}
-                </h1>
-                <div class="grid hero__piede">
-                    <p class="lead span-7">{FRASE}</p>
-                    <!-- Sul computer l'invito ai soci è già nella barra: qui compare solo su telefono -->
-                    <div class="btn-riga span-5 hero__azioni">
-                        <a class="btn btn--pieno" href="anteprime/e-cortoteca.html">{PLAY}Guarda i corti</a>
-                        <a class="btn solo-telefono" href="anteprime/e-home.html#socio">Diventa socio</a>
-                    </div>
-                </div>
-            </div>
-            <div class="nastro scorre" id="nastro" role="group" aria-label="Ultime notizie">
-                <div class="scorre__pista"></div>
-                <button class="scorre__pausa" type="button" aria-pressed="false">
-                    <span class="sr-only">Ferma lo scorrimento delle notizie</span>{ICONA_FERMA}{ICONA_RIPRENDI}
-                </button>
-            </div>
-        </section>
-
-        <!-- L'INDICE GRANDE: le tre sezioni del sito, ognuna col nome a tutta
-             larghezza e l'ultima cosa accaduta. Le note le mette e.js. -->
-        <section id="indice" aria-label="Le sezioni del sito">
-            <div class="wrap">
-                <ul class="portoni">
-                    {portone('eventi', 'Eventi', 'eventi.html', 'blu', 'azzurro')}
-                    {portone('produzioni', 'Produzioni', 'produzioni.html', 'lilla', 'nero')}
-                    {portone('cortoteca', 'Cortoteca', 'anteprime/e-cortoteca.html', 'nero', 'lilla')}
-                </ul>
-            </div>
-        </section>
-
-        <!-- DALLE SALE E DAI SET: il rullino scorre piano; ogni foto porta al suo evento -->
-        <section id="sale" class="scorre" aria-labelledby="titolo-sale">
-            <div class="wrap testa-riga">
-                <h2 id="titolo-sale">Dalle sale e dai set</h2>
-                <button class="btn scorre__pausa" type="button" aria-pressed="false"><span data-testo>Ferma</span><span class="sr-only"> lo scorrimento delle fotografie</span></button>
-            </div>
-            <div class="scorre__finestra">
-                <div class="scorre__pista">
-{rullino()}
-                </div>
-            </div>
-        </section>
-    </main>
-'''
-
-e_titolo_sostieni = '''<h2>
+titolo_sostieni = '''<h2>
                 <span class="sr-only">Sostieni CDL</span>
                 <span class="fit" aria-hidden="true"><span class="fit-testo">Sostieni<span class="logo"></span></span></span>
             </h2>'''
 
 
-def pagina_cortoteca(lettura='', prima_galleria=False):
-    """La pagina della Cortoteca è la stessa nelle due proposte: il nome a
-    tutta larghezza, gli strumenti, le opere. Cambia come sono disegnate."""
+def pagina_cortoteca_g(modello=''):
+    """Cortoteca G: il nome, la frase a tutta larghezza, il filo, poi
+    strumenti e opere"""
     return f'''
     <main id="top">
         <section class="hero hero--cortoteca">
             <div class="wrap">
                 <h1 class="parola"><span class="sr-only">Cortoteca</span>{fit('Cortoteca')}</h1>
-                {strumenti(prima_galleria)}{lettura}
+                <p class="presentazione">{CORTOTECA}</p>
+                {strumenti(True)}
                 <div id="opere"></div>
             </div>
-        </section>
+        </section>{modello}
     </main>
 '''
 
 
-scrivi('e-home.html',
-       testa('e', 'CDL APS: cinema giovane e indipendente a Rimini (anteprima E)',
-             'Associazione riminese che produce cortometraggi e organizza serate di cinema indipendente.'),
-       e_home, sostieni('e', e_titolo_sostieni), pagina='home')
-scrivi('e-cortoteca.html',
-       testa('e', 'Cortoteca: i corti dei soci di CDL APS (anteprima E)',
-             'I cortometraggi dei soci di CDL APS, da guardare in streaming sul sito.', ' class="fondo-sala stanza"'),
-       pagina_cortoteca(),
-       chiusura_cortoteca('e', '', [('30%', '34%', '58px'), ('62%', '70%', '36px'), ('84%', '24%', '44px')]),
-       pagina='cortoteca', corrente=' aria-current="page"')
-print('E scritta')
-
-
-# ----------------------------------------------------------------- F · Sala
-rullino_f = rullino(' data-cursore="Apri"')
-
-
-def porta(ident, nome, pagina, colore, scritta):
-    return f'''<li>
-                        <a class="porta" href="{pagina}" style="--colore: var(--{colore}); --scritta: var(--{scritta})">
-                            <h2 class="porta__nome">{nome}</h2>
-                            <p class="porta__nota" id="nota-{ident}"></p>
-                            <span class="porta__foto cornice" id="foto-{ident}"></span>
-                            <span class="porta__freccia">{FRECCIA}</span>
-                        </a>
-                    </li>'''
-
-
-f_home = f'''
-    <main id="top">
-        <!-- APERTURA: la sala vista dall'alto, al buio. Una luce segue il
-             puntatore, come la torcia della maschera. -->
-        <section class="hero hero--sala">
-            <img class="hero__foto" src="assets/img/sfondi/wallpaper-cdl.jpg" alt="" width="2400" height="1601" fetchpriority="high">
-            <div class="hero__buio" aria-hidden="true"></div>
-            <div class="wrap">
-                <div class="marchio" role="img" aria-label="CDL">
-                    <span class="lettera"></span><span class="lettera"></span><span class="lettera"></span>
-                </div>
-                <h1 class="claim">Cinema giovane e indipendente</h1>
-                <p class="lead">{FRASE}</p>
-                <!-- Sul computer l'invito ai soci è già nella barra: qui compare solo su telefono -->
-                <div class="btn-riga">
-                    <a class="btn btn--pieno" href="anteprime/f-cortoteca.html">{PLAY}Guarda i corti</a>
-                    <a class="btn solo-telefono" href="anteprime/f-home.html#socio">Diventa socio</a>
-                </div>
+def chiusura_cortoteca_g(elenco):
+    """In fondo alla Cortoteca G restano solo gli occhi, dietro il piede"""
+    return f'''
+    <footer class="closing closing--breve closing--occhi">
+        <div class="wrap grid">
+            <div class="span-3 start-10 occhi-chiusura occhi-chiusura--piede" aria-hidden="true">
+{occhi(elenco, 16)}
             </div>
-        </section>
-
-        <!-- L'INDICE: le tre sezioni del sito, ognuna con l'ultima cosa
-             accaduta. Le note e le fotografie le mette f.js. -->
-        <section id="indice" aria-label="Le sezioni del sito">
-            <div class="wrap">
-                <ul class="porte">
-                    {porta('eventi', 'Eventi', 'eventi.html', 'blu', 'azzurro')}
-                    {porta('produzioni', 'Produzioni', 'produzioni.html', 'lilla', 'nero')}
-                    {porta('cortoteca', 'Cortoteca', 'anteprime/f-cortoteca.html', 'nero', 'lilla')}
-                </ul>
-            </div>
-        </section>
-
-        <!-- DALLE SALE E DAI SET: il rullino scorre piano; ogni foto porta al suo evento -->
-        <section id="sale" class="scorre" aria-labelledby="titolo-sale">
-            <div class="wrap testa-riga">
-                <h2 id="titolo-sale">Dalle sale e dai set</h2>
-                <button class="btn scorre__pausa" type="button" aria-pressed="false"><span data-testo>Ferma</span><span class="sr-only"> lo scorrimento delle fotografie</span></button>
-            </div>
-            <div class="scorre__finestra">
-                <div class="scorre__pista">
-{rullino_f}
-                </div>
-            </div>
-        </section>
-    </main>
-'''
-
-f_titolo_sostieni = '<h2 class="sostieni__titolo">Sostieni <span class="logo" role="img" aria-label="CDL"></span></h2>'
-
-scrivi('f-home.html',
-       testa('f', 'CDL APS: cinema giovane e indipendente a Rimini (anteprima F)',
-             'Associazione riminese che produce cortometraggi e organizza serate di cinema indipendente.'),
-       f_home, sostieni('f', f_titolo_sostieni), pagina='home')
-scrivi('f-cortoteca.html',
-       testa('f', 'Cortoteca: i corti dei soci di CDL APS (anteprima F)',
-             'I cortometraggi dei soci di CDL APS, da guardare in streaming sul sito.', ' class="fondo-sala stanza"'),
-       pagina_cortoteca('\n                <p class="lettura" id="lettura" aria-live="polite"></p>'),
-       chiusura_cortoteca('f', ' occhi-chiusura--piede', [('22%', '-6px', '52px'), ('52%', '2px', '34px'), ('80%', '-10px', '44px')]),
-       pagina='cortoteca', corrente=' aria-current="page"')
-print('F scritta')
+        </div>''' + piede('g', ' piede--lilla')
 
 
-# ------------------------------------------------- G · E e F messe insieme
-# L'apertura è la sala di F, con al piede il nastro di E; sotto, l'indice
-# grande, il rullino e Sostieni di E. Il rullino non ha più il pulsante: si
-# ferma al passaggio o col fuoco. La Cortoteca è quella di F, con la barra
-# ridotta all'invito ad associarsi e le informazioni accanto all'opera.
+# --------------------------------------------------------------- La home
+# L'apertura è la sala vista dall'alto, con al piede il nastro delle
+# notizie; sotto, l'indice grande, il rullino (si ferma al passaggio o col
+# fuoco) e Sostieni. La Cortoteca ha la barra ridotta all'invito ad
+# associarsi.
 QUOTA = 'La quota associativa &egrave; stata ridotta per gli ultimi mesi del 2026.'
 
 
@@ -418,8 +286,8 @@ g_home = f'''
                 <p class="lead">{FRASE}</p>
                 <!-- Sul computer l'invito ai soci è già nella barra: qui compare solo su telefono -->
                 <div class="btn-riga">
-                    <a class="btn btn--pieno" href="anteprime/g-cortoteca.html">{PLAY}Guarda i corti</a>
-                    <a class="btn solo-telefono" href="anteprime/g-home.html#socio">Diventa socio</a>
+                    <a class="btn btn--pieno" href="anteprime/cortoteca.html">{PLAY}Guarda i corti</a>
+                    <a class="btn solo-telefono" href="anteprime/home.html#socio">Diventa socio</a>
                 </div>
             </div>
             <div class="nastro scorre" id="nastro" role="group" aria-label="Ultime notizie">
@@ -442,7 +310,7 @@ g_home = f'''
                 <ul class="sezioni">
                     {sezione_g('eventi', 'Eventi', 'eventi.html')}
                     {sezione_g('produzioni', 'Produzioni', 'produzioni.html')}
-                    {sezione_g('cortoteca', 'Cortoteca', 'anteprime/g-cortoteca.html', CORTOTECA_O, elenco=False)}
+                    {sezione_g('cortoteca', 'Cortoteca', 'anteprime/cortoteca.html', CORTOTECA_O, elenco=False)}
                 </ul>
             </div>
         </section>
@@ -462,15 +330,662 @@ g_home = f'''
     </main>
 '''
 
-scrivi('g-home.html',
-       testa('g', 'CDL APS: cinema giovane e indipendente a Rimini (anteprima G)',
+scrivi('home.html',
+       testa('g', 'CDL APS: cinema giovane e indipendente a Rimini (anteprima)',
              'Associazione riminese che produce cortometraggi e organizza serate di cinema indipendente.'),
-       g_home, sostieni('g', e_titolo_sostieni, QUOTA), pagina='home')
-scrivi('g-cortoteca.html',
-       testa('g', 'Cortoteca: i corti dei soci di CDL APS (anteprima G)',
+       g_home, sostieni('g', titolo_sostieni, QUOTA), pagina='home')
+print('Home scritta')
+
+
+# --------------------------------------- le pagine Eventi e Produzioni
+# Pagine a colore pieno, come la sezione della home quando ci si passa
+# sopra: Eventi blu con le scritte azzurre, Produzioni lilla con le scritte
+# nere. Si aprono col nome a tutta larghezza, nello stesso punto in cui la
+# transizione dalla home lo lascia; tutto il resto lo riempie g.js dai dati.
+FRECCIA_SU = '<svg class="freccia" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg>'
+
+
+LSS_FOTO = [
+    ('foto-1', "Il lancio al Cinema Teatro Tiberio, con il titolo di Long Story Short sullo schermo"),
+    ('foto-2', "La domanda sulla cornice narrativa proiettata in sala durante il lancio"),
+    ('foto-3', "Una troupe al tramonto in riva al mare"),
+    ('foto-4', "Un operatore prepara la macchina da presa"),
+    ('foto-5', "Riprese all'aperto con la giraffa per il microfono"),
+    ('foto-6', "Una troupe in strada con il pannello riflettente"),
+    ('foto-7', "Una troupe al montaggio"),
+    ('foto-8', "La serata finale sul palco del Cinema Teatro Tiberio"),
+    ('foto-9', "Il pubblico all'ingresso del Cinema Teatro Tiberio per la serata finale"),
+]
+RULLINO_LSS = '\n'.join(
+    f'                        <a class="cornice" href="longstoryshort.html"><img src="assets/img/eventi/long-story-short-2026/{f}.jpg" alt="{a}" width="960" height="1200" loading="lazy"></a>'
+    for f, a in LSS_FOTO)
+
+
+def testata_pagina(nome, presentazione):
+    return f'''
+    <main id="top">
+        <section class="hero hero--pagina">
+            <div class="wrap">
+                <h1 class="parola"><span class="sr-only">{nome}</span>{fit(nome)}</h1>
+                <div class="presentazione entra">{''.join(f'<p>{r}</p>' for r in presentazione)}</div>
+            </div>
+        </section>'''
+
+
+PRESENTA_EVENTI = [
+    'Proponiamo eventi per la valorizzazione della cultura cinematografica locale, in sala e altrove. '
+    'Il cinema come arte trasversale ha la possibilit&agrave; di raccontare il territorio attraverso i talenti che lo vivono. '
+    'Contattaci per portare Short Talks nel tuo cinema.']
+PRESENTA_PRODUZIONI = [
+    'Organizziamo produzioni cinematografiche indipendenti, dalla scrittura alla post-produzione, '
+    'per costruire attivamente una rete di talenti sul territorio. '
+    'Vogliamo anche riportare l&rsquo;attenzione sul medium del cortometraggio, '
+    'che ha il potere di raccontare una storia nello spazio di pochi minuti.',
+    'I nostri soci possono chiederci una prima consulenza di produzione gratuita.']
+
+
+g_eventi = testata_pagina('Eventi', PRESENTA_EVENTI) + f'''
+
+        <!-- IN EVIDENZA: Long Story Short, col solo lettering su tre righe e
+             la breve descrizione (la mette g.js), e sotto le fotografie della
+             sua pagina che scorrono -->
+        <section class="blocco-pagina entra" aria-labelledby="titolo-evidenza">
+            <div class="wrap">
+                <h2 class="blocco-pagina__testa" id="titolo-evidenza">In evidenza</h2>
+                <a class="evidenza grid" id="evidenza" href="longstoryshort.html">
+                    <span class="marchio-serie marchio-serie--lss span-5" role="img" aria-label="Long Story Short"></span>
+                    <span class="evidenza__testo span-5 start-8">
+                        <span class="evidenza__descrizione" id="evidenza-descrizione"></span>
+                        <span class="evidenza__freccia">{FRECCIA_SU}</span>
+                    </span>
+                </a>
+            </div>
+            <div class="rullino scorre" aria-label="Fotografie di Long Story Short 2026">
+                <div class="scorre__finestra">
+                    <div class="scorre__pista">
+{RULLINO_LSS}
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Le edizioni di Short Talks, dalla più recente -->
+        <section class="blocco-pagina blocco-pagina--diviso entra" id="blocco-short-talks" aria-label="Short Talks" hidden>
+            <div class="wrap">
+                <h2 class="blocco-pagina__testa"><span class="marchio-serie marchio-serie--st" role="img" aria-label="Short Talks"></span></h2>
+                <ul class="schede"></ul>
+            </div>
+        </section>
+
+        <!-- Tutto il resto: gli eventi senza serie -->
+        <section class="blocco-pagina entra" id="blocco-altri" aria-labelledby="titolo-altri" hidden>
+            <div class="wrap">
+                <h2 class="blocco-pagina__testa" id="titolo-altri">Altri eventi</h2>
+                <ul class="schede"></ul>
+            </div>
+        </section>
+    </main>
+'''
+
+g_produzioni = testata_pagina('Produzioni', PRESENTA_PRODUZIONI) + f'''
+
+        <!-- IN EVIDENZA: il lavoro più recente. Il fotogramma grande, chiuso da
+             un filo nero; a fianco il titolo (graficato in nero, se c'è), la
+             frase e i dati -->
+        <section class="blocco-pagina entra" aria-labelledby="titolo-evidenza">
+            <div class="wrap">
+                <h2 class="blocco-pagina__testa" id="titolo-evidenza">In evidenza</h2>
+                <div class="primo-piano grid" id="primo-piano" hidden>
+                    <a class="cornice span-8" tabindex="-1" aria-hidden="true"></a>
+                    <div class="primo-piano__testo span-4">
+                        <h3 class="primo-piano__titolo"></h3>
+                        <p class="primo-piano__frase"></p>
+                        <p class="primo-piano__dati"></p>
+                        <a class="btn btn--pieno primo-piano__azione"></a>
+                    </div>
+                </div>
+                <p class="avviso" id="avviso-produzioni" hidden></p>
+            </div>
+        </section>
+
+        <!-- Le produzioni originali (produzione_cdl), dalla più recente -->
+        <section class="blocco-pagina entra" id="blocco-produzioni" aria-labelledby="titolo-produzioni" hidden>
+            <div class="wrap">
+                <h2 class="blocco-pagina__testa" id="titolo-produzioni">Produzioni originali</h2>
+                <ul class="schede"></ul>
+            </div>
+        </section>
+
+        <!-- Le collaborazioni (collaborazione_cdl): il blocco compare con la prima -->
+        <section class="blocco-pagina entra" id="blocco-collaborazioni" aria-labelledby="titolo-collaborazioni" hidden>
+            <div class="wrap">
+                <h2 class="blocco-pagina__testa" id="titolo-collaborazioni">Collaborazioni</h2>
+                <ul class="schede"></ul>
+            </div>
+        </section>
+
+    </main>
+'''
+
+scrivi('eventi.html',
+       testa('g', 'Eventi – CDL APS (anteprima)',
+             'Proiezioni, dialoghi con gli autori e una sfida a tempo di cortometraggi: gli eventi di CDL APS.',
+             ' class="pagina-colore pagina-eventi"'),
+       g_eventi, '\n    <footer>' + piede('g'), pagina='eventi')
+scrivi('produzioni.html',
+       testa('g', 'Produzioni – CDL APS (anteprima)',
+             'I cortometraggi prodotti da CDL APS e quelli a cui ha collaborato.',
+             ' class="pagina-colore pagina-produzioni"'),
+       g_produzioni, '\n    <footer>' + piede('g'), pagina='produzioni')
+print('Eventi e Produzioni scritte')
+
+
+# ------------------------------------------- la pagina del singolo corto
+# Prova su Quarto Livello: fondo nero, lo schermo col fotogramma e il titolo
+# graficato, poi frase, sinossi, dati e crediti. Il colore della pagina è
+# quello del titolo (lo ricava g.js dal file del titolo). Si arriva dalla
+# galleria della Cortoteca con un'animazione: il fotogramma cresce fino a
+# diventare lo schermo di questa pagina.
+CORTO = '''
+        <section class="hero hero--corto">
+            <div class="wrap">
+                <h1 class="sr-only" id="titolo-corto">Opera</h1>
+                <div class="still schermo" id="schermo">
+                    <span class="cornice"></span>
+                    <span class="targa" id="schermo-titolo"></span>
+                </div>
+            </div>
+        </section>
+
+        <section class="blocco-pagina entra" aria-label="Il corto">
+            <div class="wrap grid corto" id="corto" hidden>
+                <div class="corto__testo span-7">
+                    <p class="corto__frase" id="corto-frase"></p>
+                    <p class="corto__sinossi" id="corto-sinossi"></p>
+                </div>
+                <dl class="corto__dati span-4 start-9" id="corto-dati"></dl>
+            </div>
+            <div class="wrap">
+                <p class="avviso" id="corto-avviso" hidden>Opera non trovata.</p>
+            </div>
+        </section>
+
+        <section class="blocco-pagina blocco-pagina--diviso entra" aria-labelledby="titolo-crediti" id="blocco-crediti" hidden>
+            <div class="wrap">
+                <h2 class="blocco-pagina__testa" id="titolo-crediti">Crediti</h2>
+                <dl class="crediti" id="crediti"></dl>
+            </div>
+        </section>
+'''
+
+g_opera = '\n    <main id="top">\n' + CORTO + '    </main>\n'
+
+scrivi('opera.html',
+       testa('g', 'Opera – CDL APS (anteprima)',
+             'Un cortometraggio della Cortoteca di CDL APS.',
+             ' class="pagina-corto"'),
+       g_opera, '\n    <footer>' + piede('g'), pagina='opera')
+print('pagina del corto scritta')
+
+
+# ------------------------------------------------------ la pagina Contatti
+# In cima l'invito a sostenere CDL, lo stesso blocco arancio che chiude la
+# home: è la meta di "Diventa socio". Più in basso il modulo di contatto,
+# meta della voce "Contatti" (#contatti). Il modulo è una prima proposta: per
+# l'invio si appoggia a Netlify Forms (data-netlify), che funziona solo sul
+# sito pubblicato.
+MOTIVI = [
+    ('informazioni', 'Informazioni'),
+    ('socio', 'Diventare socio'),
+    ('short-talks', 'Short Talks nel tuo cinema'),
+    ('cortoteca', 'Un corto per la Cortoteca'),
+    ('collaborazione', 'Collaborare a una produzione'),
+    ('altro', 'Altro'),
+]
+scelte_motivo = '\n'.join(
+    f'''                            <input type="radio" name="motivo" id="motivo-{v}" value="{t}"{' checked' if i == 0 else ''}>
+                            <label for="motivo-{v}" class="scelta">{t}</label>'''
+    for i, (v, t) in enumerate(MOTIVI))
+
+g_contatti = f'''
+    <main id="top">
+        <!-- SOSTIENI: lo stesso invito che chiude la home, qui in apertura -->
+        <section class="closing fondo-arancio contatti-testa" id="socio">
+            <div class="wrap sostieni">
+                <h1>
+                    <span class="sr-only">Sostieni CDL</span>
+                    <span class="fit" aria-hidden="true"><span class="fit-testo">Sostieni<span class="logo"></span></span></span>
+                </h1>
+                <div class="grid sostieni__corpo">
+                    <div class="span-7">
+                        <p class="sostieni__frase">{SOSTIENI}</p>
+                        <p class="sostieni__stato"><span class="rec"></span>{QUOTA}</p>
+                        <div class="btn-riga">
+                            <a class="btn btn--pieno" href="anteprime/contatti.html?motivo=socio#contatti">Diventa socio</a>
+                            <a class="btn" href="anteprime/contatti.html#contatti">Scrivici</a>
+                        </div>
+                        <a class="link" href="vantaggi-tesseramento.html">Tutti i vantaggi per i soci {FRECCIA}</a>
+                    </div>
+                    <a class="span-4 start-9 sostieni__tessera" href="vantaggi-tesseramento.html" aria-label="I vantaggi per i soci">
+                        <img src="assets/img/partner/tessera-cdl.png" alt="" width="1080" height="1080">
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- CONTATTI: si scrive solo dal modulo, che arriva per email. In alto
+             il titolo con una riga, sotto il modulo a tutta larghezza -->
+        <section class="contatti" id="contatti" aria-labelledby="titolo-contatti">
+            <div class="wrap">
+                <div class="contatti__testa">
+                    <h2 id="titolo-contatti">Scrivici</h2>
+                    <p class="contatti__frase">Per una domanda, un'idea, un corto da proporre o una sala che vorrebbe ospitare Short Talks: scrivici qui, ti rispondiamo per email.</p>
+                </div>
+
+                <form class="modulo" name="contatti" method="POST" action="anteprime/contatti.html#grazie" data-netlify="true" netlify-honeypot="campo-trappola">
+                    <input type="hidden" name="form-name" value="contatti">
+                    <p class="sr-only"><label>Non compilare questo campo: <input name="campo-trappola" tabindex="-1" autocomplete="off"></label></p>
+
+                    <fieldset class="modulo__gruppo">
+                        <legend>Di che cosa vuoi parlarci?</legend>
+                        <div class="modulo__motivi">
+{scelte_motivo}
+                        </div>
+                    </fieldset>
+
+                    <div class="modulo__coppia">
+                        <label class="modulo__campo">
+                            <span>Nome</span>
+                            <input type="text" name="nome" autocomplete="name" required>
+                        </label>
+                        <label class="modulo__campo">
+                            <span>Email</span>
+                            <input type="email" name="email" autocomplete="email" required>
+                        </label>
+                    </div>
+                    <label class="modulo__campo">
+                        <span>Messaggio</span>
+                        <textarea name="messaggio" rows="6" required></textarea>
+                    </label>
+                    <div class="modulo__piede">
+                        <label class="modulo__consenso">
+                            <input type="checkbox" name="consenso" required>
+                            <span>Acconsento al trattamento dei dati per ricevere una risposta.</span>
+                        </label>
+                        <button class="btn btn--pieno" type="submit">Invia il messaggio {FRECCIA}</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </main>
+'''
+
+scrivi('contatti.html',
+       testa('g', 'Contatti – CDL APS (anteprima)',
+             'Come diventare socio di CDL APS e come scriverci.',
+             ' class="pagina-contatti"'),
+       g_contatti, '\n    <footer>' + piede('g'), pagina='contatti')
+print('Contatti scritta')
+
+
+# La Cortoteca G apre i corti al suo interno: porta con sé il modello della
+# pagina del corto, che g.js riempie e mostra sopra la galleria
+MODELLO_CORTO = f'''
+        <!-- Modello della pagina del corto: la Cortoteca lo apre al suo interno -->
+        <template id="modello-corto">
+            <div class="sala-corto pagina-corto" role="dialog" aria-modal="true" aria-labelledby="titolo-corto">
+                <button class="sala-corto__chiudi" type="button" aria-label="Chiudi e torna alla Cortoteca"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+{CORTO}            </div>
+        </template>
+'''
+scrivi('cortoteca.html',
+       testa('g', 'Cortoteca: i corti dei soci di CDL APS (anteprima)',
              'I cortometraggi dei soci di CDL APS, da guardare in streaming sul sito.',
              ' class="fondo-sala stanza barra-ridotta"', solo_socio=True),
-       pagina_cortoteca(prima_galleria=True),
-       chiusura_cortoteca('g', ' occhi-chiusura--piede', [('22%', '-6px', '52px'), ('52%', '2px', '34px'), ('80%', '-10px', '44px')]),
+       pagina_cortoteca_g(MODELLO_CORTO),
+       chiusura_cortoteca_g([('22%', '-6px', '52px'), ('52%', '2px', '34px'), ('80%', '-10px', '44px')]),
        pagina='cortoteca')
-print('G scritta')
+
+
+# ------------------------------------------------- le pagine degli eventi
+# Le pagine statiche degli eventi, ridisegnate: in cima la grafica
+# dell'evento (la stessa della sua scheda in Eventi, che cresce fin qui),
+# sotto il nome, il racconto e i dati; poi programma, materiali e fotografie.
+# Il contenuto si legge dalle pagine attuali, così resta uno solo.
+import json
+import re
+
+EVENTI_DB = {e['pagina']: e for e in json.loads((QUI.parent / 'data/eventi.json').read_text(encoding='utf-8'))}
+PAGINE_EVENTO = ['longstoryshort.html', 'short-talks-1.html', 'short-talks-2.html', 'short-talks-off-1.html',
+                 'blue-hour.html', 'short-talks-al-not-2025.html', 'short-talks-3-x-laiff.html',
+                 'short-talks-al-not-2026.html']
+MESI = ['gennaio', 'febbraio', 'marzo', 'aprile', 'maggio', 'giugno', 'luglio', 'agosto',
+        'settembre', 'ottobre', 'novembre', 'dicembre']
+FRECCIA_FUORI = ('<svg class="freccia" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" '
+                 'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"/>'
+                 '<path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h6"/></svg>')
+
+
+def quando(evento):
+    """24 giugno – 10 luglio 2026; 18 aprile 2024"""
+    a = [int(x) for x in evento['data_inizio'].split('-')]
+    if not evento.get('data_fine'):
+        return f'{a[2]} {MESI[a[1] - 1]} {a[0]}'
+    b = [int(x) for x in evento['data_fine'].split('-')]
+    inizio = f'{a[2]} {MESI[a[1] - 1]}' + (f' {a[0]}' if a[0] != b[0] else '')
+    return f'{inizio} &ndash; {b[2]} {MESI[b[1] - 1]} {b[0]}'
+
+
+def senza_commenti(testo):
+    return re.sub(r'\s*<!--.*?-->', '', testo, flags=re.S)
+
+
+def rullino_evento(contenuto):
+    """Le fotografie della galleria, in fila, ognuna con le sue proporzioni"""
+    foto = []
+    for img in re.findall(r'<img [^>]*>', contenuto):
+        w = re.search(r'width="(\d+)"', img).group(1)
+        h = re.search(r'height="(\d+)"', img).group(1)
+        foto.append(f'                        <span class="cornice" style="--rapporto: {w} / {h}">{img}</span>')
+    crediti = re.search(r'<p class="galleria-crediti">(.*?)</p>', contenuto, re.S)
+    return '\n'.join(foto), (crediti.group(1) if crediti else '')
+
+
+def materiali_evento(contenuto):
+    """I materiali dell'edizione: una riga ciascuno, con la freccia giusta"""
+    righe = []
+    for attributi, titolo in re.findall(r'<a (href="[^"]*"[^>]*?) class="[^"]*">.*?<h3 class="scheda-titolo">(.*?)</h3>', contenuto, re.S):
+        fuori = 'target="_blank"' in attributi
+        righe.append(f'''                    <li><a class="riga-g" {attributi}>
+                        <span class="riga-g__titolo">{titolo}</span>
+                        <span class="riga-g__freccia">{FRECCIA_FUORI if fuori else FRECCIA_SU}</span>
+                    </a></li>''')
+    return '                <ul class="righe-g">\n' + '\n'.join(righe) + '\n                </ul>'
+
+
+def blocco_evento(ident, titolo, contenuto):
+    return f'''
+        <section class="blocco-pagina blocco-pagina--diviso entra" aria-labelledby="{ident}">
+            <div class="wrap">
+                <h2 class="blocco-pagina__testa" id="{ident}">{titolo}</h2>
+{contenuto}
+            </div>
+        </section>
+'''
+
+
+def blocco_galleria(contenuto):
+    foto, crediti = rullino_evento(contenuto)
+    nota = f'\n            <div class="wrap"><p class="rullino__crediti">{crediti}</p></div>' if crediti else ''
+    return f'''
+        <section class="blocco-pagina blocco-pagina--diviso entra" aria-labelledby="blocco-galleria">
+            <div class="wrap">
+                <h2 class="blocco-pagina__testa" id="blocco-galleria">Galleria</h2>
+            </div>
+            <div class="rullino rullino--evento scorre">
+                <div class="scorre__finestra">
+                    <div class="scorre__pista">
+{foto}
+                    </div>
+                </div>
+            </div>{nota}
+        </section>
+'''
+
+
+# I vincitori di Long Story Short 2026, dal documento delle premiazioni (Drive
+# "Eventi", Valutazione progetti). Regia e durata dal volantino della serata
+# finale; le still sono in assets/img/eventi/long-story-short-2026/vincitori/.
+# Ogni corto ha vinto almeno un premio: per primo il Miglior film, poi gli
+# altri dal più premiato.
+VINCITORI_LSS = [
+    ('path', 'Path', 'Lorenzo Muccioli', 12, 'Un uomo col fez rosso legge un foglio a una scrivania',
+     ['Miglior film', 'Menzione per l&rsquo;interpretazione &middot; Enrico Battarra']),
+    ('emilio', 'Emilio', 'Luca Canarecci', 12, 'Un ragazzo e un uomo sulla banchina del porto',
+     ['Miglior regia &middot; Luca Canarecci', 'Miglior montaggio &middot; Cristian Morello e Gabriele Rattini',
+      'Menzione per l&rsquo;interpretazione &middot; Gabriele Rattini']),
+    ('scintille', 'Scintille', 'Leonardo Paganelli', 12, 'Un ragazzo con gli occhiali da sole controluce sul fiume',
+     ['Miglior interpretazione &middot; Sophia Anna Losito', 'Miglior fotografia &middot; Jacopo Todoli']),
+    ('capolinea', 'Capolinea', 'Vittoria Casarini', 4, 'Un uomo tatuato tende un telo di plastica davanti al mare',
+     ['Miglior sonoro &middot; Alessandro Fabbri',
+      'Premio stampa &ldquo;Nuovi Sguardi&rdquo; &middot; giuria stampa The Soundcheck']),
+    ('umanita-perduta', 'L&rsquo;Umanit&agrave; Perduta', 'Ivan Petrovi&#263;-Poljak', 11, 'Una ragazza seduta nell&rsquo;erba, sotto il fucile di una sentinella',
+     ['Miglior soggetto &middot; Ivan Petrovi&#263;-Poljak']),
+    ('solo-per-l-estate', 'Solo per l&rsquo;estate', 'Manuel Baggiarini', 10, 'Un ragazzo legge un giornale fra i teli di plastica, visto dall&rsquo;alto',
+     ['Miglior produzione &middot; troupe I Fondo Perduto']),
+    ('le-cose-che-restano', 'Le Cose che Restano', 'Gabriele Montanaro', 11, 'Due ragazzi al porto turistico, al tramonto',
+     ['Menzione per la produzione &middot; Gabriele Montanaro e Mari Colavalle']),
+]
+
+
+def vincitore(codice, titolo, regia, minuti, alt, premi, primo=False):
+    elenco = '\n'.join(f'                                <li>{p}</li>' for p in premi)
+    return f'''                    <li class="vincitore{' vincitore--primo' if primo else ''}">
+                        <span class="cornice"><img src="assets/img/eventi/long-story-short-2026/vincitori/{codice}.jpg" alt="{alt}" loading="lazy"></span>
+                        <div class="vincitore__testo">
+                            <h3 class="vincitore__corto">{titolo}</h3>
+                            <p class="vincitore__dati">{regia} &middot; {minuti}&rsquo;</p>
+                            <ul class="vincitore__premi">
+{elenco}
+                            </ul>
+                        </div>
+                    </li>'''
+
+
+VINCITORI = f'''
+        <!-- VINCITORI: i sette corti della prima edizione, ognuno coi suoi
+             premi; Path, Miglior film, apre il blocco più grande -->
+        <section class="blocco-pagina blocco-pagina--diviso entra" aria-labelledby="blocco-vincitori">
+            <div class="wrap">
+                <h2 class="blocco-pagina__testa" id="blocco-vincitori">Vincitori</h2>
+                <ul class="vincitori">
+{chr(10).join(vincitore(*v, primo=(i == 0)) for i, v in enumerate(VINCITORI_LSS))}
+                </ul>
+            </div>
+        </section>
+'''
+
+
+# I partner della prima edizione: i loghi della cartella Grafica/Loghi del
+# Drive "Eventi" (senza LSSxRCF e Rimini Creative Field), tutti in nero e
+# rifilati; ognuno ha la sua larghezza, perché pesino tutti uguale
+PARTNER_LSS = '''
+        <section class="blocco-pagina blocco-pagina--diviso entra" aria-labelledby="blocco-partner">
+            <div class="wrap">
+                <h2 class="blocco-pagina__testa" id="blocco-partner">Partner</h2>
+                <ul class="partner">
+                    <li><img src="assets/img/eventi/long-story-short-2026/partner/cinema-teatro-tiberio.png" alt="Cinema Teatro Tiberio" style="--w: 124px" loading="lazy"></li>
+                    <li><img src="assets/img/eventi/long-story-short-2026/partner/arkadia-studios.png" alt="Arkadia Studios" style="--w: 148px" loading="lazy"></li>
+                    <li><img src="assets/img/eventi/long-story-short-2026/partner/la-valigia-dell-attore.png" alt="La Valigia dell&rsquo;Attore" style="--w: 75px" loading="lazy"></li>
+                    <li><img src="assets/img/eventi/long-story-short-2026/partner/studio-jam.png" alt="Studio JAM" style="--w: 121px" loading="lazy"></li>
+                    <li><img src="assets/img/eventi/long-story-short-2026/partner/the-soundcheck.png" alt="The Soundcheck" style="--w: 182px" loading="lazy"></li>
+                    <li><img src="assets/img/eventi/long-story-short-2026/partner/caffe-il-borgo.png" alt="Caff&egrave; Il Borgo" style="--w: 97px" loading="lazy"></li>
+                    <li><img src="assets/img/eventi/long-story-short-2026/partner/comune-di-rimini.png" alt="Comune di Rimini" style="--w: 134px" loading="lazy"></li>
+                    <li><img src="assets/img/eventi/long-story-short-2026/partner/rimini-citta-della-cultura.svg" alt="Rimini citt&agrave; della cultura" style="--w: 124px" loading="lazy"></li>
+                    <li><img src="assets/img/eventi/long-story-short-2026/partner/geco.png" alt="Dipartimento per le Politiche Giovanili, Regione Emilia-Romagna e GECO" style="--w: 240px" loading="lazy"></li>
+                </ul>
+            </div>
+        </section>
+'''
+
+
+# Il racconto di Long Story Short nella pagina nuova (quella attuale del sito
+# resta com'è)
+LSS_PARAGRAFI = '''<p><strong>Long Story Short</strong> &egrave; una sfida a tempo di brevi opere cinematografiche, a met&agrave; tra un laboratorio collettivo e un tradizionale contest di cortometraggi a tempo, in cui ogni troupe scrive, gira e monta un corto originale in pochi giorni.</p>
+                    <p>Dal <strong>24 al 28 giugno 2026</strong> sette troupe, composte da pi&ugrave; di settanta partecipanti fra i 16 e i 35 anni, girano fra Rimini e dintorni. L&rsquo;evento di lancio, mercoled&igrave; 24 al <em>Cinema Teatro Tiberio</em>, svela la cornice narrativa che fa da contenitore ai cortometraggi e assegna a ogni troupe percorso e genere; alle 20:30 partono i quattro giorni di produzione.</p>
+                    <p>La serata finale, il <strong>10 luglio 2026</strong> al <em>Cinema Teatro Tiberio</em>, restituisce al pubblico i sette corti in sala, con le premiazioni della giuria di settore e della giuria stampa, il tutto seguito da una festa nel chiostro.</p>'''
+
+
+def pagina_evento(nome):
+    src = (QUI.parent / nome).read_text(encoding='utf-8')
+    main = senza_commenti(re.search(r'<main>(.*?)</main>', src, re.S).group(1))
+    titolo_scheda = re.search(r'<title>(.*?)</title>', src).group(1).replace(' – CDL APS', '')
+    descrizione = re.search(r'<meta name="description" content="([^"]*)"', src).group(1)
+    classe = re.search(r'<body class="evento (evento--[a-z0-9-]+)"', src)
+    classe = classe.group(1) if classe else 'evento--' + nome.removesuffix('.html')
+    titolo = re.search(r'<h1>(.*?)</h1>', main, re.S).group(1)
+    corpo = re.search(r'<div class="corpo">\s*(.*?)\s*</div>\s*</div>', main, re.S).group(1)
+    evento = EVENTI_DB.get(nome)
+    base = nome.removesuffix('.html')
+
+    # In cima la grafica dell'evento (Long Story Short non ne ha una: apre
+    # col suo lettering)
+    grafica = QUI.parent / f'assets/img/eventi/copertine/{base}.svg'
+    if grafica.exists():
+        copertina = f'<img src="assets/img/eventi/copertine/{base}.svg" alt="La grafica di {re.sub("<[^>]+>", "", titolo)}" width="1600" height="1000">'
+    else:
+        copertina = ''
+
+    dati = ''
+    if evento:
+        dati = f'''
+                <dl class="evento-g__dati span-4 start-9">
+                    <div><dt>Quando</dt><dd>{quando(evento)}</dd></div>
+                    <div><dt>Dove</dt><dd>{evento['luogo']}</dd></div>
+                </dl>'''
+
+    # I blocchi della pagina attuale, ognuno col suo titoletto
+    blocchi = {}
+    pezzi = re.split(r'<h2 class="titoletto">(.*?)</h2>', main)
+    for testa_blocco, contenuto in zip(pezzi[1::2], pezzi[2::2]):
+        contenuto = re.sub(r'\s*</section>\s*$', '', contenuto.strip())
+        if testa_blocco == 'Galleria':
+            blocchi['Galleria'] = blocco_galleria(contenuto)
+        elif testa_blocco.startswith('Materiali'):
+            blocchi['Materiali'] = blocco_evento('blocco-materiali', testa_blocco, materiali_evento(contenuto))
+        else:
+            ident = 'blocco-' + re.sub(r'[^a-z]+', '-', testa_blocco.lower()).strip('-')
+            blocchi[testa_blocco] = blocco_evento(ident, testa_blocco, '                ' + contenuto)
+
+    if nome == 'longstoryshort.html':
+        corpo = LSS_PARAGRAFI
+        # Long Story Short: il lettering in cima, in nero sulla carta (è lì
+        # che arriva quello della pagina Eventi), i tre paragrafi a tutta
+        # larghezza, la galleria, i vincitori e, in fondo, i materiali
+        blocchi['Materiali'] = blocchi['Materiali'].replace(">Materiali dell'edizione<", '>Materiali della prima edizione<')
+        corpo_html = f'''
+    <main id="top">
+        <section class="hero hero--evento hero--marchio">
+            <div class="wrap">
+                <h1 class="evento-g__marchio" id="titolo-evento"><span class="sr-only">{re.sub("<[^>]+>", "", titolo)}</span><span class="marchio-serie marchio-serie--lss" data-arrivo aria-hidden="true"></span></h1>
+                <div class="presentazione entra">
+                    {corpo}
+                </div>
+            </div>
+        </section>
+{blocchi['Galleria']}{VINCITORI}{blocchi['Materiali']}{PARTNER_LSS}    </main>
+'''
+    else:
+        corpo_html = f'''
+    <main id="top">
+        <!-- La grafica dell'evento: stessa misura e stesso posto in cui la
+             lascia il passaggio dalla scheda di Eventi -->
+        <section class="hero hero--evento">
+            <div class="wrap">
+                <div class="cornice locandina-g" data-arrivo>{copertina}</div>
+            </div>
+        </section>
+
+        <section class="blocco-pagina entra" aria-labelledby="titolo-evento">
+            <div class="wrap grid evento-g">
+                <div class="span-7">
+                    <h1 class="evento-g__titolo" id="titolo-evento">{titolo}</h1>
+                    <div class="evento-g__corpo">
+                        {corpo}
+                    </div>
+                </div>{dati}
+            </div>
+        </section>
+{''.join(blocchi.values())}    </main>
+'''
+    scrivi(nome,
+           testa('g', f'{titolo_scheda} – CDL APS (anteprima)', descrizione,
+                 f' class="pagina-evento {classe}"'),
+           corpo_html, '\n    <footer>' + piede('g'), pagina=base)
+
+
+for nome in PAGINE_EVENTO:
+    pagina_evento(nome)
+print('pagine degli eventi scritte')
+
+
+# ------------------------------------------------------ Vantaggi per i soci
+# Il nome a tutta larghezza su due righe, la presentazione, poi i vantaggi
+# divisi in tre blocchi, a righe col filo come le schede. In fondo l'invito
+# arancio della home, che porta al modulo di Contatti.
+def vantaggio(titolo, testo, href='', logo='', fuori=False):
+    freccia = (FRECCIA_FUORI if fuori else FRECCIA) if href else ''
+    tag = 'a' if href else 'div'
+    attr = f' href="{href}"' + (' target="_blank" rel="noopener"' if fuori else '') if href else ''
+    figura = f'<img class="vantaggio-g__logo" src="assets/img/partner/{logo}" alt="" loading="lazy">' if logo else ''
+    return f'''                    <li><{tag} class="vantaggio-g"{attr}>
+                        {figura}<span class="vantaggio-g__titolo">{titolo}{f'<span class="vantaggio-g__freccia">{freccia}</span>' if freccia else ''}</span>
+                        <span class="vantaggio-g__testo">{testo}</span>
+                    </{tag}></li>'''
+
+
+def blocco_vantaggi(ident, titolo, voci, diviso=True):
+    return f'''
+        <section class="blocco-pagina{' blocco-pagina--diviso' if diviso else ''} entra" aria-labelledby="{ident}">
+            <div class="wrap">
+                <h2 class="blocco-pagina__testa" id="{ident}">{titolo}</h2>
+                <ul class="vantaggi-g">
+{chr(10).join(voci)}
+                </ul>
+            </div>
+        </section>
+'''
+
+
+g_vantaggi = f'''
+    <main id="top">
+        <section class="hero hero--pagina">
+            <div class="wrap">
+                <h1 class="parola"><span class="sr-only">Vantaggi per i soci</span>{fit('Vantaggi')}{fit('per i soci')}</h1>
+                <div class="presentazione entra"><p>CDL &egrave; una realt&agrave; indipendente che esplora, sostiene e diffonde il cinema giovane, realizzando cortometraggi e organizzando eventi cinematografici. Ai soci riserviamo servizi che crescono con l&rsquo;associazione.</p></div>
+            </div>
+        </section>
+''' + blocco_vantaggi('titolo-supporto', 'Cinema indipendente e supporto', [
+    vantaggio('Sviluppo di nuovi progetti', 'Collabora alle produzioni originali, o ricevi supporto logistico e creativo per la tua prossima idea. La prima consulenza di produzione &egrave; gratuita.'),
+    vantaggio('Cortoteca', 'L&rsquo;archivio delle opere realizzate dai soci, da guardare in streaming sul sito.', 'anteprime/cortoteca.html'),
+], diviso=False) + blocco_vantaggi('titolo-partner', 'I nostri partner', [
+    vantaggio('C&rsquo;entro Supercinema', 'Prezzo ridotto nelle sale di Santarcangelo di Romagna per tutta la stagione.', 'https://www.centrosupercinema.com/', 'supercinema.png', True),
+    vantaggio('Arkadia Studios', 'Il 15% di sconto sul noleggio dell&rsquo;attrezzatura da Arkadia Rental.', 'https://arkadiastudios.it/rental-noleggio/', 'arkadia.png', True),
+    vantaggio('Alcatraz', 'Il 5% di sconto sull&rsquo;editoria nella storica fumetteria riminese.', 'https://www.alcatraz.shop/', 'alcatraz.png', True),
+]) + blocco_vantaggi('titolo-comunita', 'Eventi e comunit&agrave;', [
+    vantaggio('Eventi dedicati', 'Anteprime, incontri e workshop tecnici riservati ai tesserati.'),
+    vantaggio('Il tuo nome sul grande schermo', 'I nomi dei soci scorrono nei titoli proiettati prima e dopo ogni nostro evento pubblico.'),
+]) + '    </main>\n'
+
+scrivi('vantaggi.html',
+       testa('g', 'Vantaggi per i soci – CDL APS (anteprima)',
+             'Cosa riserva CDL APS ai suoi soci: supporto ai progetti, la Cortoteca, sconti dai partner ed eventi dedicati.',
+             ' class="pagina-vantaggi"'),
+       g_vantaggi,
+       sostieni('g', titolo_sostieni, QUOTA),
+       pagina='vantaggi')
+print('Vantaggi scritta')
+
+
+# ------------------------------------------------------------ Pagina 404
+# Il nome a tutta larghezza; nelle O di NON TROVATA due occhi che cercano.
+NON_TROVATA = f'N<span class="o">O{OCCHIO_O}</span>N TR<span class="o">O{OCCHIO_O}</span>VATA'
+g_404 = f'''
+    <main id="top">
+        <section class="hero hero--pagina hero--smarrita">
+            <div class="wrap">
+                <h1 class="parola"><span class="sr-only">Pagina non trovata</span>{fit('Pagina')}{fit(NON_TROVATA)}</h1>
+                <div class="presentazione entra"><p>L&rsquo;indirizzo che hai aperto non esiste, o la pagina &egrave; stata spostata.</p></div>
+                <div class="btn-riga smarrita__azioni entra">
+                    <a class="btn btn--pieno" href="anteprime/home.html">Torna alla home {FRECCIA}</a>
+                    <a class="btn" href="anteprime/cortoteca.html">Vai alla Cortoteca {FRECCIA}</a>
+                </div>
+            </div>
+        </section>
+    </main>
+'''
+scrivi('404.html',
+       testa('g', 'Pagina non trovata – CDL APS (anteprima)', 'La pagina cercata non esiste o è stata spostata.',
+             ' class="pagina-smarrita"'),
+       g_404, '\n    <footer>' + piede('g'), pagina='404')
+print('404 scritta')

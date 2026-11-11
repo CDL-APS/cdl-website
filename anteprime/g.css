@@ -1,9 +1,9 @@
 /* ==========================================================================
-   ANTEPRIMA G — E e F messe insieme
-   Home: l'apertura è la sala di F (vista dall'alto, al buio, con la torcia)
-   e porta al piede il nastro di notizie di E; sotto restano l'indice grande,
-   il rullino e Sostieni di E. Cortoteca: quella di F, con la barra ridotta
-   all'invito ad associarsi e le informazioni sempre accanto all'opera.
+   ANTEPRIMA DEL NUOVO SITO — le pagine.
+   Home: la sala vista dall'alto, al buio, con la torcia e il nastro di
+   notizie; sotto l'indice grande, il rullino e Sostieni. Cortoteca nera,
+   Eventi blu, Produzioni lilla, Contatti arancio; corti ed eventi col loro
+   colore.
    Si appoggia a comune.css.
    File di prova: non fa parte del sito pubblicato.
    ========================================================================== */
@@ -77,7 +77,7 @@
 }
 #indice:has(.sezione--eventi:is(:hover, :focus-within)) { --fondo: var(--blu); --inchiostro: var(--azzurro); --filo: rgba(132, 241, 247, 0.3); --tenue: rgba(247, 247, 247, 0.78); --spento: rgba(132, 241, 247, 0.22); }
 #indice:has(.sezione--produzioni:is(:hover, :focus-within)) { --fondo: var(--lilla); --inchiostro: var(--nero); --filo: rgba(29, 29, 27, 0.25); --tenue: rgba(29, 29, 27, 0.7); --spento: rgba(29, 29, 27, 0.16); }
-#indice:has(.sezione--cortoteca:is(:hover, :focus-within)) { --fondo: var(--nero); --inchiostro: var(--lilla); --filo: rgba(185, 187, 248, 0.3); --tenue: rgba(185, 187, 248, 0.75); --spento: rgba(185, 187, 248, 0.2); }
+#indice:has(.sezione--cortoteca:is(:hover, :focus-within)) { --fondo: var(--nero-sala); --inchiostro: var(--lilla); --filo: rgba(185, 187, 248, 0.3); --tenue: rgba(185, 187, 248, 0.75); --spento: rgba(185, 187, 248, 0.2); }
 
 .sezioni { border-top: 1px solid var(--filo); transition: border-color 0.3s var(--ease); }
 .sezione { padding-top: clamp(18px, 2.2vw, 30px); border-bottom: 1px solid var(--filo); transition: color 0.3s var(--ease), border-color 0.3s var(--ease); }
@@ -197,33 +197,25 @@
 .palco__azione:hover { background: var(--chiaro); transform: translateY(-1px); }
 .palco__azione:active { transform: translateY(1px) scale(0.985); }
 
-/* Galleria: fotogrammi distanziati. Quello su cui ci si trova resta acceso
-   e si scurisce appena; al centro compaiono, piano, titolo, regista e anno.
-   Gli altri arretrano. */
+/* Galleria: su ogni fotogramma sta il suo titolo, graficato come nei titoli
+   di testa del corto (in testo, finché la grafica non c'è), con regista e
+   anno sotto. Al passaggio titolo e dati svaniscono e resta il fotogramma
+   pulito; gli altri intorno si spengono. I colori sono quelli dei file. */
 .galleria { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; --r-still: 14px; }
 .still { transition: opacity 0.25s var(--ease); }
-.still .cornice img { transition: transform 0.6s var(--ease), filter 0.35s var(--ease); }
 .galleria.ha-fuoco .still:not(.is-fuoco) { opacity: 0.3; }
 
 .galleria .targa {
   inset: 0;
-  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
-  padding: 16px; border-radius: 0; background: none; color: var(--chiaro); text-align: center;
-  translate: none; text-shadow: 0 1px 12px rgba(0, 0, 0, 0.5);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
+  padding: 7% 10%; border-radius: 0; background: none; color: var(--chiaro); text-align: center;
+  opacity: 1; translate: none;
   transition: opacity 0.35s var(--ease);
 }
-.galleria .targa__titolo { font-size: clamp(16px, 1.3vw, 19px); }
-.galleria .targa__dati { font-size: 13px; font-weight: 500; letter-spacing: 0.02em; color: rgba(247, 247, 247, 0.82); }
+.targa__grafica { display: block; min-height: 0; max-width: 100%; max-height: 62%; object-fit: contain; }
+.galleria .targa__titolo { font-size: clamp(22px, 2.4vw, 34px); line-height: 0.95; }
 @media (hover: hover) {
-  .still:hover .cornice img, .still:focus-visible .cornice img { filter: brightness(0.42); }
-}
-
-/* Senza puntatore niente passaggio: la didascalia sta sotto il fotogramma */
-@media (hover: none) {
-  .galleria { row-gap: 24px; }
-  .galleria .targa { position: static; align-items: flex-start; padding: 10px 0 0; text-align: left; color: var(--inchiostro); text-shadow: none; }
-  .galleria .targa__titolo { color: var(--chiaro); }
-  .galleria .targa__dati { color: var(--tenue); }
+  .galleria .still:hover .targa, .galleria .still:focus-visible .targa { opacity: 0; }
 }
 
 /* --------------------------------------------------------------------------
@@ -253,3 +245,552 @@
 .occhi-chiusura--piede { align-self: end; min-height: 0; height: 0; }
 .occhi-chiusura--piede .occhio { top: calc(var(--padb) + var(--y)); }
 .stanza .piede { position: relative; z-index: 1; }
+
+/* ==========================================================================
+   EVENTI E PRODUZIONI (pagine)
+   A colore pieno, come la sezione della home quando ci si passa sopra:
+   Eventi blu con le scritte azzurre, Produzioni lilla con le scritte nere.
+   Anche la barra prende il colore, così la transizione dalla home non ha
+   stacchi. Il nome della pagina sta in alto a tutta larghezza; sotto, il
+   primo piano e i blocchi, con le schede che si spengono a vicenda.
+   ========================================================================== */
+.pagina-eventi {
+  --fondo: var(--blu); --inchiostro: var(--azzurro); --barra: var(--blu);
+  --tenue: rgba(247, 247, 247, 0.8); --filo: rgba(132, 241, 247, 0.32);
+  --accento-hover: var(--chiaro); --accento-hover-testo: var(--blu);
+}
+.pagina-produzioni {
+  --fondo: var(--lilla); --inchiostro: var(--nero); --barra: var(--lilla);
+  --tenue: rgba(29, 29, 27, 0.72); --filo: rgba(29, 29, 27, 0.24);
+  --accento-hover: var(--chiaro); --accento-hover-testo: var(--nero);
+}
+html:has(.pagina-eventi) { background: var(--blu); }
+html:has(.pagina-produzioni) { background: var(--lilla); }
+.pagina-colore .nav { color: var(--inchiostro); }
+.pagina-eventi .nav__voce[aria-current]::before { background: var(--azzurro); }
+
+/* Testata: solo il nome, nello stesso punto in cui lo lascia la transizione */
+.pagina-colore main > section { min-height: 0; }
+.hero--pagina { padding-bottom: 0; }
+
+/* Il resto entra dopo il nome, salendo appena */
+.entra { animation: entra 0.8s var(--ease) 0.12s both; }
+@keyframes entra {
+  from { opacity: 0; translate: 0 28px; }
+}
+
+.blocco-pagina { padding: clamp(36px, 4.5vw, 64px) 0 0; }
+/* Spazio prima del piede: lo dà la pagina, non l'ultimo blocco (che può
+   essere nascosto, come le collaborazioni finché non ce n'è una) */
+.pagina-colore main { padding-bottom: clamp(96px, 11vw, 168px); }
+
+/* Sotto il nome, la presentazione della pagina: a misura di lettura, grande */
+.presentazione {
+  margin-top: clamp(20px, 2.4vw, 36px); padding-bottom: clamp(28px, 3.4vw, 48px); border-bottom: 1px solid var(--filo);
+  font-size: clamp(21px, 2.1vw, 31px); font-weight: 600; line-height: 1.3; letter-spacing: -0.01em;
+}
+.presentazione p + p { margin-top: 0.7em; }
+
+/* Un filo separa un blocco dal precedente */
+.blocco-pagina--diviso { margin-top: clamp(48px, 6vw, 88px); padding-top: 0; }
+.blocco-pagina--diviso > .wrap { padding-top: clamp(36px, 4.5vw, 64px); border-top: 1px solid var(--filo); }
+.blocco-pagina__testa { display: flex; align-items: center; min-height: 48px; margin-bottom: clamp(18px, 2vw, 28px); font-size: clamp(26px, 2.6vw, 38px); }
+
+/* I marchi delle serie: le scritte dei PNG, ricolorate col colore della pagina */
+.marchio-serie {
+  display: block; background: currentColor;
+  -webkit-mask: var(--marchio) center / contain no-repeat; mask: var(--marchio) center / contain no-repeat;
+}
+.marchio-serie--lss { --marchio: url(../assets/img/brand/long-story-short.png); aspect-ratio: 1777 / 1263; width: min(100%, 260px); }
+.marchio-serie--st { --marchio: url(../assets/img/brand/short-talks.png); aspect-ratio: 1000 / 298; height: clamp(44px, 4.6vw, 66px); }
+
+/* Primo piano: la foto grande e, a fianco, quel che serve sapere */
+.primo-piano { align-items: stretch; }
+.primo-piano[hidden] { display: none; }
+.primo-piano > .cornice { aspect-ratio: 16 / 10; border-radius: 0; }
+.primo-piano__testo { display: flex; flex-direction: column; gap: 12px; padding-top: 14px; border-top: 2px solid var(--inchiostro); }
+.primo-piano__titolo { font-size: clamp(36px, 4.2vw, 64px); line-height: 0.92; }
+.primo-piano__frase { font-size: clamp(17px, 1.4vw, 20px); font-weight: 600; line-height: 1.4; }
+.primo-piano__dati { font-size: 15px; color: var(--tenue); }
+.primo-piano__azione { align-self: flex-start; margin-top: auto; }
+
+/* Le schede: foto a spigolo vivo, sotto un filo, titolo e dati. Al
+   passaggio su una le altre si spengono, come nella galleria. */
+.schede { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(28px, 3vw, 44px) var(--gap); }
+.scheda-g { display: block; transition: opacity 0.25s var(--ease); }
+.scheda-g .cornice { aspect-ratio: 16 / 10; border-radius: 0; }
+.scheda-g__testo { display: grid; gap: 4px; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--filo); }
+.scheda-g__titolo { font-family: var(--f-titoli); font-weight: 900; text-transform: uppercase; font-size: clamp(19px, 1.7vw, 24px); line-height: 1; letter-spacing: var(--titoli-spazio); }
+.scheda-g__dati { font-size: 14px; line-height: 1.4; color: var(--tenue); }
+@media (hover: hover) {
+  .schede:has(a.scheda-g:hover) .scheda-g:not(:hover) { opacity: 0.35; }
+}
+
+/* Eventi, In evidenza: il lettering su tre righe a sinistra, la breve
+   descrizione a destra, e sotto le fotografie che scorrono */
+.evidenza { align-items: end; }
+.evidenza .marchio-serie--lss { width: 100%; max-width: 520px; }
+.evidenza__testo { display: flex; flex-direction: column; align-items: flex-start; gap: 20px; }
+.evidenza__descrizione { font-size: clamp(17px, 1.45vw, 21px); font-weight: 600; line-height: 1.45; }
+.evidenza__freccia { display: grid; place-items: center; width: 48px; height: 48px; border: 2px solid currentColor; border-radius: 50%; transition: transform 0.3s var(--ease); }
+.evidenza__freccia .freccia { width: 20px; height: 20px; }
+.evidenza:hover .evidenza__freccia { transform: translate(3px, -3px); }
+
+.rullino { margin-top: clamp(18px, 2.2vw, 30px); overflow: hidden; }
+.rullino .scorre__pista { --durata: 70s; height: clamp(240px, 36svh, 380px); align-items: stretch; }
+.rullino .cornice { flex: 0 0 auto; height: 100%; aspect-ratio: 4 / 5; margin-right: 12px; border-radius: 0; }
+
+/* Produzioni, In evidenza: il fotogramma chiuso da un filo nero, che lo
+   stacca dal lilla anche quando è chiaro; a fianco il titolo graficato,
+   ricolorato in nero */
+/* Le still delle Produzioni hanno un contorno nero, che le stacca dal lilla
+   anche quando sono chiare */
+.pagina-produzioni .primo-piano > .cornice,
+.pagina-produzioni .scheda-g .cornice { border: 2px solid var(--nero); }
+.primo-piano__titolo img { display: block; width: 100%; max-height: 220px; object-fit: contain; object-position: left bottom; filter: brightness(0); }
+
+@media (max-width: 1023px) {
+  .evidenza .marchio-serie--lss, .evidenza__testo { grid-column: 1 / -1; }
+  .evidenza .marchio-serie--lss { max-width: 320px; }
+  .primo-piano > .cornice, .primo-piano__testo { grid-column: 1 / -1; }
+  .schede { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 639px) {
+  .schede { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* ==========================================================================
+   Il passaggio dalla home a una sezione: il colore della sezione riempie lo
+   schermo e il nome sale dove la pagina d'arrivo lo aspetta (vedi g.js)
+   ========================================================================== */
+.passaggio { position: fixed; inset: 0; z-index: 50; pointer-events: none; }
+.passaggio__parola { position: fixed; z-index: 51; margin: 0; pointer-events: none; }
+.passaggio__parola .o .occhio { display: none; }
+.pagina-produzioni .nav__voce[aria-current]::before { background: var(--nero); }
+
+/* Barra di tutte le pagine G: Cortoteca e Diventa socio alla stessa altezza,
+   e Diventa socio col bordino nero */
+.nav .nav__socio { min-height: 44px; padding: 0 20px; font-size: 15px; border-color: var(--nero); }
+.nav .nav__socio:hover { border-color: var(--nero); }
+@media (max-width: 639px) {
+  .nav .nav__socio { min-height: 40px; padding: 0 16px; font-size: 14px; }
+}
+
+/* Arrivo da un passaggio: il nome è già al suo posto; barra e filo
+   compaiono piano invece che di colpo */
+.da-passaggio .nav__riga { animation: affiora 0.5s ease-out 0.05s both; }
+.da-passaggio .presentazione { animation: filo 0.6s ease-out both; }
+@keyframes affiora { from { opacity: 0; } }
+@keyframes filo { from { border-bottom-color: transparent; } }
+
+/* ==========================================================================
+   Proposta G, ultime regole
+   ========================================================================== */
+:root { --nero-sala: #000; }
+
+/* Barra: Eventi, Produzioni e Contatti accanto al marchio; Cortoteca e
+   l'invito ai soci restano a destra */
+.nav__logo { margin-right: clamp(6px, 1.6vw, 24px); }
+.nav__cortoteca, .barra-ridotta .nav__socio { margin-left: auto; }
+@media (max-width: 519px) {
+  .nav__voce--contatti { display: none; } /* su telefono i contatti stanno nel piede */
+}
+
+/* Cortoteca: nero pieno, scritte lilla. La frase sotto il nome, poi il filo,
+   poi strumenti e opere; in fondo restano solo gli occhi */
+.stanza { --barra: var(--nero-sala); }
+.fondo-sala { --fondo: var(--nero-sala); }
+html:has(.fondo-sala) { background: var(--nero-sala); }
+.hero--cortoteca .presentazione { color: var(--inchiostro); }
+.hero--cortoteca .strumenti { margin-top: clamp(28px, 3.4vw, 48px); }
+.closing--occhi { padding-top: clamp(64px, 8vw, 120px); }
+
+/* ==========================================================================
+   LA PAGINA DEL CORTO (prova su Quarto Livello)
+   Fondo nero; il colore è quello del titolo del corto (--titolo, messo da
+   g.js). In alto lo schermo: il fotogramma col titolo graficato, con le
+   stesse proporzioni della galleria, perché il passaggio dalla Cortoteca
+   sia solo un ingrandimento.
+   ========================================================================== */
+.pagina-corto {
+  --fondo: var(--nero-sala); --barra: var(--nero-sala); --inchiostro: var(--chiaro);
+  --titolo: var(--lilla); --tenue: rgba(247, 247, 247, 0.72);
+  /* i fili prendono il colore del corto */
+  --filo: color-mix(in srgb, var(--titolo) 60%, transparent);
+  --accento-hover: var(--chiaro); --accento-hover-testo: var(--nero);
+}
+html:has(.pagina-corto) { background: var(--nero-sala); }
+.pagina-corto .nav { color: var(--chiaro); }
+.pagina-corto main > section { min-height: 0; }
+.pagina-corto main { padding-bottom: clamp(96px, 11vw, 168px); }
+.hero--corto { padding-bottom: 0; }
+
+.schermo { --r-still: 14px; }
+/* Le stesse proporzioni della targa in galleria */
+.schermo .targa {
+  inset: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
+  padding: 7% 10%; border-radius: 0; background: none; color: var(--chiaro); text-align: center;
+  opacity: 1; translate: none;
+}
+.schermo .targa { animation: affiora 0.6s ease-out 0.15s both; }
+.schermo .targa__titolo { font-size: clamp(36px, 5vw, 72px); line-height: 0.95; }
+.schermo iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+
+.corto { align-items: start; }
+.corto[hidden] { display: none; }
+.corto__frase { font-size: clamp(24px, 2.6vw, 38px); font-weight: 600; line-height: 1.22; letter-spacing: -0.01em; color: var(--titolo); }
+.corto__sinossi { margin-top: 20px; max-width: 60ch; font-size: 17px; line-height: 1.6; color: var(--tenue); }
+.corto .btn-riga { margin-top: 28px; }
+.corto .btn--pieno { border-color: var(--titolo); background: var(--titolo); color: var(--nero-sala); }
+.corto .btn--pieno:hover { border-color: var(--chiaro); background: var(--chiaro); }
+.corto__dati, .crediti { display: grid; gap: 14px; }
+.corto__dati { padding-top: 14px; border-top: 2px solid var(--titolo); }
+.corto__dati dt, .crediti dt { font-size: 14px; color: var(--tenue); }
+.corto__dati dd, .crediti dd { margin: 2px 0 0; font-size: 17px; font-weight: 600; }
+.crediti { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px var(--gap); }
+@media (max-width: 1023px) {
+  .corto__testo, .corto__dati { grid-column: 1 / -1; }
+  .crediti { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* Il passaggio dalla galleria al corto: il fotogramma si stacca e cresce,
+   mentre lo schermo intorno si fa nero (vedi g.js) */
+.passaggio-corto { position: fixed; z-index: 51; margin: 0; pointer-events: none; transform-origin: 0 0; }
+
+/* Pagina del corto: il colore del titolo anche per le piccole intestazioni
+   e per i fili */
+.pagina-corto .blocco-pagina__testa,
+.corto__dati dt, .crediti dt { color: var(--titolo); }
+.crediti > div { padding-top: 12px; border-top: 1px solid var(--filo); }
+
+/* ==========================================================================
+   CONTATTI (pagina)
+   In cima l'invito a sostenere CDL, lo stesso blocco arancio della home
+   (meta di "Diventa socio"); sotto, recapiti e modulo (meta di "Contatti").
+   ========================================================================== */
+/* L'arancio occupa lo schermo intero: il nome in alto, sotto in fondo la
+   frase grande con gli inviti a sinistra e la tessera a destra */
+.pagina-contatti main > .contatti-testa { min-height: 100svh !important; padding-top: calc(var(--nav) + 32px); }
+.contatti-testa .sostieni { display: flex; flex-direction: column; }
+.contatti-testa .sostieni__corpo { margin-top: auto; padding-top: clamp(32px, 4vw, 56px); align-items: end; border-top: 2px solid var(--nero); }
+.contatti-testa .sostieni__frase { max-width: 26ch; font-size: clamp(24px, 2.7vw, 40px); line-height: 1.18; letter-spacing: -0.01em; }
+.contatti-testa .sostieni__stato { margin-top: 22px; font-size: 17px; }
+.contatti-testa .btn-riga { margin-top: 28px; }
+.contatti-testa .sostieni__tessera { max-width: 440px; }
+.sostieni h1 { font-size: inherit; }
+.sostieni h1 .logo { height: 0.72em; margin-left: 0.2em; }
+
+.contatti { min-height: 0 !important; padding: clamp(64px, 8vw, 120px) 0 clamp(96px, 11vw, 168px) !important; scroll-margin-top: var(--nav); }
+.contatti__testa { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); align-items: end; gap: 16px var(--gap); padding-bottom: clamp(28px, 3.4vw, 48px); border-bottom: 2px solid var(--arancio); }
+.contatti__testa h2 { font-size: clamp(48px, 7vw, 108px); line-height: 0.86; }
+.contatti__frase { max-width: 40ch; font-size: clamp(19px, 1.7vw, 24px); font-weight: 600; line-height: 1.35; }
+
+/* Il modulo: prima il motivo, a pillole come gli strumenti della Cortoteca,
+   poi nome, email e messaggio */
+.modulo { display: grid; gap: 26px; margin-top: clamp(32px, 4vw, 56px); }
+.modulo__gruppo { margin: 0; padding: 0; border: 0; }
+.modulo__gruppo legend { margin-bottom: 14px; padding: 0; font-family: var(--f-titoli); font-weight: 900; text-transform: uppercase; letter-spacing: var(--titoli-spazio); font-size: clamp(22px, 2vw, 28px); line-height: 1; }
+.modulo__motivi { display: flex; flex-wrap: wrap; gap: 8px; }
+.modulo__motivi input { position: absolute; opacity: 0; pointer-events: none; }
+.modulo__motivi .scelta { min-height: 44px; border: 2px solid var(--nero); }
+.modulo__motivi input:checked + .scelta { border-color: var(--nero); background: var(--arancio); color: var(--nero); }
+.modulo__motivi input:focus-visible + .scelta { outline: 3px solid var(--nero); outline-offset: 3px; }
+.modulo__motivi .scelta:hover { background: rgba(29, 29, 27, 0.08); }
+.modulo__coppia { display: grid; grid-template-columns: 1fr 1fr; gap: 22px var(--gap); }
+.modulo__campo { display: grid; gap: 8px; }
+.modulo__campo span { font-size: 14px; font-weight: 700; }
+.modulo__campo input, .modulo__campo textarea {
+  width: 100%; min-height: 52px; padding: 12px 16px;
+  border: 2px solid var(--nero); border-radius: 14px; background: #fff;
+  font: inherit; font-size: 16px; color: var(--nero);
+}
+.modulo__campo textarea { resize: vertical; min-height: 160px; }
+.modulo__campo input:focus-visible, .modulo__campo textarea:focus-visible { outline: 3px solid var(--arancio); outline-offset: 2px; }
+.modulo__consenso { display: flex; align-items: flex-start; gap: 12px; font-size: 15px; line-height: 1.45; }
+.modulo__consenso input { width: 22px; height: 22px; margin: 0; flex: 0 0 auto; accent-color: var(--arancio); }
+.modulo__piede { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 20px 32px; }
+.modulo__piede .modulo__consenso { flex: 1 1 320px; }
+.modulo .btn--pieno:hover { border-color: var(--nero); background: var(--nero); color: var(--chiaro); }
+.modulo .btn--pieno:active, .modulo .btn--pieno.is-inviato { border-color: var(--arancio); background: var(--arancio); color: var(--nero); }
+
+
+@media (max-width: 1023px) {
+}
+@media (max-width: 639px) {
+  .modulo__coppia, .contatti__testa { grid-template-columns: 1fr; }
+}
+
+/* Produzioni, In evidenza: i dati del corto su righe distinte */
+.primo-piano__dati span { display: block; }
+
+/* Lo schermo come lettore: la copertina (fotogramma e titolo) sta sopra il
+   video e si dissolve quando parte */
+.schermo--lettore { cursor: pointer; }
+.schermo--lettore:focus-visible { outline: 3px solid var(--titolo); outline-offset: 4px; }
+.schermo .cornice img, .schermo .targa, .schermo__play { transition: opacity 0.5s var(--ease); }
+.schermo.is-in-onda .cornice img, .schermo.is-in-onda .targa, .schermo.is-in-onda .schermo__play { opacity: 0; pointer-events: none; }
+.schermo .cornice img { z-index: 1; }
+.schermo .targa { z-index: 2; }
+.schermo__play { z-index: 2; background: var(--titolo); color: var(--nero); }
+
+/* ==========================================================================
+   La sala: il corto aperto dentro la Cortoteca, sopra la galleria e sotto
+   la barra. Ha le stesse misure della pagina del corto, così il fotogramma
+   ingrandito dal passaggio ci si posa sopra esatto.
+   ========================================================================== */
+html.sala-aperta { overflow: hidden; }
+.sala-corto {
+  position: fixed; inset: 0; z-index: 9; overflow-y: auto; overscroll-behavior: contain;
+  padding-bottom: clamp(96px, 11vw, 168px);
+  background: var(--nero-sala); color: var(--inchiostro);
+}
+.sala-corto > section { position: relative; }
+.sala-corto__chiudi {
+  /* nel margine destro, all'altezza dello schermo */
+  position: fixed; z-index: 3; top: calc(var(--nav) + 40px); right: max(12px, calc(max(var(--gut), (100vw - 1280px) / 2) - 56px));
+  display: grid; place-items: center; width: 44px; height: 44px; border: 0; border-radius: 50%;
+  background: var(--titolo); color: var(--nero); cursor: pointer;
+  transition: transform 0.15s var(--ease), background-color 0.15s var(--ease);
+}
+.sala-corto__chiudi svg { width: 18px; height: 18px; }
+.sala-corto__chiudi:hover { transform: rotate(90deg); background: var(--chiaro); }
+.sala-corto__chiudi:focus-visible { outline: 3px solid var(--chiaro); outline-offset: 3px; }
+
+/* Al passaggio sulle still il puntatore sparisce: resta solo l'immagine.
+   Sullo schermo del corto lo sostituisce il disco "Guarda". */
+@media (hover: hover) and (pointer: fine) {
+  .galleria .still:hover, .schermo--lettore[data-cursore]:hover { cursor: none; }
+}
+
+/* ==========================================================================
+   LE PAGINE DEGLI EVENTI
+   Carta, scritte nere; il colore dell'evento (quello della sua grafica) va
+   sulle piccole intestazioni e sui fili, come quello del titolo nella
+   pagina del corto. In cima la grafica a tutta larghezza, a spigolo vivo:
+   è la stessa della scheda in Eventi, che al clic cresce fin qui.
+   ========================================================================== */
+.pagina-evento {
+  --evento: var(--nero);
+  /* Per le scritte il colore si scurisce un poco, così si legge sulla carta */
+  --evento-testo: color-mix(in oklab, var(--evento) 82%, #000);
+  --filo: color-mix(in srgb, var(--evento) 45%, transparent);
+}
+/* Long Story Short tiene il nero come colore suo */
+.pagina-evento.evento--longstoryshort { --evento: var(--nero); --filo: rgba(29, 29, 27, 0.2); }
+.evento--short-talks-1 { --evento: #ff7a41; }
+.evento--short-talks-2, .evento--short-talks-off-1 { --evento: #ff0000; }
+.evento--blue-hour { --evento: #0a1256; }
+.evento--short-talks-al-not-2025 { --evento: #e47800; }
+.evento--short-talks-3-x-laiff { --evento: #f00084; }
+.evento--short-talks-al-not-2026 { --evento: #0c7830; }
+.pagina-evento .nav__voce[aria-current]::before { background: var(--evento); }
+.pagina-evento main > section { min-height: 0; }
+.pagina-evento main { padding-bottom: clamp(96px, 11vw, 168px); }
+
+.hero--evento { padding-bottom: 0; }
+.locandina-g { aspect-ratio: 16 / 10; border-radius: 0; background: var(--evento); }
+/* Un filo nero la chiude, come le still di Produzioni: le grafiche chiare
+   non si perdono nella carta */
+.locandina-g::after { content: ''; position: absolute; inset: 0; border: 2px solid var(--nero); pointer-events: none; }
+
+/* Nome, racconto e dati: come la pagina del corto */
+.evento-g { align-items: start; }
+.evento-g__titolo { font-size: clamp(44px, 6.4vw, 104px); line-height: 0.86; }
+.evento-g__titolo span { color: var(--evento-testo); }
+.evento-g__corpo { margin-top: clamp(22px, 2.4vw, 34px); display: grid; gap: 1em; max-width: 62ch; font-size: clamp(17px, 1.3vw, 19px); line-height: 1.6; }
+.evento-g__corpo strong { font-weight: 700; }
+.evento-g__dati { display: grid; gap: 14px; padding-top: 14px; border-top: 2px solid var(--evento); }
+.evento-g__dati dt { font-size: 14px; font-weight: 700; color: var(--evento-testo); }
+.evento-g__dati dd { margin: 2px 0 0; font-size: 19px; font-weight: 600; line-height: 1.35; }
+.pagina-evento .blocco-pagina__testa { color: var(--evento-testo); }
+
+/* Programma: i gruppi in colonne, ogni titolo su una riga col filo; i corti
+   che sono nella Cortoteca portano la freccia ↗ e si aprono */
+.pagina-evento .programma-griglia { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 4fr); gap: clamp(28px, 3vw, 48px) var(--gap); align-items: start; }
+.pagina-evento .programma-griglia:not(:has(.locandina)) { grid-template-columns: minmax(0, 1fr); }
+.pagina-evento .programma-griglia:has(.locandina) { grid-template-columns: minmax(0, 8fr) minmax(0, 4fr); }
+.pagina-evento .programma { display: grid; grid-template-columns: minmax(0, 1fr); gap: clamp(32px, 3.4vw, 52px) var(--gap); }
+/* Più serate o più gruppi: due colonne */
+.pagina-evento .programma--gruppi { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (max-width: 767px) { .pagina-evento .programma--gruppi { grid-template-columns: minmax(0, 1fr); } }
+.pagina-evento .programma-gruppo { display: grid; align-content: start; gap: 6px; }
+.pagina-evento .programma-gruppo-titolo { font-size: clamp(22px, 2vw, 28px); line-height: 1; }
+.pagina-evento .programma-gruppo-nota { font-size: 15px; line-height: 1.45; color: var(--tenue); }
+.pagina-evento .programma-lista { margin-top: 12px; padding: 0; list-style: none; border-top: 2px solid var(--evento); counter-reset: corto; }
+.pagina-evento .programma-lista li { border-bottom: 1px solid var(--filo); counter-increment: corto; }
+.pagina-evento .programma-voce {
+  display: grid; grid-template-columns: 2.2em minmax(0, 1fr) auto; column-gap: 8px; align-items: baseline;
+  min-height: 44px; padding: 14px 0;
+}
+.pagina-evento .programma-voce::before { content: counter(corto, decimal-leading-zero); grid-row: span 2; font-size: 13px; font-weight: 700; color: var(--evento-testo); font-variant-numeric: tabular-nums; }
+.pagina-evento .programma-titolo { font-family: var(--f-titoli); font-weight: 900; text-transform: uppercase; letter-spacing: var(--titoli-spazio); font-size: clamp(18px, 1.5vw, 21px); line-height: 1.05; }
+.pagina-evento .programma-dati { grid-column: 2; font-size: 14px; line-height: 1.4; color: var(--tenue); }
+.pagina-evento .programma-cortoteca { grid-column: 3; grid-row: 1 / span 2; align-self: center; display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 700; }
+.pagina-evento .programma-cortoteca svg { width: 18px; height: 18px; transition: transform 0.3s var(--ease); }
+.pagina-evento a.programma-voce { transition: color 0.2s var(--ease); }
+.pagina-evento a.programma-voce:hover { color: var(--evento-testo); }
+.pagina-evento a.programma-voce:hover .programma-cortoteca svg { transform: translate(3px, -3px); }
+.pagina-evento .locandina { margin: 0; }
+.pagina-evento .locandina img { display: block; width: 100%; height: auto; border: 2px solid var(--nero); }
+
+/* Materiali: righe a tutta larghezza, il nome grande e la freccia */
+.righe-g { padding: 0; list-style: none; border-top: 2px solid var(--evento); }
+.riga-g { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 72px; padding: 14px 0; border-bottom: 1px solid var(--filo); }
+.riga-g__titolo { font-family: var(--f-titoli); font-weight: 900; text-transform: uppercase; letter-spacing: var(--titoli-spazio); font-size: clamp(24px, 2.6vw, 38px); line-height: 1; transition: color 0.2s var(--ease); }
+.riga-g__freccia { display: grid; place-items: center; flex: 0 0 auto; width: 48px; height: 48px; border: 2px solid currentColor; border-radius: 50%; transition: transform 0.3s var(--ease); }
+.riga-g__freccia .freccia { width: 20px; height: 20px; }
+.riga-g:hover .riga-g__titolo { color: var(--evento-testo); }
+.riga-g:hover .riga-g__freccia { transform: translate(3px, -3px); }
+
+/* Le fotografie dell'evento scorrono, ognuna con le sue proporzioni */
+/* il titoletto ha già il suo margine: le foto partono subito sotto */
+.rullino--evento { margin-top: 0; }
+.rullino--evento .cornice { aspect-ratio: var(--rapporto, 4 / 5); }
+.rullino--evento .cornice img { transition: transform 0.6s var(--ease); }
+.rullino--evento .cornice:hover img { transform: scale(1.025); }
+.rullino__crediti { margin-top: 14px; font-size: 14px; color: var(--tenue); }
+
+@media (max-width: 1023px) {
+  .evento-g > * { grid-column: 1 / -1; }
+  .evento-g__dati { margin-top: 28px; grid-template-columns: 1fr 1fr; gap: 14px var(--gap); }
+  .pagina-evento .programma-griglia:has(.locandina) { grid-template-columns: minmax(0, 1fr); }
+  .pagina-evento .locandina { max-width: 420px; }
+}
+@media (max-width: 639px) {
+  .evento-g__dati { grid-template-columns: 1fr; }
+  .pagina-evento .programma-cortoteca span { display: none; }
+}
+
+/* ==========================================================================
+   VANTAGGI PER I SOCI
+   Carta, filo arancio: i vantaggi in tre blocchi, ognuno una riga di voci
+   col filo sopra, come le schede. In fondo l'invito arancio della home.
+   ========================================================================== */
+.pagina-vantaggi { --filo: rgba(29, 29, 27, 0.2); }
+.pagina-vantaggi main > section { min-height: 0; }
+.pagina-vantaggi main { padding-bottom: clamp(96px, 11vw, 168px); }
+.pagina-vantaggi .hero--pagina .fit + .fit { margin-top: 0.04em; }
+.pagina-vantaggi .presentazione { border-bottom: 2px solid var(--arancio); }
+.vantaggi-g { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(28px, 3vw, 44px) var(--gap); padding: 0; list-style: none; }
+.vantaggio-g { display: grid; align-content: start; gap: 10px; height: 100%; padding-top: 16px; border-top: 2px solid var(--nero); }
+/* I marchi dei partner, tutti in nero: stanno insieme e non litigano coi colori */
+.vantaggio-g__logo { width: 84px; height: 84px; margin: -8px 0 0 -8px; object-fit: contain; filter: brightness(0); }
+.vantaggio-g__titolo { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; font-family: var(--f-titoli); font-weight: 900; text-transform: uppercase; letter-spacing: var(--titoli-spazio); font-size: clamp(21px, 1.9vw, 27px); line-height: 1; }
+.vantaggio-g__freccia { display: grid; place-items: center; flex: 0 0 auto; width: 44px; height: 44px; margin-top: -6px; border: 2px solid currentColor; border-radius: 50%; transition: transform 0.3s var(--ease), background-color 0.2s var(--ease); }
+.vantaggio-g__freccia .freccia { width: 18px; height: 18px; }
+.vantaggio-g__testo { max-width: 42ch; font-size: 16px; line-height: 1.55; color: var(--tenue); }
+a.vantaggio-g { transition: border-color 0.2s var(--ease); }
+a.vantaggio-g:hover { border-top-color: var(--arancio); }
+a.vantaggio-g:hover .vantaggio-g__freccia { transform: translate(3px, -3px); background: var(--arancio); border-color: var(--nero); }
+@media (max-width: 1023px) { .vantaggi-g { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 639px) { .vantaggi-g { grid-template-columns: 1fr; } }
+
+/* ==========================================================================
+   PAGINA NON TROVATA
+   Il nome a tutta larghezza; nelle O di NON TROVATA gli occhi della
+   Cortoteca, aperti, che seguono il puntatore.
+   ========================================================================== */
+.pagina-smarrita main > section { min-height: 0; }
+.pagina-smarrita main { padding-bottom: clamp(96px, 11vw, 168px); }
+.hero--smarrita .fit-testo { display: inline-block; }
+.hero--smarrita .fit + .fit { margin-top: 0.04em; }
+.hero--smarrita .o { position: relative; }
+.hero--smarrita .o .occhio {
+  position: absolute; left: 50%; top: 0.62em; width: 0.27em;
+  translate: -50% -50%;
+  border-width: 0.016em;
+  box-shadow: inset -0.012em -0.016em 0 rgba(29, 29, 27, 0.14);
+  animation: apri 0.5s var(--ease) 0.4s both;
+}
+@keyframes apri { from { transform: scale(0); } }
+.smarrita__azioni { margin-top: clamp(28px, 3.4vw, 48px); }
+
+/* Long Story Short: in cima il lettering, in nero sulla carta, poi i tre
+   paragrafi a tutta larghezza; il filo della presentazione chiude la testa */
+.evento-g__marchio { margin: 0; color: var(--evento); }
+.evento-g__marchio .marchio-serie--lss { width: clamp(240px, 50vw, 720px); max-width: 100%; }
+.hero--marchio .presentazione { display: grid; gap: 0.8em; font-size: clamp(19px, 1.75vw, 26px); }
+.hero--marchio .presentazione p + p { margin-top: 0; }
+.hero--marchio .presentazione strong { font-weight: 800; }
+.hero--marchio + .blocco-pagina--diviso { margin-top: 0; }
+/* il filo è già quello della presentazione: sotto, lo stesso respiro degli altri blocchi */
+.hero--marchio + .blocco-pagina--diviso > .wrap { padding-top: clamp(36px, 4.5vw, 64px); border-top: 0; }
+
+/* I vincitori: tre per riga, il fotogramma a spigolo vivo col filo nero,
+   sotto il titolo, regia e durata, e i premi. Path (Miglior film) apre il
+   blocco su tutta la riga: il fotogramma più grande e, a fianco, il premio
+   scritto in grande */
+.vincitori { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(36px, 4vw, 56px) var(--gap); padding: 0; list-style: none; }
+.vincitore .cornice { aspect-ratio: 16 / 9; border-radius: 0; border: 2px solid var(--nero); }
+.vincitore .cornice img { transition: transform 0.6s var(--ease); }
+.vincitore:hover .cornice img { transform: scale(1.025); }
+.vincitore__testo { display: grid; align-content: start; gap: 6px; margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--filo); }
+.vincitore__corto { font-size: clamp(22px, 2vw, 30px); line-height: 1; }
+.vincitore__dati { font-size: 15px; color: var(--tenue); }
+.vincitore__premi { display: grid; gap: 6px; margin-top: 8px; padding: 0; list-style: none; font-size: 15px; font-weight: 600; line-height: 1.35; }
+.vincitore__premi li { padding-left: 18px; position: relative; }
+.vincitore__premi li::before { content: ''; position: absolute; left: 0; top: 0.42em; width: 8px; height: 8px; border-radius: 50%; background: var(--evento); }
+
+.vincitore--primo { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(0, 8fr) minmax(0, 4fr); gap: var(--gap); align-items: end; }
+.vincitore--primo .vincitore__testo { margin-top: 0; padding-top: 16px; border-top: 2px solid var(--evento); }
+.vincitore--primo .vincitore__corto { font-size: clamp(40px, 5vw, 76px); line-height: 0.9; }
+.vincitore--primo .vincitore__dati { font-size: 17px; }
+.vincitore--primo .vincitore__premi li:first-child {
+  padding: 0; margin-bottom: 4px;
+  font-family: var(--f-titoli); font-weight: 900; text-transform: uppercase; letter-spacing: var(--titoli-spazio);
+  font-size: clamp(22px, 2.1vw, 30px); line-height: 1;
+}
+.vincitore--primo .vincitore__premi li:first-child::before { display: none; }
+@media (max-width: 1023px) {
+  .vincitori { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .vincitore--primo { grid-template-columns: minmax(0, 1fr); }
+  .vincitore--primo .vincitore__testo { padding-top: 12px; }
+}
+@media (max-width: 639px) { .vincitori { grid-template-columns: minmax(0, 1fr); } }
+
+/* Partner: i loghi in nero, ognuno al centro della sua casella, in una
+   griglia chiusa da fili sottili */
+.partner { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); padding: 0; list-style: none; border-top: 1px solid var(--filo); }
+.partner li { display: grid; place-items: center; min-height: clamp(104px, 9vw, 136px); padding: 20px; border-bottom: 1px solid var(--filo); }
+.partner li:not(:nth-child(3n)) { border-right: 1px solid var(--filo); }
+.partner img { display: block; width: var(--w); max-width: 100%; height: auto; }
+@media (max-width: 639px) {
+  .partner { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .partner li { min-height: 92px; padding: 16px; }
+  .partner li:not(:nth-child(3n)) { border-right: 0; }
+  .partner li:nth-child(odd) { border-right: 1px solid var(--filo); }
+  .partner img { width: calc(var(--w) * 0.72); }
+  /* l'ultimo logo, se resta da solo, prende tutta la riga */
+  .partner li:last-child:nth-child(odd) { grid-column: 1 / -1; border-right: 0; }
+}
+
+/* ==========================================================================
+   L'EVENTO APERTO DENTRO LA PAGINA EVENTI
+   Come il corto nella Cortoteca: la pagina dell'evento si apre sopra quella
+   degli eventi, su carta, e l'indirizzo diventa il suo. Il lettering di Long
+   Story Short (o la grafica della scheda) sale al suo posto e si fa del
+   colore dell'evento; la barra passa alla carta.
+   ========================================================================== */
+.sala-evento {
+  position: fixed; inset: 0; z-index: 9; overflow-y: auto; overscroll-behavior: contain;
+  padding-bottom: clamp(96px, 11vw, 168px);
+  --fondo: var(--chiaro); --inchiostro: var(--nero); --tenue: rgba(29, 29, 27, 0.74);
+  background: var(--fondo); color: var(--inchiostro);
+}
+.sala-evento > section { position: relative; overflow: clip; }
+/* Pronta ma invisibile mentre il passaggio la raggiunge; le entrate aspettano */
+.sala-evento.in-attesa { visibility: hidden; }
+.sala-evento.in-attesa .entra { animation: none; }
+.sala-evento__chiudi {
+  position: fixed; z-index: 3; top: calc(var(--nav) + 40px); right: max(12px, calc(max(var(--gut), (100vw - 1280px) / 2) - 56px));
+  display: grid; place-items: center; width: 44px; height: 44px; border: 0; border-radius: 50%;
+  background: var(--evento); color: var(--chiaro); cursor: pointer;
+  transition: transform 0.15s var(--ease), background-color 0.15s var(--ease);
+}
+.sala-evento__chiudi svg { width: 18px; height: 18px; }
+.sala-evento__chiudi:hover { transform: rotate(90deg); }
+.sala-evento__chiudi:focus-visible { outline: 3px solid var(--nero); outline-offset: 3px; }
+html.evento-aperto { overflow: hidden; }
+html.evento-aperto .pagina-eventi { --barra: var(--chiaro); }
+html.evento-aperto .pagina-eventi .nav { color: var(--nero); }

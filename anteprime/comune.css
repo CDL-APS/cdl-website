@@ -1,7 +1,6 @@
 /* ==========================================================================
-   ANTEPRIME E e F — base comune.
-   Barra e piede della prima proposta, il logo grande che si scopre, le
-   scritte a tutta larghezza. Gli occhi sono solo della Cortoteca, sparsi per
+   ANTEPRIMA DEL NUOVO SITO — base comune.
+   Barra e piede, il logo, le scritte a tutta larghezza. Gli occhi sono solo della Cortoteca, sparsi per
    la pagina. Colori di sezione: Eventi blu e azzurro, Produzioni lilla e
    nero, Cortoteca nero e lilla, Sostieni arancio e giallo.
    File di prova: non fa parte del sito pubblicato.
@@ -289,7 +288,6 @@ a:hover > .cornice img, a.cornice:hover img, .scheda:hover .cornice img { transf
   border-radius: 999px; background: var(--lilla); color: var(--nero); font-size: 15px; font-weight: 700;
 }
 .disco svg { width: 11px; height: 11px; }
-.disco--attesa { background: var(--chiaro); padding-left: 16px; }
 
 /* Scheda: una superficie che porta a una pagina. Al passaggio sale di 2 px. */
 .scheda { display: block; border-radius: var(--r); transition: transform 0.18s var(--ease); }
@@ -333,7 +331,7 @@ a:hover > .cornice img, a.cornice:hover img, .scheda:hover .cornice img { transf
 /* --------------------------------------------------------------------------
    Adattamenti comuni
    -------------------------------------------------------------------------- */
-.solo-stretto, .btn.solo-telefono { display: none; }
+.btn.solo-telefono { display: none; }
 
 @media (max-width: 1023px) {
   .grid > [class*='span-'] { grid-column: 1 / -1; }
@@ -342,8 +340,6 @@ a:hover > .cornice img, a.cornice:hover img, .scheda:hover .cornice img { transf
 
 @media (max-width: 759px) {
   .nav__socio { display: none; }
-  .solo-largo { display: none; }
-  .solo-stretto { display: block; }
   .btn.solo-telefono { display: inline-flex; }
   .piede__riga { gap: 8px; }
   .piede__riga > a, .piede__elenchi { grid-column: 1 / -1; }

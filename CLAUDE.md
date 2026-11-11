@@ -104,8 +104,10 @@ com'è.
   è bloccato anche un deploy caricato a mano (connettore o CLI). Si sblocca
   unendo con `cdl-aps` una pull request qualsiasi.
 - Netlify pubblica tutta la radice: `netlify.toml` risponde 404 a
-  `README.md`, `CLAUDE.md`, `supabase/` e `.github/`. Nuovi file interni vanno aggiunti
-  lì.
+  `README.md`, `CLAUDE.md`, `supabase/`, `.github/` e `storico/`. Nuovi file
+  interni vanno aggiunti lì.
+- `storico/` raccoglie i passaggi di consegne fra una sessione di lavoro e
+  l'altra (handoff e specifiche di design), con la data nel nome.
 - `netlify.toml` mantiene in vita gli indirizzi precedenti alla
   riorganizzazione (in particolare `/cortoteca/info_film2?film=...`, oggi
   `/opera.html?film=...`). Vanno conservati, e con loro i file a cui puntano
