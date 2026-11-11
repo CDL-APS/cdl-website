@@ -16,3 +16,4 @@ a:focus-visible { outline: 3px solid currentColor; outline-offset: 3px; }
 .accantonate { margin-top: 2rem; }
 .accantonate a { display: inline; min-height: 0; padding: 0; border-radius: 0; background: none; color: inherit; font-weight: 500; text-decoration: underline; }
 .accantonate a:hover { background: none; color: #ff0000; }
+.di-partenza { margin-top: 3rem; }

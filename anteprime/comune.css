@@ -1,10 +1,9 @@
 /* ==========================================================================
-   ANTEPRIME C e D — base comune.
-   Tiene ciò che è piaciuto delle prime due: barra e piede di «Finestre», il
-   logo grande che si scopre, gli occhi che seguono il puntatore, le scritte a
-   tutta larghezza, la Cortoteca lilla. Aggiunge i colori di sezione presi
-   dalle prove su Drive e un impianto a schermi: ogni sezione occupa uno
-   schermo, tutto sta sugli stessi due margini.
+   ANTEPRIME E e F — base comune.
+   Barra e piede della prima proposta, il logo grande che si scopre, le
+   scritte a tutta larghezza. Gli occhi sono solo della Cortoteca, sparsi per
+   la pagina. Colori di sezione: Eventi blu e azzurro, Produzioni lilla e
+   nero, Cortoteca nero e lilla, Sostieni arancio e giallo.
    File di prova: non fa parte del sito pubblicato.
    ========================================================================== */
 
@@ -52,9 +51,11 @@
 
 /* Campiture: ogni classe porta fondo, testo e colore d'accento */
 .fondo-nero { --fondo: var(--nero); --inchiostro: var(--chiaro); --accento: var(--lilla); --tenue: rgba(247, 247, 247, 0.8); --filo: rgba(247, 247, 247, 0.26); }
-.fondo-lilla { --fondo: var(--lilla); --inchiostro: var(--nero); --accento: var(--nero); --tenue: rgba(29, 29, 27, 0.8); --filo: rgba(29, 29, 27, 0.32); }
-.fondo-blu { --fondo: var(--blu); --inchiostro: var(--chiaro); --accento: var(--azzurro); --tenue: rgba(247, 247, 247, 0.86); --filo: rgba(247, 247, 247, 0.3); }
-.fondo-arancio { --fondo: var(--arancio); --inchiostro: var(--nero); --accento: var(--giallo); --tenue: rgba(29, 29, 27, 0.86); --filo: rgba(29, 29, 27, 0.34); }
+.fondo-lilla { --fondo: var(--lilla); --inchiostro: var(--nero); --accento: var(--nero); --accento-hover: var(--chiaro); --accento-hover-testo: var(--nero); --tenue: rgba(29, 29, 27, 0.8); --filo: rgba(29, 29, 27, 0.32); }
+.fondo-blu { --fondo: var(--blu); --inchiostro: var(--azzurro); --accento: var(--azzurro); --accento-hover: var(--chiaro); --accento-hover-testo: var(--blu); --tenue: rgba(247, 247, 247, 0.86); --filo: rgba(247, 247, 247, 0.3); }
+.fondo-arancio { --fondo: var(--arancio); --inchiostro: var(--nero); --accento: var(--giallo); --tenue: rgba(29, 29, 27, 0.88); --filo: rgba(29, 29, 27, 0.34); --accento-hover: var(--giallo); --accento-hover-testo: var(--nero); --rec: var(--chiaro); }
+/* La Cortoteca: nero, con scritte e dettagli lilla */
+.fondo-sala { --fondo: var(--nero); --inchiostro: var(--lilla); --accento: var(--lilla); --tenue: rgba(185, 187, 248, 0.82); --filo: rgba(185, 187, 248, 0.3); --accento-hover: var(--chiaro); --accento-hover-testo: var(--nero); }
 
 html { scroll-behavior: auto; }
 
@@ -98,7 +99,10 @@ a:focus-visible, button:focus-visible, input:focus-visible, [tabindex]:focus-vis
 .span-5 { grid-column-end: span 5; }
 .span-6 { grid-column-end: span 6; }
 .span-7 { grid-column-end: span 7; }
+.span-3 { grid-column-end: span 3; }
+.span-8 { grid-column-end: span 8; }
 .start-7 { grid-column-start: 7; }
+.start-10 { grid-column-start: 10; }
 .start-8 { grid-column-start: 8; }
 
 /* Ogni sezione occupa uno schermo (o due con --h: 2); cresce solo se il
@@ -106,6 +110,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, [tabindex]:focus-vis
 main > section,
 .closing {
   position: relative;
+  overflow: clip;
   min-height: calc(var(--h, 1) * 100svh);
   padding: var(--padt) 0 var(--padb);
   background: var(--fondo);
@@ -187,19 +192,19 @@ h2 { font-size: clamp(30px, 3.4vw, 48px); }
   transition: transform 0.14s linear;
 }
 
-/* Una O con dentro un occhio: sostituisce la lettera nei titoli */
-.o {
-  display: inline-grid; place-items: center; flex: 0 0 auto;
-  width: var(--o-larga, 0.84em); height: var(--o-alta, 0.72em); margin: 0 0.02em;
-  border-radius: 50%; background: currentColor;
-}
-.o .occhio { width: 58%; height: 60%; aspect-ratio: auto; border-width: 0; font-size: 0.5em; }
-.o .pupilla { width: 52%; height: auto; aspect-ratio: 1; }
+/* Ogni tanto un occhio sbatte la palpebra (il ritmo lo dà comune.js) */
+.occhio.is-chiuso { scale: 1 0.08; transition: scale 0.09s ease-in; }
+.occhio { transition: scale 0.16s ease-out; }
+
+/* Occhi sparsi: uno strato che non intercetta il puntatore; ogni occhio ha
+   posizione (--x, --y) e diametro (--d) propri */
+.sparsi { position: absolute; inset: 0; pointer-events: none; z-index: 2; }
+.sparsi .occhio { position: absolute; left: var(--x); top: var(--y); width: var(--d); translate: -50% -50%; }
 
 /* --------------------------------------------------------------------------
-   Barra (da «Finestre»): chiara, il marchio a sinistra, Cortoteca in pillola
-   lilla, l'invito ai soci in pillola nera. Un pallino dice il colore della
-   sezione.
+   Barra: chiara, il marchio a sinistra. Ogni voce porta il colore della sua
+   sezione: pallino blu per Eventi, lilla per Produzioni; Cortoteca è una
+   pillola nera con la scritta lilla, l'invito ai soci una pillola arancio.
    -------------------------------------------------------------------------- */
 .nav { position: fixed; inset: 0 0 auto 0; z-index: 10; height: var(--nav); background: var(--barra); color: var(--nero); }
 .nav__riga { height: 100%; display: flex; align-items: center; gap: clamp(4px, 1.4vw, 20px); }
@@ -217,7 +222,7 @@ h2 { font-size: clamp(30px, 3.4vw, 48px); }
   position: relative; display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 8px;
   font-size: 15px; font-weight: 700; white-space: nowrap;
 }
-.nav__voce::before { content: ''; width: 9px; height: 9px; border-radius: 50%; background: var(--punto, currentColor); }
+.nav__voce::before { content: ''; width: 10px; height: 10px; border-radius: 50%; background: var(--punto, currentColor); }
 .nav__voce::after {
   content: ''; position: absolute; left: 25px; right: 8px; bottom: 9px; height: 2px; background: currentColor;
   transform: scaleX(0); transform-origin: left; transition: transform 0.15s var(--ease);
@@ -226,13 +231,16 @@ h2 { font-size: clamp(30px, 3.4vw, 48px); }
 
 .nav__cortoteca {
   display: inline-flex; align-items: center; gap: 7px; min-height: 44px; padding: 0 17px 0 14px;
-  border: 2px solid var(--nero); border-radius: 999px; background: var(--lilla);
+  border: 2px solid var(--nero); border-radius: 999px; background: var(--nero); color: var(--lilla);
   font-size: 15px; font-weight: 700; white-space: nowrap;
   transition: background-color 0.15s var(--ease), color 0.15s var(--ease), transform 0.15s var(--ease);
 }
 .nav__cortoteca svg { width: 11px; height: 11px; }
 .nav__cortoteca:hover { transform: translateY(-1px); }
-.nav__cortoteca:hover, .nav__cortoteca[aria-current] { background: var(--nero); color: var(--lilla); }
+.nav__cortoteca:hover, .nav__cortoteca[aria-current] { background: var(--lilla); color: var(--nero); }
+
+.nav .nav__socio { border-color: var(--arancio); background: var(--arancio); color: var(--nero); }
+.nav .nav__socio:hover { border-color: var(--giallo); background: var(--giallo); color: var(--nero); }
 .nav__cortoteca:active { transform: translateY(1px) scale(0.985); }
 
 /* --------------------------------------------------------------------------
@@ -263,8 +271,9 @@ h2 { font-size: clamp(30px, 3.4vw, 48px); }
   transition: background-size 0.2s var(--ease);
 }
 .link:hover { background-size: 100% 2px, 100% 2px; }
-.piu { width: 0.8em; height: 0.8em; flex: 0 0 auto; transition: transform 0.3s var(--ease); }
-.link:hover .piu { transform: rotate(90deg); }
+/* Frecce: → verso un elenco o un'altra pagina, ↗ per aprire un contenuto */
+.freccia { width: 1.05em; height: 1.05em; flex: 0 0 auto; transition: transform 0.3s var(--ease); }
+.link:hover .freccia { transform: translateX(4px); }
 
 /* --------------------------------------------------------------------------
    Cornice: il contenitore di ogni immagine. Fondo nero, angoli del marchio.
@@ -287,18 +296,17 @@ a:hover > .cornice img, a.cornice:hover img, .scheda:hover .cornice img { transf
 .scheda:hover { transform: translateY(-2px); }
 
 /* --------------------------------------------------------------------------
-   Chiusura: l'invito a sostenere CDL (chiaro e rosso, come nella prova su
-   Drive) e, sotto, il piede di «Finestre»
+   Chiusura: l'invito a sostenere CDL, in arancio e giallo, e sotto il piede
    -------------------------------------------------------------------------- */
 .closing { display: flex; flex-direction: column; padding-bottom: 0; scroll-margin-top: 0; }
 .closing > .wrap { flex: 1 1 auto; padding-bottom: var(--padb); }
 
-.sostieni h2 { color: var(--rosso); font-size: inherit; }
+.sostieni h2 { font-size: inherit; }
 .sostieni h2 .logo { height: 0.72em; margin-left: 0.2em; }
 .sostieni__corpo { margin-top: clamp(24px, 3vw, 40px); }
 .sostieni__frase { font-size: clamp(18px, 1.6vw, 22px); font-weight: 600; line-height: 1.4; max-width: 34ch; }
 .sostieni__stato { display: flex; align-items: center; gap: 10px; margin-top: 14px; font-weight: 600; }
-.rec { width: 10px; height: 10px; flex: 0 0 auto; border-radius: 50%; background: var(--rosso); animation: pulsa 1.5s infinite; }
+.rec { width: 10px; height: 10px; flex: 0 0 auto; border-radius: 50%; background: var(--rec, var(--rosso)); animation: pulsa 1.5s infinite; }
 @keyframes pulsa { 50% { opacity: 0.35; transform: scale(1.25); } }
 .sostieni .btn-riga { margin-top: 24px; }
 .sostieni .link { margin-top: 12px; }
@@ -371,4 +379,116 @@ a:hover > .cornice img, a.cornice:hover img, .scheda:hover .cornice img { transf
   .nav__voce { padding: 0 3px; font-size: 13px; }
   .nav__cortoteca { padding: 0 10px; font-size: 13px; }
   .nav__cortoteca svg { display: none; }
+}
+
+/* --------------------------------------------------------------------------
+   Barra sulla pagina scura della Cortoteca
+   -------------------------------------------------------------------------- */
+.stanza { --barra: var(--nero); }
+.stanza .nav { color: var(--lilla); }
+.stanza .nav__cortoteca { border-color: var(--lilla); }
+.stanza .skip-link { background: var(--lilla); color: var(--nero); }
+
+/* Piede lilla: chiude la pagina scura della Cortoteca */
+.piede--lilla { background: var(--lilla); color: var(--nero); --inchiostro: var(--nero); }
+.piede--lilla .logo { color: var(--nero); }
+.piede--lilla .piede__elenchi a:hover { color: var(--blu); }
+.piede--lilla .piede__dati { border-top-color: rgba(29, 29, 27, 0.3); color: rgba(29, 29, 27, 0.82); }
+
+/* --------------------------------------------------------------------------
+   Il disco che accompagna il puntatore sulle fotografie che portano altrove:
+   dice che cosa succede al clic. Solo con un puntatore vero.
+   -------------------------------------------------------------------------- */
+.cursore {
+  position: fixed; left: 0; top: 0; z-index: 30; pointer-events: none;
+  display: grid; place-items: center; width: 88px; height: 88px; margin: -44px 0 0 -44px;
+  border: 2px solid var(--lilla); border-radius: 50%; background: var(--nero); color: var(--lilla);
+  font-size: 14px; font-weight: 700;
+  translate: var(--cx, -200px) var(--cy, -200px); scale: 0;
+  transition: scale 0.2s var(--ease);
+}
+.cursore.is-visibile { scale: 1; }
+
+/* --------------------------------------------------------------------------
+   Cortoteca: strumenti (ricerca, vista, ordine) comuni alle due proposte
+   -------------------------------------------------------------------------- */
+.strumenti { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.campo {
+  flex: 1 1 240px; max-width: 420px; height: 48px;
+  display: flex; align-items: center; gap: 10px; padding: 0 18px;
+  border: 2px solid var(--inchiostro); border-radius: 999px; cursor: text;
+}
+.campo svg { width: 17px; height: 17px; flex: 0 0 auto; }
+.campo input { flex: 1; min-width: 0; height: 100%; border: 0; outline: 0; background: none; font: inherit; color: var(--inchiostro); }
+.campo input::placeholder { color: var(--tenue); }
+.campo:focus-within { outline: 3px solid var(--inchiostro); outline-offset: 2px; }
+.campo input:focus-visible { outline: none; }
+
+.scelte { display: flex; padding: 3px; gap: 3px; border: 2px solid var(--inchiostro); border-radius: 999px; }
+.scelte--vista { margin-left: auto; }
+.scelte input { position: absolute; opacity: 0; pointer-events: none; }
+.scelta {
+  display: inline-flex; align-items: center; gap: 7px; min-height: 38px; padding: 0 15px; border-radius: 999px;
+  font-size: 15px; font-weight: 700; cursor: pointer;
+  transition: background-color 0.15s var(--ease), color 0.15s var(--ease);
+}
+.scelta svg { width: 15px; height: 15px; }
+.scelte input:checked + .scelta { background: var(--inchiostro); color: var(--fondo); }
+.scelte input:focus-visible + .scelta { outline: 3px solid var(--inchiostro); outline-offset: 3px; }
+
+.avviso { padding: 24px 0; font-weight: 700; }
+
+/* Galleria: solo i fotogrammi. La targa con titolo e dati compare al
+   passaggio o col fuoco; dove non c'è un puntatore resta sempre visibile. */
+.still { position: relative; display: block; overflow: hidden; border-radius: var(--r-still, 14px); }
+.still .cornice { border-radius: 0; }
+.targa {
+  position: absolute; left: 10px; right: 10px; bottom: 10px;
+  display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 2px 12px;
+  padding: 12px 14px; border-radius: 10px; background: var(--lilla); color: var(--nero);
+  opacity: 0; translate: 0 12px;
+  transition: opacity 0.2s var(--ease), translate 0.25s var(--ease);
+}
+.targa__titolo { font-family: var(--f-titoli); font-weight: 900; text-transform: uppercase; font-size: clamp(17px, 1.5vw, 21px); line-height: 1; letter-spacing: var(--titoli-spazio); }
+.targa__dati { grid-column: 1; font-size: 14px; line-height: 1.35; }
+.targa__stato { grid-column: 2; grid-row: 1 / span 2; display: inline-flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 700; white-space: nowrap; }
+.targa__stato svg { width: 10px; height: 10px; }
+.still:hover .targa, .still:focus-visible .targa { opacity: 1; translate: 0 0; }
+@media (hover: none) { .targa { opacity: 1; translate: 0 0; } }
+
+.closing--breve { min-height: 0; padding-top: clamp(48px, 7vw, 96px); }
+.closing--breve .lead { font-size: clamp(18px, 1.6vw, 22px); font-weight: 600; line-height: 1.45; }
+.closing--breve .btn { margin-top: 24px; }
+
+/* --------------------------------------------------------------------------
+   Strisce che scorrono da sole (il nastro di notizie, il rullino di foto):
+   si fermano al passaggio, col fuoco o col loro pulsante
+   -------------------------------------------------------------------------- */
+.scorre__pista { display: flex; align-items: center; width: max-content; animation: scorre var(--durata, 48s) linear infinite; }
+.scorre:hover .scorre__pista, .scorre:focus-within .scorre__pista, .scorre.is-ferma .scorre__pista { animation-play-state: paused; }
+@keyframes scorre { to { transform: translateX(-50%); } }
+
+/* --------------------------------------------------------------------------
+   Occhi della Cortoteca: pochi, piccoli, solo dove non c'è contenuto.
+   In chiusura stanno nella colonna libera accanto al testo; in galleria
+   occupano l'ultimo posto della griglia.
+   -------------------------------------------------------------------------- */
+.occhi-chiusura { position: relative; align-self: stretch; min-height: 150px; }
+.occhi-chiusura .occhio, .galleria__vuoto .occhio { position: absolute; left: var(--x); top: var(--y); width: var(--d); translate: -50% -50%; }
+.galleria__vuoto { position: relative; grid-column-end: -1; aspect-ratio: 16 / 9; }
+
+@media (max-width: 1023px) {
+  .occhi-chiusura { min-height: 96px; max-width: 260px; }
+}
+
+/* Il posto degli occhi in galleria c'è solo se l'ultima fila ha davvero un
+   vuoto: se i fotogrammi la riempiono (o la colonna è una sola) sparisce,
+   invece di aprire una fila tutta sua */
+.galleria__vuoto:nth-child(3n + 1) { display: none; }
+@media (max-width: 1023px) {
+  .galleria__vuoto:nth-child(3n + 1) { display: block; }
+  .galleria__vuoto:nth-child(2n + 1) { display: none; }
+}
+@media (max-width: 639px) {
+  .galleria__vuoto, .galleria__vuoto:nth-child(3n + 1) { display: none; }
 }

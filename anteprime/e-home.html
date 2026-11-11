@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>CDL APS: cinema giovane e indipendente a Rimini (anteprima E)</title>
+    <meta name="description" content="Associazione riminese che produce cortometraggi e organizza serate di cinema indipendente.">
+    <meta name="robots" content="noindex">
+    <!-- Anteprima: gli indirizzi relativi partono dalla radice del sito -->
+    <base href="/">
+    <link rel="icon" type="image/png" href="assets/img/brand/favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;900&display=swap">
+    <link rel="stylesheet" href="anteprime/comune.css">
+    <link rel="stylesheet" href="anteprime/e.css">
+</head>
+<body>
+
+    <header class="nav">
+        <div class="wrap nav__riga">
+            <a class="skip-link" href="anteprime/e-home.html#top">Vai al contenuto</a>
+            <a class="nav__logo" href="anteprime/e-home.html" aria-label="CDL, pagina iniziale"><span class="logo"></span></a>
+            <a class="nav__voce" href="eventi.html" style="--punto: var(--blu)">Eventi</a>
+            <a class="nav__voce" href="produzioni.html" style="--punto: var(--lilla)">Produzioni</a>
+            <a class="nav__cortoteca" href="anteprime/e-cortoteca.html"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.14v13.72L19 12 8 5.14Z"/></svg>Cortoteca</a>
+            <a class="btn btn--pieno nav__socio" href="anteprime/e-home.html#socio">Diventa socio</a>
+        </div>
+    </header>
+
+    <main id="top">
+        <!-- APERTURA: il marchio a tutta larghezza, la frase su una riga, e al
+             piede il nastro delle ultime notizie -->
+        <section class="hero hero--home">
+            <div class="wrap">
+                <div class="marchio" role="img" aria-label="CDL">
+                    <span class="lettera"></span><span class="lettera"></span><span class="lettera"></span>
+                </div>
+                <h1 class="claim">
+                    <span class="sr-only">Cinema giovane e indipendente</span>
+                    <span class="fit solo-largo" aria-hidden="true"><span class="fit-testo">Cinema giovane e indipendente</span></span>
+                    <span class="fit solo-stretto" aria-hidden="true"><span class="fit-testo">Cinema giovane</span></span>
+                    <span class="fit solo-stretto" aria-hidden="true"><span class="fit-testo">e indipendente</span></span>
+                </h1>
+                <div class="grid hero__piede">
+                    <p class="lead span-7">CDL &egrave; un'associazione di promozione sociale che si occupa di sostenere, diffondere ed esplorare il cinema giovane e indipendente, attraverso la realizzazione di progetti cinematografici e l'organizzazione di eventi.</p>
+                    <!-- Sul computer l'invito ai soci è già nella barra: qui compare solo su telefono -->
+                    <div class="btn-riga span-5 hero__azioni">
+                        <a class="btn btn--pieno" href="anteprime/e-cortoteca.html"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.14v13.72L19 12 8 5.14Z"/></svg>Guarda i corti</a>
+                        <a class="btn solo-telefono" href="anteprime/e-home.html#socio">Diventa socio</a>
+                    </div>
+                </div>
+            </div>
+            <div class="nastro scorre" id="nastro" role="group" aria-label="Ultime notizie">
+                <div class="scorre__pista"></div>
+                <button class="scorre__pausa" type="button" aria-pressed="false">
+                    <span class="sr-only">Ferma lo scorrimento delle notizie</span><svg class="icona-ferma" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="5" width="4.5" height="14" rx="1"/><rect x="13.5" y="5" width="4.5" height="14" rx="1"/></svg><svg class="icona-riprendi" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.14v13.72L19 12 8 5.14Z"/></svg>
+                </button>
+            </div>
+        </section>
+
+        <!-- L'INDICE GRANDE: le tre sezioni del sito, ognuna col nome a tutta
+             larghezza e l'ultima cosa accaduta. Le note le mette e.js. -->
+        <section id="indice" aria-label="Le sezioni del sito">
+            <div class="wrap">
+                <ul class="portoni">
+                    <li>
+                        <a class="portone" href="eventi.html" style="--colore: var(--blu); --scritta: var(--azzurro)">
+                            <h2 class="portone__nome"><span class="sr-only">Eventi</span><span class="fit" aria-hidden="true"><span class="fit-testo">Eventi</span></span></h2>
+                            <span class="portone__riga">
+                                <span class="portone__nota" id="nota-eventi"></span>
+                                <span class="portone__freccia"><svg class="freccia" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h15"/><path d="m13 6 6 6-6 6"/></svg></span>
+                            </span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="portone" href="produzioni.html" style="--colore: var(--lilla); --scritta: var(--nero)">
+                            <h2 class="portone__nome"><span class="sr-only">Produzioni</span><span class="fit" aria-hidden="true"><span class="fit-testo">Produzioni</span></span></h2>
+                            <span class="portone__riga">
+                                <span class="portone__nota" id="nota-produzioni"></span>
+                                <span class="portone__freccia"><svg class="freccia" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h15"/><path d="m13 6 6 6-6 6"/></svg></span>
+                            </span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="portone" href="anteprime/e-cortoteca.html" style="--colore: var(--nero); --scritta: var(--lilla)">
+                            <h2 class="portone__nome"><span class="sr-only">Cortoteca</span><span class="fit" aria-hidden="true"><span class="fit-testo">Cortoteca</span></span></h2>
+                            <span class="portone__riga">
+                                <span class="portone__nota" id="nota-cortoteca"></span>
+                                <span class="portone__freccia"><svg class="freccia" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h15"/><path d="m13 6 6 6-6 6"/></svg></span>
+                            </span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- DALLE SALE E DAI SET: il rullino scorre piano; ogni foto porta al suo evento -->
+        <section id="sale" class="scorre" aria-labelledby="titolo-sale">
+            <div class="wrap testa-riga">
+                <h2 id="titolo-sale">Dalle sale e dai set</h2>
+                <button class="btn scorre__pausa" type="button" aria-pressed="false"><span data-testo>Ferma</span><span class="sr-only"> lo scorrimento delle fotografie</span></button>
+            </div>
+            <div class="scorre__finestra">
+                <div class="scorre__pista">
+                    <a class="cornice" href="short-talks-al-not-2026.html"><img src="assets/img/eventi/short-talks-al-not-2026/foto-6.jpg" alt="Spettatori fra le poltrone del Supercinema" loading="lazy"></a>
+                    <a class="cornice" href="longstoryshort.html"><img src="assets/img/eventi/long-story-short-2026/foto-3.jpg" alt="Una troupe al tramonto in riva al mare" loading="lazy"></a>
+                    <a class="cornice" href="short-talks-al-not-2025.html"><img src="assets/img/eventi/short-talks-al-not-2025/foto-3.jpg" alt="Il pubblico in sala" loading="lazy"></a>
+                    <a class="cornice" href="longstoryshort.html"><img src="assets/img/eventi/long-story-short-2026/foto-4.jpg" alt="Un operatore prepara la macchina da presa" loading="lazy"></a>
+                    <a class="cornice" href="short-talks-2.html"><img src="assets/img/eventi/short-talks-2/foto-4.jpg" alt="Un biglietto di Short Talks davanti alle poltrone della sala" loading="lazy"></a>
+                    <a class="cornice" href="short-talks-off-1.html"><img src="assets/img/eventi/short-talks-off-1/foto-2.jpg" alt="Un autore risponde alle domande del pubblico" loading="lazy"></a>
+                    <a class="cornice" href="blue-hour.html"><img src="assets/img/eventi/blue-hour/foto-1.jpg" alt="Il pubblico sulla sabbia sotto le lanterne blu" loading="lazy"></a>
+                    <a class="cornice" href="short-talks-al-not-2025.html"><img src="assets/img/eventi/short-talks-al-not-2025/foto-6.jpg" alt="Il pubblico durante il dialogo con gli autori" loading="lazy"></a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="closing fondo-arancio" id="socio">
+        <div class="wrap sostieni">
+            <h2>
+                <span class="sr-only">Sostieni CDL</span>
+                <span class="fit" aria-hidden="true"><span class="fit-testo">Sostieni<span class="logo"></span></span></span>
+            </h2>
+            <div class="grid sostieni__corpo">
+                <div class="span-7">
+                    <p class="sostieni__frase">Associarti a CDL significa contribuire attivamente al nostro progetto di diffusione della cultura cinematografica indipendente.</p>
+                    <p class="sostieni__stato"><span class="rec"></span>Il tesseramento 2026 &egrave; aperto.</p>
+                    <div class="btn-riga">
+                        <a class="btn btn--pieno" href="https://wa.me/393493290864?text=Ciao,%20vorrei%20diventare%20socio%20di%20CDL%20APS" target="_blank" rel="noopener">Diventa socio</a>
+                        <a class="btn" href="mailto:ciao@cdlaps.com?subject=Richiesta%20Diventare%20Socio">Scrivici</a>
+                    </div>
+                    <a class="link" href="vantaggi-tesseramento.html">Tutti i vantaggi per i soci <svg class="freccia" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h15"/><path d="m13 6 6 6-6 6"/></svg></a>
+                </div>
+                <a class="span-4 start-9 sostieni__tessera" href="vantaggi-tesseramento.html" aria-label="I vantaggi per i soci">
+                    <img src="assets/img/partner/tessera-cdl.png" alt="" width="1080" height="1080" loading="lazy">
+                </a>
+            </div>
+        </div>
+        <div class="piede">
+            <div class="wrap piede__riga">
+                <a href="anteprime/e-home.html" aria-label="CDL, pagina iniziale"><span class="logo"></span></a>
+                <nav class="piede__elenchi" aria-label="Pagine e contatti">
+                    <ul>
+                        <li><a href="eventi.html">Eventi</a></li>
+                        <li><a href="produzioni.html">Produzioni</a></li>
+                        <li><a href="anteprime/e-cortoteca.html">Cortoteca</a></li>
+                        <li><a href="vantaggi-tesseramento.html">Vantaggi per i soci</a></li>
+                    </ul>
+                    <ul>
+                        <li><a href="https://instagram.com/cdl_aps" target="_blank" rel="noopener">Instagram</a></li>
+                        <li><a href="https://www.youtube.com/@cdl_aps" target="_blank" rel="noopener">YouTube</a></li>
+                        <li><a href="mailto:ciao@cdlaps.com">ciao@cdlaps.com</a></li>
+                    </ul>
+                </nav>
+                <p class="piede__dati">Associazione di promozione del cinema giovane e indipendente<br>
+                CDL APS &bull; Viale Laurana 13, Rimini, 47921 &bull; CF: 91200080405 &bull; 2026</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="assets/js/dati.js"></script>
+    <script src="anteprime/comune.js"></script>
+    <script src="anteprime/e.js"></script>
+</body>
+</html>

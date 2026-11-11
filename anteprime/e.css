@@ -1,0 +1,138 @@
+/* ==========================================================================
+   ANTEPRIMA E — «Indice grande»
+   La versione a scritte grandi. Apertura col marchio a tutta larghezza e, al
+   piede, un nastro di notizie che scorre. Poi l'indice delle sezioni: tre
+   nomi larghi quanto la pagina, che al passaggio prendono il loro colore.
+   Stessa logica della proposta F, a un'altra scala. Solo Montserrat.
+   Si appoggia a comune.css.
+   File di prova: non fa parte del sito pubblicato.
+   ========================================================================== */
+
+.start-9 { grid-column-start: 9; }
+
+/* --------------------------------------------------------------------------
+   Apertura
+   -------------------------------------------------------------------------- */
+.hero .wrap { display: flex; flex-direction: column; }
+/* Lo spazio in fondo è quello del nastro */
+.hero--home { padding-bottom: calc(48px + 46px); }
+
+.claim { margin-top: clamp(16px, 2vw, 28px); }
+.claim .fit + .fit { margin-top: 0.06em; }
+.hero__piede { margin-top: clamp(16px, 2vw, 28px); align-items: end; }
+.hero__azioni { justify-content: flex-end; }
+
+/* Il nastro: le ultime notizie scorrono al piede dell'apertura, separate dal
+   marchio. Si ferma al passaggio, col fuoco o col pulsante. */
+.nastro {
+  position: absolute; left: 0; right: 0; bottom: 0; height: 46px;
+  display: flex; align-items: center; overflow: hidden;
+  background: var(--nero); color: var(--chiaro);
+}
+.nastro__voce { display: inline-flex; align-items: center; gap: 28px; padding-left: 28px; font-size: 15px; font-weight: 700; white-space: nowrap; }
+.nastro__voce .logo { width: 30px; color: var(--lilla); }
+.nastro__voce a { transition: color 0.15s var(--ease); }
+.nastro__voce a:hover { color: var(--lilla); }
+.nastro .scorre__pausa {
+  position: absolute; right: 0; top: 0; bottom: 0; width: 56px;
+  display: grid; place-items: center; border: 0; cursor: pointer;
+  background: var(--nero); color: var(--chiaro); box-shadow: -14px 0 14px var(--nero);
+  --inchiostro: var(--chiaro);
+}
+.nastro .scorre__pausa svg { width: 14px; height: 14px; }
+.nastro .scorre__pausa .icona-riprendi, .nastro.is-ferma .scorre__pausa .icona-ferma { display: none; }
+.nastro.is-ferma .scorre__pausa .icona-riprendi { display: block; }
+
+/* --------------------------------------------------------------------------
+   L'indice grande: tre sezioni, tre nomi larghi quanto la pagina. A riposo
+   sono neri su chiaro, con sotto l'ultima cosa accaduta; al passaggio il
+   colore della sezione sale da sotto e la freccia avanza.
+   -------------------------------------------------------------------------- */
+#indice { min-height: 0; padding-top: clamp(40px, 5vw, 72px); }
+.portoni { border-top: 1px solid var(--filo); }
+.portone {
+  position: relative; isolation: isolate; display: block;
+  padding: clamp(18px, 2.2vw, 30px) 0 clamp(12px, 1.4vw, 18px);
+  border-bottom: 1px solid var(--filo);
+  transition: color 0.2s var(--ease);
+}
+/* Il colore sporge un poco oltre i margini, così il nome non tocca il bordo */
+.portone::before {
+  content: ''; position: absolute; inset: -1px calc(var(--gut) * -0.3); z-index: -1;
+  border-radius: var(--r); background: var(--colore);
+  transform: scaleY(0); transform-origin: bottom;
+  transition: transform 0.4s var(--ease);
+}
+.portone__nome { margin-left: -0.012em; }
+.portone__riga { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: clamp(8px, 1vw, 14px); }
+.portone__nota { display: flex; align-items: center; gap: 10px; font-size: clamp(16px, 1.3vw, 18px); font-weight: 600; }
+.portone__nota::before { content: ''; flex: 0 0 auto; width: 12px; height: 12px; border-radius: 50%; background: var(--colore); transition: background-color 0.2s var(--ease); }
+.portone__freccia { display: grid; place-items: center; flex: 0 0 auto; width: 44px; height: 44px; border: 2px solid currentColor; border-radius: 50%; transition: transform 0.4s var(--ease); }
+.portone__freccia .freccia { width: 19px; height: 19px; }
+
+@media (hover: hover) {
+  .portone:hover, .portone:focus-visible { color: var(--scritta); }
+  .portone:hover::before, .portone:focus-visible::before { transform: scaleY(1); }
+  .portone:hover .portone__nota::before, .portone:focus-visible .portone__nota::before { background: var(--scritta); }
+  .portone:hover .portone__freccia, .portone:focus-visible .portone__freccia { transform: translateX(6px); }
+}
+
+/* --------------------------------------------------------------------------
+   Dalle sale e dai set: il rullino scorre piano da solo
+   -------------------------------------------------------------------------- */
+#sale { min-height: 0; padding-left: 0; padding-right: 0; }
+.testa-riga { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px 24px; }
+#sale .scorre__pausa { min-height: 44px; }
+.scorre__finestra { margin-top: clamp(24px, 2.8vw, 40px); overflow: hidden; }
+#sale .scorre__pista { --durata: 80s; height: clamp(220px, 34svh, 340px); align-items: stretch; }
+#sale .cornice { flex: 0 0 auto; height: 100%; aspect-ratio: auto; margin-right: 12px; border-radius: 16px; }
+#sale .cornice img { position: static; width: auto; height: 100%; }
+
+/* --------------------------------------------------------------------------
+   CORTOTECA (pagina)
+   -------------------------------------------------------------------------- */
+.parola { margin-left: -0.012em; }
+.hero--cortoteca .strumenti { margin-top: clamp(22px, 2.6vw, 36px); }
+#opere { margin-top: 20px; }
+
+/* Lista: una riga per opera, con la miniatura */
+.indice { border-top: 1px solid var(--filo); }
+.voce {
+  display: grid; grid-template-columns: 120px minmax(0, 1fr) auto auto; align-items: center; gap: 0 24px;
+  padding: 9px 0; border-bottom: 1px solid var(--filo);
+}
+.voce .cornice { width: 120px; border-radius: 10px; }
+.voce__titolo { font-family: var(--f-titoli); font-weight: 900; text-transform: uppercase; font-size: clamp(20px, 1.9vw, 26px); line-height: 1.02; letter-spacing: var(--titoli-spazio); }
+.voce__titolo span { background: linear-gradient(currentColor, currentColor) 0 100% / 0 2px no-repeat; transition: background-size 0.25s var(--ease); }
+.voce:hover .voce__titolo span { background-size: 100% 2px; }
+.voce__dati { display: block; font-size: 15px; line-height: 1.4; color: var(--tenue); }
+.voce__anno { font-weight: 700; font-variant-numeric: tabular-nums; }
+.voce__stato {
+  display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-width: 112px; min-height: 36px; padding: 0 14px;
+  border: 2px solid var(--lilla); border-radius: 999px; font-size: 14px; font-weight: 700;
+}
+.voce__stato svg { width: 10px; height: 10px; }
+.voce__stato--play { background: var(--lilla); color: var(--nero); }
+
+/* Galleria: tre colonne strette, come un provino */
+.galleria { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+
+/* --------------------------------------------------------------------------
+   Adattamenti
+   -------------------------------------------------------------------------- */
+@media (max-width: 1023px) {
+  .hero__azioni { justify-content: flex-start; }
+  .galleria { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .voce { grid-template-columns: 112px minmax(0, 1fr); gap: 0 14px; }
+  .voce .cornice { width: 112px; }
+  .voce__anno, .voce__stato { display: none; }
+}
+
+@media (max-width: 759px) {
+  .scelte--vista { margin-left: 0; }
+}
+
+@media (max-width: 639px) {
+  .hero--home { padding-bottom: calc(32px + 46px); }
+  .galleria { grid-template-columns: minmax(0, 1fr); }
+}

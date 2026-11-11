@@ -1,0 +1,171 @@
+/* ==========================================================================
+   ANTEPRIMA F — «Sala»
+   La versione discreta. L'apertura è la sala vista dall'alto, al buio: una
+   luce segue il puntatore come la torcia della maschera. Le sezioni sono un
+   indice di tre righe che si colorano al passaggio; il rullino di fotografie
+   scorre piano. Scritte più contenute, solo Montserrat. Si appoggia a
+   comune.css.
+   File di prova: non fa parte del sito pubblicato.
+   ========================================================================== */
+
+.start-9 { grid-column-start: 9; }
+
+h2 { font-size: clamp(30px, 3.6vw, 52px); }
+
+/* --------------------------------------------------------------------------
+   Apertura: la sala al buio e la torcia
+   -------------------------------------------------------------------------- */
+.hero--sala {
+  display: flex; align-items: flex-end;
+  padding-bottom: clamp(40px, 6svh, 72px);
+  background: var(--nero); color: var(--chiaro);
+  --fondo: var(--nero); --inchiostro: var(--chiaro); --accento-hover: var(--lilla); --accento-hover-testo: var(--nero);
+}
+.hero__foto { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; object-fit: cover; animation: assesta 2s var(--ease) both; }
+@keyframes assesta {
+  from { transform: scale(1.08); }
+  to { transform: scale(1); }
+}
+
+/* Due veli: uno fisso a sinistra, che tiene leggibile il testo; uno che
+   lascia un cerchio di luce attorno al punto (--mx, --my) seguito da f.js */
+.hero__buio {
+  position: absolute; inset: 0;
+  background:
+    linear-gradient(90deg, rgba(29, 29, 27, 0.84) 0%, rgba(29, 29, 27, 0.45) 40%, rgba(29, 29, 27, 0) 64%),
+    radial-gradient(circle clamp(240px, 28vw, 430px) at var(--mx, 70%) var(--my, 42%), rgba(29, 29, 27, 0) 0%, rgba(29, 29, 27, 0.2) 55%, rgba(29, 29, 27, 0.66) 100%);
+}
+
+.hero--sala .wrap { position: relative; z-index: 1; }
+.hero--sala .marchio { width: min(100%, 500px); color: var(--lilla); }
+.claim { margin-top: clamp(20px, 2.4vw, 32px); max-width: 14ch; font-size: clamp(30px, 3.4vw, 50px); }
+.hero--sala .lead { margin-top: 16px; max-width: 52ch; }
+.hero--sala .btn-riga { margin-top: 24px; }
+
+/* --------------------------------------------------------------------------
+   L'indice: tre righe, tre sezioni. A riposo sono scritte su fondo chiaro,
+   con un pallino del loro colore; al passaggio il colore sale da sotto, il
+   nome si sposta e compare l'ultima fotografia.
+   -------------------------------------------------------------------------- */
+.porte { border-top: 1px solid var(--filo); }
+.porta {
+  position: relative; isolation: isolate;
+  display: grid; grid-template-columns: minmax(0, 6.2fr) minmax(0, 4fr) minmax(0, 2.6fr) 48px; align-items: center; gap: var(--gap);
+  min-height: clamp(150px, 21svh, 200px);
+  border-bottom: 1px solid var(--filo);
+  transition: color 0.2s var(--ease);
+}
+.porta::before {
+  content: ''; position: absolute; inset: -1px 0; z-index: -1;
+  border-radius: var(--r); background: var(--colore);
+  transform: scaleY(0); transform-origin: bottom;
+  transition: transform 0.4s var(--ease);
+}
+.porta__nome { display: flex; align-items: center; gap: 0.28em; font-size: clamp(36px, 4.8vw, 68px); transition: transform 0.4s var(--ease); }
+.porta__nome::before { content: ''; flex: 0 0 auto; width: 0.2em; height: 0.2em; border-radius: 50%; background: var(--colore); transition: background-color 0.2s var(--ease); }
+.porta__nota { font-size: 17px; line-height: 1.45; color: var(--tenue); transition: color 0.2s var(--ease); }
+.porta__foto { border-radius: 12px; opacity: 0; scale: 0.92; transition: opacity 0.25s var(--ease), scale 0.4s var(--ease); }
+.porta__freccia { display: grid; place-items: center; width: 48px; height: 48px; border: 2px solid currentColor; border-radius: 50%; transition: transform 0.4s var(--ease); }
+.porta__freccia .freccia { width: 20px; height: 20px; }
+
+@media (hover: hover) {
+  .porta:hover, .porta:focus-visible { color: var(--scritta); }
+  .porta:hover::before, .porta:focus-visible::before { transform: scaleY(1); }
+  .porta:hover .porta__nome, .porta:focus-visible .porta__nome { transform: translateX(28px); }
+  .porta:hover .porta__nome::before, .porta:focus-visible .porta__nome::before { background: var(--scritta); }
+  .porta:hover .porta__nota, .porta:focus-visible .porta__nota { color: inherit; }
+  .porta:hover .porta__foto, .porta:focus-visible .porta__foto { opacity: 1; scale: 1; }
+  .porta:hover .porta__freccia, .porta:focus-visible .porta__freccia { transform: translateX(-24px); }
+}
+
+/* --------------------------------------------------------------------------
+   Dalle sale e dai set: il rullino scorre piano da solo
+   -------------------------------------------------------------------------- */
+#sale { min-height: 0; padding-left: 0; padding-right: 0; }
+.testa-riga { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px 24px; }
+#sale .scorre__pausa { min-height: 44px; }
+.scorre__finestra { margin-top: clamp(24px, 2.8vw, 40px); overflow: hidden; }
+#sale .scorre__pista { --durata: 80s; height: clamp(220px, 34svh, 340px); align-items: stretch; }
+#sale .cornice { flex: 0 0 auto; height: 100%; aspect-ratio: auto; margin-right: 12px; border-radius: 16px; }
+#sale .cornice img { position: static; width: auto; height: 100%; }
+
+/* --------------------------------------------------------------------------
+   Sostieni: arancio, il titolo a misura d'uomo
+   -------------------------------------------------------------------------- */
+.sostieni__titolo { display: flex; flex-wrap: wrap; align-items: center; gap: 0.1em 0.24em; font-size: clamp(40px, 5.6vw, 80px) !important; }
+.sostieni__titolo .logo { height: 0.74em; margin-left: 0 !important; }
+
+/* --------------------------------------------------------------------------
+   CORTOTECA (pagina)
+   -------------------------------------------------------------------------- */
+.parola { margin-left: -0.012em; }
+.hero--cortoteca .strumenti { margin-top: clamp(22px, 2.6vw, 36px); }
+#opere { margin-top: 20px; }
+
+/* Lista: l'indice dei titoli e, a fianco, la scheda di quello su cui ci si trova */
+.righe { border-top: 1px solid var(--filo); }
+.riga {
+  display: grid; grid-template-columns: 18px minmax(0, 1fr) auto; align-items: center; gap: 2px 16px;
+  padding: 9px 0; border-bottom: 1px solid var(--filo);
+  color: var(--tenue); transition: color 0.15s var(--ease);
+}
+.riga__play { width: 12px; height: 12px; grid-row: 1 / span 2; }
+.riga__titolo { grid-column: 2; font-family: var(--f-titoli); font-weight: 900; text-transform: uppercase; font-size: clamp(19px, 1.85vw, 26px); line-height: 1.02; letter-spacing: var(--titoli-spazio); }
+.riga__dati { grid-column: 2; font-size: 15px; line-height: 1.4; }
+.riga__anno { grid-column: 3; grid-row: 1 / span 2; font-weight: 700; font-variant-numeric: tabular-nums; }
+.riga__mini { display: none; }
+.riga.is-attiva, .riga:hover, .riga:focus-visible { color: var(--inchiostro); }
+.riga.is-attiva .riga__titolo { color: var(--chiaro); }
+
+.palco { overflow: hidden; border-radius: var(--r); background: var(--lilla); color: var(--nero); --inchiostro: var(--nero); --fondo: var(--lilla); --accento-hover: var(--chiaro); --accento-hover-testo: var(--nero); }
+.palco .cornice { border-radius: 0; }
+.palco__testo { padding: 16px 24px 20px; }
+.palco__titolo { font-size: clamp(24px, 2.3vw, 32px); }
+.palco__frase { margin-top: 8px; font-size: 16px; line-height: 1.45; }
+.palco__dati { margin-top: 6px; font-size: 14px; }
+.palco .btn { margin-top: 12px; }
+
+/* Galleria: fotogrammi distanziati. Quello su cui ci si trova resta acceso,
+   gli altri arretrano; titolo e dati si leggono nella riga sopra. */
+.galleria { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; --r-still: 16px; }
+.still { transition: opacity 0.25s var(--ease); }
+.galleria.ha-fuoco .still:not(.is-fuoco) { opacity: 0.3; }
+
+.lettura { display: none; align-items: baseline; flex-wrap: wrap; gap: 4px 20px; min-height: 44px; margin-top: 24px; }
+.lettura__titolo { font-family: var(--f-titoli); font-weight: 900; text-transform: uppercase; font-size: clamp(22px, 2.4vw, 34px); line-height: 1; letter-spacing: var(--titoli-spazio); color: var(--chiaro); }
+.lettura__dati { font-size: 16px; color: var(--tenue); }
+@media (hover: hover) {
+  .lettura.is-visibile { display: flex; }
+  .galleria .targa { display: none; }
+}
+
+/* --------------------------------------------------------------------------
+   Adattamenti
+   -------------------------------------------------------------------------- */
+@media (max-width: 1023px) {
+  .hero--sala { min-height: min(100svh, 760px); }
+  .galleria { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .palco { display: none; }
+  .riga { grid-template-columns: 112px minmax(0, 1fr); gap: 2px 14px; color: var(--inchiostro); }
+  .riga__mini { display: block; grid-column: 1; grid-row: 1 / span 2; position: relative; width: 112px; aspect-ratio: 16 / 10; overflow: hidden; border-radius: 10px; background: #000; }
+  .riga__mini img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .riga__play, .riga__anno { display: none; }
+  .porta { grid-template-columns: minmax(0, 1fr) 48px; gap: 4px 16px; min-height: 0; padding: 22px 0; }
+  .porta__nota { grid-column: 1; grid-row: 2; }
+  .porta__foto { display: none; }
+  .porta__freccia { grid-column: 2; grid-row: 1 / span 2; }
+}
+
+@media (max-width: 759px) {
+  .scelte--vista { margin-left: 0; }
+}
+
+@media (max-width: 639px) {
+  .galleria { grid-template-columns: minmax(0, 1fr); }
+  .hero--sala { min-height: min(100svh, 680px); }
+}
+
+/* In chiusura gli occhi spuntano da dietro il piede lilla */
+.occhi-chiusura--piede { align-self: end; min-height: 0; height: 0; }
+.occhi-chiusura--piede .occhio { top: calc(var(--padb) + var(--y)); }
+.stanza .piede { position: relative; z-index: 1; }

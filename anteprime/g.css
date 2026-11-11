@@ -1,0 +1,255 @@
+/* ==========================================================================
+   ANTEPRIMA G — E e F messe insieme
+   Home: l'apertura è la sala di F (vista dall'alto, al buio, con la torcia)
+   e porta al piede il nastro di notizie di E; sotto restano l'indice grande,
+   il rullino e Sostieni di E. Cortoteca: quella di F, con la barra ridotta
+   all'invito ad associarsi e le informazioni sempre accanto all'opera.
+   Si appoggia a comune.css.
+   File di prova: non fa parte del sito pubblicato.
+   ========================================================================== */
+
+.start-9 { grid-column-start: 9; }
+
+/* --------------------------------------------------------------------------
+   Apertura: la sala al buio, la torcia e, al piede, il nastro
+   -------------------------------------------------------------------------- */
+.hero--sala {
+  display: flex; align-items: flex-end;
+  /* Lo spazio in fondo comprende quello del nastro */
+  padding-bottom: calc(46px + clamp(36px, 5svh, 64px));
+  background: var(--nero); color: var(--chiaro);
+  --fondo: var(--nero); --inchiostro: var(--chiaro); --accento-hover: var(--lilla); --accento-hover-testo: var(--nero);
+}
+.hero__foto { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; object-fit: cover; animation: assesta 2s var(--ease) both; }
+@keyframes assesta {
+  from { transform: scale(1.08); }
+  to { transform: scale(1); }
+}
+
+/* Due veli: uno fisso a sinistra, che tiene leggibile il testo; uno che
+   lascia un cerchio di luce attorno al punto (--mx, --my) seguito da g.js */
+.hero__buio {
+  position: absolute; inset: 0;
+  background:
+    linear-gradient(90deg, rgba(29, 29, 27, 0.84) 0%, rgba(29, 29, 27, 0.45) 40%, rgba(29, 29, 27, 0) 64%),
+    radial-gradient(circle clamp(240px, 28vw, 430px) at var(--mx, 70%) var(--my, 42%), rgba(29, 29, 27, 0) 0%, rgba(29, 29, 27, 0.2) 55%, rgba(29, 29, 27, 0.66) 100%);
+}
+
+.hero--sala .wrap { position: relative; z-index: 1; }
+/* Il marchio sta un passo indietro rispetto al titolo, soprattutto su telefono */
+.hero--sala .marchio { width: clamp(180px, 26vw, 380px); color: var(--lilla); }
+.claim { margin-top: clamp(20px, 2.4vw, 32px); max-width: 14ch; font-size: clamp(30px, 3.4vw, 50px); }
+.hero--sala .lead { margin-top: 16px; max-width: 52ch; }
+.hero--sala .btn-riga { margin-top: 24px; }
+
+/* Il nastro: le ultime notizie scorrono al piede dell'apertura, separate dal
+   marchio. Si ferma al passaggio, col fuoco o col pulsante. */
+.nastro {
+  position: absolute; left: 0; right: 0; bottom: 0; z-index: 1; height: 46px;
+  display: flex; align-items: center; overflow: hidden;
+  background: var(--nero); color: var(--chiaro);
+}
+.nastro__voce { display: inline-flex; align-items: center; gap: 28px; padding-left: 28px; font-size: 15px; font-weight: 700; white-space: nowrap; }
+.nastro__voce .logo { width: 30px; color: var(--lilla); }
+.nastro__voce a { transition: color 0.15s var(--ease); }
+.nastro__voce a:hover { color: var(--lilla); }
+.nastro .scorre__pausa {
+  position: absolute; right: 0; top: 0; bottom: 0; width: 56px;
+  display: grid; place-items: center; border: 0; cursor: pointer;
+  background: var(--nero); color: var(--chiaro); box-shadow: -14px 0 14px var(--nero);
+  --inchiostro: var(--chiaro);
+}
+.nastro .scorre__pausa svg { width: 14px; height: 14px; }
+.nastro .scorre__pausa .icona-riprendi, .nastro.is-ferma .scorre__pausa .icona-ferma { display: none; }
+.nastro.is-ferma .scorre__pausa .icona-riprendi { display: block; }
+
+/* --------------------------------------------------------------------------
+   L'indice: tre nomi larghi quanto la pagina, e nient'altro. Al passaggio
+   su un nome tutta la sezione prende il colore di quella parte del sito, gli
+   altri nomi si spengono e sotto compare l'elenco breve dei più recenti.
+   Sulla Cortoteca la sezione si fa sala: si aprono gli occhi nelle O e
+   altri si affacciano dai bordi della pagina.
+   -------------------------------------------------------------------------- */
+#indice {
+  min-height: 0; padding-top: clamp(40px, 5vw, 72px);
+  --spento: rgba(29, 29, 27, 0.16);
+  transition: background-color 0.45s var(--ease), color 0.3s var(--ease);
+}
+#indice:has(.sezione--eventi:is(:hover, :focus-within)) { --fondo: var(--blu); --inchiostro: var(--azzurro); --filo: rgba(132, 241, 247, 0.3); --tenue: rgba(247, 247, 247, 0.78); --spento: rgba(132, 241, 247, 0.22); }
+#indice:has(.sezione--produzioni:is(:hover, :focus-within)) { --fondo: var(--lilla); --inchiostro: var(--nero); --filo: rgba(29, 29, 27, 0.25); --tenue: rgba(29, 29, 27, 0.7); --spento: rgba(29, 29, 27, 0.16); }
+#indice:has(.sezione--cortoteca:is(:hover, :focus-within)) { --fondo: var(--nero); --inchiostro: var(--lilla); --filo: rgba(185, 187, 248, 0.3); --tenue: rgba(185, 187, 248, 0.75); --spento: rgba(185, 187, 248, 0.2); }
+
+.sezioni { border-top: 1px solid var(--filo); transition: border-color 0.3s var(--ease); }
+.sezione { padding-top: clamp(18px, 2.2vw, 30px); border-bottom: 1px solid var(--filo); transition: color 0.3s var(--ease), border-color 0.3s var(--ease); }
+.sezione__nome { margin-left: -0.012em; }
+.sezione__nome a { display: block; }
+.sezione__nome a:focus-visible { outline: 3px solid currentColor; outline-offset: 6px; }
+#indice:has(.sezione:is(:hover, :focus-within)) .sezione:not(:hover, :focus-within) { color: var(--spento); }
+
+/* L'elenco breve: una riga sola sotto il nome, nello spazio che c'è sempre
+   (così al passaggio nulla si sposta). Titolo e data, separati da un filo. */
+.sezione__elenco {
+  display: flex; flex-wrap: wrap; align-items: center; column-gap: 0;
+  height: 56px; overflow: hidden;
+  font-size: 15px; line-height: 1.3;
+}
+.sezione__elenco li { display: flex; align-items: center; height: 56px; }
+.sezione__elenco li + li::before { content: ''; width: 1px; height: 16px; margin: 0 18px; background: var(--filo); }
+.sezione__elenco a { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; font-weight: 700; white-space: nowrap; }
+.sezione__elenco a small { font-size: 13px; font-weight: 500; color: var(--tenue); }
+.sezione__elenco a:hover span { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 4px; }
+
+@media (hover: hover) {
+  .sezione__elenco li { opacity: 0; translate: 0 -8px; transition: opacity 0.25s var(--ease), translate 0.35s var(--ease); }
+  .sezione:is(:hover, :focus-within) .sezione__elenco li { opacity: 1; translate: 0 0; transition-delay: calc(var(--i, 0) * 45ms); }
+}
+/* Senza puntatore l'elenco non c'è: restano i tre nomi */
+@media (hover: none) {
+  .sezione__elenco { height: clamp(12px, 2vw, 20px); }
+  .sezione__elenco li { display: none; }
+}
+
+/* Gli occhi nelle O: chiusi (assenti) a riposo, si aprono quando la
+   Cortoteca si accende. Il centro è a 0,62 della riga, dove sta il centro
+   delle maiuscole. */
+.sezione--cortoteca .fit-testo { display: inline-block; }
+.sezione .o { position: relative; }
+.sezione .o .occhio {
+  position: absolute; left: 50%; top: 0.62em; width: 0.27em;
+  translate: -50% -50%;
+  border-width: 0.016em;
+  box-shadow: inset -0.012em -0.016em 0 rgba(29, 29, 27, 0.14);
+  transform: scale(0); transition: transform 0.35s var(--ease);
+}
+
+/* Gli occhi ai bordi: fuori pagina a riposo, si affacciano a metà */
+.occhi-bordo { position: absolute; inset: 0; pointer-events: none; }
+.occhi-bordo .occhio {
+  position: absolute; left: var(--x); top: var(--y); width: var(--d);
+  translate: -50% -50%;
+  transform: translateX(calc((var(--x) - 50%) * 2.2)); transition: transform 0.5s var(--ease);
+}
+.occhi-bordo .occhio:nth-child(2), .occhi-bordo .occhio:nth-child(4) { transition-delay: 0.08s; }
+
+#indice:has(.sezione--cortoteca:is(:hover, :focus-within)) .o .occhio { transform: scale(1); }
+#indice:has(.sezione--cortoteca:is(:hover, :focus-within)) .occhi-bordo .occhio { transform: none; }
+
+/* --------------------------------------------------------------------------
+   Dalle sale e dai set: il rullino scorre piano da solo e si ferma al
+   passaggio o col fuoco (le regole stanno in comune.css)
+   -------------------------------------------------------------------------- */
+#sale { min-height: 0; padding-left: 0; padding-right: 0; }
+.scorre__finestra { margin-top: clamp(24px, 2.8vw, 40px); overflow: hidden; }
+#sale .scorre__pista { --durata: 80s; height: clamp(220px, 34svh, 340px); align-items: stretch; }
+#sale .cornice { flex: 0 0 auto; height: 100%; aspect-ratio: auto; margin-right: 12px; border-radius: 16px; }
+#sale .cornice img { position: static; width: auto; height: 100%; }
+
+/* --------------------------------------------------------------------------
+   CORTOTECA (pagina)
+   -------------------------------------------------------------------------- */
+/* Per ora la barra porta solo il marchio e l'invito ad associarsi, che
+   resta visibile anche su telefono */
+.barra-ridotta .nav__socio { display: inline-flex; }
+@media (max-width: 639px) {
+  .barra-ridotta .nav__socio { min-height: 40px; padding: 0 18px; font-size: 14px; }
+}
+
+.parola { margin-left: -0.012em; }
+.hero--cortoteca .strumenti { margin-top: clamp(22px, 2.6vw, 36px); }
+#opere { margin-top: 24px; }
+
+/* Lista: l'indice dei titoli e, a fianco, il fotogramma di quello su cui ci
+   si trova. Il fotogramma resta fermo sotto la barra mentre la lista scorre,
+   così si vede anche quando la lista è lunga. */
+.start-6 { grid-column-start: 6; }
+#opere > .grid { align-items: start; }
+.righe { border-top: 1px solid var(--filo); }
+.riga {
+  display: grid; grid-template-columns: 18px minmax(0, 1fr); align-items: center; gap: 3px 16px;
+  padding: 12px 0; border-bottom: 1px solid var(--filo);
+  color: var(--tenue); transition: color 0.15s var(--ease);
+}
+.riga__play { width: 12px; height: 12px; grid-row: 1 / span 2; }
+.riga__titolo { grid-column: 2; font-family: var(--f-titoli); font-weight: 900; text-transform: uppercase; font-size: clamp(19px, 1.85vw, 26px); line-height: 1.02; letter-spacing: var(--titoli-spazio); }
+.riga__dati { grid-column: 2; font-size: 15px; line-height: 1.4; }
+.riga__mini { display: none; }
+.riga.is-attiva, .riga:hover, .riga:focus-visible { color: var(--inchiostro); }
+.riga.is-attiva .riga__titolo { color: var(--chiaro); }
+
+/* Il fotogramma a fianco è uno schermo acceso in sala: un filo lilla lo
+   stacca dal nero e un alone lo fa emergere. Parte all'altezza della prima
+   riga; l'unico comando è un pulsantino nell'angolo. */
+.palco { position: sticky; top: calc(var(--nav) + 24px); }
+.palco__schermo {
+  border-radius: 14px;
+  box-shadow: 0 0 0 1px rgba(185, 187, 248, 0.32), 0 24px 90px -24px rgba(185, 187, 248, 0.32);
+}
+.palco__schermo img { animation: accendi 0.35s var(--ease) both; }
+@keyframes accendi { from { opacity: 0; } }
+.palco__azione {
+  position: absolute; left: 16px; bottom: 16px; z-index: 1;
+  display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 18px;
+  border-radius: 999px; background: var(--lilla); color: var(--nero); font-size: 15px; font-weight: 700;
+  transition: background-color 0.15s var(--ease), transform 0.15s var(--ease);
+}
+.palco__azione svg { width: 11px; height: 11px; }
+.palco__azione .freccia { width: 15px; height: 15px; }
+.palco__azione:hover { background: var(--chiaro); transform: translateY(-1px); }
+.palco__azione:active { transform: translateY(1px) scale(0.985); }
+
+/* Galleria: fotogrammi distanziati. Quello su cui ci si trova resta acceso
+   e si scurisce appena; al centro compaiono, piano, titolo, regista e anno.
+   Gli altri arretrano. */
+.galleria { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; --r-still: 14px; }
+.still { transition: opacity 0.25s var(--ease); }
+.still .cornice img { transition: transform 0.6s var(--ease), filter 0.35s var(--ease); }
+.galleria.ha-fuoco .still:not(.is-fuoco) { opacity: 0.3; }
+
+.galleria .targa {
+  inset: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
+  padding: 16px; border-radius: 0; background: none; color: var(--chiaro); text-align: center;
+  translate: none; text-shadow: 0 1px 12px rgba(0, 0, 0, 0.5);
+  transition: opacity 0.35s var(--ease);
+}
+.galleria .targa__titolo { font-size: clamp(16px, 1.3vw, 19px); }
+.galleria .targa__dati { font-size: 13px; font-weight: 500; letter-spacing: 0.02em; color: rgba(247, 247, 247, 0.82); }
+@media (hover: hover) {
+  .still:hover .cornice img, .still:focus-visible .cornice img { filter: brightness(0.42); }
+}
+
+/* Senza puntatore niente passaggio: la didascalia sta sotto il fotogramma */
+@media (hover: none) {
+  .galleria { row-gap: 24px; }
+  .galleria .targa { position: static; align-items: flex-start; padding: 10px 0 0; text-align: left; color: var(--inchiostro); text-shadow: none; }
+  .galleria .targa__titolo { color: var(--chiaro); }
+  .galleria .targa__dati { color: var(--tenue); }
+}
+
+/* --------------------------------------------------------------------------
+   Adattamenti
+   -------------------------------------------------------------------------- */
+@media (max-width: 1023px) {
+  .hero--sala { min-height: min(100svh, 760px); }
+  .galleria { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .palco { display: none; }
+  .riga { grid-template-columns: 112px minmax(0, 1fr); gap: 2px 14px; color: var(--inchiostro); }
+  .riga__mini { display: block; grid-column: 1; grid-row: 1 / span 2; position: relative; width: 112px; aspect-ratio: 16 / 10; overflow: hidden; border-radius: 10px; background: #000; }
+  .riga__mini img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .riga__play { display: none; }
+}
+
+@media (max-width: 759px) {
+  .scelte--vista { margin-left: 0; }
+}
+
+@media (max-width: 639px) {
+  .hero--sala { min-height: min(100svh, 680px); padding-bottom: calc(46px + 32px); }
+  .hero--sala .marchio { width: 150px; }
+  .galleria { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* In chiusura gli occhi spuntano da dietro il piede lilla */
+.occhi-chiusura--piede { align-self: end; min-height: 0; height: 0; }
+.occhi-chiusura--piede .occhio { top: calc(var(--padb) + var(--y)); }
+.stanza .piede { position: relative; z-index: 1; }
