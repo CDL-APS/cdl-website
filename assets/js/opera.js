@@ -40,7 +40,7 @@ async function initPage() {
       return;
     }
 
-    document.title = 'CDL | ' + movie.titolo;
+    document.title = movie.titolo + ' – CDL APS';
     document.getElementById('movie-title').textContent = movie.titolo;
     document.getElementById('movie-year').textContent = movie.anno;
 

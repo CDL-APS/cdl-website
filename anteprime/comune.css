@@ -1,0 +1,374 @@
+/* ==========================================================================
+   ANTEPRIME C e D — base comune.
+   Tiene ciò che è piaciuto delle prime due: barra e piede di «Finestre», il
+   logo grande che si scopre, gli occhi che seguono il puntatore, le scritte a
+   tutta larghezza, la Cortoteca lilla. Aggiunge i colori di sezione presi
+   dalle prove su Drive e un impianto a schermi: ogni sezione occupa uno
+   schermo, tutto sta sugli stessi due margini.
+   File di prova: non fa parte del sito pubblicato.
+   ========================================================================== */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+:root {
+  /* Palette ufficiale */
+  --nero: #1d1d1b;
+  --lilla: #b9bbf8;
+  --chiaro: #f7f7f7;
+  --rosso: #ff0000;
+  /* Accoppiamenti di sezione (cartella "CDL Loghi Drive") */
+  --blu: #004aad;
+  --azzurro: #84f1f7;
+  --arancio: #ff751f;
+  --giallo: #f7c923;
+
+  /* Ritmo: barra, respiro delle sezioni, margine laterale, colonne */
+  --nav: 72px;
+  --padt: 120px;
+  --padb: 72px;
+  --gut: 80px;
+  --gap: 24px;
+
+  --r: 20px;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* Carattere dei titoli: ogni proposta imposta il suo */
+  --f-testo: 'Montserrat', sans-serif;
+  --f-titoli: 'Montserrat', sans-serif;
+  --titoli-larghezza: 100%;
+  --titoli-spazio: -0.04em;
+
+  /* Fondo e inchiostro della sezione corrente */
+  --fondo: var(--chiaro);
+  --inchiostro: var(--nero);
+  --accento: var(--nero);
+  --tenue: rgba(29, 29, 27, 0.74);
+  --filo: rgba(29, 29, 27, 0.2);
+  --barra: var(--chiaro);
+}
+
+@media (max-width: 1023px) { :root { --gut: 48px; } }
+@media (max-width: 639px) { :root { --nav: 56px; --padt: 88px; --padb: 48px; --gut: 20px; --gap: 12px; } }
+
+/* Campiture: ogni classe porta fondo, testo e colore d'accento */
+.fondo-nero { --fondo: var(--nero); --inchiostro: var(--chiaro); --accento: var(--lilla); --tenue: rgba(247, 247, 247, 0.8); --filo: rgba(247, 247, 247, 0.26); }
+.fondo-lilla { --fondo: var(--lilla); --inchiostro: var(--nero); --accento: var(--nero); --tenue: rgba(29, 29, 27, 0.8); --filo: rgba(29, 29, 27, 0.32); }
+.fondo-blu { --fondo: var(--blu); --inchiostro: var(--chiaro); --accento: var(--azzurro); --tenue: rgba(247, 247, 247, 0.86); --filo: rgba(247, 247, 247, 0.3); }
+.fondo-arancio { --fondo: var(--arancio); --inchiostro: var(--nero); --accento: var(--giallo); --tenue: rgba(29, 29, 27, 0.86); --filo: rgba(29, 29, 27, 0.34); }
+
+html { scroll-behavior: auto; }
+
+body {
+  margin: 0;
+  overflow-x: hidden;
+  font-family: var(--f-testo);
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.625;
+  background: var(--fondo);
+  color: var(--inchiostro);
+  -webkit-font-smoothing: antialiased;
+}
+
+img { display: block; max-width: 100%; height: auto; }
+h1, h2, h3, p, ul, ol { margin: 0; }
+ul, ol { padding: 0; list-style: none; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; }
+[hidden] { display: none !important; }
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+  overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+}
+
+a:focus-visible, button:focus-visible, input:focus-visible, [tabindex]:focus-visible {
+  outline: 3px solid var(--inchiostro);
+  outline-offset: 3px;
+}
+
+/* --------------------------------------------------------------------------
+   Margini e griglia: un solo contenitore per barra, sezioni e piede
+   -------------------------------------------------------------------------- */
+.wrap { width: min(100% - 2 * var(--gut), 1280px); margin-inline: auto; }
+
+.grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--gap); align-items: start; }
+/* Solo la fine della campata: così una classe start-N può fissarne l'inizio */
+.span-4 { grid-column-end: span 4; }
+.span-5 { grid-column-end: span 5; }
+.span-6 { grid-column-end: span 6; }
+.span-7 { grid-column-end: span 7; }
+.start-7 { grid-column-start: 7; }
+.start-8 { grid-column-start: 8; }
+
+/* Ogni sezione occupa uno schermo (o due con --h: 2); cresce solo se il
+   contenuto non ci sta, così nulla viene mai tagliato */
+main > section,
+.closing {
+  position: relative;
+  min-height: calc(var(--h, 1) * 100svh);
+  padding: var(--padt) 0 var(--padb);
+  background: var(--fondo);
+  color: var(--inchiostro);
+}
+
+.hero { padding-top: calc(var(--nav) + 40px); padding-bottom: 56px; }
+
+/* --------------------------------------------------------------------------
+   Titoli
+   -------------------------------------------------------------------------- */
+h1, h2, h3, .titolo {
+  font-family: var(--f-titoli);
+  font-stretch: var(--titoli-larghezza);
+  font-weight: 900;
+  text-transform: uppercase;
+  line-height: 0.94;
+  letter-spacing: var(--titoli-spazio);
+  text-wrap: balance;
+}
+
+h2 { font-size: clamp(30px, 3.4vw, 48px); }
+
+/* Riga a tutta larghezza: la misura la calcola comune.js partendo da 100 px.
+   Senza script resta la dimensione di ripiego. */
+.fit { display: block; white-space: nowrap; line-height: 0.8; font-size: var(--ripiego, 9vw); }
+/* La spaziatura negativa accorcia la misura dell'ultima lettera: il margine interno la restituisce */
+.fit-testo { display: inline-flex; align-items: center; padding-right: calc(var(--titoli-spazio) * -1); }
+
+.lead { max-width: 60ch; font-size: clamp(16px, 1.25vw, 18px); }
+
+/* Il marchio, ricolorato con una maschera: prende il colore del testo */
+.logo {
+  display: block; flex: 0 0 auto;
+  aspect-ratio: 1435 / 557;
+  background: currentColor;
+  -webkit-mask: url('../assets/img/brand/logo-cdl.png') center / contain no-repeat;
+  mask: url('../assets/img/brand/logo-cdl.png') center / contain no-repeat;
+}
+
+/* Il marchio grande: tre lettere che si scoprono dal basso, una dopo l'altra */
+.marchio {
+  position: relative;
+  display: grid; grid-template-columns: repeat(3, 31.36%); justify-content: space-between;
+}
+.lettera {
+  display: block; aspect-ratio: 450 / 557;
+  background: currentColor;
+  -webkit-mask: url('../assets/img/brand/logo-cdl.png') var(--x, 0%) 0 / 318.9% 100% no-repeat;
+  mask: url('../assets/img/brand/logo-cdl.png') var(--x, 0%) 0 / 318.9% 100% no-repeat;
+  animation: scopre 1.1s var(--ease) both;
+}
+.lettera:nth-child(2) { --x: 50%; animation-delay: 0.12s; }
+.lettera:nth-child(3) { --x: 100%; animation-delay: 0.24s; }
+
+@keyframes scopre {
+  from { clip-path: inset(100% 0 0 0); }
+  to { clip-path: inset(0 0 0 0); }
+}
+
+/* --------------------------------------------------------------------------
+   Occhi: i bulbi dell'icona CDL. La pupilla si sposta con --px e --py, che
+   comune.js aggiorna seguendo il puntatore.
+   -------------------------------------------------------------------------- */
+.occhio {
+  display: grid; place-items: center;
+  aspect-ratio: 1;
+  border: max(2px, 0.045em) solid var(--nero);
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: inset -0.06em -0.08em 0 rgba(29, 29, 27, 0.14);
+}
+.pupilla {
+  width: 46%; height: 46%; border-radius: 50%;
+  background:
+    radial-gradient(circle at 34% 32%, #fff 0 13%, transparent 14%),
+    radial-gradient(circle, var(--nero) 0 50%, #8f8f95 51% 66%, var(--nero) 67%);
+  transform: translate(var(--px, 0px), var(--py, 0px));
+  transition: transform 0.14s linear;
+}
+
+/* Una O con dentro un occhio: sostituisce la lettera nei titoli */
+.o {
+  display: inline-grid; place-items: center; flex: 0 0 auto;
+  width: var(--o-larga, 0.84em); height: var(--o-alta, 0.72em); margin: 0 0.02em;
+  border-radius: 50%; background: currentColor;
+}
+.o .occhio { width: 58%; height: 60%; aspect-ratio: auto; border-width: 0; font-size: 0.5em; }
+.o .pupilla { width: 52%; height: auto; aspect-ratio: 1; }
+
+/* --------------------------------------------------------------------------
+   Barra (da «Finestre»): chiara, il marchio a sinistra, Cortoteca in pillola
+   lilla, l'invito ai soci in pillola nera. Un pallino dice il colore della
+   sezione.
+   -------------------------------------------------------------------------- */
+.nav { position: fixed; inset: 0 0 auto 0; z-index: 10; height: var(--nav); background: var(--barra); color: var(--nero); }
+.nav__riga { height: 100%; display: flex; align-items: center; gap: clamp(4px, 1.4vw, 20px); }
+.nav__logo { margin-right: auto; padding: 8px 0; }
+.nav__logo .logo { width: 68px; }
+
+.skip-link {
+  position: absolute; left: var(--gut); top: 12px; z-index: 2;
+  padding: 10px 16px; border-radius: 999px; background: var(--nero); color: var(--chiaro); font-weight: 700;
+  transform: translateY(-200%);
+}
+.skip-link:focus-visible { transform: none; }
+
+.nav__voce {
+  position: relative; display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 8px;
+  font-size: 15px; font-weight: 700; white-space: nowrap;
+}
+.nav__voce::before { content: ''; width: 9px; height: 9px; border-radius: 50%; background: var(--punto, currentColor); }
+.nav__voce::after {
+  content: ''; position: absolute; left: 25px; right: 8px; bottom: 9px; height: 2px; background: currentColor;
+  transform: scaleX(0); transform-origin: left; transition: transform 0.15s var(--ease);
+}
+.nav__voce:hover::after, .nav__voce[aria-current]::after { transform: scaleX(1); }
+
+.nav__cortoteca {
+  display: inline-flex; align-items: center; gap: 7px; min-height: 44px; padding: 0 17px 0 14px;
+  border: 2px solid var(--nero); border-radius: 999px; background: var(--lilla);
+  font-size: 15px; font-weight: 700; white-space: nowrap;
+  transition: background-color 0.15s var(--ease), color 0.15s var(--ease), transform 0.15s var(--ease);
+}
+.nav__cortoteca svg { width: 11px; height: 11px; }
+.nav__cortoteca:hover { transform: translateY(-1px); }
+.nav__cortoteca:hover, .nav__cortoteca[aria-current] { background: var(--nero); color: var(--lilla); }
+.nav__cortoteca:active { transform: translateY(1px) scale(0.985); }
+
+/* --------------------------------------------------------------------------
+   Pulsanti e collegamenti. Al passaggio il pulsante sale di un pixel, alla
+   pressione scende; il filo dei collegamenti si disegna da sinistra.
+   -------------------------------------------------------------------------- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 9px;
+  min-height: 48px; padding: 0 24px;
+  border: 2px solid var(--inchiostro); border-radius: 999px;
+  font-size: 16px; font-weight: 700; color: var(--inchiostro); white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 0.15s var(--ease), color 0.15s var(--ease), border-color 0.15s var(--ease), transform 0.15s var(--ease);
+}
+.btn svg { width: 13px; height: 13px; }
+.btn--pieno { background: var(--inchiostro); color: var(--fondo); }
+.btn:hover { transform: translateY(-1px); background: var(--inchiostro); color: var(--fondo); }
+.btn--pieno:hover { background: var(--accento-hover, var(--rosso)); border-color: var(--accento-hover, var(--rosso)); color: var(--accento-hover-testo, #fff); }
+.btn:active { transform: translateY(1px) scale(0.985); transition-duration: 0.09s; }
+.btn-riga { display: flex; flex-wrap: wrap; gap: 12px; }
+
+.link {
+  display: inline-flex; align-items: center; gap: 8px; min-height: 44px;
+  font-weight: 700;
+  background:
+    linear-gradient(currentColor, currentColor) 0 calc(100% - 9px) / 0 2px no-repeat,
+    linear-gradient(var(--filo), var(--filo)) 0 calc(100% - 9px) / 100% 2px no-repeat;
+  transition: background-size 0.2s var(--ease);
+}
+.link:hover { background-size: 100% 2px, 100% 2px; }
+.piu { width: 0.8em; height: 0.8em; flex: 0 0 auto; transition: transform 0.3s var(--ease); }
+.link:hover .piu { transform: rotate(90deg); }
+
+/* --------------------------------------------------------------------------
+   Cornice: il contenitore di ogni immagine. Fondo nero, angoli del marchio.
+   Dentro un collegamento la foto si avvicina appena, la cornice resta ferma.
+   -------------------------------------------------------------------------- */
+.cornice { position: relative; display: block; overflow: hidden; aspect-ratio: 16 / 9; border-radius: var(--r); background: var(--nero); }
+.cornice img { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; object-fit: cover; transition: transform 0.6s var(--ease); }
+a:hover > .cornice img, a.cornice:hover img, .scheda:hover .cornice img { transform: scale(1.03); }
+
+.disco {
+  position: absolute; left: 16px; bottom: 16px; z-index: 1;
+  display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 0 16px 0 13px;
+  border-radius: 999px; background: var(--lilla); color: var(--nero); font-size: 15px; font-weight: 700;
+}
+.disco svg { width: 11px; height: 11px; }
+.disco--attesa { background: var(--chiaro); padding-left: 16px; }
+
+/* Scheda: una superficie che porta a una pagina. Al passaggio sale di 2 px. */
+.scheda { display: block; border-radius: var(--r); transition: transform 0.18s var(--ease); }
+.scheda:hover { transform: translateY(-2px); }
+
+/* --------------------------------------------------------------------------
+   Chiusura: l'invito a sostenere CDL (chiaro e rosso, come nella prova su
+   Drive) e, sotto, il piede di «Finestre»
+   -------------------------------------------------------------------------- */
+.closing { display: flex; flex-direction: column; padding-bottom: 0; scroll-margin-top: 0; }
+.closing > .wrap { flex: 1 1 auto; padding-bottom: var(--padb); }
+
+.sostieni h2 { color: var(--rosso); font-size: inherit; }
+.sostieni h2 .logo { height: 0.72em; margin-left: 0.2em; }
+.sostieni__corpo { margin-top: clamp(24px, 3vw, 40px); }
+.sostieni__frase { font-size: clamp(18px, 1.6vw, 22px); font-weight: 600; line-height: 1.4; max-width: 34ch; }
+.sostieni__stato { display: flex; align-items: center; gap: 10px; margin-top: 14px; font-weight: 600; }
+.rec { width: 10px; height: 10px; flex: 0 0 auto; border-radius: 50%; background: var(--rosso); animation: pulsa 1.5s infinite; }
+@keyframes pulsa { 50% { opacity: 0.35; transform: scale(1.25); } }
+.sostieni .btn-riga { margin-top: 24px; }
+.sostieni .link { margin-top: 12px; }
+/* La fotografia mostra già le due tessere inclinate: il riquadro resta dritto, nella sua colonna */
+.sostieni__tessera { display: block; width: 100%; max-width: 340px; margin-left: auto; transition: transform 0.18s var(--ease); }
+.sostieni__tessera:hover { transform: translateY(-2px); }
+
+.piede {
+  border-radius: clamp(28px, 4.5vw, 60px) clamp(28px, 4.5vw, 60px) 0 0;
+  background: var(--nero); color: var(--chiaro);
+  padding: clamp(28px, 3.5vw, 44px) 0 clamp(20px, 2.5vw, 30px);
+  --inchiostro: var(--chiaro);
+}
+.piede__riga { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); align-items: start; gap: 20px var(--gap); }
+.piede__riga > a { grid-column: span 2; }
+.piede__elenchi { grid-column: span 10; }
+.piede .logo { width: 64px; color: var(--lilla); margin-top: 10px; }
+.piede__elenchi { display: flex; flex-wrap: wrap; gap: 0 clamp(32px, 6vw, 80px); }
+.piede__elenchi ul { display: flex; flex-wrap: wrap; gap: 0 24px; }
+.piede__elenchi a { display: inline-flex; align-items: center; min-height: 44px; font-size: 15px; font-weight: 700; transition: color 0.15s var(--ease); }
+.piede__elenchi a:hover { color: var(--lilla); }
+.piede__dati { grid-column: 1 / -1; padding-top: 18px; border-top: 1px solid rgba(247, 247, 247, 0.22); font-size: 13px; line-height: 1.7; color: rgba(247, 247, 247, 0.78); }
+
+/* --------------------------------------------------------------------------
+   Adattamenti comuni
+   -------------------------------------------------------------------------- */
+.solo-stretto, .btn.solo-telefono { display: none; }
+
+@media (max-width: 1023px) {
+  .grid > [class*='span-'] { grid-column: 1 / -1; }
+  .sostieni__tessera { max-width: 220px; }
+}
+
+@media (max-width: 759px) {
+  .nav__socio { display: none; }
+  .solo-largo { display: none; }
+  .solo-stretto { display: block; }
+  .btn.solo-telefono { display: inline-flex; }
+  .piede__riga { gap: 8px; }
+  .piede__riga > a, .piede__elenchi { grid-column: 1 / -1; }
+  .piede__elenchi ul { flex-direction: column; }
+}
+
+@media (max-width: 639px) {
+  .nav__logo .logo { width: 54px; }
+  /* Senza pallini e più stretta, perché tutto resti dentro i margini */
+  .nav__riga { gap: 2px; }
+  .nav__voce { padding: 0 5px; font-size: 14px; }
+  .nav__voce::before { display: none; }
+  .nav__voce::after { left: 5px; right: 5px; }
+  .nav__cortoteca { min-height: 40px; margin-left: 4px; padding: 0 12px 0 10px; font-size: 14px; }
+  .hero .btn-riga .btn { flex: 1 1 100%; }
+  .hero { padding-top: calc(var(--nav) + 24px); padding-bottom: 32px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition-duration: 0.001ms !important; }
+}
+
+/* Sotto i 1024 px le sezioni dopo l'apertura prendono l'altezza del loro
+   contenuto: su tablet e telefono uno schermo intero per sezione lascerebbe
+   grandi vuoti. Vale anche per l'apertura. */
+@media (max-width: 1023px) {
+  main > section, .closing { min-height: 0; }
+}
+
+/* Schermi molto stretti (320 px): la barra rinuncia al triangolo e stringe ancora */
+@media (max-width: 359px) {
+  .nav__logo .logo { width: 44px; }
+  .nav__voce { padding: 0 3px; font-size: 13px; }
+  .nav__cortoteca { padding: 0 10px; font-size: 13px; }
+  .nav__cortoteca svg { display: none; }
+}

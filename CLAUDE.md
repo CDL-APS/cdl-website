@@ -15,10 +15,22 @@ com'è.
   tutte le pagine) e `dati.js` (lettura di opere ed eventi, da caricare prima
   dello script della pagina). Non ci sono moduli ES né bundler: le
   funzioni sono globali.
-- **Identità visiva**: fondo chiaro, Montserrat 900 per i titoli, angoli
-  squircle (vedi `components.css`). Tailwind e Lucide restano solo su
-  `cornicenarrativa.html`, perché `cornice.js` costruisce i blocchi con
-  quelle classi; altrove le icone sono SVG scritte nell'HTML.
+- **Identità visiva**: fondo carta, Montserrat 900 molto grande per i titoli,
+  Instrument Serif in corsivo per tagline e frasi d'apertura, Inter per il
+  testo. Le fotografie sono a spigolo vivo e non portano pannelli sopra: le
+  scritte stanno sotto o accanto, appese a un filetto nero. Il lavanda del
+  marchio si usa a campiture piene (fascia del sostegno, bollini). Etichette
+  mai sotto gli 11 px (`--etichetta`), aree toccabili di almeno 44 px.
+  Tailwind e Lucide restano solo su `cornicenarrativa.html`, perché
+  `cornice.js` costruisce i blocchi con quelle classi; altrove le icone sono
+  SVG scritte nell'HTML.
+- **Barra e piede** sono ripetuti in ogni pagina: una modifica va portata su
+  tutti i file HTML. Nella barra la voce della pagina corrente ha la classe
+  `is-active` (le schede opera accendono Cortoteca, le pagine evento Eventi).
+- **Frecce**: ↗ per aprire un contenuto, → per andare a un elenco o a
+  un'altra pagina del sito, l'icona del link esterno solo per ciò che porta
+  fuori.
+- **Titolo della scheda del browser**: "Pagina – CDL APS".
 - **Immagini**: sempre sotto `assets/img/<categoria>/`, mai nella radice.
   Nomi in minuscolo con trattini.
 - **Lingua**: interfaccia, commenti e nomi di file in italiano.
@@ -76,6 +88,13 @@ com'è.
   colonne di `opere` si escludono (vincolo nel database). Primo piano,
   titoli dei blocchi e griglia stanno in `components.css`, condivisi con
   Eventi.
+- Eventi, Produzioni e Cortoteca aprono con la stessa testata
+  (`.testa-pagina`): nome della pagina a caratteri cubitali e una riga di
+  presentazione.
+- La home ha quattro parti: apertura a tutto schermo sulla foto di sala,
+  attività recenti (riempite da `home.js`), il rullino di fotografie degli
+  eventi (scritto a mano in `index.html`: ogni foto porta alla pagina del suo
+  evento) e la fascia lavanda del sostegno.
 - **Pubblicazione**: Netlify costruisce solo i commit il cui autore è membro
   del team (l'account GitHub `cdl-aps`). Le pull request vanno unite da
   GitHub con quell'account, con un merge commit; un'unione fatta da un

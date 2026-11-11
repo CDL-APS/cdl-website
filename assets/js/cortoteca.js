@@ -77,9 +77,11 @@ function sortAndRender() {
 
     // Se il fotogramma manca resta il fondo neutro del riquadro
     card.innerHTML = `
-      <img class="foto" alt="" loading="lazy">
-      ${bollino}
-      ${stato}
+      <span class="riquadro-foto">
+        <img class="foto" alt="" loading="lazy">
+        ${bollino}
+        ${stato}
+      </span>
       <div class="chip">
         <p class="chip-etichetta">${esc(movie.anno)}</p>
         <h2 class="chip-titolo">${esc(movie.titolo)}</h2>

@@ -1,14 +1,13 @@
 /* ==========================================================================
    BARRA — indicatore della barra di navigazione, comune a tutte le pagine.
 
-   Le tre voci di sinistra (logo, Produzioni, Eventi) sono le pagine del sito
-   nuovo: l'indicatore lavanda sta sotto quella in cui ci si trova — la marca
-   l'HTML con la classe is-active — e scorre sulla voce sfiorata dal mouse,
-   per poi tornare al suo posto. Cortoteca è fuori dal gruppo: è il format di
-   piattaforma, non una pagina come le altre.
+   Le voci del gruppo (Produzioni, Eventi, Cortoteca) sono le pagine del sito:
+   il filetto sta sotto quella in cui ci si trova — la marca l'HTML con la
+   classe is-active — e scorre sulla voce sfiorata dal mouse, per poi tornare
+   al suo posto.
 
-   Le pagine che non appartengono a nessuna delle tre voci (Cortoteca, schede
-   opera, vantaggi soci) non marcano nulla: l'indicatore resta spento.
+   Le pagine che non appartengono a nessuna voce (home, vantaggi soci) non
+   marcano nulla: lì il filetto compare solo al passaggio del mouse.
    ========================================================================== */
 
 (function () {
@@ -20,17 +19,13 @@
   const voci = Array.from(gruppo.querySelectorAll('.voce'));
   if (!indicatore || !voci.length) return;
 
-  const corrente = gruppo.querySelector('.voce.is-active') || voci[0];
+  const corrente = gruppo.querySelector('.voce.is-active');
 
   // Misure prese dai rettangoli e non da offsetWidth/offsetLeft: quelli
   // arrotondano all'intero e l'indicatore resterebbe sfalsato di un pixel.
-  //
-  // La bolla non compare sulla voce del logo: la home è il posto in cui si è
-  // già, e segnarla con una pastiglia non aggiunge nulla.
+  // Senza voce (pagina fuori dal gruppo) il filetto si spegne.
   function sposta(voce) {
-    if (!voce) return;
-
-    if (voce.classList.contains('voce--logo')) {
+    if (!voce) {
       indicatore.classList.remove('indicatore--visibile');
       return;
     }

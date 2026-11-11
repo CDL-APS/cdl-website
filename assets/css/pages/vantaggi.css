@@ -14,15 +14,15 @@
   gap: clamp(1.25rem, 4vw, 3rem);
   margin-top: clamp(2rem, 5vw, 3rem);
   padding: clamp(1.5rem, 4vw, 2.75rem);
-  border-radius: var(--r-l);
-  corner-shape: squircle;
   background: var(--cdl-lavender);
-  scroll-margin-top: calc(var(--barra-h) + var(--barra-top) * 2);
+  scroll-margin-top: calc(var(--barra-h) + 1rem);
 }
 
 .invito-testo { display: flex; flex-direction: column; gap: 0.6rem; }
 
-.invito h2 { font-size: clamp(1.85rem, 4.6vw, 3.25rem); }
+.invito h2 { font-size: clamp(2.4rem, 7vw, 6rem); line-height: 0.84; }
+
+.invito .etichetta { color: var(--cdl-dark); }
 
 .invito .azioni { margin-top: 1rem; }
 
@@ -30,8 +30,6 @@
   width: clamp(110px, 16vw, 200px);
   height: auto;
   flex: 0 0 auto;
-  border-radius: var(--r-s);
-  corner-shape: squircle;
   transform: rotate(-5deg);
 }
 
@@ -47,7 +45,7 @@
 .vantaggio { min-height: 170px; }
 
 /* Il titolo non deve finire sotto la freccia nell'angolo */
-a.vantaggio .scheda-titolo { padding-right: 2.5rem; }
+a.vantaggio .scheda-titolo { padding-right: 3rem; }
 
 .vantaggio-logo { margin-bottom: 0.4rem; }
 

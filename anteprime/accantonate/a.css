@@ -1,0 +1,456 @@
+/* ==========================================================================
+   ANTEPRIMA A — «Finestre»
+   Il logo CDL è il sistema: ogni immagine sta in una finestra ritagliata
+   nelle sue forme (il semicerchio della D, il quarto di cerchio della L),
+   con un contorno a inchiostro. Un solo carattere, Montserrat.
+   File di prova: non fa parte del sito pubblicato.
+   ========================================================================== */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+:root {
+  --nero: #1d1d1b;
+  --lilla: #b9bbf8;
+  --chiaro: #f7f7f7;
+  --rosso: #ff0000;
+
+  --fondo: var(--chiaro);
+  --testo-tenue: rgba(29, 29, 27, 0.72);
+
+  --margine: clamp(1rem, 4vw, 3rem);
+  --larghezza: 1360px;
+  --barra-h: 68px;
+
+  /* Angolo di base (lo squircle del logo) e spessore del contorno */
+  --r: clamp(16px, 2vw, 28px);
+  --tratto: 2px;
+
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --f: 'Montserrat', sans-serif;
+}
+
+/* La Cortoteca è la stanza lilla: stesso sistema, altro fondo */
+.stanza-lilla { --fondo: var(--lilla); --testo-tenue: rgba(29, 29, 27, 0.78); }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  padding-top: var(--barra-h);
+  min-height: 100vh;
+  overflow-x: hidden;
+  font-family: var(--f);
+  font-weight: 500;
+  line-height: 1.6;
+  background: var(--fondo);
+  color: var(--nero);
+  -webkit-font-smoothing: antialiased;
+}
+
+img { display: block; max-width: 100%; height: auto; }
+h1, h2, h3, p, ul { margin: 0; }
+ul { padding: 0; list-style: none; }
+a { color: inherit; text-decoration: none; }
+[hidden] { display: none !important; }
+
+h1, h2, h3 {
+  font-weight: 900;
+  text-transform: uppercase;
+  line-height: 0.92;
+  letter-spacing: -0.04em;
+  text-wrap: balance;
+}
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+  overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+}
+
+a:focus-visible, button:focus-visible, input:focus-visible {
+  outline: 3px solid var(--nero);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 7px var(--lilla);
+}
+.stanza-lilla a:focus-visible,
+.stanza-lilla input:focus-visible { box-shadow: 0 0 0 7px var(--chiaro); }
+
+/* Il marchio, ricolorato con una maschera: prende il colore del testo */
+.logo {
+  display: block;
+  aspect-ratio: 1435 / 557;
+  background: currentColor;
+  -webkit-mask: url('../../assets/img/brand/logo-cdl.png') center / contain no-repeat;
+  mask: url('../../assets/img/brand/logo-cdl.png') center / contain no-repeat;
+}
+
+/* Il "+" del logo, al posto delle frecce */
+.piu { width: 0.8em; height: 0.8em; flex: 0 0 auto; transition: transform 0.4s var(--ease); }
+a:hover > .piu, a:hover .porta-nome .piu { transform: rotate(90deg); }
+
+.contenuto {
+  max-width: calc(var(--larghezza) + var(--margine) * 2);
+  margin: 0 auto;
+  padding-left: var(--margine);
+  padding-right: var(--margine);
+}
+
+/* --------------------------------------------------------------------------
+   Barra
+   -------------------------------------------------------------------------- */
+.barra {
+  position: fixed; inset: 0 0 auto 0; z-index: 100;
+  height: var(--barra-h);
+  display: flex; align-items: center; gap: clamp(0.25rem, 1.5vw, 1.25rem);
+  padding: 0 var(--margine);
+  background: var(--fondo);
+}
+
+.barra-logo { margin-right: auto; padding: 0.5rem 0; }
+.barra-logo .logo { width: 68px; }
+
+.voce {
+  display: inline-flex; align-items: center; min-height: 44px;
+  padding: 0 0.5rem;
+  font-size: 0.95rem; font-weight: 700;
+  background: linear-gradient(currentColor, currentColor) 0.5rem calc(100% - 9px) / 0 2px no-repeat;
+  transition: background-size 0.35s var(--ease);
+}
+.voce:hover { background-size: calc(100% - 1rem) 2px; }
+
+/* Cortoteca: una pillola del colore della stanza in cui porta */
+.voce-cortoteca {
+  display: inline-flex; align-items: center; gap: 0.45rem; min-height: 44px;
+  padding: 0 1.05rem 0 0.9rem;
+  border: var(--tratto) solid var(--nero); border-radius: 999px;
+  background: var(--lilla);
+  font-size: 0.95rem; font-weight: 700;
+  transition: background-color 0.25s var(--ease), color 0.25s var(--ease);
+}
+.voce-cortoteca svg { width: 11px; height: 11px; }
+.voce-cortoteca:hover,
+.voce-cortoteca[aria-current] { background: var(--nero); color: var(--lilla); }
+
+.barra-socio {
+  display: inline-flex; align-items: center; min-height: 44px; padding: 0 1.1rem;
+  border-radius: 999px; background: var(--nero); color: var(--chiaro);
+  font-size: 0.95rem; font-weight: 700;
+  transition: background-color 0.25s var(--ease);
+}
+.barra-socio:hover { background: var(--rosso); }
+
+/* --------------------------------------------------------------------------
+   Pulsanti e collegamenti
+   -------------------------------------------------------------------------- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 0.55rem;
+  min-height: 52px; padding: 0 1.5rem;
+  border: var(--tratto) solid var(--nero); border-radius: 999px;
+  font: inherit; font-size: 1rem; font-weight: 700; color: var(--nero);
+  cursor: pointer;
+  transition: background-color 0.25s var(--ease), color 0.25s var(--ease),
+    border-color 0.25s var(--ease), transform 0.2s var(--ease);
+}
+.btn svg { width: 14px; height: 14px; }
+.btn:hover { background: var(--nero); color: var(--chiaro); transform: translateY(-2px); }
+.btn:active { transform: translateY(1px); }
+.btn--pieno { background: var(--nero); color: var(--chiaro); }
+.btn--pieno:hover { background: var(--rosso); border-color: var(--rosso); color: #fff; }
+
+.azioni { display: flex; flex-wrap: wrap; gap: 0.7rem; }
+
+.rimando {
+  display: inline-flex; align-items: center; gap: 0.5rem; min-height: 44px;
+  font-weight: 700;
+  background: linear-gradient(currentColor, currentColor) 0 calc(100% - 9px) / 100% 2px no-repeat;
+}
+
+/* --------------------------------------------------------------------------
+   Finestra: il contenitore di ogni immagine. Fondo nero e contorno a
+   inchiostro: un fotogramma bianco o una grafica satura hanno lo stesso
+   bordo. Le forme vengono dal logo.
+   -------------------------------------------------------------------------- */
+.finestra {
+  position: relative; display: block; overflow: hidden;
+  aspect-ratio: 16 / 10;
+  border: var(--tratto) solid var(--nero);
+  border-radius: var(--r);
+  background: var(--nero);
+}
+.finestra img {
+  width: 100%; height: 100%; max-width: none; object-fit: cover;
+  transition: transform 0.8s var(--ease);
+}
+a:hover > .finestra img, a.finestra:hover img { transform: scale(1.04); }
+
+/* Forma D: il lato destro è un semicerchio (16:10 → metà altezza = 31,25 %
+   della larghezza) */
+.finestra--d { border-radius: var(--r) 31.25% 31.25% var(--r) / var(--r) 50% 50% var(--r); }
+/* Forma L: l'angolo in basso a sinistra è un quarto di cerchio */
+.finestra--l { border-radius: var(--r) var(--r) var(--r) 43.75% / var(--r) var(--r) var(--r) 70%; }
+
+/* --------------------------------------------------------------------------
+   HOME — apertura: il logo a tutta larghezza, tre lettere, tre porte
+   -------------------------------------------------------------------------- */
+.apertura { padding-top: clamp(0.75rem, 2vw, 1.5rem); }
+
+.porte {
+  display: grid;
+  grid-template-columns: repeat(3, 31.36%);
+  justify-content: space-between;
+}
+
+.porta { display: block; }
+
+/* Ogni lettera è un riquadro largo quanto la lettera; la maschera è il logo
+   intero (318,9 % = 1435/450), fatto scorrere sulla lettera giusta */
+.lettera {
+  display: block; overflow: hidden;
+  aspect-ratio: 450 / 557;
+  background: var(--nero);
+  -webkit-mask: url('../../assets/img/brand/logo-cdl.png') var(--x, 0%) 0 / 318.9% 100% no-repeat;
+  mask: url('../../assets/img/brand/logo-cdl.png') var(--x, 0%) 0 / 318.9% 100% no-repeat;
+  animation: scopre 1.1s var(--ease) both;
+}
+.porta:nth-child(2) .lettera { --x: 50%; animation-delay: 0.12s; }
+.porta:nth-child(3) .lettera { --x: 100%; animation-delay: 0.24s; }
+
+.lettera img {
+  width: 100%; height: 100%; max-width: none; object-fit: cover;
+  transition: transform 1s var(--ease);
+}
+.porta:hover .lettera img { transform: scale(1.06); }
+
+@keyframes scopre {
+  from { clip-path: inset(100% 0 0 0); }
+  to { clip-path: inset(0 0 0 0); }
+}
+
+.porta-nome {
+  display: flex; align-items: center; gap: 0.4em;
+  margin-top: clamp(0.5rem, 1.2vw, 1rem);
+  font-size: clamp(0.82rem, 2.1vw, 1.75rem);
+  font-weight: 900; text-transform: uppercase; letter-spacing: -0.03em; line-height: 1;
+}
+
+.apertura-testo {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: clamp(1.25rem, 4vw, 4rem);
+  align-items: end;
+  margin-top: clamp(2rem, 5vw, 4.5rem);
+}
+.apertura-testo h1 { font-size: clamp(2.1rem, 5.6vw, 5.25rem); margin-left: -0.04em; }
+.apertura-frase { max-width: 54ch; font-size: clamp(1rem, 1.25vw, 1.15rem); }
+.apertura-testo .azioni { margin-top: 1.5rem; }
+
+/* --------------------------------------------------------------------------
+   HOME — sezioni
+   -------------------------------------------------------------------------- */
+.sezione { padding-top: clamp(4rem, 9vw, 8rem); }
+.titolo-sezione { font-size: clamp(2rem, 5vw, 4.25rem); margin: 0 0 clamp(1.5rem, 3vw, 2.5rem) -0.04em; }
+
+.recenti-griglia {
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(2rem, 4vw, 4rem) clamp(1.25rem, 3vw, 3rem);
+}
+.recente { display: flex; flex-direction: column; align-items: flex-start; }
+.recente-link { display: block; width: 100%; }
+.recente-titolo { margin-top: clamp(1rem, 2vw, 1.5rem); font-size: clamp(1.6rem, 3.1vw, 2.75rem); }
+.recente-dati { margin-top: 0.7rem; max-width: 46ch; color: var(--testo-tenue); }
+.recente .rimando { margin-top: 0.9rem; }
+
+/* Rullino: finestre alla stessa altezza, forme a rotazione */
+.rullino { padding-top: clamp(4rem, 9vw, 8rem); --h: clamp(250px, 46vh, 440px); }
+.rullino-scorri {
+  overflow-x: auto; overscroll-behavior-x: contain;
+  scrollbar-width: thin; scrollbar-color: var(--nero) transparent;
+}
+.rullino-pista {
+  display: flex; gap: clamp(0.6rem, 1.2vw, 1rem); width: max-content;
+  padding: 0 max(var(--margine), calc((100vw - var(--larghezza)) / 2)) 1rem;
+}
+.rullino .finestra { flex: 0 0 auto; height: var(--h); aspect-ratio: auto; }
+.rullino .finestra img { width: auto; height: 100%; }
+.rullino .finestra:nth-child(4n + 1) { border-radius: calc(var(--h) * 0.38) calc(var(--h) * 0.38) var(--r) var(--r); }
+.rullino .finestra:nth-child(4n + 2) { border-radius: var(--r) var(--r) var(--r) calc(var(--h) * 0.5); }
+.rullino .finestra:nth-child(4n + 3) { border-radius: var(--r) calc(var(--h) * 0.48) calc(var(--h) * 0.48) var(--r); }
+
+/* Sostegno: una campitura lilla a forma di L. In alto "Sostieni" e il
+   marchio su una riga; sotto il testo e i contatti, e la tessera che spunta
+   dal bordo inferiore. */
+.sostegno { padding-top: clamp(4rem, 9vw, 8rem); scroll-margin-top: var(--barra-h); }
+.sostegno-campo {
+  position: relative; overflow: hidden;
+  display: grid; grid-template-columns: minmax(0, 1fr) auto;
+  gap: clamp(1.5rem, 3vw, 2.75rem) clamp(1.5rem, 4vw, 4rem);
+  padding: clamp(2rem, 6vw, 5.5rem);
+  padding-left: clamp(2rem, 8vw, 7.5rem);
+  border-radius: var(--r) var(--r) var(--r) clamp(90px, 20vw, 300px);
+  background: var(--lilla);
+}
+.sostegno h2 {
+  grid-column: 1 / -1;
+  display: flex; flex-wrap: wrap; align-items: center; gap: 0.1em 0.22em;
+  margin-left: -0.04em;
+  font-size: clamp(2.8rem, 9vw, 8rem); line-height: 0.82;
+}
+.sostegno h2 .logo { height: 0.74em; }
+.sostegno-frase { font-size: clamp(1.1rem, 1.6vw, 1.4rem); font-weight: 600; line-height: 1.4; max-width: 34ch; }
+.sostegno-stato { display: flex; align-items: center; gap: 0.55rem; margin-top: 0.9rem; font-weight: 600; }
+.rec { width: 10px; height: 10px; border-radius: 50%; background: var(--rosso); animation: pulsa 1.5s infinite; }
+@keyframes pulsa { 50% { opacity: 0.35; transform: scale(1.25); } }
+.sostegno .azioni { margin-top: 1.5rem; }
+.sostegno .rimando { margin-top: 1rem; }
+.sostegno-tessera {
+  position: absolute; right: clamp(1rem, 6vw, 6rem); bottom: 0;
+  width: clamp(190px, 30vw, 420px);
+  transform: translateY(24%) rotate(8deg);
+  transition: transform 0.5s var(--ease);
+}
+.sostegno-tessera:hover { transform: translateY(16%) rotate(3deg); }
+
+/* --------------------------------------------------------------------------
+   Piede: compatto, il marchio alla misura della barra
+   -------------------------------------------------------------------------- */
+.piede {
+  margin-top: clamp(4rem, 9vw, 8rem);
+  border-radius: clamp(28px, 5vw, 64px) clamp(28px, 5vw, 64px) 0 0;
+  background: var(--nero); color: var(--chiaro);
+}
+.piede-interno {
+  display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: start;
+  gap: 1.5rem clamp(2rem, 6vw, 6rem);
+  padding-top: clamp(2rem, 4vw, 3rem); padding-bottom: clamp(1.5rem, 3vw, 2rem);
+}
+.piede .logo { width: 64px; color: var(--lilla); margin-top: 0.6rem; }
+.piede-elenchi { display: flex; flex-wrap: wrap; gap: 0 clamp(2rem, 6vw, 5rem); }
+.piede-elenchi ul { display: flex; flex-wrap: wrap; gap: 0 1.5rem; }
+.piede-elenchi a {
+  display: inline-flex; align-items: center; min-height: 44px; font-weight: 700; font-size: 0.95rem;
+  transition: color 0.25s var(--ease);
+}
+.piede-elenchi a:hover { color: var(--lilla); }
+.piede-dati {
+  grid-column: 1 / -1; padding-top: 1.1rem;
+  border-top: 1px solid rgba(247, 247, 247, 0.22);
+  font-size: 0.82rem; color: rgba(247, 247, 247, 0.78);
+}
+
+/* --------------------------------------------------------------------------
+   CORTOTECA — la stanza lilla
+   -------------------------------------------------------------------------- */
+.testa-cortoteca {
+  display: grid; grid-template-columns: minmax(0, 1fr); gap: clamp(1rem, 2vw, 1.5rem);
+  padding-top: clamp(1.5rem, 4vw, 3rem);
+}
+.testa-cortoteca h1 {
+  display: flex; align-items: center; gap: 0.08em;
+  margin-left: -0.05em;
+  font-size: clamp(2.5rem, 12.6vw, 11rem); line-height: 0.82;
+}
+/* Il triangolo del play chiude il nome, alto quanto le lettere */
+.testa-cortoteca h1 svg { width: 0.78em; height: 0.78em; flex: 0 0 auto; margin-left: -0.06em; }
+.testa-cortoteca p { max-width: 62ch; font-size: clamp(1rem, 1.25vw, 1.15rem); }
+
+.strumenti {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.75rem;
+  margin: clamp(1.75rem, 4vw, 3rem) 0 clamp(1.5rem, 3vw, 2.25rem);
+}
+.campo {
+  flex: 1 1 320px; max-width: 520px; height: 52px;
+  display: flex; align-items: center; gap: 0.7rem; padding: 0 1.25rem;
+  border: var(--tratto) solid var(--nero); border-radius: 999px;
+  background: var(--chiaro); cursor: text;
+}
+.campo svg { width: 17px; height: 17px; flex: 0 0 auto; }
+.campo input {
+  flex: 1; min-width: 0; height: 100%; border: 0; outline: 0; background: none;
+  font: inherit; font-size: 1rem; color: var(--nero);
+}
+.campo input::placeholder { color: rgba(29, 29, 27, 0.62); }
+.campo input:focus-visible { outline: none; box-shadow: none; }
+.campo:focus-within { box-shadow: 0 0 0 4px var(--nero); }
+
+.ordine {
+  display: flex; padding: 4px; gap: 4px;
+  border: var(--tratto) solid var(--nero); border-radius: 999px;
+}
+.ordine input { position: absolute; opacity: 0; pointer-events: none; }
+.scelta {
+  display: inline-flex; align-items: center; min-height: 40px; padding: 0 1.1rem;
+  border-radius: 999px; font-weight: 700; font-size: 0.95rem; cursor: pointer;
+  transition: background-color 0.25s var(--ease), color 0.25s var(--ease);
+}
+.ordine input:checked + .scelta { background: var(--nero); color: var(--lilla); }
+.ordine input:focus-visible + .scelta { outline: 3px solid var(--nero); outline-offset: 3px; }
+
+.griglia-opere {
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(2rem, 3.5vw, 3rem) clamp(1rem, 2vw, 1.75rem);
+}
+
+.opera { display: block; opacity: 0; transform: translateY(16px); transition: opacity 0.5s var(--ease), transform 0.5s var(--ease); }
+.opera.is-visibile { opacity: 1; transform: none; }
+
+/* Al passaggio la finestra prende la forma della D */
+.opera .finestra { aspect-ratio: 16 / 9; transition: border-radius 0.5s var(--ease); }
+.opera:hover .finestra,
+.opera:focus-visible .finestra { border-radius: var(--r) 28.125% 28.125% var(--r) / var(--r) 50% 50% var(--r); }
+
+.opera-stato {
+  position: absolute; left: 0.75rem; bottom: 0.75rem;
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  min-height: 34px; padding: 0 0.85rem 0 0.75rem;
+  border-radius: 999px; background: var(--chiaro); color: var(--nero);
+  font-size: 0.85rem; font-weight: 700;
+}
+.opera-stato svg { width: 10px; height: 10px; }
+.opera-stato--play { background: var(--lilla); }
+
+.opera-cdl {
+  position: absolute; left: 0.75rem; top: 0.75rem;
+  display: grid; place-items: center; height: 30px; padding: 0 0.7rem;
+  border-radius: 999px; background: var(--nero); color: var(--lilla);
+}
+.opera-cdl .logo { width: 34px; }
+
+.opera-titolo { margin-top: 0.9rem; font-size: clamp(1.3rem, 2.1vw, 1.75rem); }
+.opera-dati { margin-top: 0.45rem; font-size: 0.95rem; line-height: 1.45; color: var(--testo-tenue); }
+
+.avviso { grid-column: 1 / -1; padding: 3rem 0; font-weight: 700; font-size: 1.1rem; }
+
+/* --------------------------------------------------------------------------
+   Adattamenti
+   -------------------------------------------------------------------------- */
+@media (max-width: 1000px) {
+  .griglia-opere { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 760px) {
+  .barra-socio { display: none; }
+  .apertura-testo, .recenti-griglia, .sostegno-campo { grid-template-columns: minmax(0, 1fr); }
+  .apertura-testo { align-items: start; }
+  .sostegno-campo { padding-bottom: 9.5rem; }
+  .sostegno-tessera { right: 0.5rem; }
+  .piede-interno { grid-template-columns: minmax(0, 1fr); gap: 0.75rem; }
+  .piede-elenchi ul { flex-direction: column; }
+}
+
+@media (max-width: 620px) {
+  :root { --barra-h: 60px; }
+  .barra-logo .logo { width: 54px; }
+  .voce, .voce-cortoteca { font-size: 0.85rem; }
+  .voce { padding: 0 0.35rem; }
+  .voce-cortoteca { padding: 0 0.8rem 0 0.7rem; min-height: 40px; }
+  .griglia-opere { grid-template-columns: minmax(0, 1fr); }
+  .campo { max-width: none; }
+  .ordine { flex: 1 1 100%; }
+  .scelta { flex: 1; justify-content: center; }
+  .apertura .azioni .btn { flex: 1 1 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation: none !important; transition-duration: 0.001ms !important; }
+  .opera { opacity: 1; transform: none; }
+}

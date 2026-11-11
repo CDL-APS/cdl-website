@@ -4,11 +4,20 @@
    Primo piano, titoli dei blocchi e griglia sono in components.css.
    ========================================================================== */
 
+/* I fotogrammi sono quasi tutti in formato cinema: il primo piano li mostra
+   più larghi del 16:9 e i riquadri in 16:9, due per riga */
+.primo-piano-copertina { aspect-ratio: 1.85 / 1; }
+
+.griglia-riquadri { grid-template-columns: repeat(auto-fill, minmax(min(100%, 440px), 1fr)); }
+
+.riquadro-foto { aspect-ratio: 16 / 9; }
+
 /* Dati essenziali dell'opera in primo piano, in coppie voce / valore come la
    troupe della scheda opera */
 .primo-piano-dati {
   display: grid;
   gap: 0.55rem;
+  width: 100%;
   margin-top: 0.4rem;
   padding-top: 0.9rem;
   border-top: 1px solid var(--riga);
@@ -16,50 +25,33 @@
 
 .primo-piano-dati div {
   display: grid;
-  grid-template-columns: 6.5rem minmax(0, 1fr);
+  grid-template-columns: 7rem minmax(0, 1fr);
   gap: 0.75rem;
   align-items: baseline;
 }
 
 .primo-piano-dati dt {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 9px;
-  font-weight: 900;
+  font-family: var(--f-titoli);
+  font-size: var(--etichetta);
+  font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.14em;
   color: var(--testo-medio);
 }
 
-.primo-piano-dati dd { font-size: 0.9rem; line-height: 1.4; }
+.primo-piano-dati dd { font-size: 0.95rem; line-height: 1.4; }
 
-.riga-altrove {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.6rem;
-  margin-top: clamp(2.5rem, 5vw, 3.5rem);
-  padding: 0.8rem 1.2rem;
-  border-radius: var(--r-s);
-  corner-shape: squircle;
-  background: var(--cdl-dark);
-  color: var(--cdl-white);
-  font-family: 'Montserrat', sans-serif;
-  font-size: 10px;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-  transition: background-color 0.3s var(--ease-out);
-}
-
-.riga-altrove:hover { background: var(--cdl-red); }
+/* Rimando alla Cortoteca in fondo alla pagina */
+.riga-altrove { margin-top: clamp(2.5rem, 5vw, 3.5rem); }
 
 /* Database non raggiungibile o nessuna opera */
 .avviso {
-  padding: 2rem 0.5rem;
+  padding: 2rem 0;
   border-bottom: 1px solid var(--riga);
-  font-family: 'Montserrat', sans-serif;
-  font-size: 10px;
-  font-weight: 900;
+  font-family: var(--f-titoli);
+  font-size: var(--etichetta);
+  font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.14em;
   color: var(--testo-tenue);
 }

@@ -11,7 +11,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 0.75rem;
-  margin: clamp(2rem, 5vw, 3rem) 0 var(--spazio);
+  margin: 0 0 clamp(1.5rem, 3vw, 2.25rem);
 }
 
 .campo {
@@ -24,7 +24,7 @@
   height: 48px;
   border-radius: var(--r-s);
   border: 1px solid var(--riga);
-  background: rgba(29, 29, 27, 0.025);
+  background: rgba(255, 255, 255, 0.5);
   color: var(--testo-medio);
   cursor: text;
   transition: border-color 0.25s var(--ease-out), background-color 0.25s var(--ease-out);
@@ -50,7 +50,7 @@
 .campo input::placeholder { color: var(--testo-tenue); }
 
 /* L'anello del focus lo disegna già il bordo del campo */
-.campo input:focus-visible { outline: none; }
+.campo input:focus-visible { outline: none; box-shadow: none; }
 
 /* Interruttore a due posizioni: due radio nascosti, le etichette fanno da
    pulsanti. Quello scelto è pieno. */
@@ -58,7 +58,7 @@
   display: flex;
   gap: 4px;
   padding: 4px;
-  border-radius: 999px;
+  border-radius: var(--r-m);
   border: 1px solid var(--riga);
 }
 
@@ -68,13 +68,14 @@
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
-  padding: 0.6rem 0.95rem;
-  border-radius: 999px;
-  font-family: 'Montserrat', sans-serif;
-  font-size: 9.5px;
-  font-weight: 900;
+  min-height: 40px;
+  padding: 0 0.95rem;
+  border-radius: var(--r-s);
+  font-family: var(--f-titoli);
+  font-size: var(--etichetta);
+  font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.1em;
   color: var(--testo-tenue);
   cursor: pointer;
   transition: background-color 0.25s var(--ease-out), color 0.25s var(--ease-out);
@@ -86,71 +87,66 @@
 
 .ordine input:checked + .scelta { background: var(--cdl-dark); color: var(--cdl-white); }
 
-.ordine input:focus-visible + .scelta { outline: 3px solid var(--cdl-lavender); outline-offset: 2px; }
+.ordine input:focus-visible + .scelta { outline: 3px solid var(--cdl-dark); outline-offset: 2px; }
 
 /* --------------------------------------------------------------------------
-   Griglia delle opere
+   Griglia delle opere: fotogrammi in 16:9, non ritagliati a quadrato
    -------------------------------------------------------------------------- */
 .griglia-opere {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: var(--spazio);
+  gap: clamp(2rem, 3.5vw, 3rem) var(--spazio);
 }
 
-.griglia-opere .riquadro {
-  min-height: 0;
-  aspect-ratio: 1;
-}
+.griglia-opere .riquadro-foto { aspect-ratio: 16 / 9; }
 
 /* Ingresso a cascata: ogni card parte bassa e trasparente, il ritardo
    crescente lo imposta cortoteca.js */
 .opera {
   opacity: 0;
   transform: translateY(15px);
-  transition: opacity 0.4s ease, transform 0.4s ease, box-shadow 0.4s var(--ease-out);
+  transition: opacity 0.4s ease, transform 0.4s ease;
 }
 
 .opera.is-visibile { opacity: 1; transform: none; }
 
-/* Bollino CDL sulle opere prodotte dall'associazione: stessa pastiglia di
-   vetro della freccia, nell'angolo opposto */
+a.opera.is-visibile:hover { transform: translateY(-2px); }
+
+/* Bollino CDL sulle opere prodotte dall'associazione: una linguetta lavanda
+   nell'angolo opposto a quello di play e info */
 .bollino-cdl {
   position: absolute;
-  top: 14px;
-  left: 14px;
+  top: 0;
+  left: 0;
   z-index: 3;
   display: grid;
   place-items: center;
-  height: 38px;
+  height: 44px;
   padding: 0 0.9rem;
-  border-radius: 999px;
-  corner-shape: squircle;
-  background: rgba(247, 247, 247, 0.72);
-  backdrop-filter: blur(14px) saturate(150%);
-  -webkit-backdrop-filter: blur(14px) saturate(150%);
-  border: 1px solid rgba(255, 255, 255, 0.7);
+  background: var(--cdl-lavender);
 }
 
-.bollino-cdl img { width: 31px; height: 12px; filter: brightness(0); }
+.bollino-cdl img { width: 36px; height: 14px; filter: brightness(0); }
 
-/* Play o info nell'angolo: la pastiglia della freccia, ferma al passaggio
+/* Play o info nell'angolo: la linguetta della freccia, ferma al passaggio
    del mouse perché non indica una direzione */
-a.riquadro:hover .icona-stato { transform: none; }
+a.riquadro:hover .icona-stato svg { transform: none; }
 
 /* Il triangolo, a parità di riquadro, sembra spostato a sinistra: lo si
    accosta di poco al centro ottico */
-.icona-stato--play { transform: translateX(1px); }
+.icona-stato .icona-stato--play,
+a.riquadro:hover .icona-stato .icona-stato--play { transform: translateX(1px); }
 
 /* Ricerca senza risultati o database non raggiungibile */
 .avviso {
   grid-column: 1 / -1;
   padding: 3rem 1rem;
   text-align: center;
-  font-family: 'Montserrat', sans-serif;
-  font-size: 10px;
-  font-weight: 900;
+  font-family: var(--f-titoli);
+  font-size: var(--etichetta);
+  font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.14em;
   color: var(--testo-tenue);
 }
 
@@ -161,6 +157,7 @@ a.riquadro:hover .icona-stato { transform: none; }
 @media (max-width: 620px) {
   .griglia-opere { grid-template-columns: 1fr; }
   .campo { max-width: none; }
+  .strumenti { align-items: stretch; }
 }
 
 @media (prefers-reduced-motion: reduce) {

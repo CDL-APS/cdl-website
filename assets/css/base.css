@@ -3,55 +3,66 @@
    Caricato da tutte le pagine, sempre per primo.
    ========================================================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=Montserrat:wght@400;500;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&family=Montserrat:wght@500;700;800;900&display=swap');
 
 *, *::before, *::after { box-sizing: border-box; }
 
 :root {
-  /* Palette CDL */
+  /* Palette CDL. Il fondo è una carta appena calda: accanto alle fotografie
+     regge meglio del grigio neutro. Il lavanda è il colore del marchio e si
+     usa a campiture piene, mai come velo. */
   --cdl-lavender: #b9bbf8;
   --cdl-dark: #1d1d1b;
-  --cdl-white: #f7f7f7;
+  --cdl-white: #f5f3ee;
   --cdl-red: #ff0000;
 
   /* Curva di easing unica per tutte le micro-interazioni */
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
 
-  /* Barra galleggiante */
-  --barra-h: 54px;
-  --barra-top: 12px;
+  /* Barra di navigazione: fissa in cima, a tutta larghezza. --barra-top
+     resta (a zero) perché le pagine la usano nei calcoli degli ancoraggi. */
+  --barra-h: 64px;
+  --barra-top: 0px;
 
-  /* Raggi: applicati sempre insieme a corner-shape: squircle */
-  --r-l: 30px;
-  --r-m: 18px;
-  --r-s: 13px;
+  /* Angoli: quasi vivi, come un fotogramma. Le fotografie non ne hanno. */
+  --r-l: 4px;
+  --r-m: 3px;
+  --r-s: 2px;
 
-  /* Distanza unica fra i blocchi. Le pagine sono pile di riquadri separati
-     sempre da questa misura. */
-  --spazio: 1rem;
+  /* Margine laterale della pagina, uguale a destra e a sinistra per ogni
+     blocco, e larghezza massima del contenuto */
+  --margine: clamp(1rem, 4vw, 3rem);
+  --larghezza: 1360px;
 
-  --riga: rgba(29, 29, 27, 0.14);
-  --testo-tenue: rgba(29, 29, 27, 0.62);
-  --testo-medio: rgba(29, 29, 27, 0.78);
-  /* Sui riquadri il fondo è più scuro del bianco pagina, quindi il testo
-     secondario va più carico del tenue per restare sopra il contrasto minimo */
+  /* Distanza fra riquadri affiancati */
+  --spazio: 1.25rem;
+
+  --riga: rgba(29, 29, 27, 0.16);
+  --riga-forte: var(--cdl-dark);
+  --testo-tenue: rgba(29, 29, 27, 0.68);
+  --testo-medio: rgba(29, 29, 27, 0.8);
   --testo-chip: rgba(29, 29, 27, 0.75);
+  --fondo-foto: rgba(29, 29, 27, 0.07);
+
+  /* Famiglie: Montserrat per titoli ed etichette, Instrument Serif in
+     corsivo per tagline e frasi d'apertura, Inter per il testo */
+  --f-titoli: 'Montserrat', sans-serif;
+  --f-corsivo: 'Instrument Serif', 'Times New Roman', serif;
+  --f-testo: 'Inter', sans-serif;
+
+  /* Etichette in maiuscolo: mai sotto gli 11 px */
+  --etichetta: 0.72rem;
 }
 
-/* --------------------------------------------------------------------------
-   Fondo chiaro, Inter per il testo e Montserrat 900 per i titoli: è
-   l'identità del sito. Lo spazio in cima copre la barra galleggiante e il suo
-   scostamento; i 16px di distacco dal primo blocco li mette la sezione.
-   -------------------------------------------------------------------------- */
 html { scroll-behavior: smooth; }
 
 body {
   margin: 0;
-  padding: calc(var(--barra-h) + var(--barra-top)) 0 0;
+  padding: var(--barra-h) 0 0;
   min-height: 100vh;
   overflow-x: hidden;
   position: relative;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--f-testo);
   background-color: var(--cdl-white);
   color: var(--cdl-dark);
   -webkit-font-smoothing: antialiased;
@@ -61,11 +72,11 @@ img { max-width: 100%; display: block; }
 
 h1, h2 {
   margin: 0;
-  font-family: 'Montserrat', sans-serif;
+  font-family: var(--f-titoli);
   font-weight: 900;
   text-transform: uppercase;
-  line-height: 0.94;
-  letter-spacing: -0.035em;
+  line-height: 0.9;
+  letter-spacing: -0.045em;
   text-wrap: balance;
 }
 
@@ -113,14 +124,15 @@ svg { width: 15px; height: 15px; flex: 0 0 auto; }
 }
 
 /* --------------------------------------------------------------------------
-   Accessibilità: focus da tastiera visibile e coerente col brand
+   Accessibilità: focus da tastiera visibile su fondo chiaro e scuro
    -------------------------------------------------------------------------- */
 a:focus-visible,
 button:focus-visible,
 input:focus-visible + label,
 input[type='search']:focus-visible {
-  outline: 3px solid var(--cdl-lavender);
-  outline-offset: 4px;
+  outline: 3px solid var(--cdl-dark);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 6px var(--cdl-lavender);
 }
 
 /* --------------------------------------------------------------------------

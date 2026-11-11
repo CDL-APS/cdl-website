@@ -15,7 +15,7 @@ function indirizzoOpera(opera) {
   return 'opera.html?film=' + encodeURIComponent(opera.codice);
 }
 
-/* Riquadro di un'opera: fotogramma a piena superficie e lastra con anno,
+/* Riquadro di un'opera: il fotogramma sopra e, sotto il filetto, anno,
    titolo e regia. Per le collaborazioni anche chi l'ha prodotta. */
 function riquadroOpera(opera) {
   const riquadro = document.createElement('a');
@@ -26,8 +26,10 @@ function riquadroOpera(opera) {
     ? `<br>Produzione: ${esc(opera.produzione)}`
     : '';
   riquadro.innerHTML = `
-    <img class="foto" alt="" loading="lazy">
-    <span class="freccia" aria-hidden="true">${ICONA_FRECCIA_OPERA}</span>
+    <span class="riquadro-foto">
+      <img class="foto" alt="" loading="lazy">
+      <span class="freccia" aria-hidden="true">${ICONA_FRECCIA_OPERA}</span>
+    </span>
     <div class="chip">
       <p class="chip-etichetta">${esc(opera.anno)}</p>
       <h3 class="chip-titolo">${esc(opera.titolo)}</h3>

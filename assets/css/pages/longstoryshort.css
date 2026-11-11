@@ -9,16 +9,6 @@
 }
 
 /* --------------------------------------------------------------------------
-   Marchio sopra la copertina dell'edizione (la copertina sta in
-   components.css, condivisa con le pagine degli altri eventi)
-   -------------------------------------------------------------------------- */
-.copertina-marchio {
-  position: relative;
-  width: clamp(170px, 30vw, 360px);
-  height: auto;
-}
-
-/* --------------------------------------------------------------------------
    Materiali: due schede, ognuna col colore di una linea
    -------------------------------------------------------------------------- */
 .materiali {

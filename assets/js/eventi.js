@@ -12,8 +12,8 @@
 const ICONA_FRECCIA_EVENTO =
   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>';
 
-/* Riquadro di un evento: foto a piena superficie e lastra con anno, titolo
-   e riassunto */
+/* Riquadro di un evento: la foto sopra e, sotto il filetto, anno, titolo e
+   riassunto */
 function riquadroEvento(evento) {
   const pagina = indirizzoSicuro(evento.pagina);
   const riquadro = document.createElement(pagina ? 'a' : 'div');
@@ -21,8 +21,10 @@ function riquadroEvento(evento) {
   if (pagina) riquadro.href = pagina;
 
   riquadro.innerHTML = `
-    <img class="foto" alt="" loading="lazy">
-    ${pagina ? `<span class="freccia" aria-hidden="true">${ICONA_FRECCIA_EVENTO}</span>` : ''}
+    <span class="riquadro-foto">
+      <img class="foto" alt="" loading="lazy">
+      ${pagina ? `<span class="freccia" aria-hidden="true">${ICONA_FRECCIA_EVENTO}</span>` : ''}
+    </span>
     <div class="chip">
       <p class="chip-etichetta">${esc(evento.data_inizio.slice(0, 4))}</p>
       <p class="chip-titolo">${esc(evento.titolo)}</p>

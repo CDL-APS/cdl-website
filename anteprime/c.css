@@ -1,0 +1,177 @@
+/* ==========================================================================
+   ANTEPRIMA C — «Fasce»
+   Ogni parte del sito ha la sua fascia di colore, alta uno schermo: Eventi
+   arancio, Produzioni blu, Cortoteca lilla. In ogni fascia il nome a tutta
+   larghezza e le ultime voci, da scorrere senza cambiare pagina. Un solo
+   carattere, Montserrat. Si appoggia a comune.css.
+   File di prova: non fa parte del sito pubblicato.
+   ========================================================================== */
+
+.start-9 { grid-column-start: 9; }
+
+/* --------------------------------------------------------------------------
+   Apertura: il marchio occupa la larghezza della pagina e guarda chi arriva
+   -------------------------------------------------------------------------- */
+.hero .wrap { display: flex; flex-direction: column; }
+
+/* Largo quanto i margini; su schermi bassi si restringe perché tutta
+   l'apertura resti nel primo schermo */
+.hero .marchio { width: min(100%, calc((100svh - 403px) * 2.576)); min-width: min(100%, 520px); }
+
+.marchio .occhio {
+  position: absolute; left: var(--x); top: var(--y); width: var(--d);
+  translate: -50% -50%;
+  border-color: transparent;
+  animation: spunta 0.5s var(--ease) both; animation-delay: calc(0.9s + var(--i, 0) * 0.08s);
+}
+@keyframes spunta {
+  from { scale: 0; }
+  to { scale: 1; }
+}
+
+.claim { margin-top: clamp(16px, 2vw, 28px); }
+.hero__piede { margin-top: clamp(16px, 2vw, 28px); align-items: end; }
+.hero__azioni { justify-content: flex-end; }
+
+/* --------------------------------------------------------------------------
+   Il nome della sezione, largo quanto la pagina
+   -------------------------------------------------------------------------- */
+.parola { color: var(--accento-parola, var(--inchiostro)); margin-left: -0.012em; }
+.fondo-blu .parola { --accento-parola: var(--azzurro); }
+
+.sezione__corpo { margin-top: clamp(24px, 2.8vw, 40px); }
+
+/* --------------------------------------------------------------------------
+   Elenco con anteprima: a sinistra le voci, a destra la fotografia della
+   voce su cui ci si trova. Quella attiva è in pieno contrasto, le altre
+   arretrano.
+   -------------------------------------------------------------------------- */
+.righe { border-top: 1px solid var(--filo); }
+.riga {
+  display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 2px 16px;
+  padding: 11px 0; border-bottom: 1px solid var(--filo);
+  color: var(--tenue);
+  transition: color 0.15s var(--ease);
+}
+.riga__titolo {
+  font-family: var(--f-titoli); font-weight: 900; text-transform: uppercase;
+  font-size: clamp(19px, 1.85vw, 26px); line-height: 1.02; letter-spacing: -0.035em;
+}
+.riga__dati { grid-column: 1; font-size: 15px; line-height: 1.4; }
+.riga__segno {
+  grid-column: 2; grid-row: 1 / span 2;
+  display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%;
+  border: 2px solid currentColor; opacity: 0.55;
+  transition: background-color 0.15s var(--ease), color 0.15s var(--ease), opacity 0.15s var(--ease), transform 0.3s var(--ease);
+}
+.riga__segno svg { width: 13px; height: 13px; }
+.riga.is-attiva, .riga:hover, .riga:focus-visible { color: var(--inchiostro); }
+.riga.is-attiva .riga__segno { opacity: 1; background: var(--accento); border-color: var(--accento); color: var(--nero); transform: rotate(90deg); }
+
+.elenco__tutti { margin-top: 8px; }
+
+/* Nella cornice stanno tutte le fotografie dell'elenco, una sopra l'altra:
+   si vede quella della voce attiva */
+.peek__cornice { aspect-ratio: 16 / 10; }
+.peek__cornice img { opacity: 0; transition: opacity 0.2s var(--ease); }
+.peek__cornice img.is-attiva { opacity: 1; }
+
+/* --------------------------------------------------------------------------
+   Produzioni: tre tessere azzurre, con il titolo dentro la tessera
+   -------------------------------------------------------------------------- */
+.tessera { padding: 12px; background: var(--azzurro); color: var(--nero); }
+.tessera .cornice { border-radius: 12px; }
+.tessera__testo { padding: 14px 10px 8px; }
+.tessera__titolo { font-size: clamp(20px, 1.9vw, 26px); }
+.tessera__dati { margin-top: 6px; font-size: 15px; line-height: 1.4; }
+.produzioni__tutti { margin-top: 20px; }
+
+/* --------------------------------------------------------------------------
+   Cortoteca: il nome con gli occhi, il testo e un corto da guardare subito
+   -------------------------------------------------------------------------- */
+.cortoteca__testo .btn { margin-top: 24px; --accento-hover: var(--chiaro); --accento-hover-testo: var(--nero); }
+
+/* --------------------------------------------------------------------------
+   CORTOTECA (pagina) — indice e palco
+   -------------------------------------------------------------------------- */
+.stanza { --barra: var(--lilla); }
+
+.strumenti { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 12px; }
+.campo {
+  flex: 1 1 220px; height: 48px;
+  display: flex; align-items: center; gap: 10px; padding: 0 18px;
+  border: 2px solid var(--nero); border-radius: 999px; background: var(--chiaro); cursor: text;
+}
+.campo svg { width: 17px; height: 17px; flex: 0 0 auto; }
+.campo input { flex: 1; min-width: 0; height: 100%; border: 0; outline: 0; background: none; font: inherit; color: var(--nero); }
+.campo input::placeholder { color: rgba(29, 29, 27, 0.66); }
+.campo:focus-within { outline: 3px solid var(--nero); outline-offset: 2px; }
+.campo input:focus-visible { outline: none; }
+
+.ordine { display: flex; padding: 3px; gap: 3px; border: 2px solid var(--nero); border-radius: 999px; }
+.ordine input { position: absolute; opacity: 0; pointer-events: none; }
+.scelta {
+  display: inline-flex; align-items: center; min-height: 38px; padding: 0 16px; border-radius: 999px;
+  font-size: 15px; font-weight: 700; cursor: pointer;
+  transition: background-color 0.15s var(--ease), color 0.15s var(--ease);
+}
+.ordine input:checked + .scelta { background: var(--nero); color: var(--lilla); }
+.ordine input:focus-visible + .scelta { outline: 3px solid var(--nero); outline-offset: 3px; }
+
+.riga--indice { grid-template-columns: 18px minmax(0, 1fr) auto; padding: 8px 0; }
+.riga--indice .riga__play { width: 12px; height: 12px; grid-row: 1 / span 2; }
+.riga--indice .riga__titolo { grid-column: 2; }
+.riga--indice .riga__dati { grid-column: 2; }
+.riga--indice .riga__anno { grid-column: 3; grid-row: 1 / span 2; font-weight: 700; font-variant-numeric: tabular-nums; }
+.riga__mini { display: none; }
+
+/* Il palco: la scheda del corto su cui ci si trova, con il titolo dentro */
+.palco { overflow: hidden; border-radius: var(--r); background: var(--nero); color: var(--chiaro); --inchiostro: var(--chiaro); }
+.palco .cornice { border-radius: 0; }
+.palco__testo { padding: 16px 24px 20px; }
+.palco__titolo { font-size: clamp(24px, 2.3vw, 32px); }
+.palco__frase { margin-top: 8px; font-size: 16px; line-height: 1.45; }
+.palco__dati { margin-top: 6px; font-size: 14px; color: rgba(247, 247, 247, 0.78); }
+.palco .btn { margin-top: 12px; border-color: var(--lilla); background: var(--lilla); color: var(--nero); }
+.palco .btn:hover { background: var(--chiaro); border-color: var(--chiaro); color: var(--nero); }
+
+.avviso { padding: 24px 0; font-weight: 700; }
+
+/* Chiusura della pagina Cortoteca: che cos'è, e l'invito ad associarsi */
+.closing--breve { min-height: 0; padding-top: clamp(48px, 7vw, 96px); }
+.closing--breve .lead { font-size: clamp(18px, 1.6vw, 22px); font-weight: 600; line-height: 1.45; }
+.closing--breve .btn { margin-top: 24px; --accento-hover: var(--chiaro); --accento-hover-testo: var(--nero); }
+
+/* --------------------------------------------------------------------------
+   Adattamenti
+   -------------------------------------------------------------------------- */
+@media (max-width: 1023px) {
+  .hero__azioni { justify-content: flex-start; }
+  .peek__cornice, .palco { display: none; }
+  /* Senza la cornice a fianco, ogni voce porta la sua miniatura */
+  .riga, .riga--indice { grid-template-columns: 112px minmax(0, 1fr); gap: 2px 14px; color: var(--inchiostro); }
+  .riga__mini { display: block; grid-column: 1; grid-row: 1 / span 2; position: relative; width: 112px; aspect-ratio: 16 / 10; overflow: hidden; border-radius: 10px; background: var(--nero); }
+  .riga__mini img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .riga__titolo, .riga__dati, .riga--indice .riga__titolo, .riga--indice .riga__dati { grid-column: 2; }
+  .riga__segno, .riga--indice .riga__play, .riga--indice .riga__anno { display: none; }
+}
+
+.claim .fit + .fit { margin-top: 0.06em; }
+
+/* La Cortoteca sta in uno schermo: il nome più vicino all'indice */
+.stanza .hero .sezione__corpo { margin-top: clamp(20px, 2.2vw, 30px); }
+
+/* Tablet: le tre tessere restano affiancate */
+@media (min-width: 640px) and (max-width: 1023px) {
+  #tessere-produzioni > .tessera { grid-column: span 4; }
+}
+
+/* Telefono: ogni tessera diventa una riga, miniatura a sinistra e titolo a destra */
+@media (max-width: 639px) {
+  .tessera { display: grid; grid-template-columns: 132px minmax(0, 1fr); align-items: center; gap: 12px; padding: 8px; }
+  .tessera .cornice { border-radius: 10px; }
+  .tessera__testo { padding: 0 6px 0 0; }
+}
+
+/* Le tre tessere hanno la stessa altezza, anche se un titolo va su due righe */
+#tessere-produzioni { align-items: stretch; }
