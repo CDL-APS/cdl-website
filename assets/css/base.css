@@ -1,153 +1,170 @@
 /* ==========================================================================
-   BASE — variabili di brand, reset e fondamenta tipografiche.
-   Caricato da tutte le pagine, sempre per primo.
-   ========================================================================== */
+   BASE — colori, misure, reset e fondamenta tipografiche.
+   Caricato da tutte le pagine, sempre per primo. Il carattere (Montserrat)
+   arriva con un <link> a Google Fonts nell'<head> di ogni pagina.
 
-@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&family=Montserrat:wght@500;700;800;900&display=swap');
+   Ogni sezione del sito ha un fondo pieno suo: Eventi blu con le scritte
+   azzurre, Produzioni lilla e nero, Cortoteca nera con le scritte lilla,
+   Contatti e Sostieni arancio. Le pagine di contenuto stanno sulla carta.
+   ========================================================================== */
 
 *, *::before, *::after { box-sizing: border-box; }
 
 :root {
-  /* Palette CDL. Il fondo è una carta appena calda: accanto alle fotografie
-     regge meglio del grigio neutro. Il lavanda è il colore del marchio e si
-     usa a campiture piene, mai come velo. */
-  --cdl-lavender: #b9bbf8;
-  --cdl-dark: #1d1d1b;
-  --cdl-white: #f5f3ee;
-  --cdl-red: #ff0000;
+  /* Palette ufficiale */
+  --nero: #1d1d1b;
+  --nero-sala: #000;
+  --lilla: #b9bbf8;
+  --chiaro: #f7f7f7;
+  --rosso: #ff0000;
+  /* Accoppiamenti di sezione (cartella "CDL Loghi Drive") */
+  --blu: #004aad;
+  --azzurro: #84f1f7;
+  --arancio: #ff751f;
+  --giallo: #f7c923;
 
-  /* Curva di easing unica per tutte le micro-interazioni */
-  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  /* Ritmo: barra, respiro delle sezioni, margine laterale, colonne */
+  --nav: 72px;
+  --padt: 120px;
+  --padb: 72px;
+  --gut: 80px;
+  --gap: 24px;
 
-  /* Barra di navigazione: fissa in cima, a tutta larghezza. --barra-top
-     resta (a zero) perché le pagine la usano nei calcoli degli ancoraggi. */
-  --barra-h: 64px;
-  --barra-top: 0px;
+  /* Angoli del marchio: cornici e pulsanti */
+  --r: 20px;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
 
-  /* Angoli: quasi vivi, come un fotogramma. Le fotografie non ne hanno. */
-  --r-l: 4px;
-  --r-m: 3px;
-  --r-s: 2px;
-
-  /* Margine laterale della pagina, uguale a destra e a sinistra per ogni
-     blocco, e larghezza massima del contenuto */
-  --margine: clamp(1rem, 4vw, 3rem);
-  --larghezza: 1360px;
-
-  /* Distanza fra riquadri affiancati */
-  --spazio: 1.25rem;
-
-  --riga: rgba(29, 29, 27, 0.16);
-  --riga-forte: var(--cdl-dark);
-  --testo-tenue: rgba(29, 29, 27, 0.68);
-  --testo-medio: rgba(29, 29, 27, 0.8);
-  --testo-chip: rgba(29, 29, 27, 0.75);
-  --fondo-foto: rgba(29, 29, 27, 0.07);
-
-  /* Famiglie: Montserrat per titoli ed etichette, Instrument Serif in
-     corsivo per tagline e frasi d'apertura, Inter per il testo */
+  --f-testo: 'Montserrat', sans-serif;
   --f-titoli: 'Montserrat', sans-serif;
-  --f-corsivo: 'Instrument Serif', 'Times New Roman', serif;
-  --f-testo: 'Inter', sans-serif;
+  --titoli-spazio: -0.04em;
 
-  /* Etichette in maiuscolo: mai sotto gli 11 px */
-  --etichetta: 0.72rem;
+  /* Fondo e inchiostro della sezione corrente: le campiture li cambiano */
+  --fondo: var(--chiaro);
+  --inchiostro: var(--nero);
+  --accento: var(--nero);
+  --tenue: rgba(29, 29, 27, 0.74);
+  --filo: rgba(29, 29, 27, 0.2);
+  --barra: var(--chiaro);
 }
 
-html { scroll-behavior: smooth; }
+@media (max-width: 1023px) { :root { --gut: 48px; } }
+@media (max-width: 639px) { :root { --nav: 56px; --padt: 88px; --padb: 48px; --gut: 20px; --gap: 12px; } }
+
+/* Campiture: ogni classe porta fondo, testo e colore d'accento */
+.fondo-arancio { --fondo: var(--arancio); --inchiostro: var(--nero); --accento: var(--giallo); --tenue: rgba(29, 29, 27, 0.88); --filo: rgba(29, 29, 27, 0.34); --accento-hover: var(--giallo); --accento-hover-testo: var(--nero); --rec: var(--chiaro); }
+/* La Cortoteca: nero pieno, con scritte e dettagli lilla */
+.fondo-sala { --fondo: var(--nero-sala); --inchiostro: var(--lilla); --accento: var(--lilla); --tenue: rgba(185, 187, 248, 0.82); --filo: rgba(185, 187, 248, 0.3); --accento-hover: var(--chiaro); --accento-hover-testo: var(--nero); }
+
+html { scroll-behavior: auto; }
 
 body {
   margin: 0;
-  padding: var(--barra-h) 0 0;
-  min-height: 100vh;
   overflow-x: hidden;
-  position: relative;
   font-family: var(--f-testo);
-  background-color: var(--cdl-white);
-  color: var(--cdl-dark);
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.625;
+  background: var(--fondo);
+  color: var(--inchiostro);
   -webkit-font-smoothing: antialiased;
 }
 
-img { max-width: 100%; display: block; }
-
-h1, h2 {
-  margin: 0;
-  font-family: var(--f-titoli);
-  font-weight: 900;
-  text-transform: uppercase;
-  line-height: 0.9;
-  letter-spacing: -0.045em;
-  text-wrap: balance;
-}
-
-h3, p, dl, dd, ul, ol { margin: 0; }
-
-ul, ol { padding: 0; }
-
+img { display: block; max-width: 100%; height: auto; }
+h1, h2, h3, p, ul, ol, dl, dd { margin: 0; }
+ul, ol { padding: 0; list-style: none; }
 a { color: inherit; text-decoration: none; }
-
-svg { width: 15px; height: 15px; flex: 0 0 auto; }
-
-/* L'attributo hidden deve vincere anche sui componenti che impostano un
-   display proprio (flex, grid) */
+button { font: inherit; }
+/* L'attributo hidden vince anche sui componenti che impostano un display proprio */
 [hidden] { display: none !important; }
 
 /* Testo leggibile dai lettori di schermo ma invisibile */
 .sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
+  position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+  overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
 }
 
-/* --------------------------------------------------------------------------
-   Animazione di ingresso (scheda opera, cornice narrativa)
-   -------------------------------------------------------------------------- */
-.fade-in {
-  animation: fadeIn 0.8s ease-out forwards;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* --------------------------------------------------------------------------
-   Accessibilità: focus da tastiera visibile su fondo chiaro e scuro
-   -------------------------------------------------------------------------- */
-a:focus-visible,
-button:focus-visible,
-input:focus-visible + label,
-input[type='search']:focus-visible {
-  outline: 3px solid var(--cdl-dark);
+a:focus-visible, button:focus-visible, input:focus-visible, [tabindex]:focus-visible {
+  outline: 3px solid var(--inchiostro);
   outline-offset: 3px;
-  box-shadow: 0 0 0 6px var(--cdl-lavender);
 }
 
 /* --------------------------------------------------------------------------
-   Rispetto delle preferenze di movimento ridotto.
-   Chi ha attivato "riduci animazioni" nel sistema operativo vede il sito
-   fermo invece che animato.
+   Margini e griglia: un solo contenitore per barra, sezioni e piede
+   -------------------------------------------------------------------------- */
+.wrap { width: min(100% - 2 * var(--gut), 1280px); margin-inline: auto; }
+
+.grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--gap); align-items: start; }
+/* Solo la fine della campata: così una classe start-N può fissarne l'inizio */
+.span-3 { grid-column-end: span 3; }
+.span-4 { grid-column-end: span 4; }
+.span-5 { grid-column-end: span 5; }
+.span-7 { grid-column-end: span 7; }
+.span-8 { grid-column-end: span 8; }
+.start-6 { grid-column-start: 6; }
+.start-8 { grid-column-start: 8; }
+.start-9 { grid-column-start: 9; }
+.start-10 { grid-column-start: 10; }
+
+@media (max-width: 1023px) {
+  .grid > [class*='span-'] { grid-column: 1 / -1; }
+}
+
+/* --------------------------------------------------------------------------
+   Titoli: Montserrat 900, maiuscolo, stretti
+   -------------------------------------------------------------------------- */
+h1, h2, h3, .titolo {
+  font-family: var(--f-titoli);
+  font-weight: 900;
+  text-transform: uppercase;
+  line-height: 0.94;
+  letter-spacing: var(--titoli-spazio);
+  text-wrap: balance;
+}
+
+h2 { font-size: clamp(30px, 3.4vw, 48px); }
+
+/* Riga a tutta larghezza: la misura la calcola comune.js partendo da 100 px.
+   Senza script resta la dimensione di ripiego. */
+.fit { display: block; white-space: nowrap; line-height: 0.8; font-size: var(--ripiego, 9vw); }
+/* La spaziatura negativa accorcia la misura dell'ultima lettera: il margine interno la restituisce */
+.fit-testo { display: inline-flex; align-items: center; padding-right: calc(var(--titoli-spazio) * -1); }
+
+.lead { max-width: 60ch; font-size: clamp(16px, 1.25vw, 18px); }
+
+/* --------------------------------------------------------------------------
+   Movimento ridotto: niente animazioni, transizioni istantanee. Gli script
+   (comune.js, FERMO) fermano i rullini e trasformano i passaggi in cambi
+   di pagina.
    -------------------------------------------------------------------------- */
 @media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation: none !important; transition-duration: 0.001ms !important; }
+}
 
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.001ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.001ms !important;
-  }
+/* --------------------------------------------------------------------------
+   Alias per le pagine riservate (gestione.html, proponi.html) e per la
+   cornice narrativa: i loro fogli usano ancora i nomi del sito precedente.
+   Puntano ai valori nuovi; non usarli nei fogli delle pagine pubbliche.
+   -------------------------------------------------------------------------- */
+:root {
+  --cdl-lavender: var(--lilla);
+  --cdl-dark: var(--nero);
+  --cdl-white: var(--chiaro);
+  --cdl-red: var(--rosso);
+  --ease-out: var(--ease);
+  --barra-h: var(--nav);
+  --barra-top: 0px;
+  --r-l: var(--r);
+  --r-m: 14px;
+  --r-s: 10px;
+  --margine: var(--gut);
+  --larghezza: 1280px;
+  --spazio: 20px;
+  --riga: var(--filo);
+  --riga-forte: var(--nero);
+  --testo-tenue: var(--tenue);
+  --testo-medio: rgba(29, 29, 27, 0.8);
+  --fondo-foto: rgba(29, 29, 27, 0.07);
+  --f-corsivo: var(--f-testo);
+  /* Etichette in maiuscolo: mai sotto gli 11 px */
+  --etichetta: 0.75rem;
 }
