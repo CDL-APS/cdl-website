@@ -65,9 +65,33 @@
 .hero--marchio .presentazione p + p { margin-top: 0; }
 .hero--marchio .presentazione strong { font-weight: 800; }
 .pagina-evento .presentazione strong { color: var(--evento-testo); }
-/* Pagine dei singoli eventi (non Long Story Short): niente filo sotto logo e
-   racconto, il programma segue dopo lo spazio */
-.pagina-evento:not(.evento--longstoryshort) .hero--marchio .presentazione { padding-bottom: 0; border-bottom: 0; }
+/* Pagine degli eventi: niente filo sotto logo e racconto, il programma
+   segue dopo lo spazio */
+.pagina-evento .hero--marchio .presentazione { padding-bottom: 0; border-bottom: 0; }
+/* Long Story Short: in cima l'artwork della cover, dalla cima della pagina
+   al bordo inferiore della galleria, che gli scorre sopra. Il blocco in cima
+   si allunga di quanto è alta la galleria (--galleria, l'altezza delle foto
+   del rullino in components.css) e la galleria risale di altrettanto, senza
+   fondo. Il file è già adattato al fondo (carta #f7f7f7, senza la sua grana
+   dove è vuota), così i bordi non si vedono. */
+.evento--longstoryshort { --galleria: clamp(240px, 36svh, 380px); }
+.evento--longstoryshort .hero--marchio {
+  padding-bottom: calc(clamp(36px, 4.5vw, 64px) + var(--galleria));
+  background: var(--fondo) url("/assets/img/eventi/long-story-short-2026/artwork.jpg") center bottom / cover no-repeat;
+}
+.evento--longstoryshort .hero--marchio + .blocco-pagina--diviso { margin-top: calc(-1 * var(--galleria)); background: none; }
+.evento--longstoryshort .hero--marchio + .blocco-pagina--diviso > .rullino:first-child { margin-top: 0; }
+.evento--longstoryshort .hero--marchio + .blocco-pagina--diviso .scorre__finestra { margin-top: 0; }
+/* sopra le bande colorate dell'artwork il testo ha un alone del colore del fondo */
+.evento--longstoryshort .hero--marchio .presentazione { text-shadow: 0 0 2px var(--chiaro), 0 0 8px var(--chiaro), 0 0 18px var(--chiaro); }
+/* Su tablet e telefono il blocco è alto e stretto: l'artwork intero in cima,
+   dietro il lettering, e il testo sul fondo */
+@media (max-width: 1023px) {
+  .evento--longstoryshort .hero--marchio { background-size: 100% auto; background-position: center top; }
+}
+/* Long Story Short: nessun filo fra i blocchi, solo lo spazio */
+.evento--longstoryshort .blocco-pagina--diviso { margin-top: clamp(36px, 4.5vw, 64px); }
+.evento--longstoryshort .blocco-pagina--diviso > .wrap { padding-top: 0; border-top: 0; }
 .hero--marchio + .blocco-pagina--diviso { margin-top: 0; }
 /* il filo è già quello della presentazione: sotto, lo stesso respiro degli altri blocchi */
 .hero--marchio + .blocco-pagina--diviso > .wrap { padding-top: clamp(36px, 4.5vw, 64px); border-top: 0; }
@@ -128,13 +152,23 @@
 }
 
 /* --------------------------------------------------------------------------
-   Materiali: righe a tutta larghezza, il nome grande e la freccia
+   Materiali: un breve racconto, poi le righe a tutta larghezza, il nome e
+   la freccia
    -------------------------------------------------------------------------- */
 .righe-g { padding: 0; list-style: none; border-top: 2px solid var(--evento); }
-.riga-g { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 72px; padding: 14px 0; border-bottom: 1px solid var(--filo); }
-.riga-g__titolo { font-family: var(--f-titoli); font-weight: 900; text-transform: uppercase; letter-spacing: var(--titoli-spazio); font-size: clamp(24px, 2.6vw, 38px); line-height: 1; transition: color 0.2s var(--ease); }
-.riga-g__freccia { display: grid; place-items: center; flex: 0 0 auto; width: 48px; height: 48px; border: 2px solid currentColor; border-radius: 50%; transition: transform 0.3s var(--ease); }
-.riga-g__freccia .freccia { width: 20px; height: 20px; }
+.riga-g { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 64px; padding: 10px 0; border-bottom: 1px solid var(--filo); }
+.riga-g__titolo { font-family: var(--f-titoli); font-weight: 900; text-transform: uppercase; letter-spacing: var(--titoli-spazio); font-size: clamp(19px, 1.8vw, 26px); line-height: 1; transition: color 0.2s var(--ease); }
+.riga-g__freccia { display: grid; place-items: center; flex: 0 0 auto; width: 44px; height: 44px; border: 2px solid currentColor; border-radius: 50%; transition: transform 0.3s var(--ease); }
+.riga-g__freccia .freccia { width: 18px; height: 18px; }
+/* Il testo di un blocco (Vincitori, Materiali): scritto come la
+   presentazione in cima, a tutta larghezza; un elenco, se c'è, col
+   pallino nel colore dell'evento */
+.blocco-testo { display: grid; gap: 0.8em; margin-bottom: clamp(28px, 3vw, 40px); font-size: clamp(19px, 1.75vw, 26px); font-weight: 600; line-height: 1.3; letter-spacing: -0.01em; }
+.blocco-testo strong { font-weight: 800; color: var(--evento-testo); }
+.blocco-testo__elenco { display: grid; gap: 0.2em; padding-left: 1.1em; list-style: disc; }
+.blocco-testo__elenco li::marker { color: var(--evento-testo); }
+/* La galleria senza titolo: il rullino prende il respiro che avrebbe avuto il titolo */
+.blocco-pagina--diviso > .rullino:first-child { margin-top: clamp(36px, 4.5vw, 64px); }
 .riga-g:hover .riga-g__titolo { color: var(--evento-testo); }
 .riga-g:hover .riga-g__freccia { transform: translate(3px, -3px); }
 
@@ -185,6 +219,13 @@
 /* I comandi: la linea che avanza, i due tasti, il rimando al post */
 .giostra__comandi { grid-area: comandi; align-self: end; display: flex; align-items: center; gap: 10px; padding-bottom: 16px; }
 .serata--senza-testa .giostra__comandi { align-self: start; padding: 12px 0 0; }
+/* Senza testa ma con i blocchi (il Nòt): la striscia parte dal filo del
+   primo elenco, sotto il titolo del primo blocco (titolo + gap + margine) */
+@media (min-width: 1024px) {
+  .serata--senza-testa:has(> .serata__lista > .programma-gruppo:first-child > .programma-gruppo-titolo + .programma-lista) .giostra__foto {
+    margin-top: calc(clamp(22px, 2vw, 28px) + 6px + 12px);
+  }
+}
 .giostra__avanzamento { position: relative; flex: 1 1 auto; height: 2px; background: var(--filo); }
 .giostra__linea { position: absolute; inset: 0; background: var(--evento); transform-origin: left; transform: scaleX(0); transition: transform 0.4s var(--ease); }
 .giostra__tasto {
@@ -223,7 +264,9 @@
 .vincitore__premi li { padding-left: 18px; position: relative; }
 .vincitore__premi li::before { content: ''; position: absolute; left: 0; top: 0.42em; width: 8px; height: 8px; border-radius: 50%; background: var(--evento); }
 
-.vincitore--primo { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(0, 8fr) minmax(0, 4fr); gap: var(--gap); align-items: end; }
+.vincitore--primo { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--gap); align-items: end; }
+/* la still su due colonne della griglia sotto, il testo nella terza: i bordi coincidono */
+.vincitore--primo > :first-child { grid-column: span 2; }
 .vincitore--primo .vincitore__testo { margin-top: 0; padding-top: 16px; border-top: 2px solid var(--evento); }
 .vincitore--primo .vincitore__corto { font-size: clamp(40px, 5vw, 76px); line-height: 0.9; }
 .vincitore--primo .vincitore__dati { font-size: 17px; }
@@ -236,6 +279,7 @@
 @media (max-width: 1023px) {
   .vincitori { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .vincitore--primo { grid-template-columns: minmax(0, 1fr); }
+  .vincitore--primo > :first-child { grid-column: auto; }
   .vincitore--primo .vincitore__testo { padding-top: 12px; }
 }
 @media (max-width: 639px) { .vincitori { grid-template-columns: minmax(0, 1fr); } }
@@ -256,3 +300,12 @@
   /* l'ultimo logo, se resta da solo, prende tutta la riga */
   .partner li:last-child:nth-child(odd) { grid-column: 1 / -1; border-right: 0; }
 }
+
+/* L'anteprima dalla gestione (evento.html?anteprima): una striscia in cima
+   ricorda che la pagina non è quella pubblicata */
+.avviso-anteprima {
+  position: sticky; top: var(--nav, 72px); z-index: 4;
+  padding: 10px var(--gut); background: var(--nero); color: var(--chiaro);
+  font-size: 14px; font-weight: 700; line-height: 1.4; text-align: center;
+}
+

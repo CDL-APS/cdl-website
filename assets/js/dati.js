@@ -1,11 +1,11 @@
 /* ==========================================================================
-   DATI — opere ed eventi, comune a tutte le pagine che li mostrano: home,
-   Cortoteca, Produzioni, pagina del corto, Eventi. Lo usano anche gestione
+   DATI — opere, eventi e il rullino della home, comune a tutte le pagine
+   che li mostrano: home, Cortoteca, Produzioni, pagina del corto, Eventi. Lo usano anche gestione
    e proposta (urlImmagine, esc, indirizzoSicuro).
 
    La fonte è il database Supabase dell'associazione. Se non risponde (per
    esempio perché il progetto è in pausa) le pagine ripiegano sulla copia di
-   riserva in data/opere.json e data/eventi.json, che ha la stessa forma dei
+   riserva in data/opere.json, data/eventi.json e data/rullino.json, che ha la stessa forma dei
    dati del database. Le immagini seguono la stessa logica: prima lo spazio
    immagini di Supabase, poi le copie in assets/img/.
 
@@ -29,7 +29,8 @@ const IMMAGINI_LOCALI = {
 
 const RISERVA = {
   opere: 'data/opere.json',
-  eventi: 'data/eventi.json'
+  eventi: 'data/eventi.json',
+  rullino: 'data/rullino.json'
 };
 
 /* Legge una tabella dalla Data API di Supabase. `query` è la parte dopo il
@@ -56,8 +57,8 @@ async function leggiRiserva(tabella) {
   const response = await fetch(RISERVA[tabella]);
   if (!response.ok) throw new Error('Copia di riserva non trovata: ' + RISERVA[tabella]);
   const righe = await response.json();
-  const campo = tabella === 'opere' ? 'pubblicata' : 'pubblicato';
-  return righe.filter((riga) => riga[campo] === true);
+  const campo = { opere: 'pubblicata', eventi: 'pubblicato' }[tabella];
+  return campo ? righe.filter((riga) => riga[campo] === true) : righe;
 }
 
 /* Prima il database, poi la copia di riserva */
@@ -84,7 +85,8 @@ const COLONNE_OPERE = [
 
 const COLONNE_EVENTI = [
   'id', 'codice', 'titolo', 'data_inizio', 'data_fine', 'luogo', 'riassunto', 'descrizione',
-  'copertina', 'miniatura', 'pagina', 'serie', 'pubblicato'
+  'copertina', 'miniatura', 'pagina', 'serie', 'pubblicato',
+  'logo', 'colore', 'instagram', 'sfondo', 'presentazione', 'blocchi'
 ].join(',');
 
 // Gli interpreti arrivano già annidati in ogni opera, nell'ordine del cast
@@ -104,6 +106,12 @@ async function caricaOpera(codice) {
 async function caricaEventi() {
   const eventi = await leggi('eventi', `select=${COLONNE_EVENTI}&pubblicato=eq.true&order=data_inizio.desc`);
   return eventi.sort((a, b) => b.data_inizio.localeCompare(a.data_inizio));
+}
+
+/* Il rullino della home, nell'ordine scelto in gestione. Ogni foto porta a
+   un evento, a un corto o a una pagina del sito (vedi home.js) */
+async function caricaRullino() {
+  return leggi('rullino', 'select=immagine,descrizione,evento_id,opera_id,pagina,posizione&order=posizione,id');
 }
 
 /* Ordine dalla più recente. A parità di anno conta come più recente l'opera
@@ -191,13 +199,52 @@ function indirizzoSicuro(indirizzo) {
   return /^(https?:\/\/|[a-z0-9-]+\.html(\?.*)?$)/i.test(indirizzo) ? indirizzo : null;
 }
 
-/* La pagina di un evento: solo il nome di un file del sito
-   (short-talks-1.html), niente indirizzi esterni né parametri. La pagina
-   Eventi la scarica e ne inserisce il contenuto: un indirizzo esterno
-   porterebbe dentro il sito una pagina di altri. */
+/* Vero se la pagina dell'evento si compone dal database (evento.html, vedi
+   modello-evento.js): ha una presentazione o almeno un blocco */
+function conModello(evento) {
+  return Boolean(evento && evento.codice && ((evento.presentazione || '').trim()
+    || (Array.isArray(evento.blocchi) && evento.blocchi.length)));
+}
+
+/* La pagina di un evento: quella composta dal modello
+   (evento.html?e=short-talks-1) o, per gli eventi non ancora convertiti,
+   solo il nome di un file del sito (blue-hour.html), niente indirizzi
+   esterni né parametri. La pagina Eventi scarica quel file e ne inserisce il
+   contenuto: un indirizzo esterno porterebbe dentro il sito una pagina di
+   altri. */
 function paginaEvento(evento) {
+  if (conModello(evento)) return 'evento.html?e=' + evento.codice;
   const pagina = (evento && evento.pagina) || '';
   return /^[a-z0-9-]+\.html$/.test(pagina) ? pagina : null;
+}
+
+/* Un'immagine di un evento: una copia nel sito (assets/img/eventi/…, le foto
+   degli eventi di prima) o un percorso nello spazio immagini. Qualsiasi
+   altra cosa è scartata. */
+function immagineEvento(percorso) {
+  if (typeof percorso !== 'string') return null;
+  if (/^assets\/img\/eventi\/[a-z0-9\/._-]+$/i.test(percorso) && !percorso.includes('..')) return { locale: percorso };
+  if (/^eventi\/[a-z0-9\/._-]+$/i.test(percorso) && !percorso.includes('..')) return { percorso };
+  return null;
+}
+
+/* L'indirizzo da cui caricare un'immagine di un evento (il ripiego sulla
+   copia locale lo fa mostraImmagine) */
+function urlImmagineEvento(percorso) {
+  const i = immagineEvento(percorso);
+  return i ? (i.locale || urlImmagine(i.percorso)) : null;
+}
+
+/* Le foto delle pagine composte dal modello, blocco per blocco (le usa la
+   scheda Rullino della gestione) */
+function fotoEvento(evento) {
+  const viste = new Set();
+  return (Array.isArray(evento && evento.blocchi) ? evento.blocchi : [])
+    .flatMap((b) => (b && Array.isArray(b.foto) ? b.foto.filter(Boolean).map((f, i, tutte) => ({
+      immagine: f.immagine,
+      descrizione: f.descrizione || (b.descrizione_foto ? `${b.descrizione_foto}, ${i + 1} di ${tutte.length}` : '')
+    })) : []))
+    .filter((f) => immagineEvento(f.immagine) && !viste.has(f.immagine) && viste.add(f.immagine));
 }
 
 /* Testo sicuro da inserire in un modello HTML: i dati arrivano da un modulo

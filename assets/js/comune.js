@@ -31,10 +31,48 @@ function adatta() {
     const testo = riga.querySelector('.fit-testo');
     // data-fermo: il corpo è già quello giusto (arriva da un'altra pagina)
     if (!testo || !riga.clientWidth || riga.dataset.fermo) return;
+    if ('preciso' in riga.dataset) return adattaPreciso(riga, testo);
     riga.style.fontSize = '100px';
     const largo = testo.getBoundingClientRect().width;
     if (largo) riga.style.fontSize = (99.4 * riga.clientWidth / largo).toFixed(2) + 'px';
   });
+}
+
+/* ---- Righe a tutta larghezza misurate sull'inchiostro (.fit con
+   data-preciso, i nomi dell'indice della home): non conta la scatola delle
+   lettere ma il loro disegno, così righe con iniziali e finali diverse (la
+   E, la P, la C) cominciano e finiscono esattamente ai margini. Dal
+   carattere (a 100 px, su una tela) si leggono la larghezza della parola e
+   lo spazio a sinistra della prima lettera e a destra dell'ultima. La
+   spaziatura fra le lettere può arrivare fissa in px (ereditata dal titolo)
+   o in em: la si legge a 100 e a 200 px, e conta solo fra una lettera e
+   l'altra. ---- */
+const tela = document.createElement('canvas').getContext('2d');
+
+function adattaPreciso(riga, testo) {
+  testo.style.marginLeft = '';
+  const spazioA = (corpo) => {
+    riga.style.fontSize = corpo + 'px';
+    return parseFloat(getComputedStyle(testo).letterSpacing) || 0;
+  };
+  const s200 = spazioA(200);
+  const s100 = spazioA(100);
+  const stile = getComputedStyle(testo);
+  const parola = stile.textTransform === 'uppercase' ? testo.textContent.toUpperCase() : testo.textContent;
+  tela.font = `${stile.fontWeight} 100px ${stile.fontFamily}`;
+  const prima = tela.measureText(parola[0]);
+  const ultima = tela.measureText(parola[parola.length - 1]);
+  const aSinistra = -prima.actualBoundingBoxLeft;
+  const aDestra = ultima.width - ultima.actualBoundingBoxRight;
+  // il disegno a 100 px senza spaziatura; la spaziatura vale a + b × corpo
+  const disegno = tela.measureText(parola).width - aSinistra - aDestra;
+  const b = (s200 - s100) / 100;
+  const a = s100 - 100 * b;
+  const fra = parola.length - 1;
+  const corpo = (riga.clientWidth - fra * a) / (disegno / 100 + fra * b);
+  if (!(corpo > 0)) return;
+  riga.style.fontSize = corpo.toFixed(2) + 'px';
+  testo.style.marginLeft = (-aSinistra * corpo / 100).toFixed(2) + 'px';
 }
 
 /* ---- Occhi: la pupilla va verso il punto guardato; ogni tanto un battito ---- */
@@ -140,7 +178,9 @@ function preparaScorre(blocco) {
 function nuovaImmagine(percorso, alt) {
   const img = document.createElement('img');
   img.alt = alt || '';
-  mostraImmagine(img, percorso);
+  // le foto degli eventi di prima stanno nel sito (assets/…), le altre nello spazio immagini
+  if (immagineEvento(percorso)?.locale) img.src = percorso;
+  else mostraImmagine(img, percorso);
   return img;
 }
 
@@ -170,7 +210,11 @@ function durata(opera) {
    3. un SVG in assets/img/film/titoli/, solo per i codici di TITOLI_GRAFICI
       (copie provvisorie: quei titoli vanno ricaricati dalla gestione);
    4. nessuno: restituisce null e chi chiama scrive il titolo in Montserrat.
-   Se l'immagine non arriva, al suo posto compare il titolo scritto. ---- */
+   Se l'immagine non arriva, al suo posto compare il titolo scritto.
+   Se l'opera ha un colore (colonna colore, da gestione) il titolo grafico
+   prende quel colore: l'immagine fa da maschera a un fondo pieno, così la
+   forma resta quella del file. Con colora: false (Produzioni, che lo vuole
+   nero) resta com'è. ---- */
 const TITOLI_GRAFICI = new Set(['interzona', 'quartolivello', 'relativita', 'vivarevolution']);
 const caratteriTitolo = new Map();
 
@@ -182,14 +226,28 @@ function titoloScritto(opera, classe = '') {
   return span;
 }
 
-function titoloGrafico(opera, { classe = '', alt = opera.titolo } = {}) {
-  const testo = () => titoloScritto(opera, classe);
+function titoloGrafico(opera, { classe = '', alt = opera.titolo, colora = true } = {}) {
+  const colore = colora && /^#[0-9a-f]{6}$/i.test(opera.colore || '') ? opera.colore : null;
+  const testo = () => {
+    const span = titoloScritto(opera, classe);
+    if (colore) span.style.color = colore;
+    return span;
+  };
   const immagine = (src) => {
     const img = document.createElement('img');
     img.className = 'targa__grafica';
     img.alt = alt;
     img.addEventListener('error', () => img.replaceWith(testo()), { once: true });
     img.src = src;
+    if (colore) {
+      // il disegno esce dal riquadro, che resta della sua misura; resta il
+      // fondo colorato, ritagliato dalla stessa immagine (come object-fit: contain)
+      const maschera = `url(${JSON.stringify(src)}) center / contain no-repeat`;
+      img.style.backgroundColor = colore;
+      img.style.objectPosition = '-99999px 0';
+      img.style.webkitMask = maschera;
+      img.style.mask = maschera;
+    }
     return img;
   };
   if (opera.titolo_png) return immagine(urlImmagine(opera.titolo_png));
@@ -269,7 +327,7 @@ function riempiSchede(id, schede) {
 const COLORI_SEZIONE = {
   eventi: ['--blu', '--azzurro'],
   produzioni: ['--lilla', '--nero'],
-  cortoteca: ['--nero-sala', '--lilla'],
+  cortoteca: ['--nero-sala', '--cortoteca'],
 };
 
 // Con Netlify una pagina risponde anche senza ".html" (e la home anche come

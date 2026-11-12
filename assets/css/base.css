@@ -4,7 +4,7 @@
    arriva con un <link> a Google Fonts nell'<head> di ogni pagina.
 
    Ogni sezione del sito ha un fondo pieno suo: Eventi blu con le scritte
-   azzurre, Produzioni lilla e nero, Cortoteca nera con le scritte lilla,
+   azzurre, Produzioni lilla e nero, Cortoteca nera con le scritte arancio,
    Contatti e Sostieni arancio. Le pagine di contenuto stanno sulla carta.
    ========================================================================== */
 
@@ -22,6 +22,9 @@
   --azzurro: #84f1f7;
   --arancio: #ff751f;
   --giallo: #f7c923;
+  /* Il colore della Cortoteca, sul nero (scritte, dettagli, piede, colore
+     dei corti senza un colore loro). Prima era il lilla */
+  --cortoteca: var(--arancio);
 
   /* Ritmo: barra, respiro delle sezioni, margine laterale, colonne */
   --nav: 72px;
@@ -52,8 +55,8 @@
 
 /* Campiture: ogni classe porta fondo, testo e colore d'accento */
 .fondo-arancio { --fondo: var(--arancio); --inchiostro: var(--nero); --accento: var(--giallo); --tenue: rgba(29, 29, 27, 0.88); --filo: rgba(29, 29, 27, 0.34); --accento-hover: var(--giallo); --accento-hover-testo: var(--nero); --rec: var(--chiaro); }
-/* La Cortoteca: nero pieno, con scritte e dettagli lilla */
-.fondo-sala { --fondo: var(--nero-sala); --inchiostro: var(--lilla); --accento: var(--lilla); --tenue: rgba(185, 187, 248, 0.82); --filo: rgba(185, 187, 248, 0.3); --accento-hover: var(--chiaro); --accento-hover-testo: var(--nero); }
+/* La Cortoteca: nero pieno, con scritte e dettagli nel suo colore */
+.fondo-sala { --fondo: var(--nero-sala); --inchiostro: var(--cortoteca); --accento: var(--cortoteca); --tenue: color-mix(in srgb, var(--cortoteca) 82%, transparent); --filo: color-mix(in srgb, var(--cortoteca) 30%, transparent); --accento-hover: var(--chiaro); --accento-hover-testo: var(--nero); }
 
 html { scroll-behavior: auto; }
 
@@ -98,9 +101,11 @@ a:focus-visible, button:focus-visible, input:focus-visible, [tabindex]:focus-vis
 .span-3 { grid-column-end: span 3; }
 .span-4 { grid-column-end: span 4; }
 .span-5 { grid-column-end: span 5; }
+.span-6 { grid-column-end: span 6; }
 .span-7 { grid-column-end: span 7; }
 .span-8 { grid-column-end: span 8; }
 .start-6 { grid-column-start: 6; }
+.start-7 { grid-column-start: 7; }
 .start-8 { grid-column-start: 8; }
 .start-9 { grid-column-start: 9; }
 .start-10 { grid-column-start: 10; }
@@ -141,8 +146,8 @@ h2 { font-size: clamp(30px, 3.4vw, 48px); }
 }
 
 /* --------------------------------------------------------------------------
-   Alias per le pagine riservate (gestione.html, proponi.html) e per la
-   cornice narrativa: i loro fogli usano ancora i nomi del sito precedente.
+   Alias per proponi.css e per la cornice narrativa: i loro fogli usano
+   ancora i nomi del sito precedente (riservato.css e gestione.css no).
    Puntano ai valori nuovi; non usarli nei fogli delle pagine pubbliche.
    -------------------------------------------------------------------------- */
 :root {

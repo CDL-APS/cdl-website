@@ -1,8 +1,10 @@
 /* ==========================================================================
    EVENTI (eventi.html) — gli eventi per serie: in evidenza l'ultimo Long
    Story Short, poi le edizioni di Short Talks, poi gli altri. Ogni evento
-   con una pagina si apre qui sopra, nella sala, con la pagina dell'evento
-   letta così com'è dal suo file. Si appoggia a dati.js e comune.js.
+   con una pagina si apre qui sopra, nella sala: composta dal database con
+   modello-evento.js (come evento.html) o, per le pagine scritte a mano,
+   letta così com'è dal suo file. Si appoggia a dati.js, comune.js e
+   modello-evento.js.
    ========================================================================== */
 
 // Il luogo, senza la città: "C'entro Supercinema, Santarcangelo" diventa "C'entro Supercinema"
@@ -10,22 +12,62 @@ function luogoBreve(evento) {
   return (evento.luogo || '').split(',')[0].trim();
 }
 
-/* Il logo di un evento è un PNG senza fondo, salvato col nome della sua
-   pagina: short-talks-1.html → assets/img/eventi/loghi/short-talks-1.png.
+/* Il logo di un evento è un PNG senza fondo: la colonna logo o, per le
+   pagine scritte a mano, il file col nome della pagina
+   (short-talks-2.html → assets/img/eventi/loghi/short-talks-2.png).
    Se il file non c'è, la scheda mostra la foto del database. */
 function logoEvento(evento) {
+  if (evento.logo) return urlImmagineEvento(evento.logo);
   const pagina = paginaEvento(evento);
+  if (conModello(evento)) return null;
   return pagina ? `assets/img/eventi/loghi/${pagina.replace(/\.html$/, '')}.png` : null;
+}
+
+/* Le parole in grassetto nella descrizione di Long Story Short, che arriva
+   dal database come testo semplice */
+const GRASSETTI_LSS = ['Long Story Short', 'laboratorio collettivo'];
+
+function conGrassetti(testo, parole) {
+  return parole.reduce((html, parola) => html.replace(esc(parola), `<strong>${esc(parola)}</strong>`), esc(testo));
+}
+
+/* Le edizioni di una serie: si vedono le prime, le altre col tasto "Mostra
+   tutte le edizioni", che poi diventa "Mostra meno" */
+function preparaEdizioni(lista, visibili) {
+  const voci = [...lista.children];
+  if (voci.length <= visibili) return;
+  const nascoste = voci.slice(visibili);
+  const tasto = document.createElement('button');
+  tasto.type = 'button';
+  tasto.className = 'btn btn--pieno tutte-edizioni';
+  tasto.setAttribute('aria-controls', lista.id);
+  const imposta = (aperte) => {
+    nascoste.forEach((voce) => { voce.hidden = !aperte; });
+    tasto.setAttribute('aria-expanded', String(aperte));
+    tasto.innerHTML = (aperte ? 'Mostra meno' : 'Mostra tutte le edizioni')
+      + '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>';
+  };
+  tasto.addEventListener('click', () => {
+    const aperte = tasto.getAttribute('aria-expanded') !== 'true';
+    imposta(aperte);
+    if (aperte) nascoste[0].querySelector('a')?.focus({ preventScroll: true });
+  });
+  imposta(false);
+  const riga = document.createElement('div');
+  riga.className = 'tutte-edizioni__riga';
+  riga.append(tasto);
+  lista.after(riga);
 }
 
 async function paginaEventi() {
   const eventi = await caricaEventi();
+  eventi.forEach((e) => eventiDelModello.set(e.codice, e));
   const lss = eventi.find((e) => e.serie === 'long-story-short');
 
   // In evidenza: la breve descrizione, fino a due frasi
   if (lss) {
     const frasi = (lss.descrizione || lss.riassunto || '').match(/[^.!?]+[.!?]+/g) || [lss.descrizione || ''];
-    document.getElementById('evidenza-descrizione').textContent = frasi.slice(0, 2).join('').trim();
+    document.getElementById('evidenza-descrizione').innerHTML = conGrassetti(frasi.slice(0, 2).join('').trim(), GRASSETTI_LSS);
     const pagina = paginaEvento(lss);
     if (pagina) document.getElementById('evidenza').href = pagina;
   }
@@ -34,11 +76,12 @@ async function paginaEventi() {
   const scheda = (e) => ({
     titolo: e.titolo,
     dati: [dataBreve(e.data_inizio), luogoBreve(e)].filter(Boolean).join(' · '),
-    immagine: e.miniatura || e.copertina,
+    immagine: e.miniatura || e.copertina || fotoEvento(e)[0]?.immagine,
     logo: logoEvento(e),
     href: paginaEvento(e),
   });
   riempiSchede('blocco-short-talks', eventi.filter((e) => e.serie === 'short-talks').map(scheda));
+  preparaEdizioni(document.getElementById('edizioni-short-talks'), 3);
   riempiSchede('blocco-altri', eventi.filter((e) => e !== lss && e.serie !== 'short-talks').map(scheda));
 
   // Ogni evento si apre qui, sopra la pagina: dalla scheda sale il logo
@@ -58,13 +101,22 @@ async function paginaEventi() {
    Si leggono solo pagine del sito (paginaEvento in dati.js): il contenuto
    viene inserito qui così com'è. */
 const pagineEvento = new Map();
+const eventiDelModello = new Map(); // codice → evento, per la sala composta dal database
 let salaEvento = null;
 let titoloEventi = document.title;
 
+// evento.html?e=<codice> → il codice; null per le pagine scritte a mano
+function codiceDelModello(href) {
+  const m = /^evento\.html\?e=([a-z0-9]+(?:-[a-z0-9]+)*)$/.exec(href);
+  return m && eventiDelModello.has(m[1]) ? m[1] : null;
+}
+
+// Una pagina composta dal modello (un oggetto) o l'HTML di un file del sito
 function leggiEvento(href) {
-  if (!/^[a-z0-9-]+\.html$/.test(href)) return Promise.reject(new Error('Non è una pagina del sito: ' + href));
+  const codice = codiceDelModello(href);
+  if (!codice && !/^[a-z0-9-]+\.html$/.test(href)) return Promise.reject(new Error('Non è una pagina del sito: ' + href));
   if (!pagineEvento.has(href)) {
-    pagineEvento.set(href, fetch(href).then((r) => {
+    pagineEvento.set(href, codice ? componiEvento(eventiDelModello.get(codice)) : fetch(href).then((r) => {
       if (!r.ok) throw new Error('Pagina non trovata: ' + href);
       return r.text();
     }));
@@ -74,15 +126,23 @@ function leggiEvento(href) {
 }
 
 async function costruisciEvento(href) {
-  const doc = new DOMParser().parseFromString(await leggiEvento(href), 'text/html');
+  const letta = await leggiEvento(href);
   const nuova = document.createElement('div');
-  nuova.className = 'sala-evento in-attesa ' + doc.body.className;
   nuova.setAttribute('role', 'dialog');
   nuova.setAttribute('aria-modal', 'true');
   nuova.setAttribute('aria-labelledby', 'titolo-evento');
-  nuova.innerHTML = `<button class="sala-evento__chiudi" type="button" aria-label="Chiudi e torna agli eventi">${CHIUDI}</button>`
-    + doc.querySelector('main').innerHTML;
-  nuova.titolo = doc.title;
+  const chiudi = `<button class="sala-evento__chiudi" type="button" aria-label="Chiudi e torna agli eventi">${CHIUDI}</button>`;
+  if (typeof letta === 'string') {
+    const doc = new DOMParser().parseFromString(letta, 'text/html');
+    nuova.className = 'sala-evento in-attesa ' + doc.body.className;
+    nuova.innerHTML = chiudi + doc.querySelector('main').innerHTML;
+    nuova.titolo = doc.title;
+  } else {
+    nuova.className = 'sala-evento in-attesa pagina-evento';
+    nuova.innerHTML = chiudi + letta.html;
+    vestiEvento(nuova, nuova, letta);
+    nuova.titolo = letta.titolo;
+  }
   nuova.href = href;
   return nuova;
 }
@@ -115,10 +175,10 @@ async function apriEvento(link, sorgente) {
   }
   document.body.append(nuova);
   const arrivo = nuova.querySelector('[data-arrivo]');
-  if (FERMO || !sorgente || !arrivo) { mostraEvento(nuova, link, true); return; }
-
-  const da = sorgente.getBoundingClientRect();
-  const a = arrivo.getBoundingClientRect();
+  const da = sorgente && sorgente.getBoundingClientRect();
+  const a = arrivo && arrivo.getBoundingClientRect();
+  // senza movimento, o se manca da dove partire o dove arrivare, si apre e basta
+  if (FERMO || !da || !a || !da.width || !a.width) { mostraEvento(nuova, link, true); return; }
 
   const velo = document.createElement('div');
   velo.className = 'passaggio';

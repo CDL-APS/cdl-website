@@ -1,17 +1,28 @@
 /* ==========================================================================
    VANTAGGI PER I SOCI (vantaggi-tesseramento.html)
-   Carta, filo arancio: i vantaggi in tre blocchi, ognuno una riga di voci
-   col filo sopra, come le schede. In fondo l'invito arancio della home.
+   La meta di "Diventa socio" nella barra. Carta, filo arancio: i vantaggi
+   in tre blocchi col titolo arancio, ognuno una riga di voci col filo
+   sopra, come le schede. In fondo l'invito arancio della home.
+   Un passo (--passo) fra il filo arancio e il primo titolo; fra un blocco
+   e l'altro niente filo, un passo e mezzo.
    ========================================================================== */
-.pagina-vantaggi { --filo: rgba(29, 29, 27, 0.2); }
+.pagina-vantaggi { --filo: rgba(29, 29, 27, 0.2); --passo: clamp(40px, 4.5vw, 64px); }
 .pagina-vantaggi main > section { min-height: 0; }
-.pagina-vantaggi main { padding-bottom: clamp(96px, 11vw, 168px); }
+.pagina-vantaggi main { padding-bottom: calc(var(--passo) * 1.5); }
 .pagina-vantaggi .hero--pagina .fit + .fit { margin-top: 0.04em; }
 .pagina-vantaggi .presentazione { border-bottom: 2px solid var(--arancio); }
+.pagina-vantaggi .blocco-pagina { padding-top: var(--passo); }
+.pagina-vantaggi .blocco-pagina--diviso { margin-top: calc(var(--passo) * 1.5); padding-top: 0; }
+.pagina-vantaggi .blocco-pagina--diviso > .wrap { padding-top: 0; border-top: 0; }
+.pagina-vantaggi .blocco-pagina__testa { min-height: 0; color: var(--arancio); }
+/* Il rimando ai vantaggi in fondo (Sostieni) qui riporta in cima, scorrendo */
+@media (prefers-reduced-motion: no-preference) {
+  html:has(.pagina-vantaggi) { scroll-behavior: smooth; }
+}
 .vantaggi-g { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(28px, 3vw, 44px) var(--gap); padding: 0; list-style: none; }
 .vantaggio-g { display: grid; align-content: start; gap: 10px; height: 100%; padding-top: 16px; border-top: 2px solid var(--nero); }
 /* I marchi dei partner, tutti in nero: stanno insieme e non litigano coi colori */
-.vantaggio-g__logo { width: 84px; height: 84px; margin: -8px 0 0 -8px; object-fit: contain; filter: brightness(0); }
+.vantaggio-g__logo { width: 72px; height: 72px; margin-bottom: 4px; object-fit: contain; object-position: left center; filter: brightness(0); }
 .vantaggio-g__titolo { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; font-family: var(--f-titoli); font-weight: 900; text-transform: uppercase; letter-spacing: var(--titoli-spazio); font-size: clamp(21px, 1.9vw, 27px); line-height: 1; }
 .vantaggio-g__freccia { display: grid; place-items: center; flex: 0 0 auto; width: 44px; height: 44px; margin-top: -6px; border: 2px solid currentColor; border-radius: 50%; transition: transform 0.3s var(--ease), background-color 0.2s var(--ease); }
 .vantaggio-g__freccia .freccia { width: 18px; height: 18px; }

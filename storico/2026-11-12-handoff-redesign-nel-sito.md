@@ -4,6 +4,8 @@ Passaggio di consegne dopo il porting descritto in
 [`2026-11-12-piano-porting-redesign.md`](2026-11-12-piano-porting-redesign.md).
 Le regole per chi tocca il codice sono in `CLAUDE.md`; le scelte visive in
 [`2026-11-11-design-handoff.md`](2026-11-11-design-handoff.md).
+Per chi riprende il lavoro: [`2026-11-12-handoff-correzioni-redesign.md`](2026-11-12-handoff-correzioni-redesign.md)
+(stato a fine sessione, strumenti di verifica, cose imparate).
 
 ## Dove siamo
 

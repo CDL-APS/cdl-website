@@ -1,9 +1,9 @@
 /* ==========================================================================
    CORTOTECA (cortoteca.html)
-   Nero pieno, scritte e dettagli lilla. Il nome a tutta larghezza, la frase,
+   Nero pieno, scritte e dettagli nel colore della Cortoteca (--cortoteca). Il nome a tutta larghezza, la frase,
    il filo, poi strumenti e opere in due viste: galleria (solo i fotogrammi,
    col titolo sopra) e lista (i titoli, col fotogramma a fianco). In fondo
-   restano solo gli occhi, che spuntano da dietro il piede lilla.
+   restano solo gli occhi, che spuntano da dietro il piede colorato.
    Un corto si apre qui sopra, nella sala: la pagina carica anche
    pages/opera.css, prima di questo foglio.
    ========================================================================== */
@@ -11,8 +11,8 @@
 /* La barra della Cortoteca: scura, e per ora porta solo il marchio e
    l'invito ad associarsi, visibile anche su telefono */
 .stanza { --barra: var(--nero-sala); }
-.stanza .nav { color: var(--lilla); }
-.stanza .skip-link { background: var(--lilla); color: var(--nero); }
+.stanza .nav { color: var(--cortoteca); }
+.stanza .skip-link { background: var(--cortoteca); color: var(--nero); }
 .barra-ridotta .nav__socio { display: inline-flex; margin-left: auto; }
 html:has(.fondo-sala) { background: var(--nero-sala); }
 
@@ -55,20 +55,20 @@ html:has(.fondo-sala) { background: var(--nero-sala); }
 .riga.is-attiva, .riga:hover, .riga:focus-visible { color: var(--inchiostro); }
 .riga.is-attiva .riga__titolo { color: var(--chiaro); }
 
-/* Il fotogramma a fianco è uno schermo acceso in sala: un filo lilla lo
+/* Il fotogramma a fianco è uno schermo acceso in sala: un filo colorato lo
    stacca dal nero e un alone lo fa emergere. Parte all'altezza della prima
    riga; l'unico comando è un pulsantino nell'angolo. */
 .palco { position: sticky; top: calc(var(--nav) + 24px); }
 .palco__schermo {
   border-radius: 14px;
-  box-shadow: 0 0 0 1px rgba(185, 187, 248, 0.32), 0 24px 90px -24px rgba(185, 187, 248, 0.32);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--cortoteca) 32%, transparent), 0 24px 90px -24px color-mix(in srgb, var(--cortoteca) 32%, transparent);
 }
 .palco__schermo img { animation: accendi 0.35s var(--ease) both; }
 @keyframes accendi { from { opacity: 0; } }
 .palco__azione {
   position: absolute; left: 16px; bottom: 16px; z-index: 1;
   display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 18px;
-  border-radius: 999px; background: var(--lilla); color: var(--nero); font-size: 15px; font-weight: 700;
+  border-radius: 999px; background: var(--cortoteca); color: var(--nero); font-size: 15px; font-weight: 700;
   transition: background-color 0.15s var(--ease), transform 0.15s var(--ease);
 }
 .palco__azione svg { width: 11px; height: 11px; }
@@ -118,11 +118,10 @@ html:has(.fondo-sala) { background: var(--nero-sala); }
 .occhi-chiusura--piede .occhio { top: calc(var(--padb) + var(--y)); }
 .stanza .piede { position: relative; z-index: 1; }
 
-/* Piede lilla: chiude la pagina scura */
-.piede--lilla { background: var(--lilla); color: var(--nero); --inchiostro: var(--nero); }
-.piede--lilla .logo { color: var(--nero); }
-.piede--lilla .piede__elenchi a:hover { color: var(--blu); }
-.piede--lilla .piede__dati { border-top-color: rgba(29, 29, 27, 0.3); color: rgba(29, 29, 27, 0.82); }
+/* Il piede nel colore della Cortoteca: chiude la pagina scura */
+.piede--cortoteca { background: var(--cortoteca); color: var(--nero); --inchiostro: var(--nero); }
+.piede--cortoteca .logo { color: var(--nero); }
+.piede--cortoteca .piede__dati { color: rgba(29, 29, 27, 0.82); }
 
 /* --------------------------------------------------------------------------
    La sala: il corto aperto dentro la Cortoteca, sopra la galleria e sotto
@@ -140,11 +139,11 @@ html.sala-aperta { overflow: hidden; }
   /* nel margine destro, all'altezza dello schermo */
   position: fixed; z-index: 3; top: calc(var(--nav) + 40px); right: max(12px, calc(max(var(--gut), (100vw - 1280px) / 2) - 56px));
   display: grid; place-items: center; width: 44px; height: 44px; border: 0; border-radius: 50%;
-  background: var(--titolo); color: var(--nero); cursor: pointer;
+  background: var(--titolo); color: var(--sul-titolo, var(--nero)); cursor: pointer;
   transition: transform 0.15s var(--ease), background-color 0.15s var(--ease);
 }
 .sala-corto__chiudi svg { width: 18px; height: 18px; }
-.sala-corto__chiudi:hover { transform: rotate(90deg); background: var(--chiaro); }
+.sala-corto__chiudi:hover { transform: rotate(90deg); background: var(--chiaro); color: var(--nero); }
 .sala-corto__chiudi:focus-visible { outline: 3px solid var(--chiaro); outline-offset: 3px; }
 
 /* --------------------------------------------------------------------------

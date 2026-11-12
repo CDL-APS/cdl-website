@@ -78,7 +78,7 @@ main > section,
 /* --------------------------------------------------------------------------
    Barra: chiara, il marchio a sinistra con Eventi, Produzioni e Contatti
    (ognuna col pallino del colore della sua sezione); a destra Cortoteca,
-   pillola nera con la scritta lilla, e l'invito ai soci, pillola arancio.
+   pillola nera con la scritta nel colore della Cortoteca, e l'invito ai soci, pillola arancio.
    La voce della pagina corrente ha aria-current.
    -------------------------------------------------------------------------- */
 .nav { position: fixed; inset: 0 0 auto 0; z-index: 10; height: var(--nav); background: var(--barra); color: var(--nero); }
@@ -109,13 +109,16 @@ main > section,
 
 .nav__cortoteca {
   position: relative; display: inline-flex; align-items: center; gap: 7px; min-height: 44px; margin-left: auto; padding: 0 17px 0 14px;
-  border: 2px solid var(--nero); border-radius: 999px; background: var(--nero); color: var(--lilla);
+  border: 2px solid var(--nero); border-radius: 999px; background: var(--nero); color: var(--cortoteca);
   font-size: 15px; font-weight: 700; white-space: nowrap;
   transition: background-color 0.15s var(--ease), color 0.15s var(--ease), transform 0.15s var(--ease);
 }
 .nav__cortoteca svg { width: 11px; height: 11px; }
 .nav__cortoteca:hover { transform: translateY(-1px); }
-.nav__cortoteca:hover, .nav__cortoteca[aria-current] { background: var(--lilla); color: var(--nero); }
+.nav__cortoteca:hover { background: var(--cortoteca); color: var(--nero); }
+/* Accesa (pagina di un corto): bordo arancio sul nero, per non confondersi
+   con Diventa socio, che è un pieno arancio */
+.nav__cortoteca[aria-current] { border-color: var(--cortoteca); }
 .nav__cortoteca:active { transform: translateY(1px) scale(0.985); }
 
 /* Diventa socio: alto come Cortoteca, arancio col bordino nero */
@@ -140,7 +143,7 @@ main > section,
 }
 
 @media (max-width: 519px) {
-  .nav__voce--contatti { display: none; } /* su telefono i contatti stanno nel piede */
+  .nav__voce--contatti { display: none; } /* sotto i 520 px restano Eventi, Produzioni e Cortoteca */
 }
 
 /* Schermi molto stretti (320 px): la barra stringe ancora */
@@ -169,6 +172,13 @@ main > section,
 .btn:hover { transform: translateY(-1px); background: var(--inchiostro); color: var(--fondo); }
 .btn--pieno:hover { background: var(--accento-hover, var(--rosso)); border-color: var(--accento-hover, var(--rosso)); color: var(--accento-hover-testo, #fff); }
 .btn:active { transform: translateY(1px) scale(0.985); transition-duration: 0.09s; }
+/* "Diventa socio": arancio col bordo nero, giallo al passaggio (anche nella barra) */
+.btn--socio, .btn--socio:hover { border-color: var(--nero); color: var(--nero); }
+.btn--socio { background: var(--arancio); }
+.btn--socio:hover { background: var(--giallo); }
+/* Un tasto nero che al passaggio si schiarisce */
+.btn--scuro { border-color: var(--nero); background: var(--nero); color: var(--chiaro); }
+.btn--scuro:hover { border-color: #4a4a47; background: #4a4a47; color: var(--chiaro); }
 .btn-riga { display: flex; flex-wrap: wrap; gap: 12px; }
 /* Sul computer l'invito ai soci è già nella barra: certi pulsanti compaiono solo su telefono */
 .btn.solo-telefono { display: none; }
@@ -189,6 +199,7 @@ main > section,
    l'icona del link esterno per ciò che esce dal sito */
 .freccia { width: 1.05em; height: 1.05em; flex: 0 0 auto; transition: transform 0.3s var(--ease); }
 .link:hover .freccia { transform: translateX(4px); }
+.link:hover .freccia--su { transform: translateY(-4px); }
 
 /* --------------------------------------------------------------------------
    Cornice: il contenitore di ogni immagine. Fondo nero, angoli del marchio.
@@ -202,60 +213,60 @@ a:hover > .cornice img, a.cornice:hover img { transform: scale(1.03); }
 .disco {
   position: absolute; left: 16px; bottom: 16px; z-index: 1;
   display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 0 16px 0 13px;
-  border-radius: 999px; background: var(--lilla); color: var(--nero); font-size: 15px; font-weight: 700;
+  border-radius: 999px; background: var(--cortoteca); color: var(--nero); font-size: 15px; font-weight: 700;
 }
 .disco svg { width: 11px; height: 11px; }
 
 .avviso { padding: 24px 0; font-weight: 700; }
 
 /* --------------------------------------------------------------------------
-   Sostieni: l'invito ad associarsi, in arancio, chiude home e Vantaggi e
-   apre Contatti. Sotto, il piede.
+   Sostieni: l'invito ad associarsi, in arancio, uguale in home, Contatti e
+   Vantaggi, dove chiude la pagina e contiene il piede. Il nome; sotto, a
+   sinistra, la quota ridotta, la frase larga, i tasti e il rimando ai
+   vantaggi (in Vantaggi riporta in cima); a destra la tessera, centrata
+   sulla colonna di sinistra.
    -------------------------------------------------------------------------- */
 .closing { display: flex; flex-direction: column; padding-bottom: 0; scroll-margin-top: 0; }
 .closing > .wrap { flex: 1 1 auto; padding-bottom: var(--padb); }
 
 .sostieni h1, .sostieni h2 { font-size: inherit; }
 .sostieni h1 .logo, .sostieni h2 .logo { height: 0.72em; margin-left: 0.2em; }
-.sostieni__corpo { margin-top: clamp(24px, 3vw, 40px); }
-.sostieni__frase { font-size: clamp(18px, 1.6vw, 22px); font-weight: 600; line-height: 1.4; max-width: 34ch; }
-.sostieni__stato { display: flex; align-items: center; gap: 10px; margin-top: 14px; font-weight: 600; }
+.sostieni__stato { display: flex; align-items: flex-start; gap: 0.5em; font-size: clamp(18px, 1.7vw, 24px); font-weight: 700; line-height: 1.3; }
+/* il pallino sulla prima riga, anche quando la frase va a capo */
+.sostieni__stato .rec { width: 0.5em; height: 0.5em; margin-top: 0.4em; }
+.sostieni__corpo { margin-top: clamp(14px, 1.6vw, 24px); align-items: center; }
+.sostieni__frase { margin-top: clamp(16px, 1.8vw, 26px); font-size: clamp(22px, 2.3vw, 34px); font-weight: 600; line-height: 1.25; letter-spacing: -0.01em; }
 .rec { width: 10px; height: 10px; flex: 0 0 auto; border-radius: 50%; background: var(--rec, var(--rosso)); animation: pulsa 1.5s infinite; }
 @keyframes pulsa { 50% { opacity: 0.35; transform: scale(1.25); } }
-.sostieni .btn-riga { margin-top: 24px; }
+.sostieni .btn-riga { margin-top: clamp(22px, 2.4vw, 32px); }
 .sostieni .link { margin-top: 12px; }
 /* La fotografia mostra già le due tessere inclinate: il riquadro resta dritto, nella sua colonna */
-.sostieni__tessera { display: block; width: 100%; max-width: 340px; margin-left: auto; transition: transform 0.18s var(--ease); }
+.sostieni__tessera { display: block; width: 100%; max-width: 360px; margin-left: auto; transition: transform 0.18s var(--ease); }
 .sostieni__tessera:hover { transform: translateY(-2px); }
 @media (max-width: 1023px) {
   .sostieni__tessera { max-width: 220px; }
 }
 
 /* --------------------------------------------------------------------------
-   Piede: nero, angoli alti arrotondati, il marchio lilla piccolo, le pagine
-   e i contatti su righe alte 44 px, i dati dell'associazione
+   Piede: nero, angoli alti arrotondati. Al centro il marchio, sotto
+   Instagram e YouTube (con l'icona del link esterno) e i dati
+   dell'associazione su quattro righe, senza fili
    -------------------------------------------------------------------------- */
 .piede {
   border-radius: clamp(28px, 4.5vw, 60px) clamp(28px, 4.5vw, 60px) 0 0;
   background: var(--nero); color: var(--chiaro);
-  padding: clamp(28px, 3.5vw, 44px) 0 clamp(20px, 2.5vw, 30px);
+  padding: clamp(36px, 4.5vw, 56px) 0 clamp(28px, 3.5vw, 44px);
   --inchiostro: var(--chiaro);
 }
-.piede__riga { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); align-items: start; gap: 20px var(--gap); }
-.piede__riga > a { grid-column: span 2; }
-.piede .logo { width: 64px; color: var(--lilla); margin-top: 10px; }
-.piede__elenchi { grid-column: span 10; display: flex; flex-wrap: wrap; gap: 0 clamp(32px, 6vw, 80px); }
-.piede__elenchi ul { display: flex; flex-wrap: wrap; gap: 0 24px; }
-.piede__elenchi a { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; font-size: 15px; font-weight: 700; transition: color 0.15s var(--ease); }
-.piede__elenchi a svg { width: 13px; height: 13px; }
-.piede__elenchi a:hover { color: var(--lilla); }
-.piede__dati { grid-column: 1 / -1; padding-top: 18px; border-top: 1px solid rgba(247, 247, 247, 0.22); font-size: 13px; line-height: 1.7; color: rgba(247, 247, 247, 0.78); }
+.piede__riga { display: flex; flex-direction: column; align-items: center; gap: clamp(16px, 2vw, 22px); text-align: center; }
+.piede__riga > a { display: grid; place-items: center; min-width: 44px; min-height: 44px; }
+.piede .logo { width: 72px; color: var(--lilla); }
+.piede__social { display: flex; flex-wrap: wrap; justify-content: center; gap: 0 28px; }
+.piede__social a { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; font-size: 15px; font-weight: 700; text-decoration: underline; text-decoration-color: transparent; text-decoration-thickness: 2px; text-underline-offset: 4px; transition: text-decoration-color 0.15s var(--ease); }
+.piede__social a:hover, .piede__social a:focus-visible { text-decoration-color: currentColor; }
+.piede__social svg { width: 13px; height: 13px; flex: none; }
+.piede__dati { font-size: 13px; line-height: 1.7; color: rgba(247, 247, 247, 0.78); }
 
-@media (max-width: 759px) {
-  .piede__riga { gap: 8px; }
-  .piede__riga > a, .piede__elenchi { grid-column: 1 / -1; }
-  .piede__elenchi ul { flex-direction: column; }
-}
 
 /* --------------------------------------------------------------------------
    Il disco che accompagna il puntatore sulle immagini che fanno qualcosa al
@@ -264,7 +275,7 @@ a:hover > .cornice img, a.cornice:hover img { transform: scale(1.03); }
 .cursore {
   position: fixed; left: 0; top: 0; z-index: 30; pointer-events: none;
   display: grid; place-items: center; width: 88px; height: 88px; margin: -44px 0 0 -44px;
-  border: 2px solid var(--lilla); border-radius: 50%; background: var(--nero); color: var(--lilla);
+  border: 2px solid var(--cortoteca); border-radius: 50%; background: var(--nero); color: var(--cortoteca);
   font-size: 14px; font-weight: 700;
   translate: var(--cx, -200px) var(--cy, -200px); scale: 0;
   transition: scale 0.2s var(--ease);
@@ -297,7 +308,7 @@ a:hover > .cornice img, a.cornice:hover img { transform: scale(1.03); }
 .targa {
   position: absolute; left: 10px; right: 10px; bottom: 10px;
   display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 2px 12px;
-  padding: 12px 14px; border-radius: 10px; background: var(--lilla); color: var(--nero);
+  padding: 12px 14px; border-radius: 10px; background: var(--cortoteca); color: var(--nero);
   opacity: 0; translate: 0 12px;
   transition: opacity 0.2s var(--ease), translate 0.25s var(--ease);
 }
@@ -306,6 +317,10 @@ a:hover > .cornice img, a.cornice:hover img { transform: scale(1.03); }
    carattere del corto (titolo_font) */
 .targa__grafica { display: block; min-height: 0; max-width: 100%; max-height: 62%; object-fit: contain; }
 .targa__font { font-weight: 400; text-transform: none; letter-spacing: 0; line-height: 1.05; }
+/* Il titolo sopra la still (galleria e schermo del corto): un alone scuro
+   lo stacca da qualsiasi fotogramma. Sta sul contenitore, così vale anche
+   per il titolo grafico colorato, che è ritagliato da una maschera */
+.galleria .targa, .schermo .targa { filter: drop-shadow(0 0 1px rgba(0, 0, 0, 0.5)) drop-shadow(0 1px 12px rgba(0, 0, 0, 0.55)); }
 
 /* --------------------------------------------------------------------------
    Strisce che scorrono da sole (il nastro di notizie, i rullini di foto):
@@ -366,10 +381,10 @@ a:hover > .cornice img, a.cornice:hover img { transform: scale(1.03); }
 
 /* --------------------------------------------------------------------------
    Schede (Eventi, Produzioni): la foto a spigolo vivo, sotto un filo, il
-   titolo e i dati. Al passaggio su una le altre si spengono.
+   titolo e i dati.
    -------------------------------------------------------------------------- */
 .schede { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(28px, 3vw, 44px) var(--gap); }
-.scheda-g { display: block; transition: opacity 0.25s var(--ease); }
+.scheda-g { display: block; }
 .scheda-g .cornice { aspect-ratio: 16 / 10; border-radius: 0; }
 /* Scheda di un evento col suo logo: niente fondo, il PNG coi suoi colori
    appoggiato al filo, a sinistra, con un'area simile per tutti (la larghezza
@@ -388,11 +403,6 @@ a.scheda-g:hover .cornice--logo .logo-evento { transform: scale(1.025); }
 .scheda-g__testo { display: grid; gap: 4px; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--filo); }
 .scheda-g__titolo { font-family: var(--f-titoli); font-weight: 900; text-transform: uppercase; font-size: clamp(19px, 1.7vw, 24px); line-height: 1; letter-spacing: var(--titoli-spazio); }
 .scheda-g__dati { font-size: 14px; line-height: 1.4; color: var(--tenue); }
-/* Al passaggio su una scheda le altre si spengono; non in Eventi, dove i
-   loghi restano tutti accesi */
-@media (hover: hover) {
-  body:not(.pagina-eventi) .schede:has(a.scheda-g:hover) .scheda-g:not(:hover) { opacity: 0.35; }
-}
 @media (max-width: 1023px) {
   .schede { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }

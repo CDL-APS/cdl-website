@@ -30,7 +30,7 @@ async function paginaProduzioni() {
   box.querySelector('.cornice').append(nuovaImmagine(primo.fotogramma));
   // Il titolo grafico, se c'è (produzioni.css lo ricolora in nero); se no il testo
   const titolo = box.querySelector('.primo-piano__titolo');
-  const grafica = titoloGrafico(primo);
+  const grafica = titoloGrafico(primo, { colora: false });
   if (grafica) titolo.replaceChildren(grafica);
   else titolo.textContent = primo.titolo;
   // La frase va a capo dopo la prima virgola: "Non c'eri per l'inizio, / non ci sarai per la fine"

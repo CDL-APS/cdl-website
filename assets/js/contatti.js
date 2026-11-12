@@ -8,6 +8,67 @@
    motivo. Dopo l'invio Netlify riapre la pagina su #grazie.
    ========================================================================== */
 
+/* "Scrivici" alto quanto la frase a fianco: le maiuscole del titolo vanno
+   dalla cima delle maiuscole della prima riga della frase alla linea di base
+   dell'ultima. Servono le misure di Montserrat (in em): ascendente,
+   discendente e altezza delle maiuscole. Il titolo è largo quanto gli serve
+   e la frase prende il resto, quindi un titolo più grande può mandare la
+   frase a capo una volta di più: si cerca il numero di righe in cui i due
+   coincidono. Se il titolo prenderebbe più di metà della riga, titolo e
+   frase vanno uno sotto l'altro col corpo del CSS, come sul telefono. */
+const MONTSERRAT = { ascendente: 0.968, discendente: 0.251, maiuscole: 0.7 };
+
+function misuraTitolo() {
+  const testa = document.querySelector('.contatti__testa');
+  const titolo = testa?.querySelector('h1');
+  const frase = testa?.querySelector('.contatti__frase');
+  if (!titolo || !frase) return;
+  titolo.style.fontSize = '';
+  titolo.style.marginTop = '';
+  testa.classList.remove('contatti__testa--impilata');
+  if (getComputedStyle(testa).gridTemplateColumns.trim().split(/\s+/).length < 2) return;
+
+  const { ascendente, discendente, maiuscole } = MONTSERRAT;
+  // dalla cima della riga alla cima delle maiuscole e alla linea di base
+  const cima = (corpo, riga) => (riga - (ascendente + discendente) * corpo) / 2 + (ascendente - maiuscole) * corpo;
+  const base = (corpo, riga) => cima(corpo, riga) + maiuscole * corpo;
+
+  const stile = getComputedStyle(frase);
+  const corpo = parseFloat(stile.fontSize);
+  const riga = parseFloat(stile.lineHeight);
+  if (!corpo || !riga) return;
+  const cimaFrase = cima(corpo, riga);
+  const contaRighe = () => Math.max(1, Math.round(frase.getBoundingClientRect().height / riga));
+  // il corpo del titolo per una frase di n righe
+  const corpoPer = (n) => ((n - 1) * riga + base(corpo, riga) - cimaFrase) / maiuscole;
+
+  let righe = contaRighe();
+  for (let giro = 0; giro < 8; giro++) {
+    titolo.style.fontSize = corpoPer(righe).toFixed(2) + 'px';
+    if (titolo.getBoundingClientRect().width > testa.clientWidth / 2) break;
+    const ora = contaRighe();
+    if (ora === righe) {
+      const corpoTitolo = corpoPer(righe);
+      const rigaTitolo = parseFloat(getComputedStyle(titolo).lineHeight);
+      titolo.style.marginTop = (cimaFrase - cima(corpoTitolo, rigaTitolo)).toFixed(2) + 'px';
+      return;
+    }
+    righe = ora;
+  }
+  titolo.style.fontSize = '';
+  testa.classList.add('contatti__testa--impilata');
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  misuraTitolo();
+  document.fonts?.ready.then(misuraTitolo);
+  let attesa;
+  window.addEventListener('resize', () => {
+    clearTimeout(attesa);
+    attesa = setTimeout(misuraTitolo, 100);
+  });
+});
+
 document.addEventListener('DOMContentLoaded', () => {
   const modulo = document.querySelector('form.modulo');
   if (!modulo) return;

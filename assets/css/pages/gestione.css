@@ -5,25 +5,27 @@
    caricato prima di questo foglio.
    ========================================================================== */
 
-/* Numero di proposte in attesa (o di cose da sistemare), accanto alla voce */
+/* Numero di proposte in attesa (o di cose da sistemare), accanto alla voce:
+   un bollino piccolo, in alto come un esponente, che non allarga la voce */
 .g-conta {
-  display: inline-grid; place-items: center;
-  min-width: 22px; height: 22px; padding: 0 6px;
+  display: inline-grid; place-items: center; align-self: flex-start;
+  min-width: 18px; height: 18px; margin-top: 8px; margin-left: -2px; padding: 0 5px;
   border-radius: 999px; background: var(--rosso); color: #fff;
-  font-size: 12px; font-weight: 700;
+  font-size: 11px; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums;
 }
 
 /* --------------------------------------------------------------------------
-   Testata delle schede: il nome a caratteri cubitali, una riga che dice
-   cosa contiene e, a destra, il pulsante per aggiungere
+   Testata delle schede, come quella delle pagine pubbliche: il nome a
+   caratteri cubitali, sotto la presentazione grande (cosa contiene) chiusa
+   da un filo e, a destra, il pulsante per aggiungere
    -------------------------------------------------------------------------- */
 .testa-pagina {
-  display: grid; gap: clamp(14px, 2vw, 24px);
-  margin-bottom: clamp(28px, 4vw, 48px); padding-bottom: clamp(18px, 2.5vw, 28px);
-  border-bottom: 2px solid var(--nero);
+  display: grid; gap: clamp(16px, 2.2vw, 28px);
+  margin-bottom: clamp(32px, 4.5vw, 56px); padding-bottom: clamp(24px, 3vw, 40px);
+  border-bottom: 1px solid var(--filo);
 }
-.testa-pagina h1 { margin-left: -0.04em; font-size: clamp(42px, 9vw, 128px); line-height: 0.82; }
-.testa-pagina-nota { max-width: 52ch; font-size: clamp(16px, 1.3vw, 18px); line-height: 1.55; color: var(--testo-medio); }
+.testa-pagina h1 { margin-left: -0.04em; font-size: clamp(48px, 9vw, 128px); line-height: 0.82; }
+.testa-pagina-nota { max-width: 46ch; font-size: clamp(19px, 1.75vw, 26px); font-weight: 600; line-height: 1.3; letter-spacing: -0.01em; }
 .g-testa-riga { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px 32px; }
 
 /* Collegamento di testo ("Vedi sul sito"): il filo si disegna al passaggio */
@@ -41,124 +43,240 @@
    Da sistemare: ciò che richiede una decisione del direttivo. Il pallino
    rosso segnala che c'è qualcosa in sospeso.
    -------------------------------------------------------------------------- */
-.rec-dot { display: inline-block; width: 10px; height: 10px; flex: 0 0 auto; border-radius: 50%; background: var(--rosso); animation: pulsa 1.5s infinite; }
-.g-avvisi { margin-bottom: clamp(32px, 4vw, 48px); }
-.g-avvisi .titoletto {
-  display: flex; align-items: center; gap: 10px;
-  margin: 0; padding-top: 0; border-top: 0; /* il filetto è già quello della testata */
-}
+.rec-dot { display: inline-block; width: 12px; height: 12px; flex: 0 0 auto; border-radius: 50%; background: var(--rosso); animation: pulsa 1.5s infinite; }
+.g-avvisi { margin-bottom: clamp(40px, 5vw, 64px); }
+.g-avvisi .titoletto { display: flex; align-items: center; gap: 12px; margin: 0 0 8px; }
 .g-avvisi ul { list-style: none; }
 .g-avvisi li {
   display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 24px;
-  min-height: 64px; padding: 11px 0; border-bottom: 1px solid var(--filo); line-height: 1.5;
+  min-height: 68px; padding: 12px 0; border-bottom: 1px solid var(--filo);
+  font-size: 16px; line-height: 1.5;
 }
 .g-avvisi li span { flex: 1; min-width: min(100%, 18rem); }
-.g-avvisi .btn { min-height: 44px; }
 
 /* --------------------------------------------------------------------------
-   Dashboard: i numeri a caratteri grandi, ognuno porta alla sua scheda, e
+   Dashboard: i numeri a caratteri grandi su schede bianche con gli angoli
+   del marchio (ognuna porta alla sua scheda, al passaggio si fa nera), e
    le ultime attività come un registro
    -------------------------------------------------------------------------- */
 .g-numeri {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-  margin-bottom: clamp(16px, 3vw, 32px);
-  border-top: 2px solid var(--nero); border-left: 1px solid var(--filo);
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr)); gap: var(--gap);
+  margin-bottom: clamp(8px, 2vw, 24px);
 }
 .g-numero {
   display: flex; flex-direction: column; align-items: flex-start; gap: 6px;
-  min-height: 150px; padding: 18px 18px 20px;
-  border: 0; border-right: 1px solid var(--filo); border-bottom: 1px solid var(--filo);
-  background: none; font: inherit; text-align: left; color: inherit; cursor: pointer;
-  transition: background-color 0.3s var(--ease);
+  min-height: 168px; padding: 20px 22px 22px;
+  border: 0; border-radius: var(--r); background: #fff;
+  font: inherit; text-align: left; color: var(--nero); cursor: pointer;
+  transition: background-color 0.25s var(--ease), color 0.25s var(--ease);
 }
-.g-numero:hover { background: var(--lilla); }
-.g-numero-valore { font-family: var(--f-titoli); font-size: clamp(42px, 5vw, 64px); font-weight: 900; line-height: 0.9; letter-spacing: -0.05em; }
+.g-numero:hover { background: var(--nero); color: var(--chiaro); }
+.g-numero-valore { font-family: var(--f-titoli); font-size: clamp(48px, 5vw, 72px); font-weight: 900; line-height: 0.88; letter-spacing: -0.05em; }
 .g-numero-cosa { font-size: 15px; font-weight: 800; }
-.g-numero-dettaglio { margin-top: auto; font-size: 14px; color: var(--tenue); }
+.g-numero-dettaglio { margin-top: auto; font-size: 14px; color: var(--tenue); transition: color 0.25s var(--ease); }
+.g-numero:hover .g-numero-dettaglio { color: rgba(247, 247, 247, 0.72); }
 
 .g-attivita { list-style: none; margin: 0; padding: 0; }
 .g-attivita li {
   display: grid; grid-template-columns: 8.5rem 8.5rem minmax(0, 1fr); align-items: baseline; gap: 4px 16px;
-  padding: 12px 0; border-bottom: 1px solid var(--filo); line-height: 1.45;
+  padding: 13px 0; border-bottom: 1px solid var(--filo); font-size: 16px; line-height: 1.45;
 }
 .g-attivita li.g-vuoto { display: block; }
 .g-attivita time { font-size: 14px; color: var(--tenue); white-space: nowrap; }
-.g-attivita-tipo { font-size: 14px; font-weight: 700; color: var(--testo-medio); }
+.g-attivita-tipo { font-size: 14px; font-weight: 800; }
 
 /* --------------------------------------------------------------------------
-   Elenchi di opere, eventi, proposte e soci: righe che si accendono di
-   lilla al passaggio
+   Elenchi di opere, eventi, proposte e soci: righe separate da un filo che,
+   al passaggio, si stendono su una fascia bianca
    -------------------------------------------------------------------------- */
 .g-riga {
   display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 6px 20px;
-  width: 100%; min-height: 72px; padding: 16px 0;
+  width: 100%; min-height: 76px; padding: 16px 0;
   border: 0; border-bottom: 1px solid var(--filo); background: none;
   font: inherit; text-align: left; color: inherit; cursor: pointer;
-  transition: background-color 0.3s var(--ease), box-shadow 0.3s var(--ease);
+  transition: background-color 0.25s var(--ease), box-shadow 0.25s var(--ease);
 }
-/* Il fondo deborda di poco ai lati con due ombre piene, così il testo resta
+/* La fascia deborda di poco ai lati con due ombre piene, così il testo resta
    allineato al margine della pagina */
 button.g-riga:hover,
-a.g-riga:hover { background: var(--lilla); box-shadow: -12px 0 0 var(--lilla), 12px 0 0 var(--lilla); }
+a.g-riga:hover { background: #fff; box-shadow: -14px 0 0 #fff, 14px 0 0 #fff; }
 
 .g-segni { grid-row: 1 / span 2; grid-column: 2; display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 8px; }
-/* Bollini di stato: pillole piene */
+/* Bollini di stato: pillole. Pubblicata (e ciò che va guardato) piena di
+   nero, la bozza solo contorno, l'allarme rossa */
 .g-segno {
-  display: inline-flex; align-items: center; min-height: 28px; padding: 0 11px;
-  border: 1px solid transparent; border-radius: 999px; background: rgba(29, 29, 27, 0.08);
+  display: inline-flex; align-items: center; min-height: 30px; padding: 0 12px;
+  border: 2px solid transparent; border-radius: 999px; background: rgba(29, 29, 27, 0.08);
   font-size: 13px; font-weight: 700; white-space: nowrap;
 }
-.g-segno--pubblicata { background: var(--lilla); }
-/* Sulla riga accesa di lilla il bollino lilla passa al nero */
-.g-riga:hover .g-segno--pubblicata { background: var(--nero); color: var(--chiaro); }
+.g-segno--pubblicata { background: var(--nero); color: var(--chiaro); }
 .g-segno--bozza { background: none; border-color: var(--filo); color: var(--tenue); }
 .g-segno--allarme { background: var(--rosso); color: #fff; }
 /* Riga che non si apre: soci, proposte già decise */
 .g-riga--ferma { cursor: default; }
-.g-riga .btn { min-height: 44px; }
+/* Soci: il bollino della quota e il tasto del collegamento in due colonne
+   di larghezza fissa, così stanno incolonnati da una riga all'altra */
+.g-segni--soci { display: grid; grid-template-columns: 8.5rem 13.5rem; align-items: center; gap: 10px; }
+.g-segni--soci .g-segno { justify-content: center; }
+.g-segni--soci .btn { justify-content: center; width: 100%; }
+
+/* "Espandi" sotto le ultime attività */
+.g-espandi-riga { display: flex; justify-content: center; margin-top: 20px; }
 
 /* Scheda Soci: stato della sincronizzazione e collegamento del foglio */
-.g-pannello { display: flex; flex-direction: column; gap: 8px; margin-bottom: var(--spazio); line-height: 1.55; color: var(--testo-medio); }
-.g-pannello summary { display: flex; align-items: center; min-height: 44px; font-weight: 800; color: var(--nero); cursor: pointer; }
+.g-pannello {
+  display: flex; flex-direction: column; gap: 8px;
+  padding-bottom: 16px; border-bottom: 1px solid var(--filo);
+  font-size: 16px; line-height: 1.55; color: var(--tenue);
+}
+/* "Collega il foglio" si apre e si chiude: la freccia lo dice */
+.g-pannello summary { display: inline-flex; align-items: center; gap: 10px; align-self: flex-start; min-height: 44px; list-style: none; font-weight: 800; color: var(--nero); cursor: pointer; }
+.g-pannello summary::-webkit-details-marker { display: none; }
+.g-pannello summary::after {
+  content: ''; width: 8px; height: 8px; margin-top: -4px;
+  border-right: 2.5px solid currentColor; border-bottom: 2.5px solid currentColor;
+  transform: rotate(45deg); transition: transform 0.2s var(--ease), margin 0.2s var(--ease);
+}
+.g-pannello details[open] summary::after { margin-top: 4px; transform: rotate(-135deg); }
 .g-chiave { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px; margin-top: 12px; }
 .g-chiave .g-campo { flex: 1; min-width: min(100%, 22rem); }
 .g-chiave input { font-family: ui-monospace, 'SF Mono', Menlo, monospace; }
 
 /* --------------------------------------------------------------------------
-   Modulo dell'opera: titolo grafico, corti collegati a un evento, elimina
+   Modulo dell'opera: titolo grafico, colore, elimina
    -------------------------------------------------------------------------- */
 /* Titolo grafico in PNG: su fondo a scacchi, per vederne la trasparenza */
 .g-anteprima-titolo {
   max-width: min(100%, 480px); max-height: 160px; padding: 16px;
-  border: 1px solid var(--filo); border-radius: var(--r-s);
+  border: 2px solid var(--nero); border-radius: 14px;
   background: repeating-conic-gradient(rgba(29, 29, 27, 0.06) 0 25%, transparent 0 50%) 0 0 / 16px 16px, #fff;
   object-fit: contain;
 }
 .g-file-nome { font-weight: 600; }
 /* Il colore della pagina del corto: il selettore e il valore scritto */
 .g-colore { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
-.g-colore input[type='color'] { flex: 0 0 auto; width: 64px; min-height: 48px; padding: 4px; cursor: pointer; }
+.g-colore input[type='color'] { flex: 0 0 auto; width: 64px; padding: 4px; cursor: pointer; }
 .g-colore input[type='text'] { flex: 0 1 12rem; width: auto; font-family: ui-monospace, 'SF Mono', Menlo, monospace; }
-
-.g-collegate { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 3px 24px; }
-.g-collegate .g-spunta { grid-column: auto; font-weight: 500; }
 
 .g-elimina { border-color: var(--rosso); color: var(--rosso); }
 .g-elimina:hover { border-color: var(--rosso); background: var(--rosso); color: #fff; }
 
 /* --------------------------------------------------------------------------
-   Revisione di una proposta: socio, quota, licenza, risposte. Campitura
-   lilla piena, dati come nella pagina del corto.
+   Modulo dell'evento (gestione-eventi.js): il logo nel suo colore, come
+   sulla pagina; i blocchi su superfici bianche con gli angoli del marchio,
+   ognuno con il suo nome e i tasti tondi per spostarlo e toglierlo; dentro,
+   gli elenchi divisi da un filo, le voci in riga come il cast, le foto in
+   griglia come nel rullino
    -------------------------------------------------------------------------- */
-.g-revisione { display: flex; flex-direction: column; gap: 18px; padding: clamp(18px, 2.5vw, 28px); border-radius: var(--r-m); background: var(--lilla); }
+.g-logo-evento { display: flex; padding: 20px; border: 2px solid var(--nero); border-radius: 14px; background: var(--chiaro); max-width: min(100%, 480px); }
+.g-logo-evento__segno {
+  display: block; width: min(100%, 120px * var(--ar, 1)); max-height: 160px; aspect-ratio: var(--ar, 1);
+  background: var(--colore, var(--nero));
+  -webkit-mask: var(--marchio) center / contain no-repeat; mask: var(--marchio) center / contain no-repeat;
+}
+.g-nota-blocchi { max-width: 62ch; margin-bottom: 16px; font-size: 15px; line-height: 1.5; color: var(--tenue); }
+.g-blocchi { display: flex; flex-direction: column; gap: var(--gap); margin: 0 0 16px; padding: 0; list-style: none; }
+.g-blocchi > .g-vuoto { color: var(--tenue); }
+.g-blocco { display: flex; flex-direction: column; gap: 20px; padding: clamp(18px, 2.4vw, 28px); border-radius: var(--r); background: #fff; }
+.g-blocco > .btn { align-self: flex-start; }
+.g-blocco__testa { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; }
+.g-blocco__nome { font-size: clamp(18px, 1.7vw, 23px); line-height: 1.05; }
+h4.g-blocco__nome { font-size: 16px; }
+.g-comandi { display: flex; gap: 8px; }
+.g-comandi .g-icona:disabled { opacity: 0.25; cursor: default; }
+.g-comandi .g-icona:disabled:hover { background: none; color: var(--nero); }
+.g-elenco-voci, .g-blocco__foto { display: flex; flex-direction: column; gap: 16px; padding-top: 20px; border-top: 1px solid var(--filo); }
+.g-elenco-voci > .btn, .g-blocco__foto .g-immagine-azioni { align-self: flex-start; }
+.g-voci { display: flex; flex-direction: column; gap: 10px; margin: 0; padding: 0; list-style: none; }
+.g-riga-voce { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 0.9fr) auto; gap: 8px; align-items: center; }
+.g-riga-voce input, .g-riga-voce select {
+  width: 100%; min-height: 48px; padding: 10px 14px; border: 2px solid var(--nero); border-radius: 14px;
+  background: #fff; font: inherit; font-size: 15px; font-weight: 500; color: var(--nero);
+}
+.g-riga-voce select {
+  appearance: none; padding-right: 40px; cursor: pointer;
+  background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231d1d1b' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 12px center / 14px;
+}
+.g-riga-voce input:focus-visible, .g-riga-voce select:focus-visible { outline: 3px solid var(--nero); outline-offset: 2px; }
+.g-riga-voce__nota { grid-column: 1 / -1; font-size: 13px; color: var(--tenue); }
+.g-foto-evento { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 16px 12px; margin: 0; padding: 0; list-style: none; }
+.g-foto-evento__voce { display: flex; flex-direction: column; gap: 8px; }
+.g-foto-evento__cornice { display: block; aspect-ratio: 1; overflow: hidden; border-radius: 14px; background: rgba(29, 29, 27, 0.07); }
+.g-foto-evento__cornice img { width: 100%; height: 100%; object-fit: cover; }
+.g-foto-evento__voce input { min-height: 44px; padding: 8px 12px; border: 2px solid var(--nero); border-radius: 14px; background: #fff; font: inherit; font-size: 14px; font-weight: 500; }
+@media (max-width: 760px) {
+  .g-riga-voce { grid-template-columns: minmax(0, 1fr); }
+  .g-riga-voce .g-comandi { justify-content: flex-end; }
+}
+
+/* --------------------------------------------------------------------------
+   Rullino della home (gestione-rullino.js): in alto le foto scelte, in
+   ordine, ognuna con i tasti tondi per spostarla e toglierla; sotto le foto
+   disponibili, divise per provenienza (tre pillole), in griglia. Una foto
+   già nel rullino ha il bordo nero e il bollino.
+   -------------------------------------------------------------------------- */
+.g-rullino-barra { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 24px; margin-bottom: clamp(16px, 2vw, 24px); }
+.g-rullino-barra .titoletto { margin: 0; }
+.g-mescola { gap: 10px; }
+.g-mescola svg { width: 18px; height: 18px; }
+.g-rullino-equilibrio { margin: -8px 0 20px; font-size: clamp(17px, 1.4vw, 20px); font-weight: 600; }
+.g-rullino { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 150px), 1fr)); gap: 24px var(--gap); list-style: none; }
+@media (min-width: 760px) { .g-rullino { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); } }
+.g-rullino > .g-vuoto { grid-column: 1 / -1; }
+.g-scelta { display: flex; flex-direction: column; gap: 10px; }
+.g-scelta__foto { aspect-ratio: 4 / 3; overflow: hidden; border-radius: 14px; background: rgba(29, 29, 27, 0.07); }
+.g-scelta__foto img { width: 100%; height: 100%; object-fit: cover; }
+.g-scelta__dati { font-size: 14px; line-height: 1.4; color: var(--tenue); }
+.g-scelta__dati strong { margin-right: 4px; font-family: var(--f-titoli); font-size: 18px; font-weight: 900; color: var(--nero); }
+.g-scelta .g-campo input, .g-scelta .g-campo select { min-height: 44px; padding: 8px 12px; font-size: 14px; }
+.g-scelta .g-campo select { padding-right: 40px; background-position: right 12px center; }
+.g-scelta__comandi { display: flex; gap: 8px; margin-top: auto; }
+.g-scelta__comandi .g-icona:disabled { opacity: 0.25; cursor: default; }
+.g-scelta__comandi .g-icona:disabled:hover { background: none; color: var(--nero); }
+
+.g-provenienze { display: flex; flex-wrap: wrap; gap: 8px; }
+.g-provenienza[aria-pressed='true'] { background: var(--nero); color: var(--chiaro); }
+.g-rullino-nota { max-width: 62ch; margin: 16px 0 clamp(24px, 3vw, 36px); font-size: 16px; line-height: 1.5; color: var(--tenue); }
+.g-altra-foto { margin-bottom: clamp(32px, 4vw, 48px); padding: clamp(20px, 2.4vw, 32px); border-radius: var(--r); background: #fff; }
+
+.g-gruppo-foto + .g-gruppo-foto { margin-top: clamp(28px, 3.4vw, 44px); }
+.g-gruppo-foto__titolo { margin-bottom: 14px; font-size: clamp(18px, 1.7vw, 23px); line-height: 1.05; }
+.g-gruppo-foto__titolo small { font-family: var(--f-testo); font-size: 14px; font-weight: 600; text-transform: none; letter-spacing: 0; color: var(--tenue); }
+.g-foto-griglia { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+.g-foto { display: flex; flex-direction: column; gap: 6px; padding: 0; border: 0; background: none; font: inherit; text-align: left; color: inherit; cursor: pointer; }
+.g-foto__cornice {
+  position: relative; display: block; aspect-ratio: 4 / 3; overflow: hidden;
+  border-radius: 14px; background: rgba(29, 29, 27, 0.07);
+  outline: 3px solid transparent; outline-offset: -3px; transition: outline-color 0.15s var(--ease);
+}
+.g-foto__cornice img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s var(--ease), opacity 0.2s var(--ease); }
+.g-foto:hover .g-foto__cornice img { transform: scale(1.04); }
+.g-foto__segno {
+  position: absolute; left: 8px; top: 8px; display: none; align-items: center; min-height: 26px; padding: 0 10px;
+  border-radius: 999px; background: var(--nero); color: var(--chiaro); font-size: 12px; font-weight: 700;
+}
+.g-foto[aria-pressed='true'] .g-foto__cornice { outline-color: var(--nero); }
+.g-foto[aria-pressed='true'] .g-foto__segno { display: inline-flex; }
+.g-foto[aria-pressed='true'] .g-foto__cornice img { opacity: 0.55; }
+.g-foto:focus-visible { outline: none; }
+.g-foto:focus-visible .g-foto__cornice { outline-color: var(--nero); outline-offset: 2px; }
+.g-foto__didascalia { font-size: 13px; font-weight: 700; line-height: 1.3; }
+
+/* --------------------------------------------------------------------------
+   Revisione di una proposta: socio, quota, licenza, risposte. Su una
+   superficie bianca con gli angoli del marchio, i dati come nella pagina
+   del corto.
+   -------------------------------------------------------------------------- */
+.g-revisione { display: flex; flex-direction: column; gap: 18px; padding: clamp(20px, 2.6vw, 32px); border-radius: var(--r); background: #fff; }
 .g-revisione-dati { display: flex; flex-direction: column; }
 .g-revisione-dati > div {
   display: grid; grid-template-columns: minmax(8rem, 15rem) minmax(0, 1fr); gap: 4px 20px;
-  padding: 10px 0; border-bottom: 1px solid rgba(29, 29, 27, 0.2);
+  padding: 11px 0; border-bottom: 1px solid var(--filo);
 }
 .g-revisione-dati dt { padding-top: 2px; font-size: 14px; font-weight: 800; color: var(--nero); }
 .g-revisione-dati dd { overflow-wrap: anywhere; line-height: 1.5; }
 .g-revisione-attenzioni { padding-left: 1.2rem; list-style: disc; font-weight: 600; line-height: 1.55; }
+.g-revisione-attenzioni li::marker { color: var(--rosso); }
 .g-revisione-attenzioni a { text-decoration: underline; text-underline-offset: 3px; }
 
 /* --------------------------------------------------------------------------
@@ -166,7 +284,7 @@ a.g-riga:hover { background: var(--lilla); box-shadow: -12px 0 0 var(--lilla), 1
    -------------------------------------------------------------------------- */
 .g-sicurezza { max-width: 560px; }
 .g-sicurezza form { display: flex; flex-direction: column; gap: 16px; margin-top: 8px; }
-.g-qr { width: 200px; height: 200px; background: #fff; }
+.g-qr { width: 200px; height: 200px; border-radius: 14px; background: #fff; }
 .g-sicurezza code { font-family: ui-monospace, 'SF Mono', Menlo, monospace; overflow-wrap: anywhere; }
 
 /* --------------------------------------------------------------------------
@@ -184,5 +302,6 @@ a.g-riga:hover { background: var(--lilla); box-shadow: -12px 0 0 var(--lilla), 1
   .g-revisione-dati > div { grid-template-columns: 1fr; }
   .g-riga--ferma { grid-template-columns: 1fr; }
   .g-riga--ferma .g-segni { grid-row: auto; grid-column: 1; justify-content: flex-start; }
+  .g-segni--soci { grid-template-columns: 8.5rem minmax(0, 1fr); width: 100%; }
   .g-attivita li { grid-template-columns: 1fr; gap: 2px; }
 }

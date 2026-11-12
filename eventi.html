@@ -12,10 +12,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800;900&display=swap">
-    <link rel="stylesheet" href="assets/css/base.css?v=2026-11-12">
-    <link rel="stylesheet" href="assets/css/components.css?v=2026-11-12">
-    <link rel="stylesheet" href="assets/css/pages/evento.css?v=2026-11-12">
-    <link rel="stylesheet" href="assets/css/pages/eventi.css?v=2026-11-12">
+    <link rel="stylesheet" href="assets/css/base.css?v=2026-11-12zg">
+    <link rel="stylesheet" href="assets/css/components.css?v=2026-11-12zg">
+    <link rel="stylesheet" href="assets/css/pages/evento.css?v=2026-11-12zg">
+    <link rel="stylesheet" href="assets/css/pages/eventi.css?v=2026-11-12zg">
 </head>
 <body class="pagina-colore pagina-eventi">
 
@@ -27,7 +27,7 @@
             <a class="nav__voce nav__voce--produzioni" href="produzioni.html">Produzioni</a>
             <a class="nav__voce nav__voce--contatti" href="contatti.html#contatti">Contatti</a>
             <a class="nav__cortoteca" href="cortoteca.html"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.14v13.72L19 12 8 5.14Z"/></svg>Cortoteca</a>
-            <a class="btn btn--pieno nav__socio" href="contatti.html">Diventa socio</a>
+            <a class="btn btn--pieno nav__socio" href="vantaggi-tesseramento.html">Diventa socio</a>
         </div>
     </header>
 
@@ -46,8 +46,8 @@
             <div class="wrap">
                 <h2 class="blocco-pagina__testa" id="titolo-evidenza">In evidenza</h2>
                 <a class="evidenza grid" id="evidenza" href="longstoryshort.html">
-                    <span class="marchio-serie marchio-serie--lss span-5" role="img" aria-label="Long Story Short"></span>
-                    <span class="evidenza__testo span-5 start-8">
+                    <span class="marchio-serie marchio-serie--lss span-6" role="img" aria-label="Long Story Short"></span>
+                    <span class="evidenza__testo span-6 start-7">
                         <span class="evidenza__descrizione" id="evidenza-descrizione"></span>
                         <span class="evidenza__freccia"><svg class="freccia" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg></span>
                     </span>
@@ -70,24 +70,29 @@
             </div>
         </section>
 
-        <!-- Le edizioni di Short Talks, dalla più recente. In cima il format in
-             due righe e l'invito a portarlo in sala, che porta al modulo di
-             Contatti col motivo già scelto -->
+        <!-- SHORT TALKS: il titolo, il racconto del format (dal deck di
+             presentazione) e l'invito a portarlo in sala, che porta al modulo di
+             Contatti col motivo già scelto. Sotto le edizioni, dalla più
+             recente: le prime tre, le altre col tasto (eventi.js) -->
         <section class="blocco-pagina blocco-pagina--diviso entra" id="blocco-short-talks" aria-labelledby="titolo-short-talks" hidden>
             <div class="wrap">
-                <h2 class="sr-only" id="titolo-short-talks">Short Talks</h2>
+                <h2 class="blocco-pagina__testa" id="titolo-short-talks">Short Talks</h2>
                 <div class="serie-descrizione">
-                    <p><strong>Short Talks</strong> &egrave; il primo format firmato CDL, nato per portare il cortometraggio in sala e farlo incontrare con il suo pubblico, attraverso il dialogo con chi l&rsquo;ha realizzato.</p>
+                    <p><strong>Short Talks</strong> &egrave; il primo format firmato CDL. Nasce nell&rsquo;aprile del 2024 per presentare in sala l&rsquo;ultima produzione dell&rsquo;associazione e farne un momento di dialogo fra autori e pubblico. Il nome gioca con l&rsquo;inglese <em>small talk</em>, la conversazione leggera e informale, e richiama insieme la brevit&agrave; delle opere e lo scambio diretto che accende ogni serata.</p>
+                    <p>Ogni appuntamento mette insieme <strong>cortometraggi indipendenti di giovani autori</strong> e chiacchierate con chi li ha realizzati, fra riflessioni, curiosit&agrave; e qualche battuta fuori programma.</p>
                     <p><a class="rimando-testo" href="contatti.html?motivo=short-talks#contatti">Contattaci</a> per portare Short Talks nel tuo cinema.</p>
                 </div>
-                <ul class="schede"></ul>
+                <ul class="schede" id="edizioni-short-talks"></ul>
             </div>
         </section>
 
-        <!-- Tutto il resto: gli eventi senza serie -->
+        <!-- Tutto il resto: gli eventi senza serie, con due righe sul cinema fuori dalla sala -->
         <section class="blocco-pagina blocco-pagina--diviso entra" id="blocco-altri" aria-labelledby="titolo-altri" hidden>
             <div class="wrap">
                 <h2 class="blocco-pagina__testa" id="titolo-altri">Altri eventi</h2>
+                <div class="serie-descrizione">
+                    <p>Il cinema non sta solo in sala. Accanto ai nostri format cerchiamo strade trasversali, portando le nostre iniziative all&rsquo;aperto, in spiaggia o in uno spazio di quartiere, e sperimentando con musica o altre forme d&rsquo;arte.</p>
+                </div>
                 <ul class="schede"></ul>
             </div>
         </section>
@@ -97,27 +102,21 @@
         <div class="piede">
             <div class="wrap piede__riga">
                 <a href="index.html" aria-label="CDL, pagina iniziale"><span class="logo"></span></a>
-                <nav class="piede__elenchi" aria-label="Pagine e contatti">
-                    <ul>
-                        <li><a href="eventi.html">Eventi</a></li>
-                        <li><a href="produzioni.html">Produzioni</a></li>
-                        <li><a href="cortoteca.html">Cortoteca</a></li>
-                        <li><a href="vantaggi-tesseramento.html">Vantaggi per i soci</a></li>
-                    </ul>
-                    <ul id="contatti">
-                        <li><a href="https://instagram.com/cdl_aps" target="_blank" rel="noopener">Instagram <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h6"/></svg></a></li>
-                        <li><a href="https://www.youtube.com/@cdl_aps" target="_blank" rel="noopener">YouTube <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h6"/></svg></a></li>
-                        <li><a href="mailto:ciao@cdlaps.com">ciao@cdlaps.com</a></li>
-                    </ul>
-                </nav>
-                <p class="piede__dati">Associazione di promozione del cinema giovane e indipendente<br>
-                CDL APS &bull; Viale Laurana 13, Rimini, 47921 &bull; CF: 91200080405 &bull; 2026</p>
+                <ul class="piede__social">
+                    <li><a href="https://instagram.com/cdl_aps" target="_blank" rel="noopener">Instagram <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h6"/></svg></a></li>
+                    <li><a href="https://www.youtube.com/@cdl_aps" target="_blank" rel="noopener">YouTube <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h6"/></svg></a></li>
+                </ul>
+                <p class="piede__dati">CDL APS, 2026<br>
+                Associazione di promozione sociale<br>
+                Sede legale: Viale Laurana 13, 47921 Rimini<br>
+                CF 91200080405</p>
             </div>
         </div>
     </footer>
 
-    <script src="assets/js/dati.js?v=2026-11-12"></script>
-    <script src="assets/js/comune.js?v=2026-11-12"></script>
-    <script src="assets/js/eventi.js?v=2026-11-12"></script>
+    <script src="assets/js/dati.js?v=2026-11-12zg"></script>
+    <script src="assets/js/comune.js?v=2026-11-12zg"></script>
+    <script src="assets/js/modello-evento.js?v=2026-11-12zg"></script>
+    <script src="assets/js/eventi.js?v=2026-11-12zg"></script>
 </body>
 </html>

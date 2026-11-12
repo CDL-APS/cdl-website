@@ -29,6 +29,11 @@ html:has(.pagina-produzioni) { background: var(--lilla); }
 .pagina-produzioni .primo-piano > .cornice,
 .pagina-produzioni .scheda-g .cornice { border: 2px solid var(--nero); }
 .primo-piano__titolo img { display: block; width: 100%; max-height: 220px; object-fit: contain; object-position: left bottom; filter: brightness(0); }
+/* Accanto al fotogramma il titolo grafico prende tutta la larghezza della
+   colonna (un titolo molto alto si ferma prima) */
+@media (min-width: 1024px) {
+  .primo-piano__titolo img { max-height: 360px; }
+}
 /* Il titolo nel carattere del corto (titolo_font) */
 .primo-piano__titolo .targa__font { display: block; font-size: 1.1em; line-height: 1; }
 

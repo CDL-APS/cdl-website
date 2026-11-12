@@ -44,14 +44,29 @@ function luminosita(hex) {
   return 0.2126 * r + 0.7152 * g + 0.0722 * b;
 }
 
+// Contrasto WCAG fra un colore #rrggbb e il nero del sito (#1d1d1b)
+function contrastoColNero(hex) {
+  const lin = (v) => (v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4);
+  const lum = (h) => {
+    const [r, g, b] = [1, 3, 5].map((i) => lin(parseInt(h.slice(i, i + 2), 16) / 255));
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+  };
+  return (lum(hex) + 0.05) / (lum('#1d1d1b') + 0.05);
+}
+
 /* Il colore della pagina del corto (--titolo, sulla radice della pagina o
    della sala): la colonna colore scelta in gestione; se manca, il colore
-   del titolo grafico locale; se manca anche quello, il lilla del foglio.
-   Un colore troppo scuro sul nero non si leggerebbe: diventa il chiaro. */
+   del titolo grafico locale; se manca anche quello, il colore della Cortoteca del foglio.
+   Un colore troppo scuro sul nero non si leggerebbe: diventa il chiaro.
+   Sui pieni nel colore del corto (Guarda, il pulsante, la crocetta della
+   sala) la scritta è nera, o chiara se col nero il contrasto è troppo
+   basso (--sul-titolo). */
 function coloraCorto(o, radice) {
   const applica = (c) => {
     if (!c) return;
-    radice.style.setProperty('--titolo', luminosita(c) > 0.12 ? c : 'var(--chiaro)');
+    const leggibile = luminosita(c) > 0.12;
+    radice.style.setProperty('--titolo', leggibile ? c : 'var(--chiaro)');
+    radice.style.setProperty('--sul-titolo', leggibile && contrastoColNero(c) < 4.5 ? 'var(--chiaro)' : 'var(--nero)');
   };
   if (/^#[0-9a-f]{6}$/i.test(o.colore || '')) applica(o.colore.toLowerCase());
   else if (!o.titolo_png && !o.titolo_font && TITOLI_GRAFICI.has(o.codice)) coloreTitolo(o.codice).then(applica).catch(console.error);

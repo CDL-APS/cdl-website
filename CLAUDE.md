@@ -16,17 +16,31 @@ Il redesign sta sul branch `redesign` (dettagli in
 
 Prima di unire:
 
+- [ ] Applicare `supabase/migrations/20261112210000_eventi_a_blocchi.sql`
+  (aggiunge colonne, il sito online non ne risente). Senza, il redesign non
+  legge gli eventi e ripiega su `data/eventi.json`.
 - [ ] Prove in gestione con un accesso vero (solo l'utente: password e
   codice 2FA), dalla copia locale: un'opera con colore e "Solo la scheda",
   un titolo grafico in PNG e uno come carattere, l'approvazione di una
   proposta. Poi guardarle in Cortoteca, nella pagina del corto e in
-  Produzioni; cancellare le opere di prova.
+  Produzioni; cancellare le opere di prova. Provare anche la scheda
+  Rullino (aggiungi, sposta, togli, Mescola, carica un'altra foto, poi la
+  home) e il tasto Indietro fra schede e moduli.
+- [ ] Review del diff `main...redesign` con la skill `/code-review` (e
+  `/security-review` per gestione, proposta e migrazioni), a lavoro
+  committato e prima di aprire la pull request. Richiesta dall'utente:
+  ricordargliela sempre prima di pubblicare.
+- [ ] Prova del modulo evento con un accesso vero (solo l'utente): un
+  evento di prova con logo, colore, presentazione, un programma con un
+  corto della Cortoteca e qualche foto, un testo; Anteprima prima di
+  salvare; salvarlo pubblicato, guardarlo in Eventi (sala) e da
+  `evento.html?e=<codice>`; poi eliminarlo.
 - [ ] Pull request `redesign` → `main`, unita da GitHub con l'account
   `cdl-aps` e un merge commit (vedi "Pubblicazione" più sotto).
 
 Subito dopo il deploy:
 
-- [ ] Applicare `supabase/migrations/20261112180000_colonne_pubbliche.sql`
+- [ ] Applicare `supabase/migrations/20261112220000_colonne_pubbliche.sql`
   (non prima: il sito vecchio legge con `select=*` e ripiegherebbe sulle
   copie di riserva). Poi aprire home, Cortoteca, Eventi e Produzioni: in
   console non deve comparire "uso la copia di riserva".
@@ -46,6 +60,22 @@ Subito dopo il deploy:
 - [ ] Un giro del sito su un iPhone e su Safari (mai provati su dispositivi
   veri).
 
+## Da fare più avanti (non prioritario)
+
+- [ ] Sostieni: aggiungere la possibilità di fare una donazione, oltre a
+  diventare socio (blocco arancio in home, Contatti e Vantaggi).
+- [ ] Cortoteca, ordinamenti: diventano "Per nome", "Per regista" e "A-Z"
+  (oggi "Per anno" e "Per nome"). "Per regista" raggruppa i corti in
+  blocchi sotto il nome di ciascun regista; il nome apre un pop-up con
+  alcune informazioni sul regista, che ogni socio può modificare entrando
+  col proprio collegamento personale (come per `proponi.html`).
+- [ ] Cortoteca, ricerca globale: cerca un nome in tutte le informazioni di
+  un corto, non solo titolo e regista. Scrivendo "Andrea" escono il corto
+  Andrea e tutti quelli con un attore o una maestranza che si chiama
+  Andrea; per restringere si scrive una ricerca più precisa.
+- [ ] Iscrizione online: quando ci sarà il modulo per associarsi solo per
+  via telematica, metterlo sul sito con il pagamento integrato PayPal.
+
 ## Convenzioni
 
 - **CSS**: `base.css` (colori, misure, griglia, titoli) → `components.css`
@@ -59,21 +89,29 @@ Subito dopo il deploy:
   pagina pubblica (occhi `--x`/`--y`/`--d`, larghezze dei partner `--w`,
   proporzioni delle foto `--rapporto`); mai in gestione e proposta, dove la
   CSP li blocca. In fondo a `base.css` ci sono gli alias dei nomi vecchi
-  (`--cdl-*`, `--riga`…), solo per riservato, gestione, proposta e cornice.
+  (`--cdl-*`, `--riga`…), ormai solo per `proponi.css` e la cornice:
+  `riservato.css` e `gestione.css` usano i nomi nuovi. Nelle pagine
+  riservate i campi sono quelli del modulo di Contatti (bordo nero, angoli
+  di 14 px), le superfici bianche con gli angoli del marchio, i gruppi
+  separati da spazio e da un filo sottile sopra il titolo.
 - **JS**: un file per pagina in `assets/js/`, caricato in fondo al `<body>`.
   File comuni: `dati.js` (lettura di opere ed eventi, per primo), `comune.js`
   (scritte a tutta larghezza, occhi, rullini, schede, titolo grafico,
   passaggi fra le pagine: su tutte le pagine pubbliche, dopo `dati.js` dove
   c'è), `corto.js` (la pagina del corto: `opera.html` e la sala di
-  `cortoteca.html`) e `riservato.js` (parti condivise da `gestione.html` e
-  `proponi.html`, dopo `dati.js`). Non ci sono moduli ES né bundler: le
+  `cortoteca.html`), `modello-evento.js` (la pagina di un evento composta
+  dal database: `evento.html` e la sala di `eventi.html`) e `riservato.js` (parti condivise da `gestione.html` e
+  `proponi.html`, dopo `dati.js`). La scheda Rullino di gestione sta in
+  `gestione-rullino.js` e la pagina dell'evento (logo, colore, blocchi,
+  anteprima) in `gestione-eventi.js`, caricati dopo `gestione.js` (ne usano
+  client e stato). Non ci sono moduli ES né bundler: le
   funzioni sono globali. Le librerie di terzi stanno copiate in
   `assets/js/vendor/` con la versione nel nome.
 - **Identità visiva** (dettagli in `storico/2026-11-11-design-handoff.md`):
   solo Montserrat (500–900, da Google Fonts con un `<link>`); titoli 900
   maiuscoli e stretti, spesso a tutta larghezza (`.fit`); carta `#f7f7f7`.
   Ogni sezione ha il suo fondo pieno: Eventi blu con le scritte azzurre,
-  Produzioni lilla e nero, Cortoteca nera con le scritte lilla, Contatti e
+  Produzioni lilla e nero, Cortoteca nera con le scritte arancio (`--cortoteca` in `base.css`), Contatti e
   Sostieni arancio; corti ed eventi hanno il loro colore. Angoli del marchio
   arrotondati (`--r` 20 px, rullino della home 16, still della Cortoteca 14);
   le foto delle schede, del primo piano e dei vincitori sono a spigolo vivo,
@@ -87,7 +125,7 @@ Subito dopo il deploy:
   (le pagine dei corti accendono Cortoteca, le pagine evento e la cornice
   narrativa Eventi); il pallino colorato di una voce è una classe
   (`nav__voce--eventi`, `--produzioni`, `--contatti`). La Cortoteca ha la
-  barra ridotta (solo Diventa socio) e il piede lilla.
+  barra ridotta (solo Diventa socio) e il piede arancio.
 - **Frecce**: ↗ per aprire un contenuto, → per andare a un elenco o a
   un'altra pagina del sito, l'icona del link esterno solo per ciò che porta
   fuori (Instagram e YouTube nel piede, i tag Instagram nelle pagine evento).
@@ -123,7 +161,7 @@ Subito dopo il deploy:
   forma, da cui scarta ciò che non è pubblicato; le immagini, se mancano nel
   bucket `immagini`, ripiegano su `assets/img/`. La chiave segreta
   (*secret* / *service_role*) non va mai nel repository.
-- **Colonne pubbliche.** `20261112180000_colonne_pubbliche.sql` limita `anon`
+- **Colonne pubbliche.** `20261112220000_colonne_pubbliche.sql` limita `anon`
   alle colonne mostrate dal sito (niente `modificato_da` né date di lavoro).
   Va applicata solo quando il sito online usa già l'elenco esplicito di
   `dati.js`. Una colonna nuova da mostrare va aggiunta in `dati.js` e con un
@@ -208,7 +246,12 @@ Subito dopo il deploy:
     file;
   - il **colore della pagina del corto** (`--titolo`): `opere.colore`
     (`#rrggbb`, campo in gestione), poi il colore dell'SVG provvisorio, poi
-    il lilla. Un colore troppo scuro per il nero diventa il chiaro.
+    l'arancio della Cortoteca. Un colore troppo scuro per il nero diventa
+    il chiaro; sui pieni nel colore del corto (Guarda) la scritta diventa
+    chiara se col nero non si leggerebbe (`--sul-titolo`). Se
+    l'opera ha un colore, anche il titolo grafico lo prende (galleria, sala,
+    pagina del corto: l'immagine fa da maschera); in Produzioni resta nero
+    (`colora: false`).
 - **Dashboard di gestione**: la prima scheda di `gestione.html`. "Da
   sistemare" compare solo lì; i numeri e le ultime attività arrivano da
   `public.cruscotto()`. Chi ha fatto l'ultima modifica a un'opera o a un
@@ -234,6 +277,25 @@ Subito dopo il deploy:
   allarga il colore della sezione prima di cambiare pagina. Con
   `prefers-reduced-motion` i passaggi diventano cambi di pagina e i rullini
   restano fermi.
+- **Pagine evento composte dal database** (in corso, piano in
+  `storico/2026-11-12-piano-pagine-evento.md`): `evento.html?e=<codice>`
+  disegna testata e blocchi dalle colonne `logo`, `colore`, `instagram`,
+  `sfondo`, `presentazione` e `blocchi` di `eventi`
+  (`20261112210000_eventi_a_blocchi.sql`); tipi di blocco e sintassi del
+  testo sono descritti in cima a `modello-evento.js`. Un evento usa il
+  modello se ha una presentazione o un blocco (`conModello()` in `dati.js`):
+  allora `paginaEvento()` dà l'indirizzo del modello, la sala di Eventi lo
+  compone invece di scaricare un file e la scheda Rullino prende le foto dai
+  blocchi. Convertita finora: Short Talks #1 (il suo file resta fino ai
+  redirect della fase 3). In gestione la pagina si compone nel modulo
+  evento (`gestione-eventi.js`): logo PNG caricato com'è, foto ridimensionate
+  in `immagini/eventi/<codice>/`, misure salvate nel blocco. "Anteprima"
+  apre `evento.html?anteprima`, che legge i dati del modulo dalla memoria
+  del browser (`localStorage`, chiave `cdl-anteprima-evento`) e mostra le
+  immagini non ancora caricate dagli indirizzi `blob:`. Il modulo non
+  mostra più copertina, miniatura e corti nati dall'evento (`eventi_opere`):
+  le colonne e la tabella restano; senza logo e senza miniatura la scheda di
+  Eventi usa la prima foto dei blocchi.
 - Le pagine dei singoli eventi (`short-talks-1.html`, `blue-hour.html`…) sono
   statiche, sul modello di `longstoryshort.html`, e condividono
   `pages/evento.css`, dove stanno il colore di ciascuna (`evento--<pagina>`
@@ -258,14 +320,26 @@ Subito dopo il deploy:
   una presentazione (`.presentazione`) chiusa da un filo.
 - La home ha quattro parti: l'apertura sulla sala vista dall'alto, al buio,
   con la torcia che segue il puntatore e il nastro delle ultime notizie;
-  l'indice (Eventi, Produzioni, Cortoteca a tutta larghezza, che al
-  passaggio prendono il colore della sezione e mostrano gli ultimi titoli);
-  il rullino di fotografie degli eventi (scritto a mano in `index.html`: ogni
-  foto porta alla pagina del suo evento); Sostieni in arancio. Nastro ed
-  elenchi li riempie `home.js`; il testo della quota ridotta del nastro sta
-  in `data-quota`, nell'HTML.
-- **Contatti** (`contatti.html`): in cima Sostieni (la meta di "Diventa
-  socio"), sotto il modulo con Netlify Forms. Tre moduli, uno per indirizzo
+  l'indice (Eventi, Produzioni, Cortoteca a tutta larghezza, misurati
+  sul disegno delle lettere con `data-preciso`, così i bordi coincidono coi
+  margini; al passaggio prendono il colore della sezione e, tranne la
+  Cortoteca, mostrano i tre più recenti e "Vedi tutti…");
+  il rullino di fotografie, senza titolo; Sostieni in arancio. Nastro,
+  elenchi e rullino li riempie `home.js`; il testo della quota ridotta del
+  nastro sta in `data-quota`, nell'HTML.
+- **Il rullino della home** si sceglie in gestione, scheda Rullino (tabella
+  `public.rullino`, `20261112200000_rullino_home.sql`; copia di riserva
+  `data/rullino.json`, da aggiornare a mano come le altre). Tre
+  provenienze: le gallerie delle pagine evento (lette dall'HTML della
+  pagina: una galleria nuova compare da sola, senza loghi e partner), il
+  fotogramma di ogni corto, altre foto caricate nella cartella `rullino/`
+  dello spazio immagini. Ogni foto porta al suo evento (`evento_id`), al
+  suo corto (`opera_id`) o a una pagina del sito (`pagina`, per le altre).
+- **Contatti** (`contatti.html`): in cima il modulo con Netlify Forms
+  (`#contatti`, la meta di "Contatti"), sotto Sostieni (`#socio`), che
+  contiene anche il piede, come nella home. Il titolo Scrivici prende
+  l'altezza della frase a fianco (`contatti.js`). Il tasto "Diventa socio"
+  della barra porta invece a `vantaggi-tesseramento.html`. Tre moduli, uno per indirizzo
   (`contatti` → ciao@, `contatti-eventi` → eventi@, `contatti-produzione` →
   produzione@cdlaps.com): il motivo sceglie modulo e oggetto
   (`contatti.js`); `?motivo=socio` lo preseleziona. Dopo l'invio Netlify
@@ -306,6 +380,7 @@ Subito dopo il deploy:
 ```bash
 python3 -m json.tool data/opere.json > /dev/null  # le copie di riserva sono valide
 python3 -m json.tool data/eventi.json > /dev/null
+python3 -m json.tool data/rullino.json > /dev/null
 python3 -m http.server 5500                        # poi http://localhost:5500
 ```
 

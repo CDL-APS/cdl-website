@@ -1,24 +1,24 @@
 /* ==========================================================================
    CONTATTI (contatti.html)
-   In cima l'invito a sostenere CDL, lo stesso blocco arancio della home
-   (meta di "Diventa socio"); sotto, il modulo (meta di "Contatti"), che
-   arriva per email tramite Netlify Forms. Dopo l'invio Netlify riapre la
-   pagina su #grazie, che mostra la conferma al posto del modulo.
+   In cima il modulo (meta di "Contatti", #contatti), che arriva per email
+   tramite Netlify Forms; sotto, l'invito a sostenere CDL, lo stesso blocco
+   arancio della home (meta di "Diventa socio", #socio). Dopo l'invio
+   Netlify riapre la pagina su #grazie, che mostra la conferma al posto del
+   modulo.
    ========================================================================== */
 
-/* L'arancio occupa lo schermo intero: il nome in alto, sotto in fondo la
-   frase grande con gli inviti a sinistra e la tessera a destra */
-.pagina-contatti main > .contatti-testa { min-height: 100svh; padding-top: calc(var(--nav) + 32px); }
-.contatti-testa .sostieni { display: flex; flex-direction: column; }
-.contatti-testa .sostieni__corpo { margin-top: auto; padding-top: clamp(32px, 4vw, 56px); align-items: end; border-top: 2px solid var(--nero); }
-.contatti-testa .sostieni__frase { max-width: 26ch; font-size: clamp(24px, 2.7vw, 40px); line-height: 1.18; letter-spacing: -0.01em; }
-.contatti-testa .sostieni__stato { margin-top: 22px; font-size: 17px; }
-.contatti-testa .btn-riga { margin-top: 28px; }
-.contatti-testa .sostieni__tessera { max-width: 440px; }
+/* Il modulo apre la pagina: il titolo a sinistra, largo quanto gli serve e
+   alto quanto la frase a fianco (dalle maiuscole della prima riga alla base
+   dell'ultima: corpo e scostamento li calcola contatti.js, che li mette uno
+   sotto l'altro se il titolo prenderebbe troppo posto), sotto il modulo */
+.pagina-contatti main > .contatti { min-height: 0; padding: calc(var(--nav) + 40px) 0 clamp(96px, 11vw, 168px); scroll-margin-top: var(--nav); }
+.contatti__testa { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: start; gap: 16px clamp(24px, 3vw, 48px); padding-bottom: clamp(28px, 3.4vw, 48px); border-bottom: 2px solid var(--arancio); }
+.contatti__testa h1 { font-size: clamp(48px, 7vw, 108px); line-height: 0.86; white-space: nowrap; }
+.contatti__testa--impilata { grid-template-columns: minmax(0, 1fr); }
 
-.pagina-contatti main > .contatti { min-height: 0; padding: clamp(64px, 8vw, 120px) 0 clamp(96px, 11vw, 168px); scroll-margin-top: var(--nav); }
-.contatti__testa { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); align-items: end; gap: 16px var(--gap); padding-bottom: clamp(28px, 3.4vw, 48px); border-bottom: 2px solid var(--arancio); }
-.contatti__testa h2 { font-size: clamp(48px, 7vw, 108px); line-height: 0.86; }
+/* Sotto, l'arancio di Sostieni (components.css), alto quanto il contenuto.
+   Il margine in alto lascia spazio alla barra quando si arriva su #socio */
+.pagina-contatti .contatti-sostieni { min-height: 0; padding-top: calc(var(--nav) + 32px); }
 .contatti__frase { max-width: 40ch; font-size: clamp(19px, 1.7vw, 24px); font-weight: 600; line-height: 1.35; }
 
 /* --------------------------------------------------------------------------

@@ -12,7 +12,13 @@
     "miniatura": "eventi/short-talks-al-not-2026-miniatura-1791651896478.jpg",
     "pagina": "short-talks-al-not-2026.html",
     "serie": "short-talks",
-    "pubblicato": true
+    "pubblicato": true,
+    "logo": null,
+    "colore": null,
+    "instagram": null,
+    "sfondo": null,
+    "presentazione": null,
+    "blocchi": []
   },
   {
     "id": 1,
@@ -27,7 +33,13 @@
     "miniatura": "eventi/lss-2026-miniatura.jpg",
     "pagina": "longstoryshort.html",
     "serie": "long-story-short",
-    "pubblicato": true
+    "pubblicato": true,
+    "logo": null,
+    "colore": null,
+    "instagram": null,
+    "sfondo": null,
+    "presentazione": null,
+    "blocchi": []
   },
   {
     "id": 7,
@@ -42,7 +54,13 @@
     "miniatura": "eventi/short-talks-3-x-laiff-miniatura-1791651855529.jpg",
     "pagina": "short-talks-3-x-laiff.html",
     "serie": "short-talks",
-    "pubblicato": true
+    "pubblicato": true,
+    "logo": null,
+    "colore": null,
+    "instagram": null,
+    "sfondo": null,
+    "presentazione": null,
+    "blocchi": []
   },
   {
     "id": 6,
@@ -57,7 +75,13 @@
     "miniatura": "eventi/short-talks-al-not-2025-miniatura-1791651826359.jpg",
     "pagina": "short-talks-al-not-2025.html",
     "serie": "short-talks",
-    "pubblicato": true
+    "pubblicato": true,
+    "logo": null,
+    "colore": null,
+    "instagram": null,
+    "sfondo": null,
+    "presentazione": null,
+    "blocchi": []
   },
   {
     "id": 5,
@@ -72,7 +96,13 @@
     "miniatura": "eventi/blue-hour-miniatura-1791651792910.jpg",
     "pagina": "blue-hour.html",
     "serie": null,
-    "pubblicato": true
+    "pubblicato": true,
+    "logo": null,
+    "colore": null,
+    "instagram": null,
+    "sfondo": null,
+    "presentazione": null,
+    "blocchi": []
   },
   {
     "id": 4,
@@ -87,7 +117,13 @@
     "miniatura": "eventi/short-talks-off-1-miniatura-1791651760306.jpg",
     "pagina": "short-talks-off-1.html",
     "serie": null,
-    "pubblicato": true
+    "pubblicato": true,
+    "logo": null,
+    "colore": null,
+    "instagram": null,
+    "sfondo": null,
+    "presentazione": null,
+    "blocchi": []
   },
   {
     "id": 3,
@@ -102,7 +138,13 @@
     "miniatura": "eventi/short-talks-2-miniatura-1791651731994.jpg",
     "pagina": "short-talks-2.html",
     "serie": "short-talks",
-    "pubblicato": true
+    "pubblicato": true,
+    "logo": null,
+    "colore": null,
+    "instagram": null,
+    "sfondo": null,
+    "presentazione": null,
+    "blocchi": []
   },
   {
     "id": 2,
@@ -117,6 +159,57 @@
     "miniatura": "eventi/short-talks-1-miniatura-1791651701597.jpg",
     "pagina": "short-talks-1.html",
     "serie": "short-talks",
-    "pubblicato": true
+    "pubblicato": true,
+    "logo": "assets/img/eventi/loghi/short-talks-1.png",
+    "colore": "#ff7a41",
+    "instagram": "https://www.instagram.com/p/C5_XntuoJj_/",
+    "sfondo": null,
+    "presentazione": "Il **18 aprile 2024**, al **C'entro Supercinema di Santarcangelo**, nasce **Short Talks**: il format con cui CDL porta in sala il cinema corto, combinando la proiezione di progetti indipendenti al dialogo con i giovani autori che li hanno realizzati. Il nome è un gioco di parole sull'inglese _small talk_, la conversazione leggera e informale, e richiama sia la brevità delle opere sia lo scambio diretto con il pubblico.",
+    "blocchi": [
+      {
+        "tipo": "programma",
+        "titolo": "Doppia visione",
+        "nota": "Ogni proiezione è seguita dal dialogo con il regista e la troupe.",
+        "gruppi": [
+          {
+            "numerato": true,
+            "voci": [
+              {
+                "titolo": "Relatività",
+                "riga": "Francesco Pasquinelli · CDL · 2024 · 10'",
+                "opera_id": 1
+              },
+              {
+                "titolo": "Dettagli Temporanei",
+                "riga": "Christian Dei · LVDA Film · 2023 · 9'"
+              }
+            ]
+          }
+        ],
+        "foto": [
+          {
+            "immagine": "assets/img/eventi/short-talks-1/serate/serata-18-04-01.jpg",
+            "larghezza": 1080,
+            "altezza": 1080
+          },
+          {
+            "immagine": "assets/img/eventi/short-talks-1/serate/serata-18-04-02.jpg",
+            "larghezza": 1080,
+            "altezza": 1080
+          },
+          {
+            "immagine": "assets/img/eventi/short-talks-1/serate/serata-18-04-03.jpg",
+            "larghezza": 1080,
+            "altezza": 1080
+          },
+          {
+            "immagine": "assets/img/eventi/short-talks-1/serate/serata-18-04-04.jpg",
+            "larghezza": 1080,
+            "altezza": 1080
+          }
+        ],
+        "descrizione_foto": "Foto della serata del 18 aprile"
+      }
+    ]
   }
 ]

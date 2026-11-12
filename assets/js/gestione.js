@@ -7,6 +7,8 @@
      senza licenza, foglio non aggiornato), qualche numero, le ultime attività;
    - Proposte: i corti mandati dai soci, da rivedere e pubblicare;
    - Opere ed Eventi: elenco e modifica;
+   - Rullino: le foto che scorrono in home (in gestione-rullino.js, caricato
+     dopo questo file);
    - Soci: stato della sincronizzazione con il foglio e collegamenti personali.
 
    Tutte le scritture passano dal client di Supabase con la sessione di chi ha
@@ -27,7 +29,7 @@ const client = creaClient();
 const SPAZIO_PROPOSTE = 'proposte';
 
 const stato = {
-  scheda: null,      // scheda mostrata: dashboard, proposte, opere, eventi o soci
+  scheda: null,      // scheda mostrata: dashboard, proposte, opere, eventi, rullino o soci
   modificato: false, // modifiche non salvate nel modulo aperto
   immagini: {},      // file scelti e non ancora caricati, per nome del campo
   titolo: null,      // titolo grafico scelto e non ancora caricato: { file, tipo }
@@ -285,8 +287,7 @@ $('elenco-avvisi').addEventListener('click', async (e) => {
   const azione = b.dataset.avviso;
 
   if (azione === 'soci') {
-    stato.scheda = 'soci';
-    mostraElenco();
+    vaiAScheda('soci');
   } else if (azione === 'apri') {
     apriOpera(id);
   } else if (azione === 'nascondi') {
@@ -306,15 +307,53 @@ $('elenco-avvisi').addEventListener('click', async (e) => {
 /* --------------------------------------------------------------------------
    Elenchi
    -------------------------------------------------------------------------- */
+/* --------------------------------------------------------------------------
+   Navigazione col tasto Indietro del browser. Ogni scheda è un passo della
+   cronologia (#opere, #rullino…), e così anche un modulo aperto (opera,
+   evento, revisione): Indietro torna alla scheda di prima, o dal modulo
+   all'elenco, chiedendo conferma se ci sono modifiche non salvate.
+   Uscire da un modulo coi suoi tasti (Salva, Annulla…) toglie il suo passo
+   dalla cronologia: mostraElenco() torna indietro invece di aggiungerne uno.
+   -------------------------------------------------------------------------- */
+const MODIFICHE_PERSE = 'Ci sono modifiche non salvate. Uscire lo stesso?';
+
+function vaiAScheda(scheda) {
+  stato.scheda = scheda;
+  // da un modulo aperto il suo passo diventa quello della nuova scheda
+  if (history.state?.modulo) history.replaceState({ scheda }, '', '#' + scheda);
+  else history.pushState({ scheda }, '', '#' + scheda);
+  mostraElenco();
+}
+
+/* All'apertura di un modulo: un passo in più, per poterne uscire con Indietro */
+function apriModulo() {
+  if (!history.state?.modulo) history.pushState({ scheda: stato.scheda, modulo: true }, '', `#${stato.scheda}/modifica`);
+}
+
+window.addEventListener('popstate', (e) => {
+  if ($('schede').hidden) return; // senza accesso non c'è niente da navigare
+  const inModulo = ['opera', 'evento'].some((v) => !document.querySelector(`[data-vista="${v}"]`).hidden);
+  if (inModulo && stato.modificato && !confirm(MODIFICHE_PERSE)) {
+    history.pushState({ scheda: stato.scheda, modulo: true }, '', `#${stato.scheda}/modifica`);
+    return;
+  }
+  stato.modificato = false;
+  nascondiAvviso();
+  const scheda = SCHEDE[e.state?.scheda] ? e.state.scheda : 'dashboard';
+  // Avanti verso un modulo già chiuso: si resta sull'elenco
+  if (e.state?.modulo) history.replaceState({ scheda }, '', '#' + scheda);
+  stato.scheda = scheda;
+  mostraElenco();
+});
+
 /* Le schede stanno nella barra e restano cliccabili anche da un modulo
    aperto: in quel caso si chiede prima di perdere le modifiche */
 document.querySelectorAll('.g-scheda').forEach((b) => {
   b.addEventListener('click', () => {
-    if (stato.modificato && !confirm('Ci sono modifiche non salvate. Uscire lo stesso?')) return;
+    if (stato.modificato && !confirm(MODIFICHE_PERSE)) return;
     stato.modificato = false;
     nascondiAvviso();
-    stato.scheda = b.dataset.scheda;
-    mostraElenco();
+    vaiAScheda(b.dataset.scheda);
   });
 });
 
@@ -323,6 +362,7 @@ const SCHEDE = {
   proposte: ['Proposte', 'I corti che i soci mandano dalla loro pagina. Si rileggono, si approvano e vanno in Cortoteca.'],
   opere: ['Opere', 'Tutte le opere del sito, pubblicate e non. Le produzioni CDL e i corti dei soci.'],
   eventi: ['Eventi', 'Gli eventi del sito, pubblicati e non, con i corti nati da ciascuno.'],
+  rullino: ['Rullino', 'Le foto che scorrono in home. Sceglile da ogni provenienza: al clic ognuna porta al suo evento, al suo corto o alla pagina indicata.'],
   soci: ['Soci', 'Il libro soci arriva dal foglio Google. Da qui si manda a ciascuno il collegamento personale per la Cortoteca.']
 };
 
@@ -344,23 +384,35 @@ $('nuovo').addEventListener('click', () => {
 });
 
 async function mostraElenco() {
+  // Uscendo da un modulo si torna al passo dell'elenco: ci pensa popstate
+  if (history.state?.modulo) {
+    history.back();
+    return;
+  }
   mostraVista('elenco');
   const elenco = $('elenco');
   elenco.innerHTML = '<li class="g-vuoto">Caricamento…</li>';
 
-  // Alla prima apertura si parte dalla Dashboard
-  if (!stato.scheda) stato.scheda = 'dashboard';
+  // Alla prima apertura si parte dalla scheda dell'indirizzo (#opere…),
+  // o dalla Dashboard
+  if (!stato.scheda) {
+    const daIndirizzo = location.hash.slice(1).split('/')[0];
+    stato.scheda = SCHEDE[daIndirizzo] ? daIndirizzo : 'dashboard';
+    history.replaceState({ scheda: stato.scheda }, '', '#' + stato.scheda);
+  }
   segnaScheda();
   $('nuovo').hidden = !['opere', 'eventi'].includes(stato.scheda);
   $('nuovo').textContent = stato.scheda === 'eventi' ? 'Nuovo evento' : 'Nuova opera';
   $('pannello-soci').hidden = stato.scheda !== 'soci';
   $('cruscotto').hidden = stato.scheda !== 'dashboard';
-  $('elenco').hidden = stato.scheda === 'dashboard';
+  $('rullino-gestione').hidden = stato.scheda !== 'rullino';
+  $('elenco').hidden = ['dashboard', 'rullino'].includes(stato.scheda);
 
   // Gli avvisi servono sempre: contatore nella barra, segni negli elenchi
   await caricaAvvisi();
 
   if (stato.scheda === 'dashboard') return mostraCruscotto();
+  if (stato.scheda === 'rullino') return mostraRullino();
   if (stato.scheda === 'proposte') return elencoProposte();
   if (stato.scheda === 'soci') return elencoSoci();
   return elencoOpereEventi();
@@ -453,6 +505,7 @@ function quandoBreve(iso) {
 async function mostraCruscotto() {
   $('numeri').innerHTML = '';
   $('attivita').innerHTML = '<li class="g-vuoto">Caricamento…</li>';
+  $('espandi-attivita').hidden = true;
   const { data, error } = await client.rpc('cruscotto', { p_quante: 40 });
   if (stato.scheda !== 'dashboard') return;
   if (error) {
@@ -483,13 +536,29 @@ async function mostraCruscotto() {
         <span>${esc(a.testo)}</span>
       </li>`).join('')
     : '<li class="g-vuoto">Ancora niente.</li>';
+  troncaAttivita(false);
 }
+
+/* Le ultime attività: le prime 10, le altre con "Espandi" */
+const ATTIVITA_VISIBILI = 10;
+
+function troncaAttivita(aperte) {
+  const voci = [...$('attivita').children];
+  voci.forEach((voce, i) => { voce.hidden = !aperte && i >= ATTIVITA_VISIBILI; });
+  const tasto = $('espandi-attivita');
+  tasto.hidden = voci.length <= ATTIVITA_VISIBILI;
+  tasto.setAttribute('aria-expanded', String(aperte));
+  tasto.textContent = aperte ? 'Riduci' : `Espandi (altre ${voci.length - ATTIVITA_VISIBILI})`;
+}
+
+$('espandi-attivita').addEventListener('click', (e) => {
+  troncaAttivita(e.currentTarget.getAttribute('aria-expanded') !== 'true');
+});
 
 $('numeri').addEventListener('click', (e) => {
   const b = e.target.closest('[data-vai]');
   if (!b) return;
-  stato.scheda = b.dataset.vai;
-  mostraElenco();
+  vaiAScheda(b.dataset.vai);
 });
 
 /* --------------------------------------------------------------------------
@@ -590,7 +659,7 @@ async function elencoSoci() {
         <div class="g-riga g-riga--ferma">
           <span class="g-riga-titolo">${esc(s.nome)}</span>
           <span class="g-riga-dati">${dati}</span>
-          <span class="g-segni">
+          <span class="g-segni g-segni--soci">
             <span class="g-segno ${s.in_regola ? 'g-segno--pubblicata' : 'g-segno--allarme'}">${s.in_regola ? 'In regola' : 'Non in regola'}</span>
             <button type="button" class="btn" data-invito="${i}" ${s.email ? '' : 'disabled'}>${s.invito_creato_il ? 'Nuovo collegamento' : 'Copia il collegamento'}</button>
           </span>
@@ -908,6 +977,7 @@ async function preparaTitolare(operaId) {
 
 async function apriOpera(id) {
   nascondiAvviso();
+  apriModulo();
   const modulo = $('modulo-opera');
   let opera = { anno: new Date().getFullYear(), pubblicata: false, generi: [] };
   let interpreti = [];
@@ -974,6 +1044,7 @@ function indirizzoPosta(email, oggetto, testo) {
 
 async function apriRevisione(proposta) {
   nascondiAvviso();
+  apriModulo();
   mostraVista('caricamento');
   const modulo = $('modulo-opera');
   const dati = proposta.dati || {};
@@ -1229,13 +1300,15 @@ $('modulo-opera').addEventListener('submit', async (e) => {
    -------------------------------------------------------------------------- */
 async function apriEvento(id) {
   nascondiAvviso();
+  apriModulo();
   const modulo = $('modulo-evento');
   mostraVista('caricamento');
 
-  let evento = { pubblicato: false };
-  let collegate = [];
+  let evento = { pubblicato: false, blocchi: [] };
 
-  const opere = await client.from('opere').select('id, titolo, anno').order('anno', { ascending: false });
+  // i corti che le voci dei programmi possono collegare alla Cortoteca
+  const opere = await client.from('opere').select('id, titolo, anno, pubblicata')
+    .order('anno', { ascending: false }).order('titolo');
   if (opere.error) {
     avviso(messaggioErrore(opere.error), true);
     mostraElenco();
@@ -1245,7 +1318,7 @@ async function apriEvento(id) {
   if (id) {
     const { data, error } = await client
       .from('eventi')
-      .select('*, eventi_opere(opera_id)')
+      .select('*')
       .eq('id', id)
       .single();
     if (error) {
@@ -1254,7 +1327,6 @@ async function apriEvento(id) {
       return;
     }
     evento = data;
-    collegate = data.eventi_opere.map((c) => c.opera_id);
   }
 
   modulo.reset();
@@ -1263,14 +1335,7 @@ async function apriEvento(id) {
   compilaModulo(modulo, evento);
   preparaCodice(modulo, !id);
   preparaImmagini(modulo);
-
-  $('opere-collegate').innerHTML = opere.data.length
-    ? opere.data.map((o) => `
-        <label class="g-spunta">
-          <input type="checkbox" data-opera="${o.id}" ${collegate.includes(o.id) ? 'checked' : ''}>
-          <span>${esc(o.titolo)} <small>(${esc(o.anno)})</small></span>
-        </label>`).join('')
-    : '<p class="g-vuoto">Nessuna opera in archivio.</p>';
+  preparaPaginaEvento(evento, opere.data); // gestione-eventi.js
 
   $('titolo-modulo-evento').textContent = id ? evento.titolo : 'Nuovo evento';
   modulo.querySelector('[data-elimina]').hidden = !id;
@@ -1295,25 +1360,16 @@ $('modulo-evento').addEventListener('submit', async (e) => {
 
   try {
     const dati = leggiModulo(modulo);
-    await caricaImmagini(modulo, dati);
+    await caricaImmagini(modulo, dati); // lo sfondo
+    await caricaFileEvento(dati); // logo, foto e blocchi (gestione-eventi.js)
 
-    let eventoId = id;
     if (id) {
       const { error } = await client.from('eventi').update(dati).eq('id', id);
       if (error) throw error;
     } else {
       const { data, error } = await client.from('eventi').insert(dati).select('id').single();
       if (error) throw error;
-      eventoId = data.id;
-    }
-
-    const collegate = [...$('opere-collegate').querySelectorAll('[data-opera]:checked')]
-      .map((c) => ({ evento_id: eventoId, opera_id: Number(c.dataset.opera) }));
-    const tolti = await client.from('eventi_opere').delete().eq('evento_id', eventoId);
-    if (tolti.error) throw tolti.error;
-    if (collegate.length) {
-      const { error } = await client.from('eventi_opere').insert(collegate);
-      if (error) throw error;
+      modulo.dataset.id = data.id;
     }
 
     stato.modificato = false;
@@ -1334,7 +1390,7 @@ $('modulo-evento').addEventListener('submit', async (e) => {
    -------------------------------------------------------------------------- */
 document.querySelectorAll('[data-annulla]').forEach((b) => {
   b.addEventListener('click', () => {
-    if (stato.modificato && !confirm('Ci sono modifiche non salvate. Uscire lo stesso?')) return;
+    if (stato.modificato && !confirm(MODIFICHE_PERSE)) return;
     stato.modificato = false;
     nascondiAvviso();
     mostraElenco();

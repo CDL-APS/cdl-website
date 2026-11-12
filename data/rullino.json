@@ -1,0 +1,66 @@
+[
+  {
+    "immagine": "assets/img/eventi/short-talks-al-not-2026/foto-6.jpg",
+    "descrizione": "Spettatori fra le poltrone del Supercinema",
+    "evento_id": 8,
+    "opera_id": null,
+    "pagina": null,
+    "posizione": 1
+  },
+  {
+    "immagine": "assets/img/eventi/long-story-short-2026/foto-3.jpg",
+    "descrizione": "Una troupe al tramonto in riva al mare",
+    "evento_id": 1,
+    "opera_id": null,
+    "pagina": null,
+    "posizione": 2
+  },
+  {
+    "immagine": "assets/img/eventi/short-talks-al-not-2025/foto-3.jpg",
+    "descrizione": "Il pubblico in sala",
+    "evento_id": 6,
+    "opera_id": null,
+    "pagina": null,
+    "posizione": 3
+  },
+  {
+    "immagine": "assets/img/eventi/long-story-short-2026/foto-4.jpg",
+    "descrizione": "Un operatore prepara la macchina da presa",
+    "evento_id": 1,
+    "opera_id": null,
+    "pagina": null,
+    "posizione": 4
+  },
+  {
+    "immagine": "assets/img/eventi/short-talks-2/foto-4.jpg",
+    "descrizione": "Un biglietto di Short Talks davanti alle poltrone della sala",
+    "evento_id": 3,
+    "opera_id": null,
+    "pagina": null,
+    "posizione": 5
+  },
+  {
+    "immagine": "assets/img/eventi/short-talks-off-1/foto-2.jpg",
+    "descrizione": "Un autore risponde alle domande del pubblico",
+    "evento_id": 4,
+    "opera_id": null,
+    "pagina": null,
+    "posizione": 6
+  },
+  {
+    "immagine": "assets/img/eventi/blue-hour/foto-1.jpg",
+    "descrizione": "Il pubblico sulla sabbia sotto le lanterne blu",
+    "evento_id": 5,
+    "opera_id": null,
+    "pagina": null,
+    "posizione": 7
+  },
+  {
+    "immagine": "assets/img/eventi/short-talks-al-not-2025/foto-6.jpg",
+    "descrizione": "Il pubblico durante il dialogo con gli autori",
+    "evento_id": 6,
+    "opera_id": null,
+    "pagina": null,
+    "posizione": 8
+  }
+]

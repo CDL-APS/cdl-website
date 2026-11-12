@@ -16,6 +16,8 @@
 --
 -- La sveglia di GitHub (.github/workflows/sveglia-supabase.yml) legge
 -- eventi?select=id: id resta leggibile. Le regole RLS non cambiano.
+-- Viene dopo 20261112210000_eventi_a_blocchi.sql, di cui elenca le colonne:
+-- un revoke sulla tabella toglie anche i permessi per colonna dati prima.
 -- authenticated (gestione e soci) e service_role mantengono i permessi
 -- sulla tabella intera.
 -- ==========================================================================
@@ -31,5 +33,6 @@ grant select (
 revoke select on public.eventi from anon;
 grant select (
   id, codice, titolo, data_inizio, data_fine, luogo, riassunto, descrizione,
-  copertina, miniatura, pagina, serie, pubblicato
+  copertina, miniatura, pagina, serie, pubblicato,
+  logo, colore, instagram, sfondo, presentazione, blocchi
 ) on public.eventi to anon;

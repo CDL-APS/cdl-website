@@ -30,7 +30,7 @@
     "altri_ruoli": [],
     "titolo_png": null,
     "titolo_font": null,
-    "colore": null,
+    "colore": "#a10000",
     "solo_scheda": false,
     "pubblicata": true,
     "interpreti": [
@@ -375,7 +375,7 @@
     "generi": [
       "thriller psicologico metafisico"
     ],
-    "tagline": "Non c'eri per l'inizio, non ci sarai per la fine",
+    "tagline": "Non c'eri per l'inizio, non ci sarai per la fine.",
     "sinossi": "Perso nel vuoto di un viaggio notturno, i pensieri di Tommaso si trasformano in un’ossessione che trasforma la strada in un labirinto mentale. Quando un messaggio enigmatico rompe la monotonia del viaggio, la sua ricerca di un senso devia verso l’ignoto, trascinandolo in un abisso metafisico dove il tempo si ripiega su se stesso. Qui, rivivere il passato non è più un ricordo ossessivo, ma una scelta.",
     "note_regia": null,
     "fotogramma": "opere/interzona-fotogramma-1791650175075.jpg",

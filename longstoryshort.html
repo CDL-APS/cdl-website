@@ -12,9 +12,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800;900&display=swap">
-    <link rel="stylesheet" href="assets/css/base.css?v=2026-11-12">
-    <link rel="stylesheet" href="assets/css/components.css?v=2026-11-12">
-    <link rel="stylesheet" href="assets/css/pages/evento.css?v=2026-11-12">
+    <link rel="stylesheet" href="assets/css/base.css?v=2026-11-12zg">
+    <link rel="stylesheet" href="assets/css/components.css?v=2026-11-12zg">
+    <link rel="stylesheet" href="assets/css/pages/evento.css?v=2026-11-12zg">
 </head>
 <body class="pagina-evento evento--longstoryshort">
 
@@ -26,7 +26,7 @@
             <a class="nav__voce nav__voce--produzioni" href="produzioni.html">Produzioni</a>
             <a class="nav__voce nav__voce--contatti" href="contatti.html#contatti">Contatti</a>
             <a class="nav__cortoteca" href="cortoteca.html"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.14v13.72L19 12 8 5.14Z"/></svg>Cortoteca</a>
-            <a class="btn btn--pieno nav__socio" href="contatti.html">Diventa socio</a>
+            <a class="btn btn--pieno nav__socio" href="vantaggi-tesseramento.html">Diventa socio</a>
         </div>
     </header>
 
@@ -37,15 +37,11 @@
                 <div class="presentazione entra">
                     <p><strong>Long Story Short</strong> &egrave; una sfida a tempo di brevi opere cinematografiche, a met&agrave; tra un laboratorio collettivo e un tradizionale contest di cortometraggi a tempo, in cui ogni troupe scrive, gira e monta un corto originale in pochi giorni.</p>
                     <p>Dal <strong>24 al 28 giugno 2026</strong> sette troupe, composte da pi&ugrave; di settanta partecipanti fra i 16 e i 35 anni, girano fra Rimini e dintorni. L&rsquo;evento di lancio, mercoled&igrave; 24 al <em>Cinema Teatro Tiberio</em>, svela la cornice narrativa che fa da contenitore ai cortometraggi e assegna a ogni troupe percorso e genere; alle 20:30 partono i quattro giorni di produzione.</p>
-                    <p>La serata finale, il <strong>10 luglio 2026</strong> al <em>Cinema Teatro Tiberio</em>, restituisce al pubblico i sette corti in sala, con le premiazioni della giuria di settore e della giuria stampa, il tutto seguito da una festa nel chiostro.</p>
                 </div>
             </div>
         </section>
 
-        <section class="blocco-pagina blocco-pagina--diviso entra" aria-labelledby="blocco-galleria">
-            <div class="wrap">
-                <h2 class="blocco-pagina__testa" id="blocco-galleria">Galleria</h2>
-            </div>
+        <section class="blocco-pagina blocco-pagina--diviso entra" aria-label="Galleria">
             <div class="rullino rullino--evento scorre">
                 <div class="scorre__finestra">
                     <div class="scorre__pista">
@@ -63,11 +59,47 @@
             </div>
         </section>
 
+        <!-- MATERIALI: la cornice narrativa raccontata, poi la pagina della
+             cornice e il regolamento -->
+        <section class="blocco-pagina blocco-pagina--diviso entra" aria-labelledby="blocco-materiali">
+            <div class="wrap">
+                <h2 class="sr-only" id="blocco-materiali">Materiali della prima edizione</h2>
+                <div class="blocco-testo">
+                    <p>La cornice narrativa della prima edizione &egrave; una metropolitana immaginaria di Rimini, con tre linee e tre temi: la <strong>Ciano</strong> (trasformazione), la <strong>Magenta</strong> (contrasto) e la <strong>Gialla</strong> (evidenza). Ogni linea ha tre generi cinematografici e le sue fermate, luoghi della citt&agrave; e da raccontare tramite la propria storia. All&rsquo;evento di lancio ogni troupe ha estratto un capolinea: il corto comincia o finisce l&igrave;, passa per una fermata intermedia e arriva al capolinea opposto, con le scene montate in quest&rsquo;ordine. Aggiungendo la fermata di scalo al proprio percorso si guadagnava la possibilit&agrave; di cambiare linea, e quindi genere.</p>
+                </div>
+                <ul class="righe-g">
+                    <li><a class="riga-g" href="cornicenarrativa.html">
+                        <span class="riga-g__titolo">Cornice narrativa</span>
+                        <span class="riga-g__freccia"><svg class="freccia" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h15"/><path d="m13 6 6 6-6 6"/></svg></span>
+                    </a></li>
+                    <li><a class="riga-g" href="https://drive.google.com/file/d/13YoJdutoPZ742wfnNk6AIJzraTnp3wLo/view?usp=drive_link" target="_blank" rel="noopener">
+                        <span class="riga-g__titolo">Regolamento ufficiale</span>
+                        <span class="riga-g__freccia"><svg class="freccia" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h6"/></svg></span>
+                    </a></li>
+                </ul>
+            </div>
+        </section>
+
         <!-- VINCITORI: i sette corti della prima edizione, ognuno coi suoi
              premi; Path, Miglior film, apre il blocco più grande -->
         <section class="blocco-pagina blocco-pagina--diviso entra" aria-labelledby="blocco-vincitori">
             <div class="wrap">
-                <h2 class="blocco-pagina__testa" id="blocco-vincitori">Vincitori</h2>
+                <h2 class="sr-only" id="blocco-vincitori">Vincitori</h2>
+                <div class="blocco-testo">
+                    <p>La serata finale, il <strong>10 luglio 2026</strong> al <em>Cinema Teatro Tiberio</em>, restituisce al pubblico i sette corti in sala, con le premiazioni della giuria di settore e della giuria stampa, il tutto seguito da una festa nel chiostro.</p>
+                    <p>I premi assegnati:</p>
+                    <ul class="blocco-testo__elenco">
+                        <li><strong>Miglior film</strong>: un premio in denaro di 500 euro;</li>
+                        <li><strong>Miglior regia</strong>: l&rsquo;invito a presentare il proprio lavoro al prossimo Short Talks;</li>
+                        <li><strong>Miglior soggetto</strong>: una consulenza di CDL per la pre-produzione di un nuovo progetto;</li>
+                        <li><strong>Miglior interpretazione</strong>: tre mesi di borsa di studio alla Valigia dell&rsquo;Attore, con due menzioni;</li>
+                        <li><strong>Miglior fotografia</strong>: una giornata nello studio di posa di Studio Jam;</li>
+                        <li><strong>Miglior montaggio</strong>: la finalizzazione e la consegna di un progetto con Arkadia Studios;</li>
+                        <li><strong>Miglior sonoro</strong>;</li>
+                        <li><strong>Miglior produzione</strong>, con una menzione;</li>
+                        <li><strong>Premio stampa &ldquo;Nuovi Sguardi&rdquo;</strong>, assegnato dalla giuria di The Soundcheck.</li>
+                    </ul>
+                </div>
                 <ul class="vincitori">
                     <li class="vincitore vincitore--primo">
                         <span class="cornice"><img src="assets/img/eventi/long-story-short-2026/vincitori/path.jpg" alt="Un uomo col fez rosso legge un foglio a una scrivania" loading="lazy"></span>
@@ -148,22 +180,6 @@
             </div>
         </section>
 
-        <section class="blocco-pagina blocco-pagina--diviso entra" aria-labelledby="blocco-materiali">
-            <div class="wrap">
-                <h2 class="blocco-pagina__testa" id="blocco-materiali">Materiali della prima edizione</h2>
-                <ul class="righe-g">
-                    <li><a class="riga-g" href="cornicenarrativa.html">
-                        <span class="riga-g__titolo">Cornice narrativa</span>
-                        <span class="riga-g__freccia"><svg class="freccia" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h15"/><path d="m13 6 6 6-6 6"/></svg></span>
-                    </a></li>
-                    <li><a class="riga-g" href="https://drive.google.com/file/d/13YoJdutoPZ742wfnNk6AIJzraTnp3wLo/view?usp=drive_link" target="_blank" rel="noopener">
-                        <span class="riga-g__titolo">Regolamento ufficiale</span>
-                        <span class="riga-g__freccia"><svg class="freccia" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h6"/></svg></span>
-                    </a></li>
-                </ul>
-            </div>
-        </section>
-
         <section class="blocco-pagina blocco-pagina--diviso entra" aria-labelledby="blocco-partner">
             <div class="wrap">
                 <h2 class="blocco-pagina__testa" id="blocco-partner">Partner</h2>
@@ -186,25 +202,18 @@
         <div class="piede">
             <div class="wrap piede__riga">
                 <a href="index.html" aria-label="CDL, pagina iniziale"><span class="logo"></span></a>
-                <nav class="piede__elenchi" aria-label="Pagine e contatti">
-                    <ul>
-                        <li><a href="eventi.html">Eventi</a></li>
-                        <li><a href="produzioni.html">Produzioni</a></li>
-                        <li><a href="cortoteca.html">Cortoteca</a></li>
-                        <li><a href="vantaggi-tesseramento.html">Vantaggi per i soci</a></li>
-                    </ul>
-                    <ul id="contatti">
-                        <li><a href="https://instagram.com/cdl_aps" target="_blank" rel="noopener">Instagram <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h6"/></svg></a></li>
-                        <li><a href="https://www.youtube.com/@cdl_aps" target="_blank" rel="noopener">YouTube <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h6"/></svg></a></li>
-                        <li><a href="mailto:ciao@cdlaps.com">ciao@cdlaps.com</a></li>
-                    </ul>
-                </nav>
-                <p class="piede__dati">Associazione di promozione del cinema giovane e indipendente<br>
-                CDL APS &bull; Viale Laurana 13, Rimini, 47921 &bull; CF: 91200080405 &bull; 2026</p>
+                <ul class="piede__social">
+                    <li><a href="https://instagram.com/cdl_aps" target="_blank" rel="noopener">Instagram <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h6"/></svg></a></li>
+                    <li><a href="https://www.youtube.com/@cdl_aps" target="_blank" rel="noopener">YouTube <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h6"/></svg></a></li>
+                </ul>
+                <p class="piede__dati">CDL APS, 2026<br>
+                Associazione di promozione sociale<br>
+                Sede legale: Viale Laurana 13, 47921 Rimini<br>
+                CF 91200080405</p>
             </div>
         </div>
     </footer>
 
-    <script src="assets/js/comune.js?v=2026-11-12"></script>
+    <script src="assets/js/comune.js?v=2026-11-12zg"></script>
 </body>
 </html>
