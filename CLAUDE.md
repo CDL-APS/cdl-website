@@ -4,6 +4,48 @@ Sito statico di CDL APS. Nessun build step, nessuna dipendenza npm: i file
 sorgente sono quelli pubblicati. Netlify serve la radice del repository così
 com'è.
 
+**Vederlo in locale**: dalla cartella del progetto
+`python3 -m http.server 5500`, poi `http://localhost:5500` (Ctrl+C per
+fermarlo). Dentro Claude Code: `! python3 -m http.server 5500`.
+
+## Redesign: da fare prima e dopo il deploy (togliere quando fatto)
+
+Il redesign sta sul branch `redesign` (dettagli in
+`storico/2026-11-12-handoff-redesign-nel-sito.md`). Finché questa lista non
+è vuota, ricordala all'utente quando si parla di pubblicare.
+
+Prima di unire:
+
+- [ ] Prove in gestione con un accesso vero (solo l'utente: password e
+  codice 2FA), dalla copia locale: un'opera con colore e "Solo la scheda",
+  un titolo grafico in PNG e uno come carattere, l'approvazione di una
+  proposta. Poi guardarle in Cortoteca, nella pagina del corto e in
+  Produzioni; cancellare le opere di prova.
+- [ ] Pull request `redesign` → `main`, unita da GitHub con l'account
+  `cdl-aps` e un merge commit (vedi "Pubblicazione" più sotto).
+
+Subito dopo il deploy:
+
+- [ ] Applicare `supabase/migrations/20261112180000_colonne_pubbliche.sql`
+  (non prima: il sito vecchio legge con `select=*` e ripiegherebbe sulle
+  copie di riserva). Poi aprire home, Cortoteca, Eventi e Produzioni: in
+  console non deve comparire "uso la copia di riserva".
+- [ ] Netlify → Forms: attivare *Form detection* e una notifica email per
+  modulo (`contatti` → ciao@, `contatti-eventi` → eventi@,
+  `contatti-produzione` → produzione@cdlaps.com); un invio di prova per
+  ogni motivo del modulo di Contatti.
+- [ ] `curl -I` su `/gestione.html`, `/gestione`, `/proponi.html`,
+  `/proponi`: devono avere la Content-Security-Policy e
+  `Cache-Control: no-store`; su proponi anche `Referrer-Policy: no-referrer`.
+- [ ] Rigenerare dal sito online ("Nuovo collegamento", scheda Soci) i
+  collegamenti dei soci creati in locale: puntano a `localhost`.
+- [ ] Supabase → Authentication: attivare "Secure password change".
+- [ ] Ricaricare dalla gestione, come PNG, i titoli di Interzona, Quarto
+  Livello, Relatività e Viva Revolution; poi togliere `TITOLI_GRAFICI` da
+  `comune.js` e la cartella `assets/img/film/titoli/`.
+- [ ] Un giro del sito su un iPhone e su Safari (mai provati su dispositivi
+  veri).
+
 ## Convenzioni
 
 - **CSS**: `base.css` (colori, misure, griglia, titoli) → `components.css`
@@ -264,7 +306,7 @@ com'è.
 ```bash
 python3 -m json.tool data/opere.json > /dev/null  # le copie di riserva sono valide
 python3 -m json.tool data/eventi.json > /dev/null
-python3 -m http.server 5500                        # poi controlla le pagine
+python3 -m http.server 5500                        # poi http://localhost:5500
 ```
 
 Aprire almeno home, cortoteca, produzioni, eventi e una pagina di un corto:

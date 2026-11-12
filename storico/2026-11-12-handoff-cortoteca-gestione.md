@@ -1,5 +1,13 @@
 # Handoff — Cortoteca dei soci e gestione (12 novembre 2026)
 
+> **Aggiornamento del 12 novembre 2026, sera.** Il punto 1 di "Cosa resta"
+> è fatto con il porting del redesign: il sito mostra il titolo grafico (PNG
+> o carattere) e non promette lo streaming alle opere con la sola scheda
+> (colonna `opere.solo_scheda`). La gestione nuova va online con il redesign;
+> fino ad allora vale l'avviso sul 2FA qui sotto. Vedi
+> [`2026-11-12-handoff-redesign-nel-sito.md`](2026-11-12-handoff-redesign-nel-sito.md)
+> e la lista in cima a `CLAUDE.md`.
+
 Passaggio di consegne dopo due giorni di lavoro sull'infrastruttura della
 Cortoteca. Il progetto e le motivazioni stanno in
 `storico/2026-11-11-cortoteca-infrastruttura.md`; le regole per chi tocca il

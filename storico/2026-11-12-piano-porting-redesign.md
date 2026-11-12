@@ -1,5 +1,10 @@
 # Piano — portare il redesign dalle anteprime al sito vero (12 novembre 2026)
 
+> **Eseguito il 12 novembre 2026.** Decisioni, verifiche ed esito in
+> [`2026-11-12-handoff-redesign-nel-sito.md`](2026-11-12-handoff-redesign-nel-sito.md);
+> ciò che resta da fare è in cima a `CLAUDE.md`. `anteprime/` e `genera.py`,
+> di cui parla questo piano, non esistono più.
+
 Piano di lavoro per l'agente che farà il porting. Va letto per intero prima
 di toccare un file. Le regole generali stanno in `CLAUDE.md`; quelle visive in
 [`2026-11-11-design-handoff.md`](2026-11-11-design-handoff.md); come sono

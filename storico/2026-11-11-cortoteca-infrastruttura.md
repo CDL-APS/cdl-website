@@ -34,7 +34,7 @@ legale) stanno nel documento "Cortoteca — regolamento, licenza e delibera
 
 | Cosa | Com'è oggi |
 |---|---|
-| Sito | Statico su Netlify, nessun build step. Redesign in corso in `anteprime/` (branch `redesign`). |
+| Sito | Statico su Netlify, nessun build step. Redesign portato nella radice il 12 novembre 2026 (branch `redesign`). |
 | Database | Supabase, piano gratuito, regione `eu-west-1`. 7 opere tutte pubblicate (2 con video, entrambe su YouTube), 8 eventi. 13 MB di database, 14,5 MB di immagini. |
 | Accessi | Un solo account, che è anche l'unico redattore. Iscrizioni pubbliche disattivate (verificato sull'endpoint di Auth). Nessun secondo fattore. |
 | Regole di accesso | RLS attiva su tutte le tabelle; scrive solo chi è in `privato.redattori`; lo schema `privato` non è esposto dalla Data API. Il controllo di sicurezza di Supabase non segnala nulla su queste tabelle. |

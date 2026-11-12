@@ -8,9 +8,19 @@ compilare — i file che vedi sono esattamente quelli che finiscono online.
 
 ## Come vederlo in locale
 
-Apri la cartella in VS Code, poi clic destro su `index.html` → **Open with Live
-Server**. Il sito si apre su `http://localhost:5500` e si ricarica da solo a
-ogni salvataggio.
+Da terminale, nella cartella del progetto:
+
+```bash
+cd ~/Code/CDL-Web
+python3 -m http.server 5500
+```
+
+poi apri `http://localhost:5500` nel browser (Ctrl+C nel terminale per
+fermarlo). Dentro Claude Code basta scrivere `! python3 -m http.server 5500`.
+
+In alternativa, apri la cartella in VS Code, poi clic destro su `index.html` →
+**Open with Live Server**: si apre sullo stesso indirizzo e si ricarica da solo
+a ogni salvataggio.
 
 > **Serve un server, non basta il doppio clic sul file.** Le pagine leggono
 > opere ed eventi dal database con richieste di rete, e la copia di riserva
@@ -18,12 +28,6 @@ ogni salvataggio.
 > aperta come `file://`. Con Live Server funziona
 > tutto. L'estensione è già fra quelle consigliate in `.vscode/extensions.json`:
 > VS Code te la propone da solo la prima volta che apri il progetto.
-
-In alternativa, da terminale nella cartella del progetto:
-
-```bash
-python3 -m http.server 5500
-```
 
 ---
 
@@ -236,6 +240,11 @@ personale, per esempio dopo un push diretto, resta tutto bloccato, compreso
 un deploy caricato a mano dal connettore o dalla CLI di Netlify. Per
 sbloccare basta unire con `cdl-aps` una pull request qualsiasi: il commit di
 unione pubblica `main` così com'è, compresi i commit precedenti.
+
+**Redesign (novembre 2026)**: le cose da fare prima di unire il branch
+`redesign` e subito dopo il deploy (una migrazione da applicare, le notifiche
+dei moduli di Contatti, i controlli sugli header…) sono in cima a `CLAUDE.md`,
+come lista da spuntare.
 
 `netlify.toml` contiene i redirect dai vecchi indirizzi: **non vanno rimossi**,
 servono a non rompere i link già condivisi su Instagram e nelle chat.

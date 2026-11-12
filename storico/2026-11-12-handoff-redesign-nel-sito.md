@@ -7,8 +7,10 @@ Le regole per chi tocca il codice sono in `CLAUDE.md`; le scelte visive in
 
 ## Dove siamo
 
-Tutto sta sul branch `redesign`, un commit per fase (da "Fase 0" a "Fase 8").
-Non c'è ancora né push né pull request. Il sito della radice è quello delle
+Tutto sta sul branch `redesign`, un commit per fase (da "Fase 0" a "Fase 8"),
+pubblicato su GitHub (`origin/redesign`). La pull request verso `main` non è
+ancora aperta: l'utente prova la gestione e continua le correzioni sul
+branch. Il sito della radice è quello delle
 anteprime approvate ("proposta G"); `anteprime/` non esiste più.
 
 - Pagine pubbliche: `index.html`, `cortoteca.html`, `opera.html`,
@@ -115,22 +117,13 @@ repository):
 
 ## Cosa resta da fare
 
-Dopo il merge (PR `redesign` → `main`, unita da GitHub con l'account
-`cdl-aps`, merge commit):
-
-1. Applicare `20261112180000_colonne_pubbliche.sql` e controllare che home,
-   Cortoteca, Eventi e Produzioni leggano ancora dal database (in console
-   non deve comparire "uso la copia di riserva").
-2. Netlify → Forms: attivare *Form detection* e una notifica per modulo
-   (`contatti` → ciao@, `contatti-eventi` → eventi@, `contatti-produzione`
-   → produzione@cdlaps.com); un invio di prova per ogni motivo.
-3. `curl -I` su `/gestione.html`, `/gestione`, `/proponi.html`, `/proponi`:
-   devono avere la CSP e `Cache-Control: no-store`.
-4. Rigenerare dal sito online i collegamenti dei soci creati in locale.
-5. Supabase Auth: attivare "Secure password change" (dashboard).
-6. Ricaricare dalla gestione i titoli grafici di Interzona, Quarto Livello,
-   Relatività e Viva Revolution come PNG; poi togliere `TITOLI_GRAFICI`
-   (`comune.js`) e `assets/img/film/titoli/`.
+La lista da spuntare, prima di unire e subito dopo il deploy, sta in cima a
+`CLAUDE.md` ("Redesign: da fare prima e dopo il deploy"), così ogni sessione
+di lavoro la vede. In breve: prove in gestione con un accesso vero, PR unita
+da `cdl-aps`, poi la migrazione delle colonne pubbliche, le notifiche dei
+moduli di Contatti su Netlify, il controllo degli header, i collegamenti dei
+soci da rigenerare, "Secure password change" in Supabase, i quattro titoli
+grafici da ricaricare come PNG, un giro su iPhone e Safari.
 
 File non più mostrati da nessuna pagina, lasciati perché sono contenuti e
 non codice: le locandine in `assets/img/eventi/*/locandina.jpg`, le foto

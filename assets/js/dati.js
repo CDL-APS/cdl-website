@@ -1,6 +1,7 @@
 /* ==========================================================================
    DATI — opere ed eventi, comune a tutte le pagine che li mostrano: home,
-   Cortoteca, Produzioni, scheda opera, Eventi.
+   Cortoteca, Produzioni, pagina del corto, Eventi. Lo usano anche gestione
+   e proposta (urlImmagine, esc, indirizzoSicuro).
 
    La fonte è il database Supabase dell'associazione. Se non risponde (per
    esempio perché il progetto è in pausa) le pagine ripiegano sulla copia di
@@ -122,8 +123,9 @@ function collaborazioniCdl(opere) {
 }
 
 /* Trasforma un link YouTube o Vimeo nel corrispondente URL di embed.
-   Restituisce null se il campo è vuoto o non riconosciuto: la scheda opera
-   mostra allora "streaming in arrivo" e la Cortoteca l'icona info. */
+   Restituisce null se il campo è vuoto o non riconosciuto: la pagina del
+   corto resta un'immagine (con "Streaming in arrivo", se l'opera non è
+   segnata come sola scheda) e la Cortoteca non mostra il tasto Guarda. */
 function getEmbedUrl(url) {
   if (!url || url.trim() === '') return null;
 
@@ -207,20 +209,4 @@ function esc(testo) {
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#39;');
-}
-
-/* Il riassunto va a capo solo dopo una virgola: ogni pezzo fra due virgole
-   è uno span che non si spezza. Così una tagline come "Non c'eri per
-   l'inizio, non ci sarai per la fine" si divide nei suoi due versi invece
-   che a metà frase. Un pezzo troppo lungo per la riga va a capo comunque
-   (vedi components.css). Serve alla home e al primo piano di Produzioni. */
-function scriviRiassunto(elemento, testo) {
-  elemento.replaceChildren();
-  testo.split(/(?<=,)\s+/).forEach((pezzo, i) => {
-    if (i > 0) elemento.append(' ');
-    const span = document.createElement('span');
-    span.className = 'riassunto-pezzo';
-    span.textContent = pezzo;
-    elemento.append(span);
-  });
 }
