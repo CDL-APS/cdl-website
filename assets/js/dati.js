@@ -48,10 +48,15 @@ async function leggiSupabase(tabella, query) {
   }
 }
 
+/* La copia di riserva contiene anche ciò che non è pubblicato (per esempio
+   un'opera nascosta perché il socio non ha rinnovato la quota): qui si tiene
+   solo ciò che il database darebbe a chi visita il sito */
 async function leggiRiserva(tabella) {
   const response = await fetch(RISERVA[tabella]);
   if (!response.ok) throw new Error('Copia di riserva non trovata: ' + RISERVA[tabella]);
-  return response.json();
+  const righe = await response.json();
+  const campo = tabella === 'opere' ? 'pubblicata' : 'pubblicato';
+  return righe.filter((riga) => riga[campo] === true);
 }
 
 /* Prima il database, poi la copia di riserva */
@@ -64,9 +69,26 @@ async function leggi(tabella, query) {
   }
 }
 
+/* Le colonne che il sito legge, una per una. Chi visita il sito (ruolo anon)
+   può leggere solo queste: la data di creazione o chi ha fatto l'ultima
+   modifica restano alla gestione. Una colonna nuova da mostrare va aggiunta
+   qui e nei permessi del database (vedi supabase/migrations/, "colonne
+   pubbliche"). */
+const COLONNE_OPERE = [
+  'id', 'codice', 'titolo', 'anno', 'durata', 'regista', 'produzione', 'produzione_cdl', 'collaborazione_cdl',
+  'generi', 'tagline', 'sinossi', 'note_regia', 'fotogramma', 'video_url', 'letterboxd_url',
+  'sceneggiatura', 'produttore', 'fotografia', 'montaggio', 'colonna_sonora', 'scenografia', 'trucco', 'costumi',
+  'suono', 'altri_ruoli', 'titolo_png', 'titolo_font', 'pubblicata'
+].join(',');
+
+const COLONNE_EVENTI = [
+  'id', 'codice', 'titolo', 'data_inizio', 'data_fine', 'luogo', 'riassunto', 'descrizione',
+  'copertina', 'miniatura', 'pagina', 'serie', 'pubblicato'
+].join(',');
+
 // Gli interpreti arrivano già annidati in ogni opera, nell'ordine del cast
 const QUERY_OPERE =
-  'select=*,interpreti(posizione,nome,ruolo)&pubblicata=eq.true&order=id&interpreti.order=posizione';
+  `select=${COLONNE_OPERE},interpreti(posizione,nome,ruolo)&pubblicata=eq.true&order=id&interpreti.order=posizione`;
 
 async function caricaOpere() {
   return leggi('opere', QUERY_OPERE);
@@ -79,7 +101,7 @@ async function caricaOpera(codice) {
 
 /* Eventi pubblicati, dal più recente */
 async function caricaEventi() {
-  const eventi = await leggi('eventi', 'select=*&pubblicato=eq.true&order=data_inizio.desc');
+  const eventi = await leggi('eventi', `select=${COLONNE_EVENTI}&pubblicato=eq.true&order=data_inizio.desc`);
   return eventi.sort((a, b) => b.data_inizio.localeCompare(a.data_inizio));
 }
 
@@ -165,6 +187,15 @@ function mostraImmagine(img, percorso) {
 function indirizzoSicuro(indirizzo) {
   if (!indirizzo) return null;
   return /^(https?:\/\/|[a-z0-9-]+\.html(\?.*)?$)/i.test(indirizzo) ? indirizzo : null;
+}
+
+/* La pagina di un evento: solo il nome di un file del sito
+   (short-talks-1.html), niente indirizzi esterni né parametri. La pagina
+   Eventi la scarica e ne inserisce il contenuto: un indirizzo esterno
+   porterebbe dentro il sito una pagina di altri. */
+function paginaEvento(evento) {
+  const pagina = (evento && evento.pagina) || '';
+  return /^[a-z0-9-]+\.html$/.test(pagina) ? pagina : null;
 }
 
 /* Testo sicuro da inserire in un modello HTML: i dati arrivano da un modulo

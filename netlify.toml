@@ -129,6 +129,9 @@
 # potrebbe portare via la sessione. Vietano anche di essere mostrate dentro
 # un'altra pagina. Chi aggiunge a queste pagine uno script, un font o
 # un'immagine da un altro indirizzo deve aggiungerlo anche qui.
+# Netlify serve le pagine anche senza ".html" (/gestione, /proponi): ogni
+# regola compare due volte, una per indirizzo, e le due copie vanno tenute
+# uguali.
 [[headers]]
   for = "/gestione.html"
   [headers.values]
@@ -136,7 +139,20 @@
     Cache-Control = "no-store"
 
 [[headers]]
+  for = "/gestione"
+  [headers.values]
+    Content-Security-Policy = "default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob: https://rsspmqhhrykbmrkmwqcg.supabase.co; connect-src 'self' https://rsspmqhhrykbmrkmwqcg.supabase.co; object-src 'none'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'"
+    Cache-Control = "no-store"
+
+[[headers]]
   for = "/proponi.html"
+  [headers.values]
+    Content-Security-Policy = "default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob: https://rsspmqhhrykbmrkmwqcg.supabase.co; connect-src 'self' https://rsspmqhhrykbmrkmwqcg.supabase.co; object-src 'none'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'"
+    Cache-Control = "no-store"
+    Referrer-Policy = "no-referrer"
+
+[[headers]]
+  for = "/proponi"
   [headers.values]
     Content-Security-Policy = "default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob: https://rsspmqhhrykbmrkmwqcg.supabase.co; connect-src 'self' https://rsspmqhhrykbmrkmwqcg.supabase.co; object-src 'none'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'"
     Cache-Control = "no-store"

@@ -22,7 +22,7 @@ async function ultimoEvento() {
   if (!box || !evento) return;
 
   riempiRiquadro(box, {
-    href: indirizzoSicuro(evento.pagina) || 'eventi.html',
+    href: paginaEvento(evento) || 'eventi.html',
     immagine: evento.copertina || evento.miniatura,
     titolo: evento.titolo,
     riassunto: evento.riassunto || evento.luogo || ''

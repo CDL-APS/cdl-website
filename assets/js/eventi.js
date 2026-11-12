@@ -15,7 +15,7 @@ const ICONA_FRECCIA_EVENTO =
 /* Riquadro di un evento: la foto sopra e, sotto il filetto, anno, titolo e
    riassunto */
 function riquadroEvento(evento) {
-  const pagina = indirizzoSicuro(evento.pagina);
+  const pagina = paginaEvento(evento);
   const riquadro = document.createElement(pagina ? 'a' : 'div');
   riquadro.className = 'riquadro';
   if (pagina) riquadro.href = pagina;
@@ -48,7 +48,7 @@ function riempiBlocco(id, eventi) {
 function riempiPrimoPiano(evento) {
   if (!evento) return;
   const box = document.getElementById('primo-piano');
-  const pagina = indirizzoSicuro(evento.pagina);
+  const pagina = paginaEvento(evento);
   if (pagina) box.href = pagina;
   else box.querySelector('.freccia').remove();
 

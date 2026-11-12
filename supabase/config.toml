@@ -1,0 +1,9 @@
+# Configurazione della CLI di Supabase per questo repository.
+# Serve soprattutto alla pubblicazione delle Edge Function: senza questa
+# sezione, "supabase functions deploy accesso-socio" riattiverebbe la verifica
+# del JWT, e il collegamento personale dei soci smetterebbe di funzionare
+# (chi lo apre non ha ancora una sessione: la funzione serve proprio a dargliela).
+project_id = "cdl-web"
+
+[functions.accesso-socio]
+verify_jwt = false
