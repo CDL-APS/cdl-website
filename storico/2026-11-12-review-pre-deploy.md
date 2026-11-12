@@ -34,16 +34,15 @@ licenze uguali al database.
 
 ## Da decidere con l'utente prima di unire
 
-1. **Short Talks #1 va online col modello.** Nel database ha già
+1. **Short Talks #1 va online col modello.** L'utente decide dopo le sue
+   prove del modello degli eventi. Nel database ha già
    presentazione e blocchi: dal deploy home, Eventi e rullino portano a
    `evento.html?e=short-talks-1`. Nei controlli era identica al pixel alla
    pagina scritta a mano, ma l'utente non l'ha ancora provata. In
    alternativa si svuotano presentazione e blocchi (torna alla pagina
    scritta a mano).
-2. **Contatti dal telefono**: sotto i 520 px la barra nasconde Contatti e il
-   piede non ha un collegamento a Contatti; da quasi tutte le pagine il
-   telefono non ci arriva (si arriva solo da Sostieni in home, Contatti e
-   Vantaggi).
+2. ~~Contatti dal telefono~~ — risolto: "Contatti" è nel piede, sulla riga
+   di Instagram e YouTube, su tutte le pagine (decisione dell'utente).
 
 ## Possono aspettare (dopo il deploy)
 

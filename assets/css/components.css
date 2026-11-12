@@ -143,7 +143,7 @@ main > section,
 }
 
 @media (max-width: 519px) {
-  .nav__voce--contatti { display: none; } /* sotto i 520 px restano Eventi, Produzioni e Cortoteca */
+  .nav__voce--contatti { display: none; } /* sotto i 520 px restano Eventi, Produzioni e Cortoteca; Contatti è nel piede */
 }
 
 /* Schermi molto stretti (320 px): la barra stringe ancora */
@@ -249,8 +249,9 @@ a:hover > .cornice img, a.cornice:hover img { transform: scale(1.03); }
 
 /* --------------------------------------------------------------------------
    Piede: nero, angoli alti arrotondati. Al centro il marchio, sotto
-   Instagram e YouTube (con l'icona del link esterno) e i dati
-   dell'associazione su quattro righe, senza fili
+   Contatti, Instagram e YouTube (questi due con l'icona del link esterno:
+   portano fuori) e i dati dell'associazione su quattro righe, senza fili.
+   Sul telefono la barra non ha Contatti: ci si arriva da qui
    -------------------------------------------------------------------------- */
 .piede {
   border-radius: clamp(28px, 4.5vw, 60px) clamp(28px, 4.5vw, 60px) 0 0;
@@ -261,10 +262,10 @@ a:hover > .cornice img, a.cornice:hover img { transform: scale(1.03); }
 .piede__riga { display: flex; flex-direction: column; align-items: center; gap: clamp(16px, 2vw, 22px); text-align: center; }
 .piede__riga > a { display: grid; place-items: center; min-width: 44px; min-height: 44px; }
 .piede .logo { width: 72px; color: var(--lilla); }
-.piede__social { display: flex; flex-wrap: wrap; justify-content: center; gap: 0 28px; }
-.piede__social a { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; font-size: 15px; font-weight: 700; text-decoration: underline; text-decoration-color: transparent; text-decoration-thickness: 2px; text-underline-offset: 4px; transition: text-decoration-color 0.15s var(--ease); }
-.piede__social a:hover, .piede__social a:focus-visible { text-decoration-color: currentColor; }
-.piede__social svg { width: 13px; height: 13px; flex: none; }
+.piede__collegamenti { display: flex; flex-wrap: wrap; justify-content: center; gap: 0 28px; }
+.piede__collegamenti a { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; font-size: 15px; font-weight: 700; text-decoration: underline; text-decoration-color: transparent; text-decoration-thickness: 2px; text-underline-offset: 4px; transition: text-decoration-color 0.15s var(--ease); }
+.piede__collegamenti a:hover, .piede__collegamenti a:focus-visible { text-decoration-color: currentColor; }
+.piede__collegamenti svg { width: 13px; height: 13px; flex: none; }
 .piede__dati { font-size: 13px; line-height: 1.7; color: rgba(247, 247, 247, 0.78); }
 
 

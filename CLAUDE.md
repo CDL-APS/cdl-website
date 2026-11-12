@@ -16,13 +16,6 @@ Il redesign sta sul branch `redesign` (dettagli in
 
 Prima di unire:
 
-- [ ] Prove in gestione con un accesso vero (solo l'utente: password e
-  codice 2FA), dalla copia locale: un'opera con colore e "Solo la scheda",
-  un titolo grafico in PNG e uno come carattere, l'approvazione di una
-  proposta. Poi guardarle in Cortoteca, nella pagina del corto e in
-  Produzioni; cancellare le opere di prova. Provare anche la scheda
-  Rullino (aggiungi, sposta, togli, Mescola, carica un'altra foto, poi la
-  home) e il tasto Indietro fra schede e moduli.
 - [ ] Review del diff `main...redesign` con la skill `/code-review` (e
   `/security-review` per gestione, proposta e migrazioni), a lavoro
   committato e prima di aprire la pull request. Richiesta dall'utente:
@@ -34,7 +27,13 @@ Prima di unire:
   evento di prova con logo, colore, presentazione, un programma con un
   corto della Cortoteca e qualche foto, un testo; Anteprima prima di
   salvare; salvarlo pubblicato, guardarlo in Eventi (sala) e da
-  `evento.html?e=<codice>`; poi eliminarlo.
+  `evento.html?e=<codice>`; poi eliminarlo. Insieme, decidere se Short
+  Talks #1 va online già composta dal database (oggi ha presentazione e
+  blocchi) o se svuotarli e tenerla sulla pagina scritta a mano fino alla
+  fase 3.
+- [ ] Check generale della visualizzazione da telefono (375 px, e qualche
+  larghezza intermedia) su tutte le pagine pubbliche e sulla gestione:
+  richiesta dell'utente.
 - [ ] Pull request `redesign` → `main`, unita da GitHub con l'account
   `cdl-aps` e un merge commit (vedi "Pubblicazione" più sotto).
 
