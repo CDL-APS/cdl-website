@@ -6,33 +6,51 @@ com'è.
 
 ## Convenzioni
 
-- **CSS**: `base.css` (variabili di brand e fondamenta) → `components.css`
-  (elementi su più pagine) → `pages/<pagina>.css` (specifico). I tre fogli si
-  caricano sempre in quest'ordine. Non reintrodurre blocchi `<style>` inline
-  nelle pagine: erano la causa principale della duplicazione precedente.
+- **CSS**: `base.css` (colori, misure, griglia, titoli) → `components.css`
+  (elementi su più pagine) → `pages/<pagina>.css` (specifico). I fogli si
+  caricano sempre in quest'ordine. Eccezioni: `cortoteca.html` carica anche
+  `pages/opera.css` (la sala del corto) ed `eventi.html` anche
+  `pages/evento.css` (la sala dell'evento), prima del proprio;
+  `gestione.html` e `proponi.html` caricano `pages/riservato.css` (barra e
+  moduli comuni) prima del proprio. Non reintrodurre blocchi `<style>` nelle
+  pagine. Gli attributi `style=` restano solo per i dati di una singola
+  pagina pubblica (occhi `--x`/`--y`/`--d`, larghezze dei partner `--w`,
+  proporzioni delle foto `--rapporto`); mai in gestione e proposta, dove la
+  CSP li blocca. In fondo a `base.css` ci sono gli alias dei nomi vecchi
+  (`--cdl-*`, `--riga`…), solo per riservato, gestione, proposta e cornice.
 - **JS**: un file per pagina in `assets/js/`, caricato in fondo al `<body>`.
-  Fanno eccezione tre file comuni: `barra.js` (indicatore della barra, su
-  tutte le pagine), `dati.js` (lettura di opere ed eventi, da caricare prima
-  dello script della pagina) e `riservato.js` (parti condivise da
-  `gestione.html` e `proponi.html`, dopo `dati.js`). Non ci sono moduli ES né
-  bundler: le funzioni sono globali. Le librerie di terzi stanno copiate in
+  File comuni: `dati.js` (lettura di opere ed eventi, per primo), `comune.js`
+  (scritte a tutta larghezza, occhi, rullini, schede, titolo grafico,
+  passaggi fra le pagine: su tutte le pagine pubbliche, dopo `dati.js` dove
+  c'è), `corto.js` (la pagina del corto: `opera.html` e la sala di
+  `cortoteca.html`) e `riservato.js` (parti condivise da `gestione.html` e
+  `proponi.html`, dopo `dati.js`). Non ci sono moduli ES né bundler: le
+  funzioni sono globali. Le librerie di terzi stanno copiate in
   `assets/js/vendor/` con la versione nel nome.
-- **Identità visiva**: fondo carta, Montserrat 900 molto grande per i titoli,
-  Instrument Serif in corsivo per tagline e frasi d'apertura, Inter per il
-  testo. Le fotografie sono a spigolo vivo e non portano pannelli sopra: le
-  scritte stanno sotto o accanto, appese a un filetto nero. Il lavanda del
-  marchio si usa a campiture piene (fascia del sostegno, bollini). Etichette
-  mai sotto gli 11 px (`--etichetta`), aree toccabili di almeno 44 px.
-  Tailwind e Lucide restano solo su `cornicenarrativa.html`, perché
+- **Identità visiva** (dettagli in `storico/2026-11-11-design-handoff.md`):
+  solo Montserrat (500–900, da Google Fonts con un `<link>`); titoli 900
+  maiuscoli e stretti, spesso a tutta larghezza (`.fit`); carta `#f7f7f7`.
+  Ogni sezione ha il suo fondo pieno: Eventi blu con le scritte azzurre,
+  Produzioni lilla e nero, Cortoteca nera con le scritte lilla, Contatti e
+  Sostieni arancio; corti ed eventi hanno il loro colore. Angoli del marchio
+  arrotondati (`--r` 20 px, rullino della home 16, still della Cortoteca 14);
+  le foto delle schede, del primo piano e dei vincitori sono a spigolo vivo,
+  chiuse da un filo. **Mai eyebrow**: nessuna etichetta piccola in maiuscolo
+  sopra un titolo. Etichette mai sotto gli 11 px, aree toccabili di almeno
+  44 px. Tailwind e Lucide restano solo su `cornicenarrativa.html`, perché
   `cornice.js` costruisce i blocchi con quelle classi; altrove le icone sono
   SVG scritte nell'HTML.
 - **Barra e piede** sono ripetuti in ogni pagina: una modifica va portata su
-  tutti i file HTML. Nella barra la voce della pagina corrente ha la classe
-  `is-active` (le schede opera accendono Cortoteca, le pagine evento Eventi).
+  tutti i file HTML. La voce della pagina corrente ha `aria-current="page"`
+  (le pagine dei corti accendono Cortoteca, le pagine evento e la cornice
+  narrativa Eventi); il pallino colorato di una voce è una classe
+  (`nav__voce--eventi`, `--produzioni`, `--contatti`). La Cortoteca ha la
+  barra ridotta (solo Diventa socio) e il piede lilla.
 - **Frecce**: ↗ per aprire un contenuto, → per andare a un elenco o a
   un'altra pagina del sito, l'icona del link esterno solo per ciò che porta
-  fuori.
-- **Titolo della scheda del browser**: "Pagina – CDL APS".
+  fuori (Instagram e YouTube nel piede, i tag Instagram nelle pagine evento).
+- **Titolo della scheda del browser**: "Pagina – CDL APS"; la home resta
+  "CDL APS – Cinema giovane e indipendente a Rimini".
 - **Immagini**: sempre sotto `assets/img/<categoria>/`, mai nella radice.
   Nomi in minuscolo con trattini.
 - **Lingua**: interfaccia, commenti e nomi di file in italiano.
@@ -57,14 +75,23 @@ com'è.
   GitHub manda una mail: il progetto va ripreso dalla dashboard (*Resume
   project*). Funziona solo da `main`.
 - `dati.js` legge dalla Data API con la chiave pubblica (sta nel sito
-  apposta). Se Supabase non risponde, ripiega su `data/opere.json` e
-  `data/eventi.json`, copie di riserva con la stessa forma delle tabelle; le
-  immagini, se mancano nel bucket `immagini`, ripiegano su `assets/img/`.
-  La chiave segreta (*secret* / *service_role*) non va mai nel repository.
+  apposta), chiedendo le colonne una per una (`COLONNE_OPERE`,
+  `COLONNE_EVENTI`), mai `select=*`. Se Supabase non risponde, ripiega su
+  `data/opere.json` e `data/eventi.json`, copie di riserva con la stessa
+  forma, da cui scarta ciò che non è pubblicato; le immagini, se mancano nel
+  bucket `immagini`, ripiegano su `assets/img/`. La chiave segreta
+  (*secret* / *service_role*) non va mai nel repository.
+- **Colonne pubbliche.** `20261112180000_colonne_pubbliche.sql` limita `anon`
+  alle colonne mostrate dal sito (niente `modificato_da` né date di lavoro).
+  Va applicata solo quando il sito online usa già l'elenco esplicito di
+  `dati.js`. Una colonna nuova da mostrare va aggiunta in `dati.js` e con un
+  `grant select (colonna)` ad `anon` in una migrazione.
 - Le pagine che leggono i dati (home, cortoteca, produzioni, eventi, opera)
   sono gusci riempiti a runtime. I testi arrivano da un modulo: nei modelli
   HTML vanno sempre passati da `esc()`, e i collegamenti da
-  `indirizzoSicuro()`.
+  `indirizzoSicuro()`. Il campo `pagina` di un evento passa da
+  `paginaEvento()`, che accetta solo il nome di un file del sito
+  (`blue-hour.html`): la pagina Eventi lo scarica e ne inserisce il `<main>`.
 - Fra due produzioni CDL dello stesso anno conta come più recente quella
   inserita per ultima (id più alto).
 - `gestione.html` è la pagina dei redattori: accesso con email e password
@@ -123,40 +150,87 @@ com'è.
     (`nascondi_per_quota`), poi le ripubblica al rinnovo;
   - i fotogrammi e i titoli grafici delle proposte stanno nel bucket privato
     `proposte` (cartella per utente); all'approvazione la pagina di gestione
-    li copia in `immagini`.
+    li copia in `immagini`;
+  - `opere.solo_scheda`: il corto è in Cortoteca senza streaming per scelta
+    del socio. La scrivono `approva_proposta` e `accetta_licenza_opera` dal
+    tipo di licenza (il pubblico non legge `licenze`); i redattori la
+    cambiano in gestione. Senza video e senza `solo_scheda` la pagina del
+    corto dice "Streaming in arrivo";
+  - il **titolo grafico** sul sito (`titoloGrafico()` in `comune.js`, in
+    galleria, sala, pagina del corto e primo piano di Produzioni): prima
+    `titolo_png`, poi `titolo_font` (caricato con `FontFace` dallo spazio
+    `immagini`), poi gli SVG provvisori in `assets/img/film/titoli/` per i
+    codici di `TITOLI_GRAFICI`, poi il titolo in Montserrat. Quei quattro
+    SVG (Interzona, Quarto Livello, Relatività, Viva Revolution) vanno
+    ricaricati dalla gestione come PNG, poi si tolgono `TITOLI_GRAFICI` e i
+    file;
+  - il **colore della pagina del corto** (`--titolo`): `opere.colore`
+    (`#rrggbb`, campo in gestione), poi il colore dell'SVG provvisorio, poi
+    il lilla. Un colore troppo scuro per il nero diventa il chiaro.
 - **Dashboard di gestione**: la prima scheda di `gestione.html`. "Da
   sistemare" compare solo lì; i numeri e le ultime attività arrivano da
   `public.cruscotto()`. Chi ha fatto l'ultima modifica a un'opera o a un
   evento lo scrive un trigger in `modificato_da`.
 - **Header di sicurezza.** `netlify.toml` dà a `gestione.html` e
-  `proponi.html` una Content-Security-Policy: solo script del sito, solo
-  connessioni verso il progetto Supabase. Uno script, un font o
+  `proponi.html` (e agli stessi indirizzi senza `.html`) una
+  Content-Security-Policy: solo script del sito, solo connessioni verso il
+  progetto Supabase, stili dal sito e da Google Fonts. Uno script, un font o
   un'immagine da un altro indirizzo in quelle pagine va aggiunto anche lì.
+- `supabase/config.toml` tiene `verify_jwt = false` per `accesso-socio`:
+  una pubblicazione dalla CLI non deve riattivare la verifica.
+- I testi in `supabase/licenze/` devono restare identici byte per byte al
+  database (`.editorconfig` impedisce all'editor di toccarli).
 - `opera.html` legge il codice dell'opera dalla query string (`?film=codice`).
   Senza parametro mostra "Opera non trovata".
+- **Le sale.** Un corto si apre dentro la Cortoteca e un evento dentro
+  Eventi, sopra la pagina (`apriSala` in `cortoteca.js`, `apriEvento` in
+  `eventi.js`): l'indirizzo diventa quello del corto o dell'evento, e
+  indietro, Esc e la crocetta chiudono. Per questo `cortoteca.html` contiene
+  il modello della pagina del corto (`<template id="modello-corto">`, da
+  tenere allineato a `opera.html`) ed `eventi.html` scarica il `<main>`
+  delle pagine evento. Dalla home, il clic su Eventi, Produzioni o Cortoteca
+  allarga il colore della sezione prima di cambiare pagina. Con
+  `prefers-reduced-motion` i passaggi diventano cambi di pagina e i rullini
+  restano fermi.
 - Le pagine dei singoli eventi (`short-talks-1.html`, `blue-hour.html`…) sono
   statiche, sul modello di `longstoryshort.html`, e condividono
-  `pages/evento.css`, dove sta anche il colore d'accento di ciascuna (classe
-  sul `<body>`). Il riquadro dell'evento porta lì solo se il campo `pagina`
-  del database contiene il nome del file: si compila quando la pagina è già
-  online.
+  `pages/evento.css`, dove stanno il colore di ciascuna (`evento--<pagina>`
+  sul `<body>`) e il suo logo (`marchio--<pagina>`, PNG senza fondo in
+  `assets/img/eventi/loghi/<pagina>.png`, usato come maschera; percorso
+  assoluto, perché un `url()` dentro una variabile si risolve rispetto al
+  foglio che la usa). La scheda di Eventi mostra lo stesso PNG; senza logo,
+  la foto del database. La scheda porta alla pagina solo se il campo
+  `pagina` del database contiene il nome del file: si compila quando la
+  pagina è già online.
 - La pagina Eventi divide gli eventi per `serie` (colonna di `eventi`, scelta
   dal modulo di gestione): l'ultima edizione con `long-story-short` va in
-  primo piano col marchio, `short-talks` ha un blocco col suo lettering, gli
-  eventi senza serie finiscono in "Altri eventi".
-- La pagina Produzioni mette in primo piano il lavoro più recente, poi il
+  evidenza col lettering, `short-talks` ha un blocco suo, gli eventi senza
+  serie finiscono in "Altri eventi".
+- La pagina Produzioni mette in evidenza il lavoro più recente, poi il
   blocco delle produzioni originali (`produzione_cdl`) e quello delle
   collaborazioni (`collaborazione_cdl`, nascosto finché è vuoto). Le due
-  colonne di `opere` si escludono (vincolo nel database). Primo piano,
-  titoli dei blocchi e griglia stanno in `components.css`, condivisi con
-  Eventi.
-- Eventi, Produzioni e Cortoteca aprono con la stessa testata
-  (`.testa-pagina`): nome della pagina a caratteri cubitali e una riga di
-  presentazione.
-- La home ha quattro parti: apertura a tutto schermo sulla foto di sala,
-  attività recenti (riempite da `home.js`), il rullino di fotografie degli
-  eventi (scritto a mano in `index.html`: ogni foto porta alla pagina del suo
-  evento) e la fascia lavanda del sostegno.
+  colonne di `opere` si escludono (vincolo nel database). Le schede
+  (`.scheda-g`) stanno in `components.css`, condivise con Eventi.
+- Eventi, Produzioni, Cortoteca, Vantaggi e 404 aprono con il nome della
+  pagina a tutta larghezza (`.parola` con `.fit`, misurato da `adatta()`) e
+  una presentazione (`.presentazione`) chiusa da un filo.
+- La home ha quattro parti: l'apertura sulla sala vista dall'alto, al buio,
+  con la torcia che segue il puntatore e il nastro delle ultime notizie;
+  l'indice (Eventi, Produzioni, Cortoteca a tutta larghezza, che al
+  passaggio prendono il colore della sezione e mostrano gli ultimi titoli);
+  il rullino di fotografie degli eventi (scritto a mano in `index.html`: ogni
+  foto porta alla pagina del suo evento); Sostieni in arancio. Nastro ed
+  elenchi li riempie `home.js`; il testo della quota ridotta del nastro sta
+  in `data-quota`, nell'HTML.
+- **Contatti** (`contatti.html`): in cima Sostieni (la meta di "Diventa
+  socio"), sotto il modulo con Netlify Forms. Tre moduli, uno per indirizzo
+  (`contatti` → ciao@, `contatti-eventi` → eventi@, `contatti-produzione` →
+  produzione@cdlaps.com): il motivo sceglie modulo e oggetto
+  (`contatti.js`); `?motivo=socio` lo preseleziona. Dopo l'invio Netlify
+  apre `contatti.html#grazie`, che mostra la conferma. Le notifiche email si
+  impostano nel pannello di Netlify.
+- `404.html` usa solo percorsi assoluti: Netlify la serve a qualsiasi
+  profondità.
 - **Pubblicazione**: Netlify costruisce solo i commit il cui autore è membro
   del team (l'account GitHub `cdl-aps`). Le pull request vanno unite da
   GitHub con quell'account, con un merge commit; un'unione fatta da un
@@ -176,12 +250,14 @@ com'è.
   (per esempio le nuvolette in `assets/img/nuvole/`, non più usate dalle
   pagine).
 - CSS e JS sono richiamati con una versione nell'indirizzo
-  (`base.css?v=2026-10-09`), perché Netlify li fa tenere in cache una
+  (`base.css?v=2026-11-12`), perché Netlify li fa tenere in cache una
   settimana: quando li modifichi aggiorna la data in tutte le pagine
   (`sed -i '' 's/v=VECCHIA/v=NUOVA/g' *.html`).
 - `assets/js/cornice.js` è il generatore interattivo di Long Story Short 2026:
   autonomo, con i propri dati incorporati, e alcune funzioni sono richiamate da
-  attributi `onclick` nell'HTML — vanno mantenute globali.
+  attributi `onclick` nell'HTML — vanno mantenute globali. La pagina ha barra
+  e piede del sito; il suo `<body>` ha la classe `pagina-cornice` (non
+  `cornice`, che nel sito è la cornice delle immagini).
 
 ## Verifica prima di pubblicare
 
@@ -191,5 +267,9 @@ python3 -m json.tool data/eventi.json > /dev/null
 python3 -m http.server 5500                        # poi controlla le pagine
 ```
 
-Aprire almeno home, cortoteca, produzioni, eventi e una scheda opera: sono le
-pagine che dipendono dal database, e quindi le prime a rompersi.
+Aprire almeno home, cortoteca, produzioni, eventi e una pagina di un corto:
+sono le pagine che dipendono dal database, e quindi le prime a rompersi.
+Provare anche una sala (clic su una still della Cortoteca e su una scheda di
+Eventi, poi Esc e indietro) e le pagine a 375 px. Il server Python non manda
+gli header di `netlify.toml`: la CSP di gestione e proposta si vede solo
+online (o con un server che li aggiunga).

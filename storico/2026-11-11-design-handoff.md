@@ -1,5 +1,10 @@
 # Specifiche di design — il nuovo sito CDL APS
 
+> **Nota del 12 novembre 2026.** Il design ora vive nella radice del sito;
+> `anteprime/` non esiste più, e con lei `genera.py` e i suoi `comune.css`,
+> `g.css`, `comune.js`, `g.js`. Dove sta ogni cosa oggi: `CLAUDE.md` e
+> [`2026-11-12-handoff-redesign-nel-sito.md`](2026-11-12-handoff-redesign-nel-sito.md).
+
 *11 novembre 2026. Descrive le anteprime in `anteprime/` (generate da
 `genera.py`, stili in `comune.css` + `g.css`, comportamenti in `comune.js` +
 `g.js`). Serve a chi dovrà portare il redesign nel sito pubblicato. Lo stato
@@ -8,7 +13,7 @@ del lavoro è in [`2026-11-11-handoff.md`](2026-11-11-handoff.md).*
 ## Panoramica
 
 Un sito editoriale per un'associazione di cinema: poche parole, scritte
-enormi, fotografie a spigolo vivo. Ogni sezione ha un fondo pieno suo
+enormi, fotografie in primo piano. Ogni sezione ha un fondo pieno suo
 (Eventi blu, Produzioni lilla, Cortoteca nera, Contatti arancio) e chi
 naviga ci *entra*: il colore si allarga dalla home, la still diventa lo
 schermo del corto, la grafica dell'evento diventa la sua testata. Il
@@ -21,7 +26,10 @@ Regole che valgono ovunque:
 - Etichette mai sotto gli 11 px, aree toccabili di almeno 44 px.
 - Frecce: ↗ apre un contenuto, → porta a un elenco o a un'altra pagina,
   l'icona del link esterno solo per ciò che esce dal sito.
-- Foto a spigolo vivo (raggio 0), spesso chiuse da un filo nero di 2 px.
+- Angoli arrotondati del marchio sulle cornici (`--r` 20 px, rullino della
+  home 16, still 14); a spigolo vivo, spesso chiuse da un filo nero di 2 px,
+  le foto delle schede, del primo piano e dei vincitori. *(Corretto il 12
+  novembre: le anteprime approvate erano già così.)*
 
 ## Layout
 
