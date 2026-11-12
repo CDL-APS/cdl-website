@@ -1,690 +1,426 @@
 /* ==========================================================================
-   COMPONENTS — elementi grafici che ricorrono su più pagine.
-   Se una regola serve a una sola pagina, va in css/pages/, non qui.
-
-   L'identità: fondo carta, titoli Montserrat 900 molto grandi, fotografie
-   a spigolo vivo come fotogrammi, mai coperte da pannelli. Le scritte
-   stanno accanto o sotto le immagini, legate da un filetto nero. Il lavanda
-   del marchio compare a campiture piene.
+   COMPONENTI — gli elementi che ricorrono su più pagine: sezioni, barra,
+   pulsanti, cornici delle immagini, invito a sostenere CDL, piede, occhi,
+   strisce che scorrono, testate e blocchi delle pagine, schede, passaggi.
+   Se una regola serve a una sola pagina va in pages/, non qui.
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
-   Barra di navigazione: fissa in cima, a tutta larghezza. A sinistra il
-   marchio (la Home), a destra le pagine. Il filetto sotto la voce — la
-   pagina in cui ci si trova — lo muove assets/js/barra.js.
+   Sezioni: ognuna occupa uno schermo (o due con --h: 2); cresce solo se il
+   contenuto non ci sta, così nulla viene mai tagliato
    -------------------------------------------------------------------------- */
-.barra {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 100;
-  height: var(--barra-h);
-  display: flex;
-  align-items: stretch;
-  gap: 0.5rem;
-  padding: 0 var(--margine);
-  background: var(--cdl-white);
-  border-bottom: 1px solid var(--riga);
-}
-
-/* Il file del marchio è lavanda: il filtro lo porta a nero pieno */
-.barra-logo {
-  display: inline-flex;
-  align-items: center;
-  margin-right: auto;
-  padding-right: 0.75rem;
-}
-
-.barra-logo img {
-  width: 62px;
-  height: 24px;
-  filter: brightness(0);
-  transition: transform 0.35s var(--ease-out);
-}
-
-.barra-logo:hover img { transform: translateX(2px); }
-
-.barra-gruppo {
+main > section,
+.closing {
   position: relative;
-  display: flex;
-  align-items: stretch;
+  overflow: clip;
+  min-height: calc(var(--h, 1) * 100svh);
+  padding: var(--padt) 0 var(--padb);
+  background: var(--fondo);
+  color: var(--inchiostro);
 }
 
-/* Indicatore: un filetto spesso sul bordo inferiore della barra */
-.indicatore {
-  position: absolute;
-  bottom: -1px;
-  left: 0;
-  width: 0;
-  height: 3px;
-  background: var(--cdl-dark);
-  opacity: 0;
-  pointer-events: none;
+.hero { padding-top: calc(var(--nav) + 40px); padding-bottom: 56px; }
+
+/* Sotto i 1024 px le sezioni prendono l'altezza del loro contenuto: su
+   tablet e telefono uno schermo intero per sezione lascerebbe grandi vuoti */
+@media (max-width: 1023px) {
+  main > section, .closing { min-height: 0; }
 }
 
-.indicatore--visibile { opacity: 1; }
-
-/* La transizione si accende dopo il primo posizionamento: all'apertura
-   l'indicatore è già sotto la voce giusta, non ci arriva scorrendo. */
-.indicatore--pronto {
-  transition: transform 0.45s var(--ease-out), width 0.45s var(--ease-out),
-    opacity 0.25s var(--ease-out);
+@media (max-width: 639px) {
+  .hero { padding-top: calc(var(--nav) + 24px); padding-bottom: 32px; }
+  .hero .btn-riga .btn { flex: 1 1 100%; }
 }
 
-.voce {
-  position: relative;
-  z-index: 1;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  min-height: 44px;
-  padding: 0 0.95rem;
-  font-family: var(--f-titoli);
-  font-size: 0.78rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  white-space: nowrap;
-  color: var(--testo-tenue);
-  transition: color 0.25s var(--ease-out);
+/* Il marchio, ricolorato con una maschera: prende il colore del testo */
+.logo {
+  display: block; flex: 0 0 auto;
+  aspect-ratio: 1435 / 557;
+  background: currentColor;
+  -webkit-mask: url('../img/brand/logo-cdl.png') center / contain no-repeat;
+  mask: url('../img/brand/logo-cdl.png') center / contain no-repeat;
 }
-
-.voce:hover,
-.voce.is-active { color: var(--cdl-dark); }
-
-/* Cortoteca è la pagina dove i corti si guardano: lo dice il triangolo */
-.voce svg { width: 10px; height: 10px; }
-
-/* Invito a tesserarsi, staccato dalle pagine */
-.barra-socio {
-  align-self: center;
-  display: inline-flex;
-  align-items: center;
-  min-height: 40px;
-  margin-left: 0.75rem;
-  padding: 0 1rem;
-  border-radius: var(--r-s);
-  background: var(--cdl-dark);
-  color: var(--cdl-white);
-  font-family: var(--f-titoli);
-  font-size: 0.72rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  white-space: nowrap;
-  transition: background-color 0.25s var(--ease-out), transform 0.2s var(--ease-out);
-}
-
-.barra-socio:hover { background: var(--cdl-red); transform: translateY(-1px); }
-
-.barra-socio:active { transform: translateY(1px); }
 
 /* --------------------------------------------------------------------------
-   Impianto delle sezioni
+   Occhi: i bulbi dell'icona CDL, segno della Cortoteca. La pupilla si sposta
+   con --px e --py, che comune.js aggiorna seguendo il puntatore; ogni tanto
+   un occhio sbatte la palpebra.
    -------------------------------------------------------------------------- */
-.sezione {
-  max-width: calc(var(--larghezza) + var(--margine) * 2);
-  margin: 0 auto;
-  padding: clamp(3rem, 7vw, 6rem) var(--margine);
-  scroll-margin-top: var(--barra-h);
+.occhio {
+  display: grid; place-items: center;
+  aspect-ratio: 1;
+  border: max(2px, 0.045em) solid var(--nero);
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: inset -0.06em -0.08em 0 rgba(29, 29, 27, 0.14);
+  transition: scale 0.16s ease-out;
 }
-
-/* Prima sezione di una pagina interna: il titolo parte poco sotto la barra */
-.sezione--prima { padding-top: clamp(2rem, 4.5vw, 3.75rem); }
-
-/* Testata di una pagina elenco (Eventi, Produzioni, Cortoteca): il nome
-   della pagina a caratteri cubitali, una riga di presentazione, e il
-   filetto che apre il contenuto */
-.testa-pagina {
-  display: grid;
-  gap: clamp(0.9rem, 2vw, 1.5rem);
-  margin-bottom: clamp(1.75rem, 4vw, 3rem);
-  padding-bottom: clamp(1.1rem, 2.5vw, 1.75rem);
-  border-bottom: 2px solid var(--riga-forte);
+.pupilla {
+  width: 46%; height: 46%; border-radius: 50%;
+  background:
+    radial-gradient(circle at 34% 32%, #fff 0 13%, transparent 14%),
+    radial-gradient(circle, var(--nero) 0 50%, #8f8f95 51% 66%, var(--nero) 67%);
+  transform: translate(var(--px, 0px), var(--py, 0px));
+  transition: transform 0.14s linear;
 }
+.occhio.is-chiuso { scale: 1 0.08; transition: scale 0.09s ease-in; }
 
-.testa-pagina h1 {
-  margin-left: -0.04em;
-  font-size: clamp(2.6rem, 12.2vw, 10.5rem);
-  line-height: 0.82;
-}
-
-.testa-pagina-nota {
-  max-width: 52ch;
-  font-size: clamp(1rem, 1.3vw, 1.15rem);
-  line-height: 1.55;
-  color: var(--testo-medio);
-}
-
-.due-colonne {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
-  gap: clamp(1.5rem, 5vw, 4.5rem);
-  align-items: start;
-}
-
-.due-colonne h1,
-.due-colonne h2 { font-size: clamp(2.3rem, 5.6vw, 4.75rem); }
-
-/* Accanto al titolo, in grigio, ciò che distingue l'edizione: l'anno o il
-   numero */
-.due-colonne h1 span { color: var(--testo-tenue); }
-
-.corpo {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  max-width: 62ch;
-  font-size: 1.02rem;
-  line-height: 1.65;
-  color: var(--testo-medio);
-}
-
-.corpo p:first-child { color: var(--cdl-dark); font-size: 1.2rem; line-height: 1.5; }
-
-.corpo strong { color: var(--cdl-dark); font-weight: 700; }
-
-/* Corpo del testo sulle superfici scure */
-.corpo--chiaro { color: rgba(245, 243, 238, 0.92); }
-
-.corpo--chiaro p:first-child { color: var(--cdl-white); }
-
-.corpo--chiaro strong { color: var(--cdl-white); }
-
-/* Etichetta tecnica: maiuscolo spaziato sopra titoli e dati */
-.etichetta,
-.chip-etichetta {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-family: var(--f-titoli);
-  font-size: var(--etichetta);
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-  color: var(--testo-medio);
-}
-
-/* Titolo di un gruppo dentro la pagina: sta sopra un filetto nero che corre
-   da margine a margine */
-.titoletto {
-  margin: clamp(3rem, 6.5vw, 5.5rem) 0 clamp(1.1rem, 2vw, 1.6rem);
-  padding-top: 0.8rem;
-  border-top: 2px solid var(--riga-forte);
-  font-family: var(--f-titoli);
-  font-size: clamp(1.05rem, 1.7vw, 1.4rem);
-  font-weight: 900;
-  text-transform: uppercase;
-  line-height: 1;
-  letter-spacing: -0.02em;
-  color: var(--cdl-dark);
-}
-
-/* Blocchi delle pagine elenco: titolo pieno, a misura dei lettering */
-.titoletto--blocco {
-  font-size: clamp(1.7rem, 3.6vw, 3rem);
-  line-height: 0.92;
-  letter-spacing: -0.04em;
+/* Gli occhi dentro le O di una scritta a tutta larghezza (home, 404): il
+   centro è a 0,62 della riga, dove sta il centro delle maiuscole */
+.o { position: relative; }
+.o .occhio {
+  position: absolute; left: 50%; top: 0.62em; width: 0.27em;
+  translate: -50% -50%;
+  border-width: 0.016em;
+  box-shadow: inset -0.012em -0.016em 0 rgba(29, 29, 27, 0.14);
 }
 
 /* --------------------------------------------------------------------------
-   Collegamenti di testo: il filetto si disegna da sinistra al passaggio
+   Barra: chiara, il marchio a sinistra con Eventi, Produzioni e Contatti
+   (ognuna col pallino del colore della sua sezione); a destra Cortoteca,
+   pillola nera con la scritta lilla, e l'invito ai soci, pillola arancio.
+   La voce della pagina corrente ha aria-current.
    -------------------------------------------------------------------------- */
-.rimando,
-.indietro {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.55rem;
-  min-height: 44px;
-  font-family: var(--f-titoli);
-  font-size: var(--etichetta);
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: var(--cdl-dark);
-  background: linear-gradient(currentColor, currentColor) 0 calc(100% - 9px) / 0 2px no-repeat;
-  transition: background-size 0.4s var(--ease-out);
+.nav { position: fixed; inset: 0 0 auto 0; z-index: 10; height: var(--nav); background: var(--barra); color: var(--nero); }
+.nav__riga { height: 100%; display: flex; align-items: center; gap: clamp(4px, 1.4vw, 20px); }
+.nav__logo { display: inline-flex; align-items: center; min-height: 44px; margin-right: clamp(6px, 1.6vw, 24px); padding: 8px 0; }
+.nav__logo .logo { width: 68px; }
+
+.skip-link {
+  position: absolute; left: var(--gut); top: 12px; z-index: 2;
+  padding: 10px 16px; border-radius: 999px; background: var(--nero); color: var(--chiaro); font-weight: 700;
+  transform: translateY(-200%);
+}
+.skip-link:focus-visible { transform: none; }
+
+.nav__voce {
+  position: relative; display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 8px;
+  font-size: 15px; font-weight: 700; white-space: nowrap;
+}
+.nav__voce::before { content: ''; width: 10px; height: 10px; border-radius: 50%; background: var(--punto, currentColor); }
+.nav__voce::after {
+  content: ''; position: absolute; left: 25px; right: 8px; bottom: 9px; height: 2px; background: currentColor;
+  transform: scaleX(0); transform-origin: left; transition: transform 0.15s var(--ease);
+}
+.nav__voce:hover::after, .nav__voce[aria-current]::after { transform: scaleX(1); }
+.nav__voce--eventi { --punto: var(--blu); }
+.nav__voce--produzioni { --punto: var(--lilla); }
+.nav__voce--contatti { --punto: var(--arancio); }
+
+.nav__cortoteca {
+  position: relative; display: inline-flex; align-items: center; gap: 7px; min-height: 44px; margin-left: auto; padding: 0 17px 0 14px;
+  border: 2px solid var(--nero); border-radius: 999px; background: var(--nero); color: var(--lilla);
+  font-size: 15px; font-weight: 700; white-space: nowrap;
+  transition: background-color 0.15s var(--ease), color 0.15s var(--ease), transform 0.15s var(--ease);
+}
+.nav__cortoteca svg { width: 11px; height: 11px; }
+.nav__cortoteca:hover { transform: translateY(-1px); }
+.nav__cortoteca:hover, .nav__cortoteca[aria-current] { background: var(--lilla); color: var(--nero); }
+.nav__cortoteca:active { transform: translateY(1px) scale(0.985); }
+
+/* Diventa socio: alto come Cortoteca, arancio col bordino nero */
+.nav .nav__socio { position: relative; min-height: 44px; padding: 0 20px; font-size: 15px; border-color: var(--nero); background: var(--arancio); color: var(--nero); }
+.nav .nav__socio:hover { border-color: var(--nero); background: var(--giallo); color: var(--nero); }
+
+@media (max-width: 759px) {
+  .nav__socio { display: none; }
 }
 
-.rimando:hover,
-.indietro:hover { background-size: 100% 2px; }
-
-.rimando svg,
-.indietro svg { width: 15px; height: 15px; transition: transform 0.3s var(--ease-out); }
-
-.rimando:hover svg { transform: translateX(3px); }
-
-.indietro:hover svg { transform: translateX(-3px); }
-
-.rimando { margin-top: 1.25rem; }
-
-/* Ritorno alla pagina madre (scheda opera → Cortoteca, evento → Eventi) */
-.indietro { margin-bottom: clamp(1rem, 2.5vw, 1.75rem); color: var(--testo-medio); }
-
-/* --------------------------------------------------------------------------
-   Copertina di un evento: la grafica o la foto dell'edizione, in testa alla
-   pagina (Long Story Short e le pagine dei singoli eventi)
-   -------------------------------------------------------------------------- */
-.copertina {
-  position: relative;
-  display: flex;
-  align-items: flex-end;
-  min-height: clamp(260px, 40vw, 480px);
-  margin-bottom: clamp(2rem, 5vw, 3.5rem);
-  padding: clamp(1.25rem, 3.5vw, 2.75rem);
-  overflow: hidden;
-  background: var(--fondo-foto);
+@media (max-width: 639px) {
+  .nav__logo .logo { width: 54px; }
+  /* Senza pallini e più stretta, perché tutto resti dentro i margini */
+  .nav__riga { gap: 2px; }
+  .nav__voce { padding: 0 5px; font-size: 14px; }
+  .nav__voce::before { display: none; }
+  .nav__voce::after { left: 5px; right: 5px; }
+  .nav__cortoteca { min-height: 40px; margin-left: auto; padding: 0 12px 0 10px; font-size: 14px; }
+  .nav .nav__socio { min-height: 40px; padding: 0 16px; font-size: 14px; }
+  /* Le pillole restano alte 40 px, ma si toccano su 44 */
+  .nav__cortoteca::after, .nav .nav__socio::after { content: ''; position: absolute; inset: -4px -2px; }
 }
 
-.copertina .foto {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  max-width: none;
-  object-fit: cover;
+@media (max-width: 519px) {
+  .nav__voce--contatti { display: none; } /* su telefono i contatti stanno nel piede */
 }
 
-/* Copertina intera: la grafica o la foto si vede tutta, alla sua
-   proporzione, perché porta scritte (titolo, date, programma) che un
-   ritaglio taglierebbe. Il filetto stacca dalla pagina le grafiche chiare. */
-.copertina--intera {
-  display: block;
-  min-height: 0;
-  padding: 0;
-  border: 1px solid var(--riga);
-}
-
-.copertina--intera .foto {
-  position: static;
-  height: auto;
-}
-
-/* Galleria di un evento: colonne ad altezza libera, così foto orizzontali e
-   verticali stanno insieme senza ritagli, strette come provini */
-.galleria {
-  columns: 3 260px;
-  column-gap: 0.6rem;
-}
-
-.galleria img {
-  width: 100%;
-  height: auto;
-  margin-bottom: 0.6rem;
-  break-inside: avoid;
-  background: var(--fondo-foto);
-}
-
-.galleria-crediti {
-  font-size: 0.8rem;
-  line-height: 1.5;
-  color: var(--testo-tenue);
+/* Schermi molto stretti (320 px): la barra stringe ancora */
+@media (max-width: 359px) {
+  .nav__logo .logo { width: 44px; }
+  .nav__voce { padding: 0 3px; font-size: 13px; }
+  .nav__cortoteca { padding: 0 10px; font-size: 13px; }
+  .nav__cortoteca svg { display: none; }
 }
 
 /* --------------------------------------------------------------------------
-   Pulsanti: una sola forma. Al passaggio si accendono di rosso e l'icona
-   avanza; alla pressione scendono di un pixel.
+   Pulsanti e collegamenti. Al passaggio il pulsante sale di un pixel, alla
+   pressione scende; il filo dei collegamenti si disegna da sinistra.
    -------------------------------------------------------------------------- */
 .btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.6rem;
-  min-height: 48px;
-  padding: 0 1.3rem;
-  border-radius: var(--r-s);
-  border: 2px solid var(--cdl-dark);
+  display: inline-flex; align-items: center; justify-content: center; gap: 9px;
+  min-height: 48px; padding: 0 24px;
+  border: 2px solid var(--inchiostro); border-radius: 999px;
   background: none;
-  color: var(--cdl-dark);
-  font-family: var(--f-titoli);
-  font-size: var(--etichetta);
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
+  font-size: 16px; font-weight: 700; color: var(--inchiostro); white-space: nowrap;
   cursor: pointer;
-  transition: background-color 0.25s var(--ease-out), color 0.25s var(--ease-out),
-    border-color 0.25s var(--ease-out), transform 0.2s var(--ease-out);
+  transition: background-color 0.15s var(--ease), color 0.15s var(--ease), border-color 0.15s var(--ease), transform 0.15s var(--ease);
+}
+.btn svg { width: 13px; height: 13px; }
+.btn--pieno { background: var(--inchiostro); color: var(--fondo); }
+.btn:hover { transform: translateY(-1px); background: var(--inchiostro); color: var(--fondo); }
+.btn--pieno:hover { background: var(--accento-hover, var(--rosso)); border-color: var(--accento-hover, var(--rosso)); color: var(--accento-hover-testo, #fff); }
+.btn:active { transform: translateY(1px) scale(0.985); transition-duration: 0.09s; }
+.btn-riga { display: flex; flex-wrap: wrap; gap: 12px; }
+/* Sul computer l'invito ai soci è già nella barra: certi pulsanti compaiono solo su telefono */
+.btn.solo-telefono { display: none; }
+@media (max-width: 759px) {
+  .btn.solo-telefono { display: inline-flex; }
 }
 
-.btn svg { transition: transform 0.3s var(--ease-out); }
-
-.btn:hover {
-  background: var(--cdl-red);
-  border-color: var(--cdl-red);
-  color: #fff;
-  transform: translateY(-2px);
+.link {
+  display: inline-flex; align-items: center; gap: 8px; min-height: 44px;
+  font-weight: 700;
+  background:
+    linear-gradient(currentColor, currentColor) 0 calc(100% - 9px) / 0 2px no-repeat,
+    linear-gradient(var(--filo), var(--filo)) 0 calc(100% - 9px) / 100% 2px no-repeat;
+  transition: background-size 0.2s var(--ease);
 }
-
-.btn:hover svg { transform: translateX(3px); }
-
-.btn:active { transform: translateY(1px); }
-
-.btn--pieno { background: var(--cdl-dark); color: var(--cdl-white); }
-
-/* Variante per le superfici scure */
-.btn--chiaro { border-color: var(--cdl-white); color: var(--cdl-white); }
-
-.btn--chiaro.btn--pieno { background: var(--cdl-white); color: var(--cdl-dark); }
-
-.azioni { display: flex; flex-wrap: wrap; gap: 0.7rem; margin-top: 1.6rem; }
+.link:hover { background-size: 100% 2px, 100% 2px; }
+/* Frecce: → verso un elenco o un'altra pagina, ↗ per aprire un contenuto,
+   l'icona del link esterno per ciò che esce dal sito */
+.freccia { width: 1.05em; height: 1.05em; flex: 0 0 auto; transition: transform 0.3s var(--ease); }
+.link:hover .freccia { transform: translateX(4px); }
 
 /* --------------------------------------------------------------------------
-   Riquadro: un'opera o un evento in un elenco. Sopra la fotografia, intera
-   e a spigolo vivo; sotto, appese a un filetto, le scritte. Niente pannelli
-   sopra l'immagine.
+   Cornice: il contenitore di ogni immagine. Fondo nero, angoli del marchio.
+   Dentro un collegamento la foto si avvicina appena, la cornice resta ferma.
    -------------------------------------------------------------------------- */
-.riquadro {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 0.85rem;
+.cornice { position: relative; display: block; overflow: hidden; aspect-ratio: 16 / 9; border-radius: var(--r); background: var(--nero); }
+.cornice img { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; object-fit: cover; transition: transform 0.6s var(--ease); }
+a:hover > .cornice img, a.cornice:hover img { transform: scale(1.03); }
+
+/* Il tasto disegnato sopra un'immagine ("Guarda") */
+.disco {
+  position: absolute; left: 16px; bottom: 16px; z-index: 1;
+  display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 0 16px 0 13px;
+  border-radius: 999px; background: var(--lilla); color: var(--nero); font-size: 15px; font-weight: 700;
 }
+.disco svg { width: 11px; height: 11px; }
 
-a.riquadro { transition: transform 0.35s var(--ease-out); }
-
-a.riquadro:hover { transform: translateY(-2px); }
-
-.riquadro-foto {
-  position: relative;
-  display: block;
-  aspect-ratio: 16 / 10;
-  overflow: hidden;
-  background: var(--fondo-foto);
-}
-
-.riquadro-foto .foto {
-  width: 100%;
-  height: 100%;
-  max-width: none;
-  object-fit: cover;
-  transition: transform 0.7s var(--ease-out);
-}
-
-a.riquadro:hover .foto { transform: scale(1.03); }
-
-/* Freccia: una linguetta di carta nell'angolo della fotografia */
-.freccia {
-  position: absolute;
-  top: 0;
-  right: 0;
-  z-index: 3;
-  display: grid;
-  place-items: center;
-  width: 44px;
-  height: 44px;
-  background: var(--cdl-white);
-  color: var(--cdl-dark);
-  transition: background-color 0.25s var(--ease-out), color 0.25s var(--ease-out);
-}
-
-.freccia svg { width: 17px; height: 17px; transition: transform 0.3s var(--ease-out); }
-
-a.riquadro:hover .freccia,
-a.scheda:hover .freccia,
-a.primo-piano:hover .freccia {
-  background: var(--cdl-dark);
-  color: var(--cdl-white);
-}
-
-a.riquadro:hover .freccia svg,
-a.scheda:hover .freccia svg,
-a.primo-piano:hover .freccia svg { transform: translate(2px, -2px); }
-
-/* Le scritte del riquadro */
-.chip {
-  padding-top: 0.75rem;
-  border-top: 2px solid var(--riga-forte);
-  color: var(--cdl-dark);
-}
-
-.chip-etichetta { margin-bottom: 0.45rem; }
-
-.chip-titolo {
-  font-family: var(--f-titoli);
-  font-size: clamp(1.25rem, 2vw, 1.6rem);
-  font-weight: 900;
-  text-transform: uppercase;
-  line-height: 0.98;
-  letter-spacing: -0.035em;
-  text-wrap: balance;
-}
-
-.chip-meta {
-  margin-top: 0.5rem;
-  font-size: 0.9rem;
-  line-height: 1.45;
-  color: var(--testo-chip);
-}
+.avviso { padding: 24px 0; font-weight: 700; }
 
 /* --------------------------------------------------------------------------
-   Primo piano: il lavoro più recente in testa alla pagina (home, Eventi,
-   Produzioni). La fotografia sui due terzi; accanto, sotto un filetto
-   nero, etichetta, titolo e riassunto in alto, la freccia in fondo.
+   Sostieni: l'invito ad associarsi, in arancio, chiude home e Vantaggi e
+   apre Contatti. Sotto, il piede.
    -------------------------------------------------------------------------- */
-.primo-piano {
-  display: grid;
-  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
-  gap: clamp(1rem, 2.5vw, 2rem);
-}
+.closing { display: flex; flex-direction: column; padding-bottom: 0; scroll-margin-top: 0; }
+.closing > .wrap { flex: 1 1 auto; padding-bottom: var(--padb); }
 
-.primo-piano-copertina {
-  position: relative;
-  aspect-ratio: 16 / 9;
-  overflow: hidden;
-  background: var(--fondo-foto);
-}
-
-.primo-piano-copertina .foto {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  max-width: none;
-  object-fit: cover;
-  transition: transform 0.9s var(--ease-out);
-}
-
-a.primo-piano:hover .foto { transform: scale(1.025); }
-
-.primo-piano-testo {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0.8rem;
-  padding-top: 0.9rem;
-  border-top: 2px solid var(--riga-forte);
-}
-
-.primo-piano-titolo {
-  font-family: var(--f-titoli);
-  font-size: clamp(1.9rem, 3.5vw, 3.1rem);
-  font-weight: 900;
-  text-transform: uppercase;
-  line-height: 0.92;
-  letter-spacing: -0.045em;
-  text-wrap: balance;
-}
-
-.primo-piano-riassunto {
-  font-family: var(--f-corsivo);
-  font-style: italic;
-  font-size: clamp(1.25rem, 1.8vw, 1.6rem);
-  line-height: 1.2;
-  color: var(--testo-medio);
-}
-
-/* Il riassunto va a capo solo fra un pezzo e l'altro (scriviRiassunto in
-   dati.js lo divide alle virgole); un pezzo più largo della scheda si
-   spezza comunque. */
-.riassunto-pezzo {
-  display: inline-block;
-  max-width: 100%;
-}
-
-/* Nel primo piano la freccia scende in fondo alla colonna di testo */
-.primo-piano-testo .freccia {
-  position: static;
-  order: 9;
-  margin-top: auto;
-  border: 2px solid var(--riga-forte);
-}
-
-/* auto-fill e non auto-fit: un blocco con due soli riquadri li tiene della
-   stessa misura degli altri, invece di allargarli a tutta riga */
-.griglia-riquadri {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
-  gap: clamp(2rem, 3.5vw, 3rem) var(--spazio);
+.sostieni h1, .sostieni h2 { font-size: inherit; }
+.sostieni h1 .logo, .sostieni h2 .logo { height: 0.72em; margin-left: 0.2em; }
+.sostieni__corpo { margin-top: clamp(24px, 3vw, 40px); }
+.sostieni__frase { font-size: clamp(18px, 1.6vw, 22px); font-weight: 600; line-height: 1.4; max-width: 34ch; }
+.sostieni__stato { display: flex; align-items: center; gap: 10px; margin-top: 14px; font-weight: 600; }
+.rec { width: 10px; height: 10px; flex: 0 0 auto; border-radius: 50%; background: var(--rec, var(--rosso)); animation: pulsa 1.5s infinite; }
+@keyframes pulsa { 50% { opacity: 0.35; transform: scale(1.25); } }
+.sostieni .btn-riga { margin-top: 24px; }
+.sostieni .link { margin-top: 12px; }
+/* La fotografia mostra già le due tessere inclinate: il riquadro resta dritto, nella sua colonna */
+.sostieni__tessera { display: block; width: 100%; max-width: 340px; margin-left: auto; transition: transform 0.18s var(--ease); }
+.sostieni__tessera:hover { transform: translateY(-2px); }
+@media (max-width: 1023px) {
+  .sostieni__tessera { max-width: 220px; }
 }
 
 /* --------------------------------------------------------------------------
-   Scheda: superficie piatta per testo e dati, senza fotografia.
-   -------------------------------------------------------------------------- */
-.scheda {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
-  padding: clamp(1.1rem, 2vw, 1.5rem);
-  border-radius: var(--r-m);
-  border: 1px solid var(--riga);
-  background: rgba(255, 255, 255, 0.5);
-}
-
-a.scheda {
-  transition: background-color 0.3s var(--ease-out), border-color 0.3s var(--ease-out),
-    transform 0.35s var(--ease-out);
-}
-
-a.scheda:hover {
-  background: var(--cdl-lavender);
-  border-color: var(--cdl-lavender);
-  transform: translateY(-2px);
-}
-
-/* Icona di testa, al tratto */
-.scheda-icona { margin-bottom: 0.4rem; }
-
-.scheda-icona svg { width: 34px; height: 34px; stroke-width: 1.6; }
-
-.scheda-titolo {
-  font-family: var(--f-titoli);
-  font-size: clamp(1.05rem, 1.8vw, 1.3rem);
-  font-weight: 900;
-  text-transform: uppercase;
-  line-height: 1.02;
-  letter-spacing: -0.03em;
-}
-
-.scheda-testo { font-size: 0.95rem; line-height: 1.55; color: var(--testo-medio); }
-
-/* --------------------------------------------------------------------------
-   Pallino rosso lampeggiante
-   -------------------------------------------------------------------------- */
-.rec-dot {
-  width: 8px;
-  height: 8px;
-  background-color: var(--cdl-red);
-  border-radius: 50%;
-  display: inline-block;
-  flex: 0 0 auto;
-  animation: pulse 1.5s infinite;
-}
-
-@keyframes pulse {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.4; transform: scale(1.2); }
-}
-
-/* --------------------------------------------------------------------------
-   Piede: fondo nero, il marchio lavanda a tutta grandezza, le pagine e i
-   contatti come elenchi di testo (righe alte 44 px), i dati legali leggibili
+   Piede: nero, angoli alti arrotondati, il marchio lilla piccolo, le pagine
+   e i contatti su righe alte 44 px, i dati dell'associazione
    -------------------------------------------------------------------------- */
 .piede {
-  margin-top: clamp(3rem, 7vw, 6rem);
-  background: var(--cdl-dark);
-  color: var(--cdl-white);
+  border-radius: clamp(28px, 4.5vw, 60px) clamp(28px, 4.5vw, 60px) 0 0;
+  background: var(--nero); color: var(--chiaro);
+  padding: clamp(28px, 3.5vw, 44px) 0 clamp(20px, 2.5vw, 30px);
+  --inchiostro: var(--chiaro);
 }
+.piede__riga { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); align-items: start; gap: 20px var(--gap); }
+.piede__riga > a { grid-column: span 2; }
+.piede .logo { width: 64px; color: var(--lilla); margin-top: 10px; }
+.piede__elenchi { grid-column: span 10; display: flex; flex-wrap: wrap; gap: 0 clamp(32px, 6vw, 80px); }
+.piede__elenchi ul { display: flex; flex-wrap: wrap; gap: 0 24px; }
+.piede__elenchi a { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; font-size: 15px; font-weight: 700; transition: color 0.15s var(--ease); }
+.piede__elenchi a svg { width: 13px; height: 13px; }
+.piede__elenchi a:hover { color: var(--lilla); }
+.piede__dati { grid-column: 1 / -1; padding-top: 18px; border-top: 1px solid rgba(247, 247, 247, 0.22); font-size: 13px; line-height: 1.7; color: rgba(247, 247, 247, 0.78); }
 
-.piede-interno {
-  display: grid;
-  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
-  gap: clamp(2rem, 5vw, 4rem);
-  max-width: calc(var(--larghezza) + var(--margine) * 2);
-  margin: 0 auto;
-  padding: clamp(2.5rem, 6vw, 5rem) var(--margine) clamp(1.5rem, 3vw, 2.5rem);
-}
-
-.piede-marchio { align-self: start; display: block; max-width: 520px; }
-
-.piede-marchio img { width: 100%; height: auto; transition: transform 0.5s var(--ease-out); }
-
-.piede-marchio:hover img { transform: translateX(6px); }
-
-.piede-colonne {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--spazio);
-}
-
-.piede-elenco { list-style: none; }
-
-.piede-elenco a {
-  display: inline-flex;
-  align-items: center;
-  min-height: 44px;
-  font-family: var(--f-titoli);
-  font-size: 0.82rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  background: linear-gradient(currentColor, currentColor) 0 calc(100% - 9px) / 0 2px no-repeat;
-  transition: background-size 0.4s var(--ease-out), color 0.25s var(--ease-out);
-}
-
-.piede-elenco a:hover { background-size: 100% 2px; color: var(--cdl-lavender); }
-
-.piede-dati {
-  grid-column: 1 / -1;
-  padding-top: 1.25rem;
-  border-top: 1px solid rgba(245, 243, 238, 0.25);
-  font-size: 0.8rem;
-  line-height: 1.7;
-  color: rgba(245, 243, 238, 0.78);
+@media (max-width: 759px) {
+  .piede__riga { gap: 8px; }
+  .piede__riga > a, .piede__elenchi { grid-column: 1 / -1; }
+  .piede__elenchi ul { flex-direction: column; }
 }
 
 /* --------------------------------------------------------------------------
-   Adattamenti
+   Il disco che accompagna il puntatore sulle immagini che fanno qualcosa al
+   clic (data-cursore): dice che cosa. Solo con un puntatore vero.
    -------------------------------------------------------------------------- */
-@media (max-width: 1000px) {
-  .due-colonne { grid-template-columns: 1fr; }
+.cursore {
+  position: fixed; left: 0; top: 0; z-index: 30; pointer-events: none;
+  display: grid; place-items: center; width: 88px; height: 88px; margin: -44px 0 0 -44px;
+  border: 2px solid var(--lilla); border-radius: 50%; background: var(--nero); color: var(--lilla);
+  font-size: 14px; font-weight: 700;
+  translate: var(--cx, -200px) var(--cy, -200px); scale: 0;
+  transition: scale 0.2s var(--ease);
+}
+.cursore.is-visibile { scale: 1; }
+
+/* --------------------------------------------------------------------------
+   Scelte a pillole (vista e ordine della Cortoteca, motivo del modulo di
+   Contatti): radio veri, nascosti, con l'etichetta come pillola
+   -------------------------------------------------------------------------- */
+.scelte { display: flex; padding: 3px; gap: 3px; border: 2px solid var(--inchiostro); border-radius: 999px; }
+.scelte input { position: absolute; opacity: 0; pointer-events: none; }
+.scelta {
+  position: relative; display: inline-flex; align-items: center; gap: 7px; min-height: 38px; padding: 0 15px; border-radius: 999px;
+  font-size: 15px; font-weight: 700; cursor: pointer;
+  transition: background-color 0.15s var(--ease), color 0.15s var(--ease);
+}
+/* La pillola è alta 38 px, ma si tocca su 44: l'area sconfina nel bordo del gruppo */
+.scelte .scelta::after { content: ''; position: absolute; inset: -3px 0; }
+.scelta svg { width: 15px; height: 15px; }
+.scelte input:checked + .scelta { background: var(--inchiostro); color: var(--fondo); }
+.scelte input:focus-visible + .scelta { outline: 3px solid var(--inchiostro); outline-offset: 3px; }
+
+/* --------------------------------------------------------------------------
+   Still: il fotogramma di un corto con il suo titolo sovrapposto (la targa).
+   In galleria nella Cortoteca, e grande in cima alla pagina del corto.
+   -------------------------------------------------------------------------- */
+.still { position: relative; display: block; overflow: hidden; border-radius: var(--r-still, 14px); }
+.still .cornice { border-radius: 0; }
+.targa {
+  position: absolute; left: 10px; right: 10px; bottom: 10px;
+  display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 2px 12px;
+  padding: 12px 14px; border-radius: 10px; background: var(--lilla); color: var(--nero);
+  opacity: 0; translate: 0 12px;
+  transition: opacity 0.2s var(--ease), translate 0.25s var(--ease);
+}
+.targa__titolo { font-family: var(--f-titoli); font-weight: 900; text-transform: uppercase; font-size: clamp(17px, 1.5vw, 21px); line-height: 1; letter-spacing: var(--titoli-spazio); overflow-wrap: anywhere; }
+/* Il titolo grafico: un'immagine (PNG o SVG) o il titolo scritto nel
+   carattere del corto (titolo_font) */
+.targa__grafica { display: block; min-height: 0; max-width: 100%; max-height: 62%; object-fit: contain; }
+.targa__font { font-weight: 400; text-transform: none; letter-spacing: 0; line-height: 1.05; }
+
+/* --------------------------------------------------------------------------
+   Strisce che scorrono da sole (il nastro di notizie, i rullini di foto):
+   il contenuto è doppio (comune.js) e si fermano al passaggio, col fuoco o
+   col loro pulsante
+   -------------------------------------------------------------------------- */
+.scorre__finestra { margin-top: clamp(24px, 2.8vw, 40px); overflow: hidden; }
+.scorre__pista { display: flex; align-items: center; width: max-content; animation: scorre var(--durata, 48s) linear infinite; }
+.scorre:hover .scorre__pista, .scorre:focus-within .scorre__pista, .scorre.is-ferma .scorre__pista { animation-play-state: paused; }
+@keyframes scorre { to { transform: translateX(-50%); } }
+
+/* Il rullino delle fotografie (Eventi, pagine degli eventi) */
+.rullino { margin-top: clamp(18px, 2.2vw, 30px); overflow: hidden; }
+.rullino .scorre__pista { --durata: 70s; height: clamp(240px, 36svh, 380px); align-items: stretch; }
+.rullino .cornice { flex: 0 0 auto; height: 100%; aspect-ratio: 4 / 5; margin-right: 12px; border-radius: 0; }
+
+/* --------------------------------------------------------------------------
+   Pagine con una testata: il nome a tutta larghezza (.parola, .fit), sotto
+   la presentazione e poi i blocchi. Eventi e Produzioni sono a colore pieno
+   (vedi pagina-eventi e pagina-produzioni nei loro fogli), e anche la barra
+   prende il colore, così il passaggio dalla home non ha stacchi.
+   -------------------------------------------------------------------------- */
+.parola { margin-left: -0.012em; }
+.pagina-colore .nav { color: var(--inchiostro); }
+.pagina-colore main > section { min-height: 0; }
+.pagina-colore main { padding-bottom: clamp(96px, 11vw, 168px); }
+.hero--pagina { padding-bottom: 0; }
+
+/* Il resto entra dopo il nome, salendo appena */
+.entra { animation: entra 0.8s var(--ease) 0.12s both; }
+@keyframes entra {
+  from { opacity: 0; translate: 0 28px; }
 }
 
-/* Sul telefono il testo del primo piano va sotto l'immagine */
-@media (max-width: 760px) {
-  .primo-piano { grid-template-columns: 1fr; }
-  .primo-piano-testo { border-top: 0; padding-top: 0; }
-  .primo-piano-testo .freccia { margin-top: 0.4rem; }
-  .barra-socio { display: none; }
-  .piede-interno { grid-template-columns: 1fr; }
-  .piede-marchio { max-width: 280px; }
+.blocco-pagina { padding: clamp(36px, 4.5vw, 64px) 0 0; }
+
+/* Sotto il nome, la presentazione della pagina: a misura di lettura, grande */
+.presentazione {
+  margin-top: clamp(20px, 2.4vw, 36px); padding-bottom: clamp(28px, 3.4vw, 48px); border-bottom: 1px solid var(--filo);
+  font-size: clamp(21px, 2.1vw, 31px); font-weight: 600; line-height: 1.3; letter-spacing: -0.01em;
+}
+.presentazione p + p { margin-top: 0.7em; }
+
+/* Un filo separa un blocco dal precedente */
+.blocco-pagina--diviso { margin-top: clamp(48px, 6vw, 88px); padding-top: 0; }
+.blocco-pagina--diviso > .wrap { padding-top: clamp(36px, 4.5vw, 64px); border-top: 1px solid var(--filo); }
+.blocco-pagina__testa { display: flex; align-items: center; min-height: 48px; margin-bottom: clamp(18px, 2vw, 28px); font-size: clamp(26px, 2.6vw, 38px); }
+
+/* I marchi delle serie e degli eventi: le scritte dei PNG, ricolorate col
+   colore della pagina. Il logo di un evento prende --marchio e --ar
+   (larghezza / altezza) da una classe marchio--<pagina> (evento.css) */
+.marchio-serie {
+  display: block; background: currentColor;
+  -webkit-mask: var(--marchio) center / contain no-repeat; mask: var(--marchio) center / contain no-repeat;
+}
+.marchio-serie--lss { --marchio: url('../img/brand/long-story-short.png'); aspect-ratio: 1777 / 1263; width: min(100%, 260px); }
+.marchio-serie--evento { aspect-ratio: var(--ar); }
+
+/* --------------------------------------------------------------------------
+   Schede (Eventi, Produzioni): la foto a spigolo vivo, sotto un filo, il
+   titolo e i dati. Al passaggio su una le altre si spengono.
+   -------------------------------------------------------------------------- */
+.schede { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(28px, 3vw, 44px) var(--gap); }
+.scheda-g { display: block; transition: opacity 0.25s var(--ease); }
+.scheda-g .cornice { aspect-ratio: 16 / 10; border-radius: 0; }
+/* Scheda di un evento col suo logo: niente fondo, il PNG coi suoi colori
+   appoggiato al filo, a sinistra, con un'area simile per tutti (la larghezza
+   cresce con la radice delle proporzioni, vedi la pagina dell'evento) */
+.scheda-g .cornice--logo {
+  display: flex; align-items: flex-end; overflow: visible;
+  background: none; container-type: size;
+}
+.scheda-g .cornice--logo .logo-evento {
+  position: static; flex: 0 0 auto; height: auto; aspect-ratio: var(--ar); object-fit: contain;
+  width: min(100cqw, 100cqh * var(--ar));
+  width: min(100cqw, 100cqh * var(--ar), 80cqh * sqrt(var(--ar)));
+  transition: transform 0.6s var(--ease); transform-origin: left bottom;
+}
+a.scheda-g:hover .cornice--logo .logo-evento { transform: scale(1.025); }
+.scheda-g__testo { display: grid; gap: 4px; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--filo); }
+.scheda-g__titolo { font-family: var(--f-titoli); font-weight: 900; text-transform: uppercase; font-size: clamp(19px, 1.7vw, 24px); line-height: 1; letter-spacing: var(--titoli-spazio); }
+.scheda-g__dati { font-size: 14px; line-height: 1.4; color: var(--tenue); }
+/* Al passaggio su una scheda le altre si spengono; non in Eventi, dove i
+   loghi restano tutti accesi */
+@media (hover: hover) {
+  body:not(.pagina-eventi) .schede:has(a.scheda-g:hover) .scheda-g:not(:hover) { opacity: 0.35; }
+}
+@media (max-width: 1023px) {
+  .schede { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 639px) {
+  .schede { grid-template-columns: minmax(0, 1fr); }
 }
 
-@media (max-width: 620px) {
-  :root { --barra-h: 56px; }
-  .barra { gap: 0; }
-  .barra-logo img { width: 52px; height: 20px; }
-  .voce { padding: 0 0.45rem; font-size: 0.7rem; letter-spacing: 0.04em; }
+/* --------------------------------------------------------------------------
+   Passaggi fra le pagine (comune.js): dalla home a una sezione il colore
+   riempie lo schermo e il nome sale dove la pagina d'arrivo lo aspetta;
+   dalla Cortoteca al corto, e da Eventi a un evento, l'immagine cliccata
+   cresce fino al suo posto nella pagina d'arrivo
+   -------------------------------------------------------------------------- */
+.passaggio { position: fixed; inset: 0; z-index: 50; pointer-events: none; }
+.passaggio__parola { position: fixed; z-index: 51; margin: 0; pointer-events: none; }
+.passaggio__parola .o .occhio { display: none; }
+.passaggio-corto { position: fixed; z-index: 51; margin: 0; pointer-events: none; transform-origin: 0 0; }
+/* Il logo di una scheda in volo: l'immagine coi suoi colori e, sopra, la
+   sagoma nel colore dell'evento che compare piano */
+.passaggio-corto > .logo-evento { display: block; width: 100%; height: 100%; }
+.passaggio-tinta {
+  position: absolute; inset: 0; opacity: 0;
+  -webkit-mask: var(--marchio) center / contain no-repeat; mask: var(--marchio) center / contain no-repeat;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .indicatore--pronto { transition: none; }
-  .rec-dot { animation: none; }
-}
-
-/* Barra di scorrimento su fondo chiaro */
-::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.05); }
-::-webkit-scrollbar-thumb { background: var(--cdl-dark); }
+/* Arrivo da un passaggio: il nome è già al suo posto; barra e filo
+   compaiono piano invece che di colpo */
+.da-passaggio .nav__riga { animation: affiora 0.5s ease-out 0.05s both; }
+.da-passaggio .presentazione { animation: filo 0.6s ease-out both; }
+@keyframes affiora { from { opacity: 0; } }
+@keyframes filo { from { border-bottom-color: transparent; } }

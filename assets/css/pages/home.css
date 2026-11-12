@@ -1,282 +1,162 @@
 /* ==========================================================================
-   HOME (index.html) — apertura a tutto schermo sulla sala vista dall'alto,
-   attività recenti (l'ultimo evento e l'ultima produzione, specchiati), il
-   rullino di fotografie e la fascia lavanda del sostegno.
-
-   Barra, primo piano, pulsanti e piede sono in components.css: qui resta
-   solo quello che esiste su questa pagina.
+   HOME (index.html)
+   L'apertura: la sala vista dall'alto, al buio, con la torcia che segue il
+   puntatore e, al piede, il nastro delle ultime notizie. Sotto l'indice
+   delle tre sezioni, il rullino delle fotografie degli eventi e Sostieni.
    ========================================================================== */
 
-/* La fascia lavanda tocca il piede: niente stacco fra i due */
-.piede { margin-top: 0; }
-
-/* Titolo di sezione della home: grande, sopra il suo filetto */
-.titolo-sezione {
-  margin-bottom: clamp(1.5rem, 3vw, 2.5rem);
-  padding-bottom: clamp(0.8rem, 1.5vw, 1.2rem);
-  border-bottom: 2px solid var(--riga-forte);
-  font-size: clamp(2rem, 5.2vw, 4.5rem);
-}
-
 /* --------------------------------------------------------------------------
-   Apertura: la fotografia occupa tutto il primo schermo sotto la barra. È in
-   bianco e nero e molto scura (luminanza media 0,03): il testo bianco regge
-   da solo, il velo dal basso copre i pochi punti chiari dietro le scritte.
-   All'apertura la foto si assesta e le righe salgono una dopo l'altra, una
-   volta sola.
+   Apertura: la sala al buio, la torcia e, al piede, il nastro
    -------------------------------------------------------------------------- */
-.apertura {
-  position: relative;
-  display: flex;
-  align-items: flex-end;
-  min-height: max(520px, calc(100svh - var(--barra-h)));
-  overflow: hidden;
-  background: var(--cdl-dark);
-  color: var(--cdl-white);
+.hero--sala {
+  display: flex; align-items: flex-end;
+  /* Lo spazio in fondo comprende quello del nastro */
+  padding-bottom: calc(46px + clamp(36px, 5svh, 64px));
+  background: var(--nero); color: var(--chiaro);
+  --fondo: var(--nero); --inchiostro: var(--chiaro); --accento-hover: var(--lilla); --accento-hover-testo: var(--nero);
 }
-
-.apertura-foto {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  max-width: none;
-  object-fit: cover;
-  animation: assesta 1.6s var(--ease-out) both;
-}
-
-.apertura::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to top, rgba(29, 29, 27, 0.88) 0%, rgba(29, 29, 27, 0.5) 45%, rgba(29, 29, 27, 0) 80%);
-}
-
-.apertura-interno {
-  position: relative;
-  z-index: 1;
-  width: 100%;
-  max-width: calc(var(--larghezza) + var(--margine) * 2);
-  margin: 0 auto;
-  padding: clamp(2rem, 5vw, 4rem) var(--margine);
-}
-
-.apertura-interno > * { animation: sale 0.9s var(--ease-out) both; }
-
-.apertura-interno > :nth-child(2) { animation-delay: 0.08s; }
-
-.apertura-interno > :nth-child(3) { animation-delay: 0.16s; }
-
-.apertura-interno > :nth-child(4) { animation-delay: 0.24s; }
-
-.apertura-etichetta { color: var(--cdl-lavender); }
-
-.apertura h1 {
-  margin: 0.9rem 0 0 -0.04em;
-  font-size: clamp(2.5rem, 9.6vw, 9rem);
-  line-height: 0.84;
-}
-
-/* "CDL" in lavanda, che sul velo scuro sta a 8,6:1 */
-.apertura-frase {
-  max-width: 56ch;
-  margin-top: clamp(1.1rem, 2.5vw, 2rem);
-  font-size: clamp(1rem, 1.35vw, 1.2rem);
-  line-height: 1.55;
-  color: rgba(245, 243, 238, 0.92);
-}
-
-.apertura-frase strong {
-  font-family: var(--f-titoli);
-  font-weight: 900;
-  color: var(--cdl-lavender);
-}
-
+.hero__foto { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; object-fit: cover; animation: assesta 2s var(--ease) both; }
 @keyframes assesta {
-  from { transform: scale(1.07); }
+  from { transform: scale(1.08); }
   to { transform: scale(1); }
 }
 
-@keyframes sale {
-  from { opacity: 0; transform: translateY(22px); }
-  to { opacity: 1; transform: none; }
+/* Due veli: uno fisso a sinistra, che tiene leggibile il testo; uno che
+   lascia un cerchio di luce attorno al punto (--mx, --my) seguito da home.js */
+.hero__buio {
+  position: absolute; inset: 0;
+  background:
+    linear-gradient(90deg, rgba(29, 29, 27, 0.84) 0%, rgba(29, 29, 27, 0.45) 40%, rgba(29, 29, 27, 0) 64%),
+    radial-gradient(circle clamp(240px, 28vw, 430px) at var(--mx, 70%) var(--my, 42%), rgba(29, 29, 27, 0) 0%, rgba(29, 29, 27, 0.2) 55%, rgba(29, 29, 27, 0.66) 100%);
 }
+
+.hero--sala .wrap { position: relative; z-index: 1; }
+.hero--sala .lead { margin-top: clamp(24px, 2.8vw, 40px); max-width: 44ch; font-size: clamp(19px, 1.75vw, 25px); font-weight: 500; line-height: 1.42; }
+.hero--sala .btn-riga { margin-top: 24px; }
+
+/* Il marchio grande: tre lettere che si scoprono dal basso, una dopo
+   l'altra. Sta un passo indietro rispetto al titolo, soprattutto su telefono */
+.marchio {
+  position: relative;
+  display: grid; grid-template-columns: repeat(3, 31.36%); justify-content: space-between;
+}
+.lettera {
+  display: block; aspect-ratio: 450 / 557;
+  background: currentColor;
+  -webkit-mask: url('../../img/brand/logo-cdl.png') var(--x, 0%) 0 / 318.9% 100% no-repeat;
+  mask: url('../../img/brand/logo-cdl.png') var(--x, 0%) 0 / 318.9% 100% no-repeat;
+  animation: scopre 1.1s var(--ease) both;
+}
+.lettera:nth-child(2) { --x: 50%; animation-delay: 0.12s; }
+.lettera:nth-child(3) { --x: 100%; animation-delay: 0.24s; }
+@keyframes scopre {
+  from { clip-path: inset(100% 0 0 0); }
+  to { clip-path: inset(0 0 0 0); }
+}
+.hero--sala .marchio { width: clamp(180px, 26vw, 380px); color: var(--lilla); }
+
+/* Il nastro: le ultime notizie scorrono al piede dell'apertura, separate dal
+   marchio. Si ferma al passaggio, col fuoco o col pulsante. */
+.nastro {
+  position: absolute; left: 0; right: 0; bottom: 0; z-index: 1; height: 46px;
+  display: flex; align-items: center; overflow: hidden;
+  background: var(--nero); color: var(--chiaro);
+}
+.nastro__voce { display: inline-flex; align-items: center; gap: 28px; padding-left: 28px; font-size: 15px; font-weight: 700; white-space: nowrap; }
+.nastro__voce .logo { width: 30px; color: var(--lilla); }
+.nastro__voce a { display: inline-flex; align-items: center; min-height: 44px; transition: color 0.15s var(--ease); }
+.nastro__voce a:hover { color: var(--lilla); }
+.nastro .scorre__pausa {
+  position: absolute; right: 0; top: 0; bottom: 0; width: 56px;
+  display: grid; place-items: center; border: 0; cursor: pointer;
+  background: var(--nero); color: var(--chiaro); box-shadow: -14px 0 14px var(--nero);
+  --inchiostro: var(--chiaro);
+}
+.nastro .scorre__pausa svg { width: 14px; height: 14px; }
+.nastro .scorre__pausa .icona-riprendi, .nastro.is-ferma .scorre__pausa .icona-ferma { display: none; }
+.nastro.is-ferma .scorre__pausa .icona-riprendi { display: block; }
 
 /* --------------------------------------------------------------------------
-   Attività recenti: due primi piani (components.css), il secondo specchiato.
-   Il rimando all'elenco completo sta sotto la colonna di testo.
+   L'indice: tre nomi larghi quanto la pagina, e nient'altro. Al passaggio
+   su un nome tutta la sezione prende il colore di quella parte del sito, gli
+   altri nomi si spengono e sotto compare l'elenco breve dei più recenti.
+   Sulla Cortoteca la sezione si fa sala: si aprono gli occhi nelle O e
+   altri si affacciano dai bordi della pagina.
    -------------------------------------------------------------------------- */
-.ultimo {
-  display: grid;
-  justify-items: end;
+#indice {
+  min-height: 0; padding-top: clamp(40px, 5vw, 72px);
+  --spento: rgba(29, 29, 27, 0.16);
+  transition: background-color 0.45s var(--ease), color 0.3s var(--ease);
+}
+#indice:has(.sezione--eventi:is(:hover, :focus-within)) { --fondo: var(--blu); --inchiostro: var(--azzurro); --filo: rgba(132, 241, 247, 0.3); --tenue: rgba(247, 247, 247, 0.78); --spento: rgba(132, 241, 247, 0.22); }
+#indice:has(.sezione--produzioni:is(:hover, :focus-within)) { --fondo: var(--lilla); --inchiostro: var(--nero); --filo: rgba(29, 29, 27, 0.25); --tenue: rgba(29, 29, 27, 0.7); --spento: rgba(29, 29, 27, 0.16); }
+#indice:has(.sezione--cortoteca:is(:hover, :focus-within)) { --fondo: var(--nero-sala); --inchiostro: var(--lilla); --filo: rgba(185, 187, 248, 0.3); --tenue: rgba(185, 187, 248, 0.75); --spento: rgba(185, 187, 248, 0.2); }
+
+.sezioni { border-top: 1px solid var(--filo); transition: border-color 0.3s var(--ease); }
+.sezione { padding-top: clamp(18px, 2.2vw, 30px); border-bottom: 1px solid var(--filo); transition: color 0.3s var(--ease), border-color 0.3s var(--ease); }
+.sezione__nome { margin-left: -0.012em; }
+.sezione__nome a { display: block; }
+.sezione__nome a:focus-visible { outline: 3px solid currentColor; outline-offset: 6px; }
+#indice:has(.sezione:is(:hover, :focus-within)) .sezione:not(:hover, :focus-within) { color: var(--spento); }
+
+/* L'elenco breve: una riga sola sotto il nome, nello spazio che c'è sempre
+   (così al passaggio nulla si sposta). Titolo e data, separati da un filo. */
+.sezione__elenco {
+  display: flex; flex-wrap: wrap; align-items: center; column-gap: 0;
+  height: 56px; overflow: hidden;
+  font-size: 15px; line-height: 1.3;
+}
+.sezione__elenco li { display: flex; align-items: center; height: 56px; }
+.sezione__elenco li + li::before { content: ''; width: 1px; height: 16px; margin: 0 18px; background: var(--filo); }
+.sezione__elenco a { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; font-weight: 700; white-space: nowrap; }
+.sezione__elenco a small { font-size: 13px; font-weight: 500; color: var(--tenue); }
+.sezione__elenco a:hover span { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 4px; }
+
+@media (hover: hover) {
+  .sezione__elenco li { opacity: 0; translate: 0 -8px; transition: opacity 0.25s var(--ease), translate 0.35s var(--ease); }
+  /* --i è la posizione della voce, messa da home.js: le voci entrano una dopo l'altra */
+  .sezione:is(:hover, :focus-within) .sezione__elenco li { opacity: 1; translate: 0 0; transition-delay: calc(var(--i, 0) * 45ms); }
+}
+/* Senza puntatore l'elenco non c'è: restano i tre nomi */
+@media (hover: none) {
+  .sezione__elenco { height: clamp(12px, 2vw, 20px); }
+  .sezione__elenco li { display: none; }
 }
 
-.ultimo .primo-piano { width: 100%; }
+/* Gli occhi nelle O: chiusi (assenti) a riposo, si aprono quando la
+   Cortoteca si accende (la forma è quella di components.css) */
+.sezione--cortoteca .fit-testo { display: inline-block; }
+.sezione .o .occhio { transform: scale(0); transition: transform 0.35s var(--ease); }
 
-.ultimo + .ultimo { margin-top: clamp(2.5rem, 6vw, 5rem); }
+/* Gli occhi ai bordi: fuori pagina a riposo, si affacciano a metà */
+.occhi-bordo { position: absolute; inset: 0; pointer-events: none; }
+.occhi-bordo .occhio {
+  position: absolute; left: var(--x); top: var(--y); width: var(--d);
+  translate: -50% -50%;
+  transform: translateX(calc((var(--x) - 50%) * 2.2)); transition: transform 0.5s var(--ease);
+}
+.occhi-bordo .occhio:nth-child(2), .occhi-bordo .occhio:nth-child(4) { transition-delay: 0.08s; }
 
-.ultimo--inverso { justify-items: start; }
-
-.ultimo--inverso .primo-piano { grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); }
-
-.ultimo--inverso .primo-piano-copertina { order: 2; }
-
-.ultimo .rimando { margin-top: 0.5rem; }
+#indice:has(.sezione--cortoteca:is(:hover, :focus-within)) .o .occhio { transform: scale(1); }
+#indice:has(.sezione--cortoteca:is(:hover, :focus-within)) .occhi-bordo .occhio { transform: none; }
 
 /* --------------------------------------------------------------------------
-   Rullino: striscia di fotografie a tutta larghezza, tutte alla stessa
-   altezza e ognuna alla sua proporzione, da scorrere in orizzontale. Dove
-   il browser lo consente la striscia avanza piano mentre la pagina scorre.
+   Dalle sale e dai set: il rullino scorre piano da solo e si ferma al
+   passaggio o col fuoco; ogni foto porta al suo evento
    -------------------------------------------------------------------------- */
-.rullino { padding: 0 0 clamp(3rem, 7vw, 6rem); }
-
-.rullino .titolo-sezione {
-  max-width: var(--larghezza);
-  margin-left: max(var(--margine), calc((100% - var(--larghezza)) / 2));
-  margin-right: max(var(--margine), calc((100% - var(--larghezza)) / 2));
-}
-
-.rullino-scorri {
-  overflow-x: auto;
-  overscroll-behavior-x: contain;
-  scroll-snap-type: x proximity;
-  scrollbar-width: thin;
-  scrollbar-color: var(--cdl-dark) transparent;
-}
-
-.rullino-pista {
-  display: flex;
-  gap: 0.6rem;
-  width: max-content;
-  padding: 0 var(--margine) 0.9rem;
-}
-
-.rullino-foto {
-  flex: 0 0 auto;
-  height: clamp(280px, 56vh, 540px);
-  overflow: hidden;
-  scroll-snap-align: center;
-  background: var(--fondo-foto);
-}
-
-.rullino-foto img {
-  width: auto;
-  height: 100%;
-  max-width: none;
-  transition: transform 0.7s var(--ease-out);
-}
-
-.rullino-foto:hover img { transform: scale(1.03); }
-
-@media (prefers-reduced-motion: no-preference) {
-  @supports (animation-timeline: view()) {
-    .rullino-pista {
-      animation: avanza linear both;
-      animation-timeline: view();
-      animation-range: entry 0% exit 100%;
-    }
-  }
-}
-
-@keyframes avanza {
-  from { transform: translateX(0); }
-  to { transform: translateX(-9%); }
-}
-
-/* --------------------------------------------------------------------------
-   Sostegno: fascia lavanda da bordo a bordo. A sinistra "Sostieni" e il
-   marchio, cubitali; a destra il testo, i due contatti e il rimando ai
-   vantaggi. La tessera sporge dal fondo, inclinata.
-   -------------------------------------------------------------------------- */
-.sostegno {
-  position: relative;
-  overflow: hidden;
-  background: var(--cdl-lavender);
-  scroll-margin-top: var(--barra-h);
-}
-
-.sostegno-interno {
-  position: relative;
-  display: grid;
-  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
-  gap: clamp(1.5rem, 5vw, 4.5rem);
-  align-items: end;
-  max-width: calc(var(--larghezza) + var(--margine) * 2);
-  margin: 0 auto;
-  padding: clamp(3rem, 8vw, 7rem) var(--margine);
-}
-
-.sostegno .etichetta { color: var(--cdl-dark); }
-
-/* "Sostieni" e sotto il marchio, invece della parola CDL scritta. Il logo è
-   lavanda nel file: il filtro lo porta a nero pieno. */
-.titolo-marchio {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: clamp(0.5rem, 1.4vw, 1.1rem);
-  margin: 1rem 0 0 -0.04em;
-  font-size: var(--corpo);
-  line-height: 0.8;
-}
-
-.titolo-marchio img {
-  width: auto;
-  height: 0.78em;
-  filter: brightness(0);
-}
-
-.sostegno-frase {
-  max-width: 34ch;
-  font-family: var(--f-corsivo);
-  font-style: italic;
-  font-size: clamp(1.5rem, 2.4vw, 2.1rem);
-  line-height: 1.15;
-}
-
-/* La tessera sta accanto al marchio, nello spazio che resta sotto
-   "Sostieni": posizione e misura seguono il corpo del titolo */
-.sostegno-titolo {
-  --corpo: clamp(3rem, 11vw, 10rem);
-  position: relative;
-}
-
-.sostegno-tessera {
-  position: absolute;
-  left: calc(var(--corpo) * 2.2 + 0.75rem);
-  bottom: calc(var(--corpo) * -0.12);
-  width: max(88px, calc(var(--corpo) * 1.05));
-  transform: rotate(7deg);
-  transition: transform 0.5s var(--ease-out);
-}
-
-.sostegno-tessera:hover { transform: rotate(2deg) translateY(-4px); }
-
-.sostegno-tessera img { width: 100%; height: auto; }
+#sale { min-height: 0; padding-left: 0; padding-right: 0; }
+#sale .scorre__pista { --durata: 80s; height: clamp(220px, 34svh, 340px); align-items: stretch; }
+#sale .cornice { flex: 0 0 auto; height: 100%; aspect-ratio: auto; margin-right: 12px; border-radius: 16px; }
+#sale .cornice img { position: static; width: auto; height: 100%; }
 
 /* --------------------------------------------------------------------------
    Adattamenti
    -------------------------------------------------------------------------- */
-@media (max-width: 900px) {
-  .sostegno-interno { grid-template-columns: minmax(0, 1fr); align-items: start; }
+@media (max-width: 1023px) {
+  .hero--sala { min-height: min(100svh, 760px); }
 }
 
-/* Sul telefono il primo piano va in colonna (components.css): niente
-   specchio, e il rimando sotto il testo a sinistra */
-@media (max-width: 760px) {
-  .ultimo,
-  .ultimo--inverso { justify-items: start; }
-  .ultimo--inverso .primo-piano { grid-template-columns: minmax(0, 1fr); }
-  .ultimo--inverso .primo-piano-copertina { order: 0; }
-  .rullino-foto { height: clamp(240px, 46vh, 380px); }
-}
-
-@media (max-width: 620px) {
-  /* Titolo e frase più raccolti: il primo schermo tiene anche i pulsanti */
-  .apertura-frase { font-size: 0.95rem; line-height: 1.5; }
-  .apertura .azioni .btn { flex: 1 1 100%; }
-
-  /* Accanto al marchio la tessera sarebbe un francobollo: va a destra,
-     oltre la fine di "Sostieni" */
-  .sostegno-tessera { left: auto; right: 0; bottom: -0.6rem; width: 92px; }
+@media (max-width: 639px) {
+  .hero--sala { min-height: min(100svh, 680px); padding-bottom: calc(46px + 32px); }
+  .hero--sala .marchio { width: 150px; }
 }

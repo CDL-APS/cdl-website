@@ -1,0 +1,67 @@
+/* ==========================================================================
+   CONTATTI (contatti.html)
+   In cima l'invito a sostenere CDL, lo stesso blocco arancio della home
+   (meta di "Diventa socio"); sotto, il modulo (meta di "Contatti"), che
+   arriva per email tramite Netlify Forms. Dopo l'invio Netlify riapre la
+   pagina su #grazie, che mostra la conferma al posto del modulo.
+   ========================================================================== */
+
+/* L'arancio occupa lo schermo intero: il nome in alto, sotto in fondo la
+   frase grande con gli inviti a sinistra e la tessera a destra */
+.pagina-contatti main > .contatti-testa { min-height: 100svh; padding-top: calc(var(--nav) + 32px); }
+.contatti-testa .sostieni { display: flex; flex-direction: column; }
+.contatti-testa .sostieni__corpo { margin-top: auto; padding-top: clamp(32px, 4vw, 56px); align-items: end; border-top: 2px solid var(--nero); }
+.contatti-testa .sostieni__frase { max-width: 26ch; font-size: clamp(24px, 2.7vw, 40px); line-height: 1.18; letter-spacing: -0.01em; }
+.contatti-testa .sostieni__stato { margin-top: 22px; font-size: 17px; }
+.contatti-testa .btn-riga { margin-top: 28px; }
+.contatti-testa .sostieni__tessera { max-width: 440px; }
+
+.pagina-contatti main > .contatti { min-height: 0; padding: clamp(64px, 8vw, 120px) 0 clamp(96px, 11vw, 168px); scroll-margin-top: var(--nav); }
+.contatti__testa { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); align-items: end; gap: 16px var(--gap); padding-bottom: clamp(28px, 3.4vw, 48px); border-bottom: 2px solid var(--arancio); }
+.contatti__testa h2 { font-size: clamp(48px, 7vw, 108px); line-height: 0.86; }
+.contatti__frase { max-width: 40ch; font-size: clamp(19px, 1.7vw, 24px); font-weight: 600; line-height: 1.35; }
+
+/* --------------------------------------------------------------------------
+   Il modulo: prima il motivo, a pillole come gli strumenti della Cortoteca,
+   poi nome, email e messaggio
+   -------------------------------------------------------------------------- */
+.modulo { display: grid; gap: 26px; margin-top: clamp(32px, 4vw, 56px); }
+.modulo__gruppo { margin: 0; padding: 0; border: 0; }
+.modulo__gruppo legend { margin-bottom: 14px; padding: 0; font-family: var(--f-titoli); font-weight: 900; text-transform: uppercase; letter-spacing: var(--titoli-spazio); font-size: clamp(22px, 2vw, 28px); line-height: 1; }
+.modulo__motivi { display: flex; flex-wrap: wrap; gap: 8px; }
+.modulo__motivi input { position: absolute; opacity: 0; pointer-events: none; }
+.modulo__motivi .scelta { min-height: 44px; border: 2px solid var(--nero); }
+.modulo__motivi input:checked + .scelta { border-color: var(--nero); background: var(--arancio); color: var(--nero); }
+.modulo__motivi input:focus-visible + .scelta { outline: 3px solid var(--nero); outline-offset: 3px; }
+.modulo__motivi .scelta:hover { background: rgba(29, 29, 27, 0.08); }
+.modulo__coppia { display: grid; grid-template-columns: 1fr 1fr; gap: 22px var(--gap); }
+.modulo__campo { display: grid; gap: 8px; }
+.modulo__campo span { font-size: 14px; font-weight: 700; }
+.modulo__campo input, .modulo__campo textarea {
+  width: 100%; min-height: 52px; padding: 12px 16px;
+  border: 2px solid var(--nero); border-radius: 14px; background: #fff;
+  font: inherit; font-size: 16px; color: var(--nero);
+}
+.modulo__campo textarea { resize: vertical; min-height: 160px; }
+.modulo__campo input:focus-visible, .modulo__campo textarea:focus-visible { outline: 3px solid var(--arancio); outline-offset: 2px; }
+.modulo__consenso { display: flex; align-items: flex-start; gap: 12px; font-size: 15px; line-height: 1.45; }
+.modulo__consenso input { width: 22px; height: 22px; margin: 0; flex: 0 0 auto; accent-color: var(--arancio); }
+.modulo__piede { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 20px 32px; }
+.modulo__piede .modulo__consenso { flex: 1 1 320px; }
+.modulo .btn--pieno:hover { border-color: var(--nero); background: var(--nero); color: var(--chiaro); }
+.modulo .btn--pieno:active, .modulo .btn--pieno.is-inviato { border-color: var(--arancio); background: var(--arancio); color: var(--nero); }
+
+/* --------------------------------------------------------------------------
+   La conferma: c'è solo quando l'indirizzo finisce con #grazie (Netlify ci
+   torna dopo l'invio) e prende il posto del modulo
+   -------------------------------------------------------------------------- */
+.grazie { display: none; scroll-margin-top: calc(var(--nav) + 24px); }
+.grazie:target { display: grid; gap: 14px; justify-items: start; margin-top: clamp(32px, 4vw, 56px); }
+.contatti:has(.grazie:target) .modulo { display: none; }
+.grazie__titolo { font-size: clamp(28px, 3vw, 44px); }
+.grazie__testo { max-width: 46ch; font-size: clamp(18px, 1.6vw, 22px); font-weight: 600; line-height: 1.4; }
+.grazie .link { margin-top: 4px; }
+
+@media (max-width: 639px) {
+  .modulo__coppia, .contatti__testa { grid-template-columns: 1fr; }
+}

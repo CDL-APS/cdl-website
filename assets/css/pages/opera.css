@@ -1,262 +1,77 @@
 /* ==========================================================================
-   SCHEDA OPERA (opera.html) — dettaglio del singolo cortometraggio
+   LA PAGINA DEL CORTO (opera.html, e la sala della Cortoteca, che carica
+   anche questo foglio)
+   Fondo nero; il colore è quello del corto (--titolo, messo da corto.js:
+   la colonna colore, o il colore del titolo grafico, o il lilla). In alto lo
+   schermo: il fotogramma col titolo, con le stesse proporzioni della
+   galleria, perché il passaggio dalla Cortoteca sia solo un ingrandimento.
    ========================================================================== */
+.pagina-corto {
+  --fondo: var(--nero-sala); --barra: var(--nero-sala); --inchiostro: var(--chiaro);
+  --titolo: var(--lilla); --tenue: rgba(247, 247, 247, 0.72);
+  /* i fili prendono il colore del corto */
+  --filo: color-mix(in srgb, var(--titolo) 60%, transparent);
+  --accento-hover: var(--chiaro); --accento-hover-testo: var(--nero);
+}
+html:has(.pagina-corto) { background: var(--nero-sala); }
+.pagina-corto .nav { color: var(--chiaro); }
+.pagina-corto main > section { min-height: 0; }
+.pagina-corto main { padding-bottom: clamp(96px, 11vw, 168px); }
+.hero--corto { padding-bottom: 0; }
 
 /* --------------------------------------------------------------------------
-   Schermata di caricamento, coperta finché i dati non sono pronti. Sta sotto
-   la barra (z-index 100), che resta usabile anche se l'opera non si trova.
+   Lo schermo: le stesse proporzioni della targa in galleria
    -------------------------------------------------------------------------- */
-.caricamento {
-  position: fixed;
+.schermo { --r-still: 14px; }
+.schermo .targa {
   inset: 0;
-  z-index: 50;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem;
-  background: var(--cdl-white);
-  transition: opacity 0.5s ease;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
+  padding: 7% 10%; border-radius: 0; background: none; color: var(--chiaro); text-align: center;
+  opacity: 1; translate: none;
+  animation: affiora 0.6s ease-out 0.15s both;
 }
+.schermo .targa__titolo { font-size: clamp(36px, 5vw, 72px); line-height: 0.95; }
+.schermo iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
 
-.ruota {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  border: 2px solid var(--riga);
-  border-top-color: var(--cdl-dark);
-  animation: gira 0.9s linear infinite;
+/* Lo schermo come lettore: la copertina (fotogramma e titolo) sta sopra il
+   video e si dissolve quando parte. Al passaggio il puntatore lascia il
+   posto al disco "Guarda". */
+.schermo--lettore { cursor: pointer; }
+.schermo--lettore:focus-visible { outline: 3px solid var(--titolo); outline-offset: 4px; }
+.schermo .cornice img, .schermo .targa, .schermo__play { transition: opacity 0.5s var(--ease); }
+.schermo.is-in-onda .cornice img, .schermo.is-in-onda .targa, .schermo.is-in-onda .schermo__play { opacity: 0; pointer-events: none; }
+.schermo .cornice img { z-index: 1; }
+.schermo .targa { z-index: 2; }
+.schermo__play { z-index: 2; background: var(--titolo); color: var(--nero); }
+@media (hover: hover) and (pointer: fine) {
+  .schermo--lettore[data-cursore]:hover { cursor: none; }
 }
-
-@keyframes gira { to { transform: rotate(360deg); } }
-
-/* Il contenuto compare solo a dati pronti, con l'ingresso condiviso */
-.opera-pagina { opacity: 0; }
-
-.opera-pagina.is-pronta { animation: fadeIn 0.8s ease-out forwards; }
+/* Un corto che arriverà in streaming: lo dice una pillola ferma, non un tasto */
+.schermo__attesa { z-index: 2; border: 2px solid var(--titolo); background: var(--nero-sala); color: var(--titolo); }
 
 /* --------------------------------------------------------------------------
-   Testata: titolo cubitale e anno, la tagline in corsivo, generi e
-   Letterboxd
+   Il corto: la frase e la sinossi a sinistra, i dati a destra; sotto le
+   note di regia e i crediti
    -------------------------------------------------------------------------- */
-.testata {
-  display: flex;
-  flex-direction: column;
-  gap: clamp(0.8rem, 1.6vw, 1.25rem);
-  margin-bottom: clamp(1.5rem, 3.5vw, 2.5rem);
-}
+.corto { align-items: start; }
+.corto[hidden] { display: none; }
+.corto__frase { font-size: clamp(24px, 2.6vw, 38px); font-weight: 600; line-height: 1.22; letter-spacing: -0.01em; color: var(--titolo); }
+.corto__sinossi { margin-top: 20px; max-width: 60ch; font-size: 17px; line-height: 1.6; color: var(--tenue); }
+.corto .btn-riga { margin-top: 28px; }
+.corto .btn--pieno { border-color: var(--titolo); background: var(--titolo); color: var(--nero-sala); }
+.corto .btn--pieno:hover { border-color: var(--chiaro); background: var(--chiaro); }
+.corto__dati, .crediti { display: grid; gap: 14px; }
+.corto__dati { padding-top: 14px; border-top: 2px solid var(--titolo); }
+.corto__dati dt, .crediti dt { font-size: 14px; color: var(--titolo); }
+.corto__dati dd, .crediti dd { margin: 2px 0 0; font-size: 17px; font-weight: 600; }
+.crediti { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px var(--gap); }
+.crediti > div { padding-top: 12px; border-top: 1px solid var(--filo); }
+.note-regia { display: grid; gap: 1em; max-width: 68ch; font-size: 17px; line-height: 1.6; color: var(--tenue); }
 
-.testata-riga {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 0.2rem 1.5rem;
-}
+/* Pagina del corto: il colore del corto anche per le piccole intestazioni */
+.pagina-corto .blocco-pagina__testa { color: var(--titolo); }
 
-.testata h1 {
-  margin-left: -0.04em;
-  font-size: clamp(2.6rem, 10vw, 8.5rem);
-  line-height: 0.84;
-  overflow-wrap: anywhere;
-}
-
-.anno {
-  font-family: var(--f-titoli);
-  font-size: clamp(1.4rem, 3.4vw, 2.6rem);
-  font-weight: 900;
-  letter-spacing: -0.04em;
-  color: var(--testo-tenue);
-}
-
-.tagline {
-  max-width: 30ch;
-  font-family: var(--f-corsivo);
-  font-style: italic;
-  font-size: clamp(1.5rem, 2.8vw, 2.4rem);
-  line-height: 1.1;
-}
-
-.testata-extra {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.generi { display: flex; flex-wrap: wrap; gap: 0.4rem; }
-
-/* Etichetta di genere: tassello lavanda */
-.genere {
-  padding: 0.5rem 0.75rem;
-  border-radius: var(--r-s);
-  background: var(--cdl-lavender);
-  font-family: var(--f-titoli);
-  font-size: var(--etichetta);
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-}
-
-.letterboxd {
-  display: grid;
-  place-items: center;
-  width: 44px;
-  height: 44px;
-}
-
-.letterboxd img {
-  width: 32px;
-  height: 32px;
-  border-radius: 6px;
-  transition: transform 0.3s var(--ease-out);
-}
-
-.letterboxd:hover img { transform: scale(1.08); }
-
-/* --------------------------------------------------------------------------
-   Lo schermo: video o fotogramma a tutta larghezza, a spigolo vivo
-   -------------------------------------------------------------------------- */
-.media {
-  position: relative;
-  overflow: hidden;
-  background: var(--cdl-dark);
-}
-
-/* Rapporto 16:9 mantenuto col trucco del padding percentuale, che si calcola
-   sulla larghezza del contenitore (9/16 = 56.25%) */
-.video-container {
-  position: relative;
-  padding-bottom: 56.25%;
-  height: 0;
-}
-
-.video-container iframe {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  border: 0;
-}
-
-.fotogramma {
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  object-fit: cover;
-}
-
-/* Avviso "streaming in arrivo" per le opere senza video pubblicato: una
-   linguetta di carta nell'angolo del fotogramma */
-.in-arrivo {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  display: flex;
-  align-items: flex-end;
-  justify-content: flex-start;
-}
-
-.in-arrivo-avviso {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.6rem;
-  min-height: 44px;
-  padding: 0 1rem;
-  background: var(--cdl-white);
-  font-family: var(--f-titoli);
-  font-size: var(--etichetta);
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-}
-
-/* --------------------------------------------------------------------------
-   Sotto lo schermo: sinossi e note di regia nella colonna larga, troupe e
-   cast in quella laterale. Ogni blocco pende da un filetto nero.
-   -------------------------------------------------------------------------- */
-.opera-griglia {
-  display: grid;
-  grid-template-columns: minmax(0, 1.9fr) minmax(0, 1fr);
-  gap: clamp(2rem, 5vw, 4.5rem);
-  align-items: start;
-  margin-top: clamp(1.75rem, 4vw, 3rem);
-}
-
-.opera-principale,
-.opera-laterale {
-  display: flex;
-  flex-direction: column;
-  gap: clamp(1.75rem, 3vw, 2.5rem);
-}
-
-.sinossi {
-  max-width: 60ch;
-  font-size: clamp(1.1rem, 1.5vw, 1.3rem);
-  line-height: 1.55;
-}
-
-.blocco-dati {
-  display: flex;
-  flex-direction: column;
-  gap: 0.9rem;
-  padding-top: 0.8rem;
-  border-top: 2px solid var(--riga-forte);
-}
-
-.note { max-width: 68ch; font-size: 1rem; line-height: 1.65; color: var(--testo-medio); }
-
-.dati { display: flex; flex-direction: column; gap: 0.9rem; }
-
-.dati dt {
-  font-family: var(--f-titoli);
-  font-size: var(--etichetta);
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-  color: var(--testo-tenue);
-}
-
-.dati dd {
-  margin-top: 0.2rem;
-  font-family: var(--f-titoli);
-  font-size: 0.95rem;
-  font-weight: 700;
-  line-height: 1.3;
-  text-transform: uppercase;
-}
-
-.cast { list-style: none; display: flex; flex-direction: column; }
-
-.cast li {
-  display: flex;
-  flex-direction: column;
-  gap: 0.15rem;
-  padding: 0.6rem 0;
-  border-bottom: 1px solid var(--riga);
-}
-
-.cast li:first-child { padding-top: 0; }
-
-.cast li:last-child { border-bottom: 0; padding-bottom: 0; }
-
-.cast-nome {
-  font-family: var(--f-titoli);
-  font-size: 0.9rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.02em;
-}
-
-.cast-ruolo { font-size: 0.88rem; color: var(--testo-tenue); }
-
-@media (max-width: 1000px) {
-  .opera-griglia { grid-template-columns: 1fr; }
-
-  /* La colonna laterale finisce sotto, a tutta larghezza: la troupe si
-     distribuisce su più colonne invece di allungarsi in una lista */
-  .dati {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 0.9rem 1.5rem;
-  }
+@media (max-width: 1023px) {
+  .corto__testo, .corto__dati { grid-column: 1 / -1; }
+  .crediti { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }

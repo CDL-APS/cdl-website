@@ -1,57 +1,37 @@
 /* ==========================================================================
-   PRODUZIONI (produzioni.html) — i lavori di CDL, divisi in blocchi: il più
-   recente in primo piano, le produzioni originali, le collaborazioni.
-   Primo piano, titoli dei blocchi e griglia sono in components.css.
+   PRODUZIONI (produzioni.html)
+   Lilla pieno con le scritte nere; anche la barra prende il colore. In
+   evidenza il lavoro più recente, poi le produzioni originali e le
+   collaborazioni (il blocco compare con la prima).
    ========================================================================== */
-
-/* I fotogrammi sono quasi tutti in formato cinema: il primo piano li mostra
-   più larghi del 16:9 e i riquadri in 16:9, due per riga */
-.primo-piano-copertina { aspect-ratio: 1.85 / 1; }
-
-.griglia-riquadri { grid-template-columns: repeat(auto-fill, minmax(min(100%, 440px), 1fr)); }
-
-.riquadro-foto { aspect-ratio: 16 / 9; }
-
-/* Dati essenziali dell'opera in primo piano, in coppie voce / valore come la
-   troupe della scheda opera */
-.primo-piano-dati {
-  display: grid;
-  gap: 0.55rem;
-  width: 100%;
-  margin-top: 0.4rem;
-  padding-top: 0.9rem;
-  border-top: 1px solid var(--riga);
+.pagina-produzioni {
+  --fondo: var(--lilla); --inchiostro: var(--nero); --barra: var(--lilla);
+  --tenue: rgba(29, 29, 27, 0.72); --filo: rgba(29, 29, 27, 0.24);
+  --accento-hover: var(--chiaro); --accento-hover-testo: var(--nero);
 }
+html:has(.pagina-produzioni) { background: var(--lilla); }
+.pagina-produzioni .nav__voce[aria-current]::before { background: var(--nero); }
 
-.primo-piano-dati div {
-  display: grid;
-  grid-template-columns: 7rem minmax(0, 1fr);
-  gap: 0.75rem;
-  align-items: baseline;
-}
+/* In evidenza: il fotogramma grande e, a fianco, quel che serve sapere */
+.primo-piano { align-items: stretch; }
+.primo-piano[hidden] { display: none; }
+.primo-piano > .cornice { aspect-ratio: 16 / 10; border-radius: 0; }
+.primo-piano__testo { display: flex; flex-direction: column; gap: 12px; padding-top: 14px; border-top: 2px solid var(--inchiostro); }
+.primo-piano__titolo { font-size: clamp(36px, 4.2vw, 64px); line-height: 0.92; }
+.primo-piano__frase { font-size: clamp(17px, 1.4vw, 20px); font-weight: 600; line-height: 1.4; }
+.primo-piano__dati { font-size: 15px; color: var(--tenue); }
+/* I dati del corto su righe distinte */
+.primo-piano__dati span { display: block; }
+.primo-piano__azione { align-self: flex-start; margin-top: auto; }
 
-.primo-piano-dati dt {
-  font-family: var(--f-titoli);
-  font-size: var(--etichetta);
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-  color: var(--testo-medio);
-}
+/* Le still delle Produzioni hanno un contorno nero, che le stacca dal lilla
+   anche quando sono chiare; il titolo grafico, se c'è, è ricolorato in nero */
+.pagina-produzioni .primo-piano > .cornice,
+.pagina-produzioni .scheda-g .cornice { border: 2px solid var(--nero); }
+.primo-piano__titolo img { display: block; width: 100%; max-height: 220px; object-fit: contain; object-position: left bottom; filter: brightness(0); }
+/* Il titolo nel carattere del corto (titolo_font) */
+.primo-piano__titolo .targa__font { display: block; font-size: 1.1em; line-height: 1; }
 
-.primo-piano-dati dd { font-size: 0.95rem; line-height: 1.4; }
-
-/* Rimando alla Cortoteca in fondo alla pagina */
-.riga-altrove { margin-top: clamp(2.5rem, 5vw, 3.5rem); }
-
-/* Database non raggiungibile o nessuna opera */
-.avviso {
-  padding: 2rem 0;
-  border-bottom: 1px solid var(--riga);
-  font-family: var(--f-titoli);
-  font-size: var(--etichetta);
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-  color: var(--testo-tenue);
+@media (max-width: 1023px) {
+  .primo-piano > .cornice, .primo-piano__testo { grid-column: 1 / -1; }
 }

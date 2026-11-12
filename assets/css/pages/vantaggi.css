@@ -1,71 +1,23 @@
 /* ==========================================================================
    VANTAGGI PER I SOCI (vantaggi-tesseramento.html)
+   Carta, filo arancio: i vantaggi in tre blocchi, ognuno una riga di voci
+   col filo sopra, come le schede. In fondo l'invito arancio della home.
    ========================================================================== */
-
-/* --------------------------------------------------------------------------
-   Invito a iscriversi: tinta lavanda e tessera, come il riquadro del
-   tesseramento in home. Non è un collegamento unico ma porta due pulsanti,
-   quindi non cambia colore al passaggio del mouse.
-   -------------------------------------------------------------------------- */
-.invito {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: clamp(1.25rem, 4vw, 3rem);
-  margin-top: clamp(2rem, 5vw, 3rem);
-  padding: clamp(1.5rem, 4vw, 2.75rem);
-  background: var(--cdl-lavender);
-  scroll-margin-top: calc(var(--barra-h) + 1rem);
-}
-
-.invito-testo { display: flex; flex-direction: column; gap: 0.6rem; }
-
-.invito h2 { font-size: clamp(2.4rem, 7vw, 6rem); line-height: 0.84; }
-
-.invito .etichetta { color: var(--cdl-dark); }
-
-.invito .azioni { margin-top: 1rem; }
-
-.invito .tessera {
-  width: clamp(110px, 16vw, 200px);
-  height: auto;
-  flex: 0 0 auto;
-  transform: rotate(-5deg);
-}
-
-/* --------------------------------------------------------------------------
-   Griglie dei vantaggi
-   -------------------------------------------------------------------------- */
-.griglia-vantaggi {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--spazio);
-}
-
-.vantaggio { min-height: 170px; }
-
-/* Il titolo non deve finire sotto la freccia nell'angolo */
-a.vantaggio .scheda-titolo { padding-right: 3rem; }
-
-.vantaggio-logo { margin-bottom: 0.4rem; }
-
-/* I loghi dei partner arrivano coi loro colori: il filtro li porta a nero
-   pieno, come le icone dei vantaggi accanto */
-.vantaggio-logo {
-  width: auto;
-  height: 46px;
-  object-fit: contain;
-  align-self: flex-start;
-  filter: brightness(0);
-}
-
-@media (max-width: 760px) {
-  .griglia-vantaggi { grid-template-columns: 1fr; }
-  .vantaggio { min-height: 0; }
-}
-
-@media (max-width: 620px) {
-  /* La tessera passa sopra il testo invece di schiacciarlo */
-  .invito { flex-direction: column-reverse; align-items: flex-start; }
-  .invito .tessera { width: 96px; }
-}
+.pagina-vantaggi { --filo: rgba(29, 29, 27, 0.2); }
+.pagina-vantaggi main > section { min-height: 0; }
+.pagina-vantaggi main { padding-bottom: clamp(96px, 11vw, 168px); }
+.pagina-vantaggi .hero--pagina .fit + .fit { margin-top: 0.04em; }
+.pagina-vantaggi .presentazione { border-bottom: 2px solid var(--arancio); }
+.vantaggi-g { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(28px, 3vw, 44px) var(--gap); padding: 0; list-style: none; }
+.vantaggio-g { display: grid; align-content: start; gap: 10px; height: 100%; padding-top: 16px; border-top: 2px solid var(--nero); }
+/* I marchi dei partner, tutti in nero: stanno insieme e non litigano coi colori */
+.vantaggio-g__logo { width: 84px; height: 84px; margin: -8px 0 0 -8px; object-fit: contain; filter: brightness(0); }
+.vantaggio-g__titolo { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; font-family: var(--f-titoli); font-weight: 900; text-transform: uppercase; letter-spacing: var(--titoli-spazio); font-size: clamp(21px, 1.9vw, 27px); line-height: 1; }
+.vantaggio-g__freccia { display: grid; place-items: center; flex: 0 0 auto; width: 44px; height: 44px; margin-top: -6px; border: 2px solid currentColor; border-radius: 50%; transition: transform 0.3s var(--ease), background-color 0.2s var(--ease); }
+.vantaggio-g__freccia .freccia { width: 18px; height: 18px; }
+.vantaggio-g__testo { max-width: 42ch; font-size: 16px; line-height: 1.55; color: var(--tenue); }
+a.vantaggio-g { transition: border-color 0.2s var(--ease); }
+a.vantaggio-g:hover { border-top-color: var(--arancio); }
+a.vantaggio-g:hover .vantaggio-g__freccia { transform: translate(3px, -3px); background: var(--arancio); border-color: var(--nero); }
+@media (max-width: 1023px) { .vantaggi-g { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 639px) { .vantaggi-g { grid-template-columns: 1fr; } }
