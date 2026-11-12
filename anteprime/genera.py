@@ -373,8 +373,7 @@ def testata_pagina(nome, presentazione):
 
 PRESENTA_EVENTI = [
     'Proponiamo eventi per la valorizzazione della cultura cinematografica locale, in sala e altrove. '
-    'Il cinema come arte trasversale ha la possibilit&agrave; di raccontare il territorio attraverso i talenti che lo vivono. '
-    'Contattaci per portare Short Talks nel tuo cinema.']
+    'Il cinema come arte trasversale ha la possibilit&agrave; di raccontare il territorio attraverso i talenti che lo vivono.']
 PRESENTA_PRODUZIONI = [
     'Organizziamo produzioni cinematografiche indipendenti, dalla scrittura alla post-produzione, '
     'per costruire attivamente una rete di talenti sul territorio. '
@@ -408,16 +407,22 @@ g_eventi = testata_pagina('Eventi', PRESENTA_EVENTI) + f'''
             </div>
         </section>
 
-        <!-- Le edizioni di Short Talks, dalla più recente -->
-        <section class="blocco-pagina blocco-pagina--diviso entra" id="blocco-short-talks" aria-label="Short Talks" hidden>
+        <!-- Le edizioni di Short Talks, dalla più recente. In cima il format in
+             due righe e l'invito a portarlo in sala, che porta al modulo di
+             Contatti col motivo già scelto -->
+        <section class="blocco-pagina blocco-pagina--diviso entra" id="blocco-short-talks" aria-labelledby="titolo-short-talks" hidden>
             <div class="wrap">
-                <h2 class="blocco-pagina__testa"><span class="marchio-serie marchio-serie--st" role="img" aria-label="Short Talks"></span></h2>
+                <h2 class="sr-only" id="titolo-short-talks">Short Talks</h2>
+                <div class="serie-descrizione">
+                    <p><strong>Short Talks</strong> &egrave; il primo format firmato CDL, nato per portare il cortometraggio in sala e farlo incontrare con il suo pubblico, attraverso il dialogo con chi l&rsquo;ha realizzato.</p>
+                    <p><a class="rimando-testo" href="anteprime/contatti.html?motivo=short-talks#contatti">Contattaci</a> per portare Short Talks nel tuo cinema.</p>
+                </div>
                 <ul class="schede"></ul>
             </div>
         </section>
 
         <!-- Tutto il resto: gli eventi senza serie -->
-        <section class="blocco-pagina entra" id="blocco-altri" aria-labelledby="titolo-altri" hidden>
+        <section class="blocco-pagina blocco-pagina--diviso entra" id="blocco-altri" aria-labelledby="titolo-altri" hidden>
             <div class="wrap">
                 <h2 class="blocco-pagina__testa" id="titolo-altri">Altri eventi</h2>
                 <ul class="schede"></ul>
@@ -723,11 +728,15 @@ def materiali_evento(contenuto):
     return '                <ul class="righe-g">\n' + '\n'.join(righe) + '\n                </ul>'
 
 
-def blocco_evento(ident, titolo, contenuto):
+def blocco_evento(ident, titolo, contenuto, testa=True):
+    """Un blocco col suo titoletto; senza (testa=False) il titolo resta solo
+    per i lettori di schermo"""
+    intestazione = (f'<h2 class="blocco-pagina__testa" id="{ident}">{titolo}</h2>' if testa
+                    else f'<h2 class="sr-only" id="{ident}">{titolo}</h2>')
     return f'''
         <section class="blocco-pagina blocco-pagina--diviso entra" aria-labelledby="{ident}">
             <div class="wrap">
-                <h2 class="blocco-pagina__testa" id="{ident}">{titolo}</h2>
+                {intestazione}
 {contenuto}
             </div>
         </section>
@@ -836,6 +845,192 @@ LSS_PARAGRAFI = '''<p><strong>Long Story Short</strong> &egrave; una sfida a tem
                     <p>La serata finale, il <strong>10 luglio 2026</strong> al <em>Cinema Teatro Tiberio</em>, restituisce al pubblico i sette corti in sala, con le premiazioni della giuria di settore e della giuria stampa, il tutto seguito da una festa nel chiostro.</p>'''
 
 
+# Ritocchi ai testi delle pagine attuali: (com'è, come diventa)
+RITOCCHI = {
+    'short-talks-3-x-laiff.html': [(" · Prima proiezione pubblica, fuori concorso", '')],
+}
+
+# Racconti riscritti per l'anteprima (le altre pagine tengono quello attuale)
+TESTI_EVENTO = {
+    'short-talks-off-1.html': '<p>Fra aprile e maggio 2025 Short Talks esce dalla solita sala: nasce cos&igrave; '
+                              '<strong>Short Talks OFF</strong>, lo spin-off del format, con quattro appuntamenti al '
+                              '<strong>Centro Polifunzionale Il Pallone</strong> di Bologna.</p>',
+}
+
+
+def tag(nome):
+    """Il profilo Instagram di chi ha suonato o collaborato a una serata"""
+    return f'<a class="tag-ig" href="https://www.instagram.com/{nome}/" target="_blank" rel="noopener">@{nome}</a>'
+
+
+# Sotto il titolo di ogni serata, nell'ordine della pagina: al posto dei nomi
+# i tag di chi ha suonato o collaborato
+NOTE_SERATE = {
+    'short-talks-off-1.html': [
+        f'Musica: {tag("bwude")}',
+        f'Con {tag("sayonarafilm")} e {tag("50hinbarca")} &middot; Musica: {tag("argine_____")}',
+        f'Musica: {tag("argine_____")}',
+        f'Musica: {tag("teo_love_unity")}',
+    ],
+}
+
+
+# Le foto di ogni serata, accanto al suo programma: sono quelle del post
+# Instagram della serata (instagram.com/p/<codice>/), salvate in
+# assets/img/eventi/<pagina>/serate/serata-<gg-mm>-<nn>.jpg. Una voce per
+# gruppo del programma, nello stesso ordine; prendono il posto della galleria
+# e della locandina.
+POST_SERATE = {
+    'short-talks-off-1.html': [
+        ('30 aprile', '30-04', 'DJPqBVaIf1K'),
+        ('8 maggio', '08-05', 'DJkAuLyIxsr'),
+        ('15 maggio', '15-05', 'DJzRXcoohgx'),
+        ('22 maggio', '22-05', 'DKK3W1ro9F1'),
+    ],
+    'blue-hour.html': [
+        ('24 agosto', '24-08', 'DOY4pdDCBPO'),
+    ],
+    # un post solo per tutto il programma
+    'short-talks-1.html': [('18 aprile', '18-04', 'C5_XntuoJj_')],
+    'short-talks-2.html': [('23 dicembre', '23-12', 'DExh3JboXF0')],
+    'short-talks-al-not-2025.html': [('31 agosto', '31-08', 'DQcZEIEjNWi')],
+    'short-talks-3-x-laiff.html': [('14 dicembre', '14-12', 'DSnN3muDDuW')],
+    'short-talks-al-not-2026.html': [('29 agosto', '29-08', 'Dc09JGuiLzy')],
+}
+
+# Il logo di Short Talks OFF al posto del nome, nel colore della pagina come
+# il logo in cima (il PNG è in parte bianco e sulla carta non si vedrebbe)
+LOGO_OFF = ('<span class="marchio-serie marchio-serie--evento marchio-voce" role="img" aria-label="Short Talks OFF" '
+            'style="--marchio: url(/assets/img/eventi/loghi/short-talks-off-1.png); --ar: 5.6940"></span>')
+
+# Programmi riscritti per l'anteprima: un elenco unico, senza numeri. Una
+# voce può portare i suoi corti (titolo, dati, codice della Cortoteca o
+# None): sotto il sottotitolo, nel formato solito, numerati.
+PROGRAMMI = {
+    'blue-hour.html': [
+        ('DJ set', f'{tag("bwude")}, {tag("jb.revolution")}'),
+        ('Mostre fotografiche', f'{tag("nellafos.chia")}, {tag("mono.no.aware_ph")}'),
+        ('Clothing exhibition', tag('provvisorioclothing')),
+        (LOGO_OFF, 'Proiezione di tre cortometraggi e dialogo con gli autori.', [
+            ('Estate &rsquo;05', 'Francesco Pasquinelli &middot; CDL &middot; 2025 &middot; 10\'', None),
+            ('La Partenza', 'Alessio Petrillo &middot; CDL e Arkadia Studios &middot; 2025 &middot; 5\'', None),
+            ('Movimento', 'Luca Canarecci &middot; 2025 &middot; 9\'', None),
+        ]),
+    ],
+}
+NELLA_CORTOTECA = ('<span class="programma-cortoteca"><span>Nella Cortoteca</span> <svg viewBox="0 0 24 24" fill="none" '
+                   'stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+                   '<path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></span>')
+
+
+def voce_corto(titolo, dati, codice):
+    """Un corto nel formato solito; se è nella Cortoteca, la riga ci porta"""
+    if codice:
+        return (f'<li><a class="programma-voce" href="opera.html?film={codice}"><span class="programma-titolo">{titolo}</span>'
+                f'<span class="programma-dati">{dati}</span>{NELLA_CORTOTECA}</a></li>')
+    return (f'<li><div class="programma-voce"><span class="programma-titolo">{titolo}</span>'
+            f'<span class="programma-dati">{dati}</span></div></li>')
+
+
+def programma_scritto(voci):
+    """Un programma scritto qui: un elenco solo, senza numeri"""
+    righe = []
+    for titolo, dati, *corti in voci:
+        sotto = ''
+        if corti:
+            sotto = ('\n                        <ol class="programma-lista programma-lista--corti">\n'
+                     + '\n'.join('                            ' + voce_corto(*c) for c in corti[0])
+                     + '\n                        </ol>')
+        righe.append(f'''                    <li>
+                        <div class="programma-voce">
+                            <span class="programma-titolo">{titolo}</span>
+                            <span class="programma-dati">{dati}</span>
+                        </div>{sotto}
+                    </li>''')
+    return ('                <div class="programma-gruppo">\n'
+            '                <ul class="programma-lista programma-lista--semplice">\n'
+            + '\n'.join(righe) + '\n                </ul>\n                </div>')
+
+
+TASTO_PRIMA = ('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" '
+               'stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>')
+TASTO_DOPO = TASTO_PRIMA.replace('m15 18-6-6 6-6', 'm9 18 6-6-6-6')
+
+
+def rientra(testo, spazi=24):
+    return re.sub(r'\n\s*', '\n' + ' ' * spazi, testo.strip())
+
+
+def serata_con_foto(base, testa, lista, giorno, data, codice):
+    """Una serata: titolo e note (se ci sono), l'elenco e, alla sua stessa
+    altezza, la striscia delle foto del suo post; i comandi alla riga del
+    titolo o, senza titolo, sotto la striscia"""
+    foto = sorted((QUI.parent / f'assets/img/eventi/{base}/serate').glob(f'serata-{data}-*.jpg'))
+    righe_foto = []
+    for n, f in enumerate(foto, 1):
+        larghezza, altezza = jpeg_misure(f)
+        righe_foto.append(
+            f'                            <img src="assets/img/eventi/{base}/serate/{f.name}" '
+            f'alt="Foto della serata del {giorno}, {n} di {len(foto)}" width="{larghezza}" height="{altezza}"'
+            + ('' if n <= 4 else ' loading="lazy"') + '>')
+    immagini = '\n'.join(righe_foto)
+    parte_testa = ''
+    if testa:
+        parte_testa = f'''
+                    <div class="serata__testa">
+                        {rientra(testa)}
+                    </div>'''
+    classe = 'serata giostra' + ('' if testa else ' serata--senza-testa')
+    return f'''                <div class="{classe}">{parte_testa}
+                    <div class="serata__lista">
+                        {rientra(lista)}
+                    </div>
+                    <div class="giostra__foto">
+                        <div class="giostra__pista" tabindex="0" role="group" aria-label="Foto della serata del {giorno}">
+{immagini}
+                        </div>
+                    </div>
+                    <div class="giostra__comandi">
+                        <span class="giostra__avanzamento" aria-hidden="true"><span class="giostra__linea"></span></span>
+                        <button class="giostra__tasto" type="button" aria-label="Foto precedenti">{TASTO_PRIMA}</button>
+                        <button class="giostra__tasto" type="button" aria-label="Foto successive">{TASTO_DOPO}</button>
+                        <a class="giostra__post" href="https://www.instagram.com/p/{codice}/" target="_blank" rel="noopener">Vedi su Instagram {FRECCIA_FUORI}</a>
+                    </div>
+                </div>'''
+
+
+def jpeg_misure(percorso):
+    """Larghezza e altezza di un JPEG, lette dall'intestazione"""
+    dati = percorso.read_bytes()
+    i = 2
+    while i < len(dati):
+        marcatore, lunghezza = dati[i + 1], struct.unpack('>H', dati[i + 2:i + 4])[0]
+        if marcatore in (0xC0, 0xC1, 0xC2):
+            altezza, larghezza = struct.unpack('>HH', dati[i + 5:i + 9])
+            return larghezza, altezza
+        i += 2 + lunghezza
+    raise ValueError(percorso)
+
+
+def serate_con_foto(nome, contenuto):
+    """Il programma con le foto dei post accanto. Un post per gruppo: ogni
+    gruppo è una serata col suo titolo. Un post solo per più gruppi: i gruppi
+    stanno uno sotto l'altro e la striscia li accompagna tutti."""
+    base = nome.removesuffix('.html')
+    gruppi = re.findall(r'<div class="programma-gruppo">.*?</[ou]l>\s*</div>', contenuto, re.S)
+    post = POST_SERATE[nome]
+    if len(post) == 1 and len(gruppi) > 1:
+        tutti = '\n'.join(gruppi)
+        return serata_con_foto(base, None, tutti, *post[0])
+    assert len(gruppi) == len(post), nome
+    serate = []
+    for gruppo, voce in zip(gruppi, post):
+        testa = re.search(r'<h3.*?</h3>\s*(<p class="programma-gruppo-nota">.*?</p>)?', gruppo, re.S)
+        lista = re.search(r'<([ou]l) class="programma-lista.*?</\1>', gruppo, re.S).group(0)
+        serate.append(serata_con_foto(base, testa.group(0) if testa else None, lista, *voce))
+    return '\n'.join(serate)
+
+
 def pagina_evento(nome):
     src = (QUI.parent / nome).read_text(encoding='utf-8')
     main = senza_commenti(re.search(r'<main>(.*?)</main>', src, re.S).group(1))
@@ -853,23 +1048,24 @@ def pagina_evento(nome):
     # resta il titolo della pagina.
     titolo_testo = re.sub("<[^>]+>", "", titolo)
     logo = QUI.parent / f'assets/img/eventi/loghi/{base}.png'
+    affiancato = False
     if logo.exists():
         larghezza, altezza = struct.unpack('>II', logo.read_bytes()[16:24])
+        # Accanto al logo il racconto ci sta solo se il logo non è una riga
+        # lunga (Short Talks #2, LAIFF e OFF restano sopra il testo)
+        affiancato = larghezza / altezza < 2.5
         marchio = (f'<h1 class="evento-g__marchio" id="titolo-evento"><span class="sr-only">{titolo_testo}</span>'
                    f'<span class="marchio-serie marchio-serie--evento" data-arrivo aria-hidden="true" '
                    f'style="--marchio: url(/assets/img/eventi/loghi/{base}.png); --ar: {larghezza / altezza:.4f}"></span></h1>')
-        nome_evento = f'<h2 class="evento-g__titolo">{titolo}</h2>'
     else:
-        marchio = ''
-        nome_evento = f'<h1 class="evento-g__titolo" id="titolo-evento">{titolo}</h1>'
+        marchio = f'<h1 class="evento-g__titolo" id="titolo-evento">{titolo}</h1>'
 
-    dati = ''
-    if evento:
-        dati = f'''
-                <dl class="evento-g__dati span-4 start-9">
-                    <div><dt>Quando</dt><dd>{quando(evento)}</dd></div>
-                    <div><dt>Dove</dt><dd>{evento['luogo']}</dd></div>
-                </dl>'''
+    # Il racconto: quello della pagina attuale, o quello riscritto qui
+    corpo = TESTI_EVENTO.get(nome, corpo)
+    # Ritocchi ai testi della pagina attuale, solo per l'anteprima
+    for vecchio, nuovo in RITOCCHI.get(nome, []):
+        assert vecchio in main, (nome, vecchio)
+        main = main.replace(vecchio, nuovo)
 
     # I blocchi della pagina attuale, ognuno col suo titoletto
     blocchi = {}
@@ -877,12 +1073,26 @@ def pagina_evento(nome):
     for testa_blocco, contenuto in zip(pezzi[1::2], pezzi[2::2]):
         contenuto = re.sub(r'\s*</section>\s*$', '', contenuto.strip())
         if testa_blocco == 'Galleria':
-            blocchi['Galleria'] = blocco_galleria(contenuto)
+            # con le foto accanto alle serate la galleria non serve
+            if nome not in POST_SERATE:
+                blocchi['Galleria'] = blocco_galleria(contenuto)
         elif testa_blocco.startswith('Materiali'):
             blocchi['Materiali'] = blocco_evento('blocco-materiali', testa_blocco, materiali_evento(contenuto))
         else:
             ident = 'blocco-' + re.sub(r'[^a-z]+', '-', testa_blocco.lower()).strip('-')
-            blocchi[testa_blocco] = blocco_evento(ident, testa_blocco, '                ' + contenuto)
+            for nota in NOTE_SERATE.get(nome, []):
+                contenuto = re.sub(r'(<p class="programma-gruppo-nota">)(?!<!--fatta-->).*?(</p>)',
+                                   lambda m: m.group(1) + '<!--fatta-->' + nota + m.group(2), contenuto, count=1)
+            contenuto = contenuto.replace('<!--fatta-->', '')
+            programma = testa_blocco == 'Programma'
+            if programma and nome in PROGRAMMI:
+                contenuto = programma_scritto(PROGRAMMI[nome])
+            if programma and nome in POST_SERATE:
+                contenuto = serate_con_foto(nome, contenuto)
+            else:
+                contenuto = '                ' + contenuto
+            # il programma si presenta da sé: il titoletto resta ai lettori di schermo
+            blocchi[testa_blocco] = blocco_evento(ident, testa_blocco, contenuto, testa=not programma)
 
     if nome == 'longstoryshort.html':
         corpo = LSS_PARAGRAFI
@@ -905,22 +1115,16 @@ def pagina_evento(nome):
     else:
         corpo_html = f'''
     <main id="top">
-        <!-- Il logo dell'evento: è qui che arriva quello della scheda di
-             Eventi -->
-        <section class="hero hero--evento">
+        <!-- Come Long Story Short: in cima il logo dell'evento (è qui che
+             arriva quello della scheda di Eventi) e il racconto, con quando e
+             dove scritti dentro: a fianco se il logo è raccolto, sotto se è
+             una riga lunga -->
+        <section class="hero hero--evento hero--marchio{' hero--affiancato' if affiancato else ''}">
             <div class="wrap">
                 {marchio}
-            </div>
-        </section>
-
-        <section class="blocco-pagina entra" aria-labelledby="titolo-evento">
-            <div class="wrap grid evento-g">
-                <div class="span-7">
-                    {nome_evento}
-                    <div class="evento-g__corpo">
-                        {corpo}
-                    </div>
-                </div>{dati}
+                <div class="presentazione entra">
+                    {corpo}
+                </div>
             </div>
         </section>
 {''.join(blocchi.values())}    </main>

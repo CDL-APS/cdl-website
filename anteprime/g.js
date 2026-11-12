@@ -187,33 +187,27 @@ function schedaG({ titolo, dati, immagine, logo, href }) {
     </${href ? 'a' : 'div'}>`;
   const cornice = li.querySelector('.cornice');
   if (logo) {
-    // Il logo dell'evento, senza fondo e nel colore della pagina, come il
-    // lettering di Long Story Short; se non c'è, la fotografia
+    // Il logo dell'evento, senza fondo e coi suoi colori; se non c'è, la
+    // fotografia. --ar (larghezza / altezza) ne regola la misura, vedi g.css
     cornice.classList.add('cornice--logo');
-    const prova = new Image();
-    prova.onload = () => cornice.append(marchioEvento(logo, prova.naturalWidth / prova.naturalHeight));
-    prova.onerror = () => {
+    const img = new Image();
+    img.className = 'logo-evento';
+    img.alt = '';
+    img.onload = () => {
+      img.style.setProperty('--ar', (img.naturalWidth / img.naturalHeight).toFixed(4));
+      cornice.append(img);
+    };
+    img.onerror = () => {
       cornice.classList.remove('cornice--logo');
       cornice.append(nuovaImmagine(immagine));
     };
-    prova.src = logo;
+    img.src = logo;
   } else {
     cornice.append(nuovaImmagine(immagine));
   }
   return li;
 }
 
-/* Il logo di un evento come marchio: la sagoma del PNG, ricolorata col
-   colore del testo. --ar (larghezza / altezza) ne fissa le proporzioni, così
-   il passaggio verso la pagina dell'evento è solo un ingrandimento. */
-function marchioEvento(logo, proporzioni) {
-  const marchio = document.createElement('span');
-  marchio.className = 'marchio-serie marchio-serie--evento';
-  marchio.setAttribute('aria-hidden', 'true');
-  marchio.style.setProperty('--marchio', `url("/${logo}")`);
-  marchio.style.setProperty('--ar', proporzioni.toFixed(4));
-  return marchio;
-}
 
 /* Riempie un blocco di schede; senza schede il blocco resta nascosto */
 function riempiSchede(id, schede) {
@@ -261,7 +255,7 @@ async function paginaEventi() {
   // dell'evento (o, senza logo, cresce la foto), da In evidenza il lettering
   // di Long Story Short
   preparaEvento(document.getElementById('evidenza'), '.marchio-serie');
-  document.querySelectorAll('a.scheda-g').forEach((scheda) => preparaEvento(scheda, '.marchio-serie', '.cornice'));
+  document.querySelectorAll('a.scheda-g').forEach((scheda) => preparaEvento(scheda, '.logo-evento', '.cornice'));
 }
 
 /* Le pagine degli eventi hanno la loro anteprima G, col nome del file
@@ -560,6 +554,7 @@ function mostraEvento(sala, ritorno, scriviIndirizzo) {
   sala.classList.remove('in-attesa');
   const rullino = sala.querySelector('.rullino');
   if (rullino) preparaScorre(rullino);
+  preparaGiostre(sala);
   sala.querySelector('.sala-evento__chiudi').addEventListener('click', () => history.back());
   if (scriviIndirizzo) history.pushState({ evento: sala.href }, '', sala.href);
   sala.querySelector('.sala-evento__chiudi').focus({ preventScroll: true });
@@ -590,7 +585,19 @@ async function apriEvento(link, sorgente) {
   document.body.append(velo);
   velo.animate([{ opacity: 0 }, { opacity: 1 }], { duration: durata * 0.6, easing: 'ease-out', fill: 'forwards' });
 
-  const copia = sorgente.cloneNode(true);
+  let copia = sorgente.cloneNode(true);
+  let tinta = null;
+  if (sorgente.matches('.logo-evento')) {
+    // Il logo della scheda ha i suoi colori; quello d'arrivo è la sua
+    // sagoma nel colore dell'evento: durante il volo la sagoma compare sopra
+    copia = document.createElement('span');
+    copia.append(sorgente.cloneNode(true));
+    tinta = document.createElement('span');
+    tinta.className = 'passaggio-tinta';
+    tinta.style.setProperty('--marchio', `url("${sorgente.src}")`);
+    tinta.style.background = getComputedStyle(arrivo).color;
+    copia.append(tinta);
+  }
   copia.classList.add('passaggio-corto');
   copia.setAttribute('aria-hidden', 'true');
   Object.assign(copia.style, {
@@ -618,6 +625,7 @@ async function apriEvento(link, sorgente) {
     { transform: 'none', color: getComputedStyle(sorgente).color },
     { transform: `translate(${a.left - da.left}px, ${a.top - da.top}px) scale(${a.width / da.width})`, color: getComputedStyle(arrivo).color },
   ], { duration: durata, easing: curva, fill: 'forwards' }).finished.then(fine);
+  if (tinta) tinta.animate([{ opacity: 0 }, { opacity: 0, offset: 0.25 }, { opacity: 1 }], { duration: durata, easing: 'ease-in-out', fill: 'forwards' });
 }
 
 function chiudiEvento() {
@@ -631,6 +639,51 @@ function chiudiEvento() {
     .finished.then(() => chiusa.remove());
   setTimeout(() => chiusa.remove(), 450); // di riserva, se l'animazione resta ferma
   if (chiusa.ritorno) chiusa.ritorno.focus({ preventScroll: true });
+}
+
+/* Le strisce di foto delle serate (Short Talks OFF, Blue Hour): le foto del
+   post Instagram di ogni serata, alte quanto l'elenco accanto, si scorrono
+   col dito, col trackpad, con le frecce della tastiera o coi due tasti, una
+   foto alla volta. La linea dice quanto della striscia si è visto. */
+function preparaGiostre(radice) {
+  radice.querySelectorAll('.giostra').forEach((giostra) => {
+    if (giostra.dataset.pronta) return;
+    giostra.dataset.pronta = 'si';
+    const pista = giostra.querySelector('.giostra__pista');
+    const linea = giostra.querySelector('.giostra__linea');
+    const [prima, dopo] = giostra.querySelectorAll('.giostra__tasto');
+    // Il passo è una foto più lo spazio fra due foto
+    const passo = () => {
+      const [a, b] = pista.querySelectorAll('img');
+      return b ? b.offsetLeft - a.offsetLeft : pista.clientWidth;
+    };
+    const fine = () => pista.scrollWidth - pista.clientWidth;
+    let meta = null;
+    const aggiorna = () => {
+      const x = pista.scrollLeft;
+      if (meta !== null && Math.abs(x - Math.min(meta * passo(), fine())) < 2) meta = null; // arrivata
+      linea.style.transform = `scaleX(${pista.scrollWidth ? (x + pista.clientWidth) / pista.scrollWidth : 1})`;
+      prima.disabled = x < 2;
+      dopo.disabled = x > fine() - 2;
+    };
+    // Verso una foto precisa: due clic di fila avanzano di due anche se il
+    // primo scorrimento non è ancora finito
+    const vai = (verso) => {
+      const ultima = Math.ceil(fine() / passo());
+      meta = Math.min(Math.max((meta ?? Math.round(pista.scrollLeft / passo())) + verso, 0), ultima);
+      pista.scrollTo({ left: Math.min(meta * passo(), fine()), behavior: FERMO ? 'auto' : 'smooth' });
+    };
+    prima.addEventListener('click', () => vai(-1));
+    dopo.addEventListener('click', () => vai(1));
+    pista.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') { e.preventDefault(); vai(e.key === 'ArrowLeft' ? -1 : 1); }
+    });
+    pista.addEventListener('scroll', aggiorna, { passive: true });
+    // le foto arrivano dopo, e la striscia cambia misura con la finestra
+    new ResizeObserver(aggiorna).observe(pista);
+    pista.querySelectorAll('img').forEach((img) => img.addEventListener('load', aggiorna, { once: true }));
+    aggiorna();
+  });
 }
 
 // Al passaggio del puntatore la pagina dell'evento si comincia a leggere; al
@@ -828,6 +881,12 @@ document.addEventListener('DOMContentLoaded', () => {
   if (document.body.classList.contains('pagina-eventi')) paginaEventi().catch(console.error);
   if (document.body.classList.contains('pagina-produzioni')) paginaProduzioni();
   if (document.body.classList.contains('pagina-corto')) paginaCorto();
+  // Pagina di un evento aperta da sola: la galleria scorre di continuo,
+  // come quando si apre dentro Eventi
+  if (document.body.classList.contains('pagina-evento')) {
+    document.querySelectorAll('.rullino').forEach(preparaScorre);
+    preparaGiostre(document);
+  }
   // Contatti: all'invio il tasto resta arancio e dice che il messaggio parte
   const modulo = document.querySelector('form.modulo');
   if (modulo) {

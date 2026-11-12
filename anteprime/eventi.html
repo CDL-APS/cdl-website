@@ -33,7 +33,7 @@
         <section class="hero hero--pagina">
             <div class="wrap">
                 <h1 class="parola"><span class="sr-only">Eventi</span><span class="fit" aria-hidden="true"><span class="fit-testo">Eventi</span></span></h1>
-                <div class="presentazione entra"><p>Proponiamo eventi per la valorizzazione della cultura cinematografica locale, in sala e altrove. Il cinema come arte trasversale ha la possibilit&agrave; di raccontare il territorio attraverso i talenti che lo vivono. Contattaci per portare Short Talks nel tuo cinema.</p></div>
+                <div class="presentazione entra"><p>Proponiamo eventi per la valorizzazione della cultura cinematografica locale, in sala e altrove. Il cinema come arte trasversale ha la possibilit&agrave; di raccontare il territorio attraverso i talenti che lo vivono.</p></div>
             </div>
         </section>
 
@@ -68,16 +68,22 @@
             </div>
         </section>
 
-        <!-- Le edizioni di Short Talks, dalla più recente -->
-        <section class="blocco-pagina blocco-pagina--diviso entra" id="blocco-short-talks" aria-label="Short Talks" hidden>
+        <!-- Le edizioni di Short Talks, dalla più recente. In cima il format in
+             due righe e l'invito a portarlo in sala, che porta al modulo di
+             Contatti col motivo già scelto -->
+        <section class="blocco-pagina blocco-pagina--diviso entra" id="blocco-short-talks" aria-labelledby="titolo-short-talks" hidden>
             <div class="wrap">
-                <h2 class="blocco-pagina__testa"><span class="marchio-serie marchio-serie--st" role="img" aria-label="Short Talks"></span></h2>
+                <h2 class="sr-only" id="titolo-short-talks">Short Talks</h2>
+                <div class="serie-descrizione">
+                    <p><strong>Short Talks</strong> &egrave; il primo format firmato CDL, nato per portare il cortometraggio in sala e farlo incontrare con il suo pubblico, attraverso il dialogo con chi l&rsquo;ha realizzato.</p>
+                    <p><a class="rimando-testo" href="anteprime/contatti.html?motivo=short-talks#contatti">Contattaci</a> per portare Short Talks nel tuo cinema.</p>
+                </div>
                 <ul class="schede"></ul>
             </div>
         </section>
 
         <!-- Tutto il resto: gli eventi senza serie -->
-        <section class="blocco-pagina entra" id="blocco-altri" aria-labelledby="titolo-altri" hidden>
+        <section class="blocco-pagina blocco-pagina--diviso entra" id="blocco-altri" aria-labelledby="titolo-altri" hidden>
             <div class="wrap">
                 <h2 class="blocco-pagina__testa" id="titolo-altri">Altri eventi</h2>
                 <ul class="schede"></ul>

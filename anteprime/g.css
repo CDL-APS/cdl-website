@@ -301,7 +301,6 @@ html:has(.pagina-produzioni) { background: var(--lilla); }
   -webkit-mask: var(--marchio) center / contain no-repeat; mask: var(--marchio) center / contain no-repeat;
 }
 .marchio-serie--lss { --marchio: url(../assets/img/brand/long-story-short.png); aspect-ratio: 1777 / 1263; width: min(100%, 260px); }
-.marchio-serie--st { --marchio: url(../assets/img/brand/short-talks.png); aspect-ratio: 1000 / 298; height: clamp(44px, 4.6vw, 66px); }
 /* Il logo di un singolo evento: --marchio e --ar (larghezza / altezza) li
    mettono g.js e le pagine degli eventi */
 .marchio-serie--evento { aspect-ratio: var(--ar); }
@@ -321,25 +320,27 @@ html:has(.pagina-produzioni) { background: var(--lilla); }
 .schede { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(28px, 3vw, 44px) var(--gap); }
 .scheda-g { display: block; transition: opacity 0.25s var(--ease); }
 .scheda-g .cornice { aspect-ratio: 16 / 10; border-radius: 0; }
-/* Scheda di un evento col suo logo: niente fondo, il logo in azzurro
+/* Scheda di un evento col suo logo: niente fondo, il PNG coi suoi colori
    appoggiato al filo, a sinistra, con un'area simile per tutti (la larghezza
    cresce con la radice delle proporzioni, vedi la pagina dell'evento) */
 .scheda-g .cornice--logo {
   display: flex; align-items: flex-end; overflow: visible;
   background: none; container-type: size;
 }
-.cornice--logo .marchio-serie--evento {
-  flex: 0 0 auto;
+.scheda-g .cornice--logo .logo-evento {
+  position: static; flex: 0 0 auto; height: auto; aspect-ratio: var(--ar); object-fit: contain;
   width: min(100cqw, 100cqh * var(--ar));
   width: min(100cqw, 100cqh * var(--ar), 80cqh * sqrt(var(--ar)));
   transition: transform 0.6s var(--ease); transform-origin: left bottom;
 }
-a.scheda-g:hover .cornice--logo .marchio-serie--evento { transform: scale(1.025); }
+a.scheda-g:hover .cornice--logo .logo-evento { transform: scale(1.025); }
 .scheda-g__testo { display: grid; gap: 4px; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--filo); }
 .scheda-g__titolo { font-family: var(--f-titoli); font-weight: 900; text-transform: uppercase; font-size: clamp(19px, 1.7vw, 24px); line-height: 1; letter-spacing: var(--titoli-spazio); }
 .scheda-g__dati { font-size: 14px; line-height: 1.4; color: var(--tenue); }
+/* Al passaggio su una scheda le altre si spengono; non in Eventi, dove i
+   loghi restano tutti accesi */
 @media (hover: hover) {
-  .schede:has(a.scheda-g:hover) .scheda-g:not(:hover) { opacity: 0.35; }
+  body:not(.pagina-eventi) .schede:has(a.scheda-g:hover) .scheda-g:not(:hover) { opacity: 0.35; }
 }
 
 /* Eventi, In evidenza: il lettering su tre righe a sinistra, la breve
@@ -348,6 +349,13 @@ a.scheda-g:hover .cornice--logo .marchio-serie--evento { transform: scale(1.025)
 .evidenza .marchio-serie--lss { width: 100%; max-width: 520px; }
 .evidenza__testo { display: flex; flex-direction: column; align-items: flex-start; gap: 20px; }
 .evidenza__descrizione { font-size: clamp(17px, 1.45vw, 21px); font-weight: 600; line-height: 1.45; }
+
+/* Eventi, Short Talks: il format in due righe sopra le schede, come la
+   descrizione di In evidenza; "Contattaci" porta al modulo */
+.serie-descrizione { display: grid; gap: 0.6em; max-width: 60ch; margin-bottom: clamp(8px, 1vw, 16px); font-size: clamp(17px, 1.45vw, 21px); font-weight: 600; line-height: 1.45; }
+.serie-descrizione strong { font-weight: 800; }
+.rimando-testo { font-weight: 800; text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 4px; transition: color 0.2s var(--ease); }
+.rimando-testo:hover { color: var(--chiaro); }
 .evidenza__freccia { display: grid; place-items: center; width: 48px; height: 48px; border: 2px solid currentColor; border-radius: 50%; transition: transform 0.3s var(--ease); }
 .evidenza__freccia .freccia { width: 20px; height: 20px; }
 .evidenza:hover .evidenza__freccia { transform: translate(3px, -3px); }
@@ -473,6 +481,13 @@ html:has(.pagina-corto) { background: var(--nero-sala); }
 /* Il passaggio dalla galleria al corto: il fotogramma si stacca e cresce,
    mentre lo schermo intorno si fa nero (vedi g.js) */
 .passaggio-corto { position: fixed; z-index: 51; margin: 0; pointer-events: none; transform-origin: 0 0; }
+/* Il logo di una scheda in volo: l'immagine coi suoi colori e, sopra, la
+   sagoma nel colore dell'evento che compare piano (vedi g.js) */
+.passaggio-corto > .logo-evento { display: block; width: 100%; height: 100%; }
+.passaggio-tinta {
+  position: absolute; inset: 0; opacity: 0;
+  -webkit-mask: var(--marchio) center / contain no-repeat; mask: var(--marchio) center / contain no-repeat;
+}
 
 /* Pagina del corto: il colore del titolo anche per le piccole intestazioni
    e per i fili */
@@ -614,16 +629,9 @@ html.sala-aperta { overflow: hidden; }
   width: min(100%, clamp(200px, 38vw, 520px) * sqrt(var(--ar)));
 }
 
-/* Nome, racconto e dati: come la pagina del corto. Il nome sta sotto il
-   logo, più piccolo: porta l'edizione, che il logo non dice */
-.evento-g { align-items: start; }
-.evento-g__titolo { font-size: clamp(30px, 3.6vw, 56px); line-height: 0.9; }
+/* Un evento senza logo apre col nome scritto */
+.evento-g__titolo { font-size: clamp(44px, 6.4vw, 104px); line-height: 0.86; }
 .evento-g__titolo span { color: var(--evento-testo); }
-.evento-g__corpo { margin-top: clamp(22px, 2.4vw, 34px); display: grid; gap: 1em; max-width: 62ch; font-size: clamp(17px, 1.3vw, 19px); line-height: 1.6; }
-.evento-g__corpo strong { font-weight: 700; }
-.evento-g__dati { display: grid; gap: 14px; padding-top: 14px; border-top: 2px solid var(--evento); }
-.evento-g__dati dt { font-size: 14px; font-weight: 700; color: var(--evento-testo); }
-.evento-g__dati dd { margin: 2px 0 0; font-size: 19px; font-weight: 600; line-height: 1.35; }
 .pagina-evento .blocco-pagina__testa { color: var(--evento-testo); }
 
 /* Programma: i gruppi in colonne, ogni titolo su una riga col filo; i corti
@@ -636,17 +644,33 @@ html.sala-aperta { overflow: hidden; }
 .pagina-evento .programma--gruppi { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 @media (max-width: 767px) { .pagina-evento .programma--gruppi { grid-template-columns: minmax(0, 1fr); } }
 .pagina-evento .programma-gruppo { display: grid; align-content: start; gap: 6px; }
-.pagina-evento .programma-gruppo-titolo { font-size: clamp(22px, 2vw, 28px); line-height: 1; }
+/* I titoli dei gruppi (le serate, i blocchi) nel colore dell'evento */
+.pagina-evento .programma-gruppo-titolo { font-size: clamp(22px, 2vw, 28px); line-height: 1; color: var(--evento-testo); }
 .pagina-evento .programma-gruppo-nota { font-size: 15px; line-height: 1.45; color: var(--tenue); }
+/* I tag Instagram di chi ha suonato o collaborato: escono dal sito */
+.tag-ig { font-weight: 700; color: var(--evento-testo); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; overflow-wrap: anywhere; }
+.tag-ig:hover { text-decoration-thickness: 2px; }
 .pagina-evento .programma-lista { margin-top: 12px; padding: 0; list-style: none; border-top: 2px solid var(--evento); counter-reset: corto; }
 .pagina-evento .programma-lista li { border-bottom: 1px solid var(--filo); counter-increment: corto; }
 .pagina-evento .programma-voce {
-  display: grid; grid-template-columns: 2.2em minmax(0, 1fr) auto; column-gap: 8px; align-items: baseline;
+  display: grid; grid-template-columns: 2.2em minmax(0, 1fr) auto; gap: 5px 8px; align-items: baseline;
   min-height: 44px; padding: 14px 0;
 }
 .pagina-evento .programma-voce::before { content: counter(corto, decimal-leading-zero); grid-row: span 2; font-size: 13px; font-weight: 700; color: var(--evento-testo); font-variant-numeric: tabular-nums; }
 .pagina-evento .programma-titolo { font-family: var(--f-titoli); font-weight: 900; text-transform: uppercase; letter-spacing: var(--titoli-spazio); font-size: clamp(18px, 1.5vw, 21px); line-height: 1.05; }
 .pagina-evento .programma-dati { grid-column: 2; font-size: 14px; line-height: 1.4; color: var(--tenue); }
+/* Un elenco senza numeri (Blue Hour): le voci della serata, non una scaletta */
+.pagina-evento .programma-lista--semplice > li > .programma-voce { grid-template-columns: minmax(0, 1fr); }
+.pagina-evento .programma-lista--semplice > li > .programma-voce::before { content: none; }
+.pagina-evento .programma-lista--semplice > li > .programma-voce .programma-dati { grid-column: 1; }
+/* Una voce coi suoi corti (Short Talks OFF a Blue Hour): sotto il
+   sottotitolo grigio, i corti nel formato solito, numerati */
+.pagina-evento .programma-lista--semplice > li:has(> .programma-lista--corti) { border-bottom: 0; }
+/* sopra il logo la linea marcata, fra sottotitolo e corti quella sottile */
+.pagina-evento .programma-lista--semplice > li:has(+ li > .programma-lista--corti) { border-bottom: 2px solid var(--evento); }
+.pagina-evento .programma-lista--corti { margin-top: 4px; border-top: 1px solid var(--filo); }
+/* Un logo al posto del nome di una voce, alto quanto due righe di titolo: le lettere del logo sono sottili */
+.marchio-voce { --alto: clamp(34px, 3vw, 44px); height: var(--alto); width: calc(var(--alto) * var(--ar)); margin-block: 2px 4px; color: var(--evento); }
 .pagina-evento .programma-cortoteca { grid-column: 3; grid-row: 1 / span 2; align-self: center; display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 700; }
 .pagina-evento .programma-cortoteca svg { width: 18px; height: 18px; transition: transform 0.3s var(--ease); }
 .pagina-evento a.programma-voce { transition: color 0.2s var(--ease); }
@@ -672,14 +696,71 @@ html.sala-aperta { overflow: hidden; }
 .rullino--evento .cornice:hover img { transform: scale(1.025); }
 .rullino__crediti { margin-top: 14px; font-size: 14px; color: var(--tenue); }
 
+/* Le serate con le foto (Short Talks OFF, Blue Hour): a sinistra titolo,
+   note ed elenco della serata, a destra, alla stessa altezza dell'elenco, la
+   striscia delle foto del suo post Instagram; i comandi sopra la striscia,
+   alla riga del titolo (sotto, se la serata non ha titolo). Un filo divide
+   le serate. */
+.serata {
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: clamp(28px, 4vw, 64px);
+  grid-template-areas: "testa comandi" "lista foto";
+  padding-block: clamp(32px, 3.6vw, 56px); border-top: 1px solid var(--filo);
+}
+.serata--senza-testa { grid-template-areas: "lista foto" ". comandi"; }
+.serata:first-of-type { padding-top: 0; border-top: 0; }
+.serata:last-of-type { padding-bottom: 0; }
+.serata__testa { grid-area: testa; display: grid; gap: 6px; padding-bottom: 16px; }
+.serata__testa .programma-gruppo-titolo { font-size: clamp(28px, 3vw, 44px); line-height: 0.95; }
+.serata__testa .programma-gruppo-nota { font-size: 16px; }
+.serata__lista { grid-area: lista; }
+.pagina-evento .serata__lista > .programma-lista { margin-top: 0; }
+/* Più gruppi accanto a una striscia sola: uno sotto l'altro */
+.serata__lista { display: grid; align-content: start; gap: clamp(28px, 3vw, 44px); }
+
+/* La striscia: alta quanto l'elenco (la pista è appesa al suo riquadro),
+   foto 4:5 a spigolo vivo una accanto all'altra, che si scorrono a mano */
+.giostra__foto { grid-area: foto; position: relative; min-height: 200px; border-top: 2px solid var(--evento); }
+.giostra__pista {
+  position: absolute; inset: 0; top: 10px;
+  display: flex; gap: 8px; overflow-x: auto; overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory; scrollbar-width: none;
+}
+.giostra__pista::-webkit-scrollbar { display: none; }
+.giostra__pista:focus-visible { outline: 3px solid var(--evento); outline-offset: 3px; }
+/* ogni foto con le sue proporzioni (4:5 o quadrata), mai più larga della
+   striscia: accanto a un programma lungo si ritaglia in verticale */
+.giostra__pista img { flex: 0 0 auto; width: auto; max-width: 100%; height: 100%; object-fit: cover; scroll-snap-align: start; }
+
+/* I comandi: la linea che avanza, i due tasti, il rimando al post */
+.giostra__comandi { grid-area: comandi; align-self: end; display: flex; align-items: center; gap: 10px; padding-bottom: 16px; }
+.serata--senza-testa .giostra__comandi { align-self: start; padding: 12px 0 0; }
+.giostra__avanzamento { position: relative; flex: 1 1 auto; height: 2px; background: var(--filo); }
+.giostra__linea { position: absolute; inset: 0; background: var(--evento); transform-origin: left; transform: scaleX(0); transition: transform 0.4s var(--ease); }
+.giostra__tasto {
+  display: grid; place-items: center; flex: 0 0 auto; width: 44px; height: 44px; padding: 0;
+  border: 2px solid var(--inchiostro); border-radius: 50%; background: none; color: var(--inchiostro); cursor: pointer;
+  transition: background-color 0.2s var(--ease), color 0.2s var(--ease), opacity 0.2s var(--ease);
+}
+.giostra__tasto svg { width: 18px; height: 18px; }
+.giostra__tasto:hover:not(:disabled) { background: var(--evento); border-color: var(--evento); color: var(--chiaro); }
+.giostra__tasto:disabled { opacity: 0.25; cursor: default; }
+.giostra__tasto:focus-visible { outline: 3px solid var(--evento); outline-offset: 2px; }
+.giostra__post { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; margin-left: 6px; font-size: 14px; font-weight: 700; white-space: nowrap; }
+.giostra__post svg { width: 15px; height: 15px; transition: transform 0.3s var(--ease); }
+.giostra__post:hover { color: var(--evento-testo); }
+.giostra__post:hover svg { transform: translate(2px, -2px); }
+
 @media (max-width: 1023px) {
-  .evento-g > * { grid-column: 1 / -1; }
-  .evento-g__dati { margin-top: 28px; grid-template-columns: 1fr 1fr; gap: 14px var(--gap); }
+  .serata, .serata--senza-testa { grid-template-columns: minmax(0, 1fr); grid-template-areas: "testa" "lista" "foto" "comandi"; }
+  .giostra__foto { min-height: 0; height: clamp(220px, 46vw, 340px); margin-top: 24px; }
+  .giostra__comandi, .serata--senza-testa .giostra__comandi { align-self: start; padding: 12px 0 0; }
+}
+
+@media (max-width: 1023px) {
   .pagina-evento .programma-griglia:has(.locandina) { grid-template-columns: minmax(0, 1fr); }
   .pagina-evento .locandina { max-width: 420px; }
 }
 @media (max-width: 639px) {
-  .evento-g__dati { grid-template-columns: 1fr; }
   .pagina-evento .programma-cortoteca span { display: none; }
 }
 
@@ -734,7 +815,25 @@ a.vantaggio-g:hover .vantaggio-g__freccia { transform: translate(3px, -3px); bac
 .hero--marchio .presentazione { display: grid; gap: 0.8em; font-size: clamp(19px, 1.75vw, 26px); }
 .hero--marchio .presentazione p + p { margin-top: 0; }
 .hero--marchio .presentazione strong { font-weight: 800; }
+/* Pagine dei singoli eventi (non Long Story Short): niente filo sotto logo e
+   racconto, il programma segue dopo lo spazio */
+.pagina-evento:not(.evento--longstoryshort) .hero--marchio .presentazione { padding-bottom: 0; border-bottom: 0; }
+.pagina-evento:not(.evento--longstoryshort) .hero--affiancato .wrap { padding-bottom: 0; border-bottom: 0; }
+/* Nelle pagine degli eventi il grassetto prende il colore dell'evento */
+.pagina-evento .presentazione strong { color: var(--evento-testo); }
 .hero--marchio + .blocco-pagina--diviso { margin-top: 0; }
+/* Logo raccolto (quasi quadrato o poco più largo che alto): il racconto gli
+   sta a fianco, appoggiato alla sua base, e il filo chiude la riga intera.
+   Su schermi stretti torna sotto. */
+@media (min-width: 1024px) {
+  .hero--affiancato .wrap {
+    display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gap); align-items: end;
+    padding-bottom: clamp(28px, 3.4vw, 48px); border-bottom: 1px solid var(--filo);
+  }
+  .hero--affiancato .evento-g__marchio { grid-column: 1 / span 5; }
+  .hero--affiancato .evento-g__marchio .marchio-serie--evento { width: min(100%, clamp(260px, 30vw, 440px) * var(--ar)); }
+  .hero--affiancato .presentazione { grid-column: 7 / -1; margin-top: 0; padding-bottom: 0; border-bottom: 0; }
+}
 /* il filo è già quello della presentazione: sotto, lo stesso respiro degli altri blocchi */
 .hero--marchio + .blocco-pagina--diviso > .wrap { padding-top: clamp(36px, 4.5vw, 64px); border-top: 0; }
 

@@ -68,7 +68,8 @@ Regole che valgono ovunque:
 | Scheda (`.scheda-g`) | Eventi, Produzioni | cornice 16:10, filo, titolo 900, dati in `--tenue`; le altre schede arretrano (35%) al passaggio |
 | Still della Cortoteca (`.still`) | Cortoteca | titolo (graficato se c'è) sovrapposto; al passaggio il titolo sparisce, le altre still si oscurano, il puntatore si nasconde |
 | Schermo (`.schermo`) | corto | still 16:9 con titolo; se c'è lo streaming diventa il lettore (disco "Guarda" al posto del puntatore) |
-| Testata evento (`.evento-g__marchio`) | eventi | il logo dell'evento (`.marchio-serie--evento`, PNG in `assets/img/eventi/loghi/` usato come maschera) nel colore `--evento`, sotto il nome con l'edizione; per LSS il lettering (`.marchio-serie--lss`, max 720 px) |
+| Testata evento (`.evento-g__marchio`) | eventi | il logo dell'evento (`.marchio-serie--evento`, PNG in `assets/img/eventi/loghi/` usato come maschera) nel colore `--evento`, sotto il racconto a tutta larghezza (`.presentazione`, con quando e dove scritti in prosa) come per LSS, che ha il suo lettering (`.marchio-serie--lss`, max 720 px); il nome scritto c'è solo se manca il logo |
+| Serata con foto (`.serata`, `.giostra`) | OFF, Blue Hour (le altre quando arrivano i post) | titolo della serata e note nel colore dell'evento; sotto, l'elenco e, alla sua stessa altezza, la striscia delle foto 4:5 del post Instagram (`assets/img/eventi/<pagina>/serate/`), da scorrere a mano; comandi (linea, due tasti, "Vedi su Instagram") alla riga del titolo. Prende il posto di galleria e locandina (`POST_SERATE` in `genera.py`). Regole comuni a tutte le pagine evento: niente titoletto Programma, racconto accanto al logo se il logo è largo meno di 2,5 volte l'altezza (`.hero--affiancato`, da 1024 px in su) |
 | Programma | eventi | gruppi in 1–2 colonne; righe numerate 01, 02… col colore dell'evento; i corti in Cortoteca hanno ↗ |
 | Vincitori (`.vincitori`) | LSS | tre per riga; il Miglior film su tutta la riga (still 8/12, testo 4/12, premio in maiuscolo grande) |
 | Partner (`.partner`) | LSS | loghi tutti neri, larghezza calcolata per pesare uguale (`--w`), al centro di caselle a fili, 3 per riga (2 sul telefono) |
@@ -107,7 +108,7 @@ Regole che valgono ovunque:
 |---|---|---|---|---|
 | Home → Eventi/Produzioni | clic sul nome | il colore copre lo schermo, il nome sale dove la pagina d'arrivo ha il titolo (corpo passato con `sessionStorage`) | 820 ms | cubic-bezier(0.65, 0, 0.25, 1) |
 | Still → corto | clic sulla still | velo nero; la still cresce fino allo schermo (`--nav + 40`, larga quanto il contenuto); si apre la sala e parte il video | 820 ms | idem |
-| Scheda/LSS → evento | clic | velo carta; il logo (o il lettering di LSS) sale al suo posto nella pagina dell'evento e passa dall'azzurro al colore dell'evento | 820 ms | idem |
+| Scheda/LSS → evento | clic | velo carta; il logo (nelle schede coi suoi colori; il lettering di LSS in azzurro) sale al suo posto nella pagina dell'evento e si tinge del colore dell'evento | 820 ms | idem |
 | Chiusura sala | indietro / Esc / crocetta | dissolvenza | 320 ms (riserva 450) | ease-out |
 | Blocchi | caricamento | `.entra`: salgono appena e compaiono | 0,8 s, ritardo 0,12 s | `--ease` |
 | Occhi | puntatore | le pupille seguono il puntatore, ogni tanto sbattono le palpebre | continuo | — |
