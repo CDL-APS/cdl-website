@@ -114,7 +114,7 @@ function nuovoBlocco(tipo) {
 }
 
 // Sposta un elemento di un elenco di un posto; vero se si è mosso
-function sposta(elenco, i, verso) {
+function spostaDiUno(elenco, i, verso) {
   const j = i + verso;
   if (j < 0 || j >= elenco.length) return false;
   [elenco[i], elenco[j]] = [elenco[j], elenco[i]];
@@ -159,7 +159,7 @@ function disegnaVoce(b, g, v, voce, quante) {
     </li>`;
 }
 
-function disegnaGruppo(b, g, gruppo, quanti) {
+function disegnaElencoVoci(b, g, gruppo, quanti) {
   const dove = `${b}.gruppi.${g}`;
   const voci = Array.isArray(gruppo.voci) ? gruppo.voci : [];
   return `<div class="g-elenco-voci">
@@ -203,7 +203,7 @@ function disegnaBlocco(blocco, b, quanti) {
         ${campo('Titolo della serata', `${b}.titolo`, blocco.titolo, { nota: 'Per esempio "Doppia visione" o "Mercoledì 30 aprile". Facoltativo.' })}
         ${campo('Nota', `${b}.nota`, blocco.nota, { nota: 'Una riga sotto il titolo: chi suona, chi conduce…' })}
       </div>
-      ${gruppi.map((gruppo, g) => disegnaGruppo(b, g, gruppo || {}, gruppi.length)).join('')}
+      ${gruppi.map((gruppo, g) => disegnaElencoVoci(b, g, gruppo || {}, gruppi.length)).join('')}
       <button type="button" class="btn" data-azione="aggiungi-gruppo" data-dove="${b}.gruppi">Aggiungi un elenco</button>
       <div class="g-blocco__foto">
         <h4 class="g-blocco__nome">Foto della serata</h4>
@@ -270,7 +270,7 @@ $('blocchi-evento').addEventListener('click', (e) => {
     if (azione === 'togli') {
       if (!parti.length && !confirm('Togliere questo blocco? Si perde anche il suo contenuto.')) return;
       elenco.splice(i, 1);
-    } else if (!sposta(elenco, i, azione === 'su' ? -1 : 1)) {
+    } else if (!spostaDiUno(elenco, i, azione === 'su' ? -1 : 1)) {
       return;
     }
   }

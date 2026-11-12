@@ -16,9 +16,6 @@ Il redesign sta sul branch `redesign` (dettagli in
 
 Prima di unire:
 
-- [ ] Applicare `supabase/migrations/20261112210000_eventi_a_blocchi.sql`
-  (aggiunge colonne, il sito online non ne risente). Senza, il redesign non
-  legge gli eventi e ripiega su `data/eventi.json`.
 - [ ] Prove in gestione con un accesso vero (solo l'utente: password e
   codice 2FA), dalla copia locale: un'opera con colore e "Solo la scheda",
   un titolo grafico in PNG e uno come carattere, l'approvazione di una
@@ -29,7 +26,10 @@ Prima di unire:
 - [ ] Review del diff `main...redesign` con la skill `/code-review` (e
   `/security-review` per gestione, proposta e migrazioni), a lavoro
   committato e prima di aprire la pull request. Richiesta dall'utente:
-  ricordargliela sempre prima di pubblicare.
+  ricordargliela sempre prima di pubblicare. Una prima `/code-review` è
+  fatta (esclusa la parte del modello degli eventi): esiti e decisioni
+  aperte in `storico/2026-11-12-review-pre-deploy.md`. Restano la
+  `/security-review` e una review del modello degli eventi dopo le prove.
 - [ ] Prova del modulo evento con un accesso vero (solo l'utente): un
   evento di prova con logo, colore, presentazione, un programma con un
   corto della Cortoteca e qualche foto, un testo; Anteprima prima di
