@@ -2,196 +2,275 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Short Talks OFF #1 – CDL APS</title>
     <meta name="description" content="Short Talks OFF #1: lo spin-off di Short Talks fuori dal cinema, quattro serate sold out fra aprile e maggio 2025 al Centro Polifunzionale Il Pallone di Bologna.">
 
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link rel="icon" type="image/png" href="assets/img/brand/favicon.png">
 
-    <link rel="stylesheet" href="assets/css/base.css?v=2026-11-11">
-    <link rel="stylesheet" href="assets/css/components.css?v=2026-11-11">
-    <link rel="stylesheet" href="assets/css/pages/evento.css?v=2026-11-11">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800;900&display=swap">
+    <link rel="stylesheet" href="assets/css/base.css?v=2026-11-12">
+    <link rel="stylesheet" href="assets/css/components.css?v=2026-11-12">
+    <link rel="stylesheet" href="assets/css/pages/evento.css?v=2026-11-12">
 </head>
-<body class="evento evento--short-talks-off-1">
+<body class="pagina-evento evento--short-talks-off-1">
 
-    <!-- Pagina di un evento passato, sul modello di Long Story Short. Le foto
-         stanno in assets/img/eventi/short-talks-off-1/; la copertina è la stessa
-         del database, con lo stesso nome. -->
-    <nav class="barra" aria-label="Navigazione principale">
-        <a href="index.html" class="barra-logo" aria-label="Home">
-            <img src="assets/img/brand/logo-cdl.png" alt="CDL" width="62" height="24">
-        </a>
-
-        <div class="barra-gruppo">
-            <span class="indicatore" aria-hidden="true"></span>
-            <a href="produzioni.html" class="voce">Produzioni</a>
-            <a href="eventi.html" class="voce is-active">Eventi</a>
-            <a href="cortoteca.html" class="voce"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.14v13.72L19 12 8 5.14Z"/></svg>Cortoteca</a>
+    <header class="nav">
+        <div class="wrap nav__riga">
+            <a class="skip-link" href="#top">Vai al contenuto</a>
+            <a class="nav__logo" href="index.html" aria-label="CDL, pagina iniziale"><span class="logo"></span></a>
+            <a class="nav__voce nav__voce--eventi" href="eventi.html" aria-current="page">Eventi</a>
+            <a class="nav__voce nav__voce--produzioni" href="produzioni.html">Produzioni</a>
+            <a class="nav__voce nav__voce--contatti" href="contatti.html#contatti">Contatti</a>
+            <a class="nav__cortoteca" href="cortoteca.html"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.14v13.72L19 12 8 5.14Z"/></svg>Cortoteca</a>
+            <a class="btn btn--pieno nav__socio" href="contatti.html">Diventa socio</a>
         </div>
+    </header>
 
-        <a href="vantaggi-tesseramento.html#socio" class="barra-socio">Diventa socio</a>
-    </nav>
-
-    <main>
-        <section class="sezione sezione--prima">
-
-            <a href="eventi.html" class="indietro">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
-                Tutti gli eventi
-            </a>
-
-            <div class="copertina copertina--intera">
-                <img class="foto" src="assets/img/eventi/short-talks-off-1-copertina-1791651765291.jpg" alt="Autori sul palco sotto la proiezione di Short Talks OFF, davanti al pubblico del Pallone" width="1920" height="1080">
-            </div>
-
-            <div class="due-colonne">
-                <h1>Short Talks OFF <span>#1</span></h1>
-                <div class="corpo">
-                    <p>Fra aprile e maggio 2025 Short Talks esce dal cinema che di solito lo ospita: nasce così <strong>Short Talks OFF</strong>, lo spin-off del format, con quattro appuntamenti al <strong>Centro Polifunzionale Il Pallone di Bologna</strong>.</p>
+    <main id="top">
+        <!-- Come Long Story Short: in cima il logo dell'evento (è qui che
+             arriva quello della scheda di Eventi) e il racconto, con quando e
+             dove scritti dentro: a fianco se il logo è raccolto, sotto se è
+             una riga lunga -->
+        <section class="hero hero--evento hero--marchio">
+            <div class="wrap">
+                <h1 class="evento-g__marchio" id="titolo-evento"><span class="sr-only">Short Talks OFF #1</span><span class="marchio-serie marchio-serie--evento marchio--short-talks-off-1" data-arrivo aria-hidden="true"></span></h1>
+                <div class="presentazione entra">
+                    <p>Fra aprile e maggio 2025 Short Talks esce dalla solita sala: nasce cos&igrave; <strong>Short Talks OFF</strong>, lo spin-off del format, con quattro appuntamenti al <strong>Centro Polifunzionale Il Pallone</strong> di Bologna.</p>
                 </div>
             </div>
+        </section>
 
-            <h2 class="titoletto">Programma</h2>
-            <div class="programma-griglia">
-                <div class="programma programma--gruppi programma--serate">
-                    <div class="programma-gruppo">
+        <section class="blocco-pagina blocco-pagina--diviso entra" aria-labelledby="blocco-programma">
+            <div class="wrap">
+                <h2 class="sr-only" id="blocco-programma">Programma</h2>
+                <div class="serata giostra">
+                    <div class="serata__testa">
                         <h3 class="programma-gruppo-titolo">Mercoledì 30 aprile</h3>
-                        <p class="programma-gruppo-nota">Musica: Bwude</p>
+                        <p class="programma-gruppo-nota">Musica: <a class="tag-ig" href="https://www.instagram.com/bwude/" target="_blank" rel="noopener">@bwude<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h6"/></svg></a></p>
+                    </div>
+                    <div class="serata__lista">
                         <ol class="programma-lista">
-                            <li>
-                                <div class="programma-voce">
-                                    <span class="programma-titolo">La Media</span>
-                                    <span class="programma-dati">Mario Pio Adamo</span>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="programma-voce">
-                                    <span class="programma-titolo">I Sogni Vivono Solo di Notte</span>
-                                    <span class="programma-dati">Christian Dei</span>
-                                </div>
-                            </li>
-                            <li>
-                                <a class="programma-voce" href="opera.html?film=andrea">
-                                    <span class="programma-titolo">Andrea</span>
-                                    <span class="programma-dati">Gabriele Rattini</span>
-                                    <span class="programma-cortoteca"><span>Nella Cortoteca</span> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></span>
-                                </a>
-                            </li>
+                        <li>
+                        <div class="programma-voce">
+                        <span class="programma-titolo">La Media</span>
+                        <span class="programma-dati">Mario Pio Adamo</span>
+                        </div>
+                        </li>
+                        <li>
+                        <div class="programma-voce">
+                        <span class="programma-titolo">I Sogni Vivono Solo di Notte</span>
+                        <span class="programma-dati">Christian Dei</span>
+                        </div>
+                        </li>
+                        <li>
+                        <a class="programma-voce" href="opera.html?film=andrea">
+                        <span class="programma-titolo">Andrea</span>
+                        <span class="programma-dati">Gabriele Rattini</span>
+                        <span class="programma-cortoteca"><span>Nella Cortoteca</span> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></span>
+                        </a>
+                        </li>
                         </ol>
                     </div>
-                    <div class="programma-gruppo">
-                        <h3 class="programma-gruppo-titolo">Giovedì 8 maggio</h3>
-                        <p class="programma-gruppo-nota">Con Sayonara Film e 50h in Barca · Musica: DJ Phil</p>
-                        <ol class="programma-lista">
-                            <li>
-                                <div class="programma-voce">
-                                    <span class="programma-titolo">Il Martello</span>
-                                    <span class="programma-dati">Francesco Pasquinelli · CDL</span>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="programma-voce">
-                                    <span class="programma-titolo">Il Vizio</span>
-                                    <span class="programma-dati">Mario Pio Adamo</span>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="programma-voce">
-                                    <span class="programma-titolo">Scatti Smarriti</span>
-                                    <span class="programma-dati">Daniele Fugarese</span>
-                                </div>
-                            </li>
-                        </ol>
+                    <div class="giostra__foto">
+                        <div class="giostra__pista" tabindex="0" role="group" aria-label="Foto della serata del 30 aprile">
+                            <img src="assets/img/eventi/short-talks-off-1/serate/serata-30-04-01.jpg" alt="Foto della serata del 30 aprile, 1 di 11" width="1080" height="1350">
+                            <img src="assets/img/eventi/short-talks-off-1/serate/serata-30-04-02.jpg" alt="Foto della serata del 30 aprile, 2 di 11" width="1080" height="1350">
+                            <img src="assets/img/eventi/short-talks-off-1/serate/serata-30-04-03.jpg" alt="Foto della serata del 30 aprile, 3 di 11" width="1080" height="1350">
+                            <img src="assets/img/eventi/short-talks-off-1/serate/serata-30-04-04.jpg" alt="Foto della serata del 30 aprile, 4 di 11" width="1080" height="1350">
+                            <img src="assets/img/eventi/short-talks-off-1/serate/serata-30-04-05.jpg" alt="Foto della serata del 30 aprile, 5 di 11" width="1080" height="1350" loading="lazy">
+                            <img src="assets/img/eventi/short-talks-off-1/serate/serata-30-04-06.jpg" alt="Foto della serata del 30 aprile, 6 di 11" width="1080" height="1350" loading="lazy">
+                            <img src="assets/img/eventi/short-talks-off-1/serate/serata-30-04-07.jpg" alt="Foto della serata del 30 aprile, 7 di 11" width="1080" height="1350" loading="lazy">
+                            <img src="assets/img/eventi/short-talks-off-1/serate/serata-30-04-08.jpg" alt="Foto della serata del 30 aprile, 8 di 11" width="1080" height="1350" loading="lazy">
+                            <img src="assets/img/eventi/short-talks-off-1/serate/serata-30-04-09.jpg" alt="Foto della serata del 30 aprile, 9 di 11" width="1080" height="1350" loading="lazy">
+                            <img src="assets/img/eventi/short-talks-off-1/serate/serata-30-04-10.jpg" alt="Foto della serata del 30 aprile, 10 di 11" width="1080" height="1350" loading="lazy">
+                            <img src="assets/img/eventi/short-talks-off-1/serate/serata-30-04-11.jpg" alt="Foto della serata del 30 aprile, 11 di 11" width="1080" height="1350" loading="lazy">
+                        </div>
                     </div>
-                    <div class="programma-gruppo">
-                        <h3 class="programma-gruppo-titolo">Giovedì 15 maggio</h3>
-                        <p class="programma-gruppo-nota">Musica: DJ Phil</p>
-                        <ol class="programma-lista">
-                            <li>
-                                <div class="programma-voce">
-                                    <span class="programma-titolo">蝴蝶 – La Farfalla</span>
-                                    <span class="programma-dati">Antonio Marsicano</span>
-                                </div>
-                            </li>
-                            <li>
-                                <a class="programma-voce" href="opera.html?film=luparaverde">
-                                    <span class="programma-titolo">Lupara Verde</span>
-                                    <span class="programma-dati">Gabriele Rattini</span>
-                                    <span class="programma-cortoteca"><span>Nella Cortoteca</span> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></span>
-                                </a>
-                            </li>
-                            <li>
-                                <div class="programma-voce">
-                                    <span class="programma-titolo">La Noche No Existe</span>
-                                    <span class="programma-dati">Simone Franzolini</span>
-                                </div>
-                            </li>
-                        </ol>
-                    </div>
-                    <div class="programma-gruppo">
-                        <h3 class="programma-gruppo-titolo">Giovedì 22 maggio</h3>
-                        <p class="programma-gruppo-nota">Musica: Gatto</p>
-                        <ol class="programma-lista">
-                            <li>
-                                <div class="programma-voce">
-                                    <span class="programma-titolo">Agape</span>
-                                    <span class="programma-dati">Alessio Petrillo</span>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="programma-voce">
-                                    <span class="programma-titolo">120MM</span>
-                                    <span class="programma-dati">Lorenzo Dellapasqua</span>
-                                </div>
-                            </li>
-                            <li>
-                                <a class="programma-voce" href="opera.html?film=quartolivello">
-                                    <span class="programma-titolo">Quarto Livello</span>
-                                    <span class="programma-dati">Francesco Pasquinelli · CDL</span>
-                                    <span class="programma-cortoteca"><span>Nella Cortoteca</span> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></span>
-                                </a>
-                            </li>
-                        </ol>
+                    <div class="giostra__comandi">
+                        <span class="giostra__avanzamento" aria-hidden="true"><span class="giostra__linea"></span></span>
+                        <button class="giostra__tasto" type="button" aria-label="Foto precedenti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button>
+                        <button class="giostra__tasto" type="button" aria-label="Foto successive"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></button>
+                        <a class="giostra__post" href="https://www.instagram.com/p/DJPqBVaIf1K/" target="_blank" rel="noopener">Vedi su Instagram <svg class="freccia" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h6"/></svg></a>
                     </div>
                 </div>
-            </div>
-
-            <h2 class="titoletto">Galleria</h2>
-            <div class="galleria">
-                <img src="assets/img/eventi/short-talks-off-1/foto-1.jpg" alt="Il pubblico nella saletta del Pallone" width="1200" height="795" loading="lazy">
-                <img src="assets/img/eventi/short-talks-off-1/foto-2.jpg" alt="Un autore risponde alle domande del pubblico" width="960" height="1200" loading="lazy">
-                <img src="assets/img/eventi/short-talks-off-1/foto-3.jpg" alt="Il dialogo con gli autori davanti allo schermo" width="1200" height="800" loading="lazy">
-                <img src="assets/img/eventi/short-talks-off-1/foto-4.jpg" alt="Due autori sul palco durante il dialogo" width="1200" height="960" loading="lazy">
-                <img src="assets/img/eventi/short-talks-off-1/foto-5.jpg" alt="La sala del Pallone durante una presentazione" width="1200" height="960" loading="lazy">
-                <img src="assets/img/eventi/short-talks-off-1/foto-6.jpg" alt="Il dialogo con gli autori a fine proiezione" width="1200" height="795" loading="lazy">
+                <div class="serata giostra">
+                    <div class="serata__testa">
+                        <h3 class="programma-gruppo-titolo">Giovedì 8 maggio</h3>
+                        <p class="programma-gruppo-nota">Con <a class="tag-ig" href="https://www.instagram.com/sayonarafilm/" target="_blank" rel="noopener">@sayonarafilm<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h6"/></svg></a> e <a class="tag-ig" href="https://www.instagram.com/50hinbarca/" target="_blank" rel="noopener">@50hinbarca<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h6"/></svg></a> &middot; Musica: <a class="tag-ig" href="https://www.instagram.com/argine_____/" target="_blank" rel="noopener">@argine_____<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h6"/></svg></a></p>
+                    </div>
+                    <div class="serata__lista">
+                        <ol class="programma-lista">
+                        <li>
+                        <div class="programma-voce">
+                        <span class="programma-titolo">Il Martello</span>
+                        <span class="programma-dati">Francesco Pasquinelli · CDL</span>
+                        </div>
+                        </li>
+                        <li>
+                        <div class="programma-voce">
+                        <span class="programma-titolo">Il Vizio</span>
+                        <span class="programma-dati">Mario Pio Adamo</span>
+                        </div>
+                        </li>
+                        <li>
+                        <div class="programma-voce">
+                        <span class="programma-titolo">Scatti Smarriti</span>
+                        <span class="programma-dati">Daniele Fugarese</span>
+                        </div>
+                        </li>
+                        </ol>
+                    </div>
+                    <div class="giostra__foto">
+                        <div class="giostra__pista" tabindex="0" role="group" aria-label="Foto della serata del 8 maggio">
+                            <img src="assets/img/eventi/short-talks-off-1/serate/serata-08-05-01.jpg" alt="Foto della serata del 8 maggio, 1 di 11" width="1080" height="1350">
+                            <img src="assets/img/eventi/short-talks-off-1/serate/serata-08-05-02.jpg" alt="Foto della serata del 8 maggio, 2 di 11" width="1080" height="1350">
+                            <img src="assets/img/eventi/short-talks-off-1/serate/serata-08-05-03.jpg" alt="Foto della serata del 8 maggio, 3 di 11" width="1080" height="1350">
+                            <img src="assets/img/eventi/short-talks-off-1/serate/serata-08-05-04.jpg" alt="Foto della serata del 8 maggio, 4 di 11" width="1080" height="1350">
+                            <img src="assets/img/eventi/short-talks-off-1/serate/serata-08-05-05.jpg" alt="Foto della serata del 8 maggio, 5 di 11" width="1080" height="1350" loading="lazy">
+                            <img src="assets/img/eventi/short-talks-off-1/serate/serata-08-05-06.jpg" alt="Foto della serata del 8 maggio, 6 di 11" width="1080" height="1350" loading="lazy">
+                            <img src="assets/img/eventi/short-talks-off-1/serate/serata-08-05-07.jpg" alt="Foto della serata del 8 maggio, 7 di 11" width="1080" height="1350" loading="lazy">
+                            <img src="assets/img/eventi/short-talks-off-1/serate/serata-08-05-08.jpg" alt="Foto della serata del 8 maggio, 8 di 11" width="1080" height="1350" loading="lazy">
+                            <img src="assets/img/eventi/short-talks-off-1/serate/serata-08-05-09.jpg" alt="Foto della serata del 8 maggio, 9 di 11" width="1080" height="1350" loading="lazy">
+                            <img src="assets/img/eventi/short-talks-off-1/serate/serata-08-05-10.jpg" alt="Foto della serata del 8 maggio, 10 di 11" width="1080" height="1350" loading="lazy">
+                            <img src="assets/img/eventi/short-talks-off-1/serate/serata-08-05-11.jpg" alt="Foto della serata del 8 maggio, 11 di 11" width="1080" height="1350" loading="lazy">
+                        </div>
+                    </div>
+                    <div class="giostra__comandi">
+                        <span class="giostra__avanzamento" aria-hidden="true"><span class="giostra__linea"></span></span>
+                        <button class="giostra__tasto" type="button" aria-label="Foto precedenti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button>
+                        <button class="giostra__tasto" type="button" aria-label="Foto successive"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></button>
+                        <a class="giostra__post" href="https://www.instagram.com/p/DJkAuLyIxsr/" target="_blank" rel="noopener">Vedi su Instagram <svg class="freccia" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h6"/></svg></a>
+                    </div>
+                </div>
+                <div class="serata giostra">
+                    <div class="serata__testa">
+                        <h3 class="programma-gruppo-titolo">Giovedì 15 maggio</h3>
+                        <p class="programma-gruppo-nota">Musica: <a class="tag-ig" href="https://www.instagram.com/argine_____/" target="_blank" rel="noopener">@argine_____<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h6"/></svg></a></p>
+                    </div>
+                    <div class="serata__lista">
+                        <ol class="programma-lista">
+                        <li>
+                        <div class="programma-voce">
+                        <span class="programma-titolo">蝴蝶 – La Farfalla</span>
+                        <span class="programma-dati">Antonio Marsicano</span>
+                        </div>
+                        </li>
+                        <li>
+                        <a class="programma-voce" href="opera.html?film=luparaverde">
+                        <span class="programma-titolo">Lupara Verde</span>
+                        <span class="programma-dati">Gabriele Rattini</span>
+                        <span class="programma-cortoteca"><span>Nella Cortoteca</span> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></span>
+                        </a>
+                        </li>
+                        <li>
+                        <div class="programma-voce">
+                        <span class="programma-titolo">La Noche No Existe</span>
+                        <span class="programma-dati">Simone Franzolini</span>
+                        </div>
+                        </li>
+                        </ol>
+                    </div>
+                    <div class="giostra__foto">
+                        <div class="giostra__pista" tabindex="0" role="group" aria-label="Foto della serata del 15 maggio">
+                            <img src="assets/img/eventi/short-talks-off-1/serate/serata-15-05-01.jpg" alt="Foto della serata del 15 maggio, 1 di 10" width="1080" height="1350">
+                            <img src="assets/img/eventi/short-talks-off-1/serate/serata-15-05-02.jpg" alt="Foto della serata del 15 maggio, 2 di 10" width="1080" height="1350">
+                            <img src="assets/img/eventi/short-talks-off-1/serate/serata-15-05-03.jpg" alt="Foto della serata del 15 maggio, 3 di 10" width="1080" height="1350">
+                            <img src="assets/img/eventi/short-talks-off-1/serate/serata-15-05-04.jpg" alt="Foto della serata del 15 maggio, 4 di 10" width="1080" height="1350">
+                            <img src="assets/img/eventi/short-talks-off-1/serate/serata-15-05-05.jpg" alt="Foto della serata del 15 maggio, 5 di 10" width="1080" height="1350" loading="lazy">
+                            <img src="assets/img/eventi/short-talks-off-1/serate/serata-15-05-06.jpg" alt="Foto della serata del 15 maggio, 6 di 10" width="1080" height="1350" loading="lazy">
+                            <img src="assets/img/eventi/short-talks-off-1/serate/serata-15-05-07.jpg" alt="Foto della serata del 15 maggio, 7 di 10" width="1080" height="1350" loading="lazy">
+                            <img src="assets/img/eventi/short-talks-off-1/serate/serata-15-05-08.jpg" alt="Foto della serata del 15 maggio, 8 di 10" width="1080" height="1350" loading="lazy">
+                            <img src="assets/img/eventi/short-talks-off-1/serate/serata-15-05-09.jpg" alt="Foto della serata del 15 maggio, 9 di 10" width="1080" height="1350" loading="lazy">
+                            <img src="assets/img/eventi/short-talks-off-1/serate/serata-15-05-10.jpg" alt="Foto della serata del 15 maggio, 10 di 10" width="1080" height="1350" loading="lazy">
+                        </div>
+                    </div>
+                    <div class="giostra__comandi">
+                        <span class="giostra__avanzamento" aria-hidden="true"><span class="giostra__linea"></span></span>
+                        <button class="giostra__tasto" type="button" aria-label="Foto precedenti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button>
+                        <button class="giostra__tasto" type="button" aria-label="Foto successive"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></button>
+                        <a class="giostra__post" href="https://www.instagram.com/p/DJzRXcoohgx/" target="_blank" rel="noopener">Vedi su Instagram <svg class="freccia" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h6"/></svg></a>
+                    </div>
+                </div>
+                <div class="serata giostra">
+                    <div class="serata__testa">
+                        <h3 class="programma-gruppo-titolo">Giovedì 22 maggio</h3>
+                        <p class="programma-gruppo-nota">Musica: <a class="tag-ig" href="https://www.instagram.com/teo_love_unity/" target="_blank" rel="noopener">@teo_love_unity<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h6"/></svg></a></p>
+                    </div>
+                    <div class="serata__lista">
+                        <ol class="programma-lista">
+                        <li>
+                        <div class="programma-voce">
+                        <span class="programma-titolo">Agape</span>
+                        <span class="programma-dati">Alessio Petrillo</span>
+                        </div>
+                        </li>
+                        <li>
+                        <div class="programma-voce">
+                        <span class="programma-titolo">120MM</span>
+                        <span class="programma-dati">Lorenzo Dellapasqua</span>
+                        </div>
+                        </li>
+                        <li>
+                        <a class="programma-voce" href="opera.html?film=quartolivello">
+                        <span class="programma-titolo">Quarto Livello</span>
+                        <span class="programma-dati">Francesco Pasquinelli · CDL</span>
+                        <span class="programma-cortoteca"><span>Nella Cortoteca</span> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></span>
+                        </a>
+                        </li>
+                        </ol>
+                    </div>
+                    <div class="giostra__foto">
+                        <div class="giostra__pista" tabindex="0" role="group" aria-label="Foto della serata del 22 maggio">
+                            <img src="assets/img/eventi/short-talks-off-1/serate/serata-22-05-01.jpg" alt="Foto della serata del 22 maggio, 1 di 10" width="1080" height="1350">
+                            <img src="assets/img/eventi/short-talks-off-1/serate/serata-22-05-02.jpg" alt="Foto della serata del 22 maggio, 2 di 10" width="1080" height="1350">
+                            <img src="assets/img/eventi/short-talks-off-1/serate/serata-22-05-03.jpg" alt="Foto della serata del 22 maggio, 3 di 10" width="1080" height="1350">
+                            <img src="assets/img/eventi/short-talks-off-1/serate/serata-22-05-04.jpg" alt="Foto della serata del 22 maggio, 4 di 10" width="1080" height="1350">
+                            <img src="assets/img/eventi/short-talks-off-1/serate/serata-22-05-05.jpg" alt="Foto della serata del 22 maggio, 5 di 10" width="1080" height="1350" loading="lazy">
+                            <img src="assets/img/eventi/short-talks-off-1/serate/serata-22-05-06.jpg" alt="Foto della serata del 22 maggio, 6 di 10" width="1080" height="1350" loading="lazy">
+                            <img src="assets/img/eventi/short-talks-off-1/serate/serata-22-05-07.jpg" alt="Foto della serata del 22 maggio, 7 di 10" width="1080" height="1350" loading="lazy">
+                            <img src="assets/img/eventi/short-talks-off-1/serate/serata-22-05-08.jpg" alt="Foto della serata del 22 maggio, 8 di 10" width="1080" height="1350" loading="lazy">
+                            <img src="assets/img/eventi/short-talks-off-1/serate/serata-22-05-09.jpg" alt="Foto della serata del 22 maggio, 9 di 10" width="1080" height="1350" loading="lazy">
+                            <img src="assets/img/eventi/short-talks-off-1/serate/serata-22-05-10.jpg" alt="Foto della serata del 22 maggio, 10 di 10" width="1080" height="1350" loading="lazy">
+                        </div>
+                    </div>
+                    <div class="giostra__comandi">
+                        <span class="giostra__avanzamento" aria-hidden="true"><span class="giostra__linea"></span></span>
+                        <button class="giostra__tasto" type="button" aria-label="Foto precedenti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button>
+                        <button class="giostra__tasto" type="button" aria-label="Foto successive"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></button>
+                        <a class="giostra__post" href="https://www.instagram.com/p/DKK3W1ro9F1/" target="_blank" rel="noopener">Vedi su Instagram <svg class="freccia" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h6"/></svg></a>
+                    </div>
+                </div>
             </div>
         </section>
     </main>
 
-    <footer class="piede">
-        <div class="piede-interno">
-            <a href="index.html" class="piede-marchio" aria-label="Home">
-                <img src="assets/img/brand/logo-cdl.png" alt="CDL" width="1435" height="557" loading="lazy">
-            </a>
-            <nav class="piede-colonne" aria-label="Pagine e contatti">
-                <ul class="piede-elenco">
-                    <li><a href="produzioni.html">Produzioni</a></li>
-                    <li><a href="eventi.html">Eventi</a></li>
-                    <li><a href="cortoteca.html">Cortoteca</a></li>
-                    <li><a href="vantaggi-tesseramento.html">Vantaggi per i soci</a></li>
-                </ul>
-                <ul class="piede-elenco">
-                    <li><a href="https://instagram.com/cdl_aps" target="_blank" rel="noopener">Instagram</a></li>
-                    <li><a href="https://www.youtube.com/@cdl_aps" target="_blank" rel="noopener">YouTube</a></li>
-                    <li><a href="mailto:ciao@cdlaps.com">ciao@cdlaps.com</a></li>
-                </ul>
-            </nav>
-            <p class="piede-dati">Associazione di promozione del cinema giovane e indipendente<br>
-            CDL APS &bull; Viale Laurana 13, Rimini, 47921 &bull; CF: 91200080405 &bull; 2026</p>
+    <footer>
+        <div class="piede">
+            <div class="wrap piede__riga">
+                <a href="index.html" aria-label="CDL, pagina iniziale"><span class="logo"></span></a>
+                <nav class="piede__elenchi" aria-label="Pagine e contatti">
+                    <ul>
+                        <li><a href="eventi.html">Eventi</a></li>
+                        <li><a href="produzioni.html">Produzioni</a></li>
+                        <li><a href="cortoteca.html">Cortoteca</a></li>
+                        <li><a href="vantaggi-tesseramento.html">Vantaggi per i soci</a></li>
+                    </ul>
+                    <ul id="contatti">
+                        <li><a href="https://instagram.com/cdl_aps" target="_blank" rel="noopener">Instagram <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h6"/></svg></a></li>
+                        <li><a href="https://www.youtube.com/@cdl_aps" target="_blank" rel="noopener">YouTube <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h6"/></svg></a></li>
+                        <li><a href="mailto:ciao@cdlaps.com">ciao@cdlaps.com</a></li>
+                    </ul>
+                </nav>
+                <p class="piede__dati">Associazione di promozione del cinema giovane e indipendente<br>
+                CDL APS &bull; Viale Laurana 13, Rimini, 47921 &bull; CF: 91200080405 &bull; 2026</p>
+            </div>
         </div>
     </footer>
 
-    <script src="assets/js/barra.js?v=2026-11-11"></script>
+    <script src="assets/js/comune.js?v=2026-11-12"></script>
 </body>
 </html>

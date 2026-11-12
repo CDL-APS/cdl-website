@@ -123,7 +123,7 @@ main > section,
 .nav .nav__socio:hover { border-color: var(--nero); background: var(--giallo); color: var(--nero); }
 
 @media (max-width: 759px) {
-  .nav__socio { display: none; }
+  .nav .nav__socio { display: none; } /* più forte di .btn, che viene dopo */
 }
 
 @media (max-width: 639px) {

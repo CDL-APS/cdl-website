@@ -25,14 +25,16 @@
 
 /* Il logo di ogni evento: il PNG senza fondo in assets/img/eventi/loghi/,
    col nome della pagina, usato come maschera; --ar è larghezza / altezza.
-   Un evento nuovo col suo logo aggiunge qui la sua riga. */
-.marchio--short-talks-1 { --marchio: url('../../img/eventi/loghi/short-talks-1.png'); --ar: 1.2075; }
-.marchio--short-talks-2 { --marchio: url('../../img/eventi/loghi/short-talks-2.png'); --ar: 3.2000; }
-.marchio--short-talks-3-x-laiff { --marchio: url('../../img/eventi/loghi/short-talks-3-x-laiff.png'); --ar: 3.2000; }
-.marchio--short-talks-off-1 { --marchio: url('../../img/eventi/loghi/short-talks-off-1.png'); --ar: 5.6940; }
-.marchio--short-talks-al-not-2025 { --marchio: url('../../img/eventi/loghi/short-talks-al-not-2025.png'); --ar: 1.9827; }
-.marchio--short-talks-al-not-2026 { --marchio: url('../../img/eventi/loghi/short-talks-al-not-2026.png'); --ar: 2.1769; }
-.marchio--blue-hour { --marchio: url('../../img/eventi/loghi/blue-hour.png'); --ar: 0.9881; }
+   Un evento nuovo col suo logo aggiunge qui la sua riga. Il percorso è
+   assoluto: un url() dentro una variabile si risolve rispetto al foglio che
+   la usa (components.css), non a questo. */
+.marchio--short-talks-1 { --marchio: url('/assets/img/eventi/loghi/short-talks-1.png'); --ar: 1.2075; }
+.marchio--short-talks-2 { --marchio: url('/assets/img/eventi/loghi/short-talks-2.png'); --ar: 3.2000; }
+.marchio--short-talks-3-x-laiff { --marchio: url('/assets/img/eventi/loghi/short-talks-3-x-laiff.png'); --ar: 3.2000; }
+.marchio--short-talks-off-1 { --marchio: url('/assets/img/eventi/loghi/short-talks-off-1.png'); --ar: 5.6940; }
+.marchio--short-talks-al-not-2025 { --marchio: url('/assets/img/eventi/loghi/short-talks-al-not-2025.png'); --ar: 1.9827; }
+.marchio--short-talks-al-not-2026 { --marchio: url('/assets/img/eventi/loghi/short-talks-al-not-2026.png'); --ar: 2.1769; }
+.marchio--blue-hour { --marchio: url('/assets/img/eventi/loghi/blue-hour.png'); --ar: 0.9881; }
 
 .pagina-evento .nav__voce[aria-current]::before { background: var(--evento); }
 .pagina-evento main > section { min-height: 0; }

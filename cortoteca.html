@@ -2,94 +2,139 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Cortoteca – CDL APS</title>
-    <meta name="description" content="L'archivio dei cortometraggi realizzati dai soci di CDL APS.">
+    <meta name="description" content="I cortometraggi dei soci di CDL APS, da guardare in streaming sul sito.">
 
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link rel="icon" type="image/png" href="assets/img/brand/favicon.png">
 
-    <link rel="stylesheet" href="assets/css/base.css?v=2026-11-11">
-    <link rel="stylesheet" href="assets/css/components.css?v=2026-11-11">
-    <link rel="stylesheet" href="assets/css/pages/cortoteca.css?v=2026-11-11">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800;900&display=swap">
+    <link rel="stylesheet" href="assets/css/base.css?v=2026-11-12">
+    <link rel="stylesheet" href="assets/css/components.css?v=2026-11-12">
+    <link rel="stylesheet" href="assets/css/pages/opera.css?v=2026-11-12">
+    <link rel="stylesheet" href="assets/css/pages/cortoteca.css?v=2026-11-12">
 </head>
-<body>
+<body class="fondo-sala stanza barra-ridotta">
 
-    <nav class="barra" aria-label="Navigazione principale">
-        <a href="index.html" class="barra-logo" aria-label="Home">
-            <img src="assets/img/brand/logo-cdl.png" alt="CDL" width="62" height="24">
-        </a>
-
-        <div class="barra-gruppo">
-            <span class="indicatore" aria-hidden="true"></span>
-            <a href="produzioni.html" class="voce">Produzioni</a>
-            <a href="eventi.html" class="voce">Eventi</a>
-            <a href="cortoteca.html" class="voce is-active" aria-current="page"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.14v13.72L19 12 8 5.14Z"/></svg>Cortoteca</a>
+    <header class="nav">
+        <div class="wrap nav__riga">
+            <a class="skip-link" href="#top">Vai al contenuto</a>
+            <a class="nav__logo" href="index.html" aria-label="CDL, pagina iniziale"><span class="logo"></span></a>
+            <!-- Per ora la barra della Cortoteca porta solo l'invito ad associarsi -->
+            <a class="btn btn--pieno nav__socio" href="contatti.html">Diventa socio</a>
         </div>
+    </header>
 
-        <a href="vantaggi-tesseramento.html#socio" class="barra-socio">Diventa socio</a>
-    </nav>
-
-    <main>
-        <section class="sezione sezione--prima">
-            <header class="testa-pagina">
-                <h1>Cortoteca</h1>
-                <p class="testa-pagina-nota">La Cortoteca di CDL è lo spazio dedicato alle opere dei soci di CDL APS che ne fanno richiesta, ideata per scoprire progetti di cinema indipendente e conoscere realtà del territorio tramite lo streaming direttamente sul sito.</p>
-            </header>
-
-            <!-- Ricerca e ordinamento: li legge assets/js/cortoteca.js -->
-            <div class="strumenti">
-                <label class="campo" for="db-search">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
-                    <span class="sr-only">Cerca un'opera</span>
-                    <input type="search" id="db-search" placeholder="Cerca per titolo, regista o produzione" autocomplete="off">
-                </label>
-
-                <div class="ordine" role="group" aria-label="Ordina le opere">
-                    <input type="radio" name="ordine" id="ordine-anno" value="anno" checked>
-                    <label for="ordine-anno" class="scelta">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2v3"/><path d="M16 2v3"/><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/></svg>
-                        Per anno
+    <main id="top">
+        <section class="hero hero--cortoteca">
+            <div class="wrap">
+                <h1 class="parola"><span class="sr-only">Cortoteca</span><span class="fit" aria-hidden="true"><span class="fit-testo">Cortoteca</span></span></h1>
+                <p class="presentazione">La Cortoteca di CDL &egrave; lo spazio dedicato alle opere dei soci di CDL APS che ne fanno richiesta, ideata per scoprire progetti di cinema indipendente e conoscere realt&agrave; del territorio tramite lo streaming direttamente sul sito.</p>
+                <div class="strumenti">
+                    <label class="campo" for="db-search">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+                        <span class="sr-only">Cerca un'opera</span>
+                        <input type="search" id="db-search" placeholder="Cerca per titolo o regista" autocomplete="off">
                     </label>
-                    <input type="radio" name="ordine" id="ordine-nome" value="nome">
-                    <label for="ordine-nome" class="scelta">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 16 4 4 4-4"/><path d="M7 20V4"/><path d="M20 8h-5"/><path d="M15 10V6.5a2.5 2.5 0 0 1 5 0V10"/><path d="M15 14h5l-5 6h5"/></svg>
-                        Per nome
-                    </label>
+                    <div class="scelte scelte--vista" role="group" aria-label="Vista">
+                        <input type="radio" name="vista" id="vista-galleria" value="galleria" checked>
+                        <label for="vista-galleria" class="scelta"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="8" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/><rect x="13" y="13" width="8" height="8" rx="1.5"/></svg>Galleria</label>
+                        <input type="radio" name="vista" id="vista-lista" value="lista">
+                        <label for="vista-lista" class="scelta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>Lista</label>
+                    </div>
+                    <div class="scelte" role="group" aria-label="Ordina le opere">
+                        <input type="radio" name="ordine" id="ordine-anno" value="anno" checked>
+                        <label for="ordine-anno" class="scelta">Per anno</label>
+                        <input type="radio" name="ordine" id="ordine-nome" value="nome">
+                        <label for="ordine-nome" class="scelta">Per nome</label>
+                    </div>
                 </div>
-            </div>
-
-            <div id="movie-grid" class="griglia-opere">
-                <!-- Le card delle opere vengono inserite qui da assets/js/cortoteca.js -->
+                <div id="opere"></div>
             </div>
         </section>
+        <!-- Modello della pagina del corto: la Cortoteca lo apre al suo interno -->
+        <template id="modello-corto">
+            <div class="sala-corto pagina-corto" role="dialog" aria-modal="true" aria-labelledby="titolo-corto">
+                <button class="sala-corto__chiudi" type="button" aria-label="Chiudi e torna alla Cortoteca"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+
+        <section class="hero hero--corto">
+            <div class="wrap">
+                <h1 class="sr-only" id="titolo-corto">Opera</h1>
+                <div class="still schermo" id="schermo">
+                    <span class="cornice"></span>
+                    <span class="targa" id="schermo-titolo"></span>
+                </div>
+            </div>
+        </section>
+
+        <section class="blocco-pagina entra" aria-label="Il corto">
+            <div class="wrap grid corto" id="corto" hidden>
+                <div class="corto__testo span-7">
+                    <p class="corto__frase" id="corto-frase"></p>
+                    <p class="corto__sinossi" id="corto-sinossi"></p>
+                    <div class="btn-riga" id="corto-azioni" hidden></div>
+                </div>
+                <dl class="corto__dati span-4 start-9" id="corto-dati"></dl>
+            </div>
+            <div class="wrap">
+                <p class="avviso" id="corto-avviso" hidden>Opera non trovata.</p>
+            </div>
+        </section>
+
+        <section class="blocco-pagina blocco-pagina--diviso entra" aria-labelledby="titolo-note" id="blocco-note" hidden>
+            <div class="wrap">
+                <h2 class="blocco-pagina__testa" id="titolo-note">Note di regia</h2>
+                <div class="note-regia" id="note-regia"></div>
+            </div>
+        </section>
+
+        <section class="blocco-pagina blocco-pagina--diviso entra" aria-labelledby="titolo-crediti" id="blocco-crediti" hidden>
+            <div class="wrap">
+                <h2 class="blocco-pagina__testa" id="titolo-crediti">Crediti</h2>
+                <dl class="crediti" id="crediti"></dl>
+            </div>
+        </section>
+            </div>
+        </template>
+
     </main>
 
-    <footer class="piede">
-        <div class="piede-interno">
-            <a href="index.html" class="piede-marchio" aria-label="Home">
-                <img src="assets/img/brand/logo-cdl.png" alt="CDL" width="1435" height="557" loading="lazy">
-            </a>
-            <nav class="piede-colonne" aria-label="Pagine e contatti">
-                <ul class="piede-elenco">
-                    <li><a href="produzioni.html">Produzioni</a></li>
-                    <li><a href="eventi.html">Eventi</a></li>
-                    <li><a href="cortoteca.html">Cortoteca</a></li>
-                    <li><a href="vantaggi-tesseramento.html">Vantaggi per i soci</a></li>
-                </ul>
-                <ul class="piede-elenco">
-                    <li><a href="https://instagram.com/cdl_aps" target="_blank" rel="noopener">Instagram</a></li>
-                    <li><a href="https://www.youtube.com/@cdl_aps" target="_blank" rel="noopener">YouTube</a></li>
-                    <li><a href="mailto:ciao@cdlaps.com">ciao@cdlaps.com</a></li>
-                </ul>
-            </nav>
-            <p class="piede-dati">Associazione di promozione del cinema giovane e indipendente<br>
-            CDL APS &bull; Viale Laurana 13, Rimini, 47921 &bull; CF: 91200080405 &bull; 2026</p>
+    <footer class="closing closing--breve closing--occhi">
+        <div class="wrap grid">
+            <div class="span-3 start-10 occhi-chiusura occhi-chiusura--piede" aria-hidden="true">
+                <span class="occhio" style="--x:22%;--y:-6px;--d:52px"><span class="pupilla"></span></span>
+                <span class="occhio" style="--x:52%;--y:2px;--d:34px"><span class="pupilla"></span></span>
+                <span class="occhio" style="--x:80%;--y:-10px;--d:44px"><span class="pupilla"></span></span>
+            </div>
+        </div>
+        <div class="piede piede--lilla">
+            <div class="wrap piede__riga">
+                <a href="index.html" aria-label="CDL, pagina iniziale"><span class="logo"></span></a>
+                <nav class="piede__elenchi" aria-label="Pagine e contatti">
+                    <ul>
+                        <li><a href="eventi.html">Eventi</a></li>
+                        <li><a href="produzioni.html">Produzioni</a></li>
+                        <li><a href="cortoteca.html">Cortoteca</a></li>
+                        <li><a href="vantaggi-tesseramento.html">Vantaggi per i soci</a></li>
+                    </ul>
+                    <ul id="contatti">
+                        <li><a href="https://instagram.com/cdl_aps" target="_blank" rel="noopener">Instagram <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h6"/></svg></a></li>
+                        <li><a href="https://www.youtube.com/@cdl_aps" target="_blank" rel="noopener">YouTube <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h6"/></svg></a></li>
+                        <li><a href="mailto:ciao@cdlaps.com">ciao@cdlaps.com</a></li>
+                    </ul>
+                </nav>
+                <p class="piede__dati">Associazione di promozione del cinema giovane e indipendente<br>
+                CDL APS &bull; Viale Laurana 13, Rimini, 47921 &bull; CF: 91200080405 &bull; 2026</p>
+            </div>
         </div>
     </footer>
 
-    <script src="assets/js/barra.js?v=2026-11-11"></script>
-    <script src="assets/js/dati.js?v=2026-11-11"></script>
-    <script src="assets/js/cortoteca.js?v=2026-11-11"></script>
+    <script src="assets/js/dati.js?v=2026-11-12"></script>
+    <script src="assets/js/comune.js?v=2026-11-12"></script>
+    <script src="assets/js/corto.js?v=2026-11-12"></script>
+    <script src="assets/js/cortoteca.js?v=2026-11-12"></script>
 </body>
 </html>

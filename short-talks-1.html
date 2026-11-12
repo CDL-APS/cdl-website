@@ -2,120 +2,115 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Short Talks #1 – CDL APS</title>
     <meta name="description" content="Short Talks #1: la prima edizione del format di CDL APS fra cortometraggi e dialogo con gli autori, il 18 aprile 2024 al C'entro Supercinema di Santarcangelo.">
 
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link rel="icon" type="image/png" href="assets/img/brand/favicon.png">
 
-    <link rel="stylesheet" href="assets/css/base.css?v=2026-11-11">
-    <link rel="stylesheet" href="assets/css/components.css?v=2026-11-11">
-    <link rel="stylesheet" href="assets/css/pages/evento.css?v=2026-11-11">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800;900&display=swap">
+    <link rel="stylesheet" href="assets/css/base.css?v=2026-11-12">
+    <link rel="stylesheet" href="assets/css/components.css?v=2026-11-12">
+    <link rel="stylesheet" href="assets/css/pages/evento.css?v=2026-11-12">
 </head>
-<body class="evento evento--short-talks-1">
+<body class="pagina-evento evento--short-talks-1">
 
-    <!-- Pagina di un evento passato, sul modello di Long Story Short. Le foto
-         stanno in assets/img/eventi/short-talks-1/; la copertina è la stessa
-         del database, con lo stesso nome. -->
-    <nav class="barra" aria-label="Navigazione principale">
-        <a href="index.html" class="barra-logo" aria-label="Home">
-            <img src="assets/img/brand/logo-cdl.png" alt="CDL" width="62" height="24">
-        </a>
-
-        <div class="barra-gruppo">
-            <span class="indicatore" aria-hidden="true"></span>
-            <a href="produzioni.html" class="voce">Produzioni</a>
-            <a href="eventi.html" class="voce is-active">Eventi</a>
-            <a href="cortoteca.html" class="voce"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.14v13.72L19 12 8 5.14Z"/></svg>Cortoteca</a>
+    <header class="nav">
+        <div class="wrap nav__riga">
+            <a class="skip-link" href="#top">Vai al contenuto</a>
+            <a class="nav__logo" href="index.html" aria-label="CDL, pagina iniziale"><span class="logo"></span></a>
+            <a class="nav__voce nav__voce--eventi" href="eventi.html" aria-current="page">Eventi</a>
+            <a class="nav__voce nav__voce--produzioni" href="produzioni.html">Produzioni</a>
+            <a class="nav__voce nav__voce--contatti" href="contatti.html#contatti">Contatti</a>
+            <a class="nav__cortoteca" href="cortoteca.html"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.14v13.72L19 12 8 5.14Z"/></svg>Cortoteca</a>
+            <a class="btn btn--pieno nav__socio" href="contatti.html">Diventa socio</a>
         </div>
+    </header>
 
-        <a href="vantaggi-tesseramento.html#socio" class="barra-socio">Diventa socio</a>
-    </nav>
-
-    <main>
-        <section class="sezione sezione--prima">
-
-            <a href="eventi.html" class="indietro">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
-                Tutti gli eventi
-            </a>
-
-            <div class="copertina copertina--intera">
-                <img class="foto" src="assets/img/eventi/short-talks-1-copertina-1791651702071.jpg" alt="Short Talks: doppia visione con Francesco Pasquinelli e Christian Dei, giovedì 18 aprile alle 19:30 al Supercinema di Santarcangelo, entrata gratuita" width="1200" height="628">
-            </div>
-
-            <div class="due-colonne">
-                <h1>Short Talks <span>#1</span></h1>
-                <div class="corpo">
+    <main id="top">
+        <!-- Come Long Story Short: in cima il logo dell'evento (è qui che
+             arriva quello della scheda di Eventi) e il racconto, con quando e
+             dove scritti dentro: a fianco se il logo è raccolto, sotto se è
+             una riga lunga -->
+        <section class="hero hero--evento hero--marchio hero--affiancato">
+            <div class="wrap">
+                <h1 class="evento-g__marchio" id="titolo-evento"><span class="sr-only">Short Talks #1</span><span class="marchio-serie marchio-serie--evento marchio--short-talks-1" data-arrivo aria-hidden="true"></span></h1>
+                <div class="presentazione entra">
                     <p>Il <strong>18 aprile 2024</strong>, al <strong>C'entro Supercinema di Santarcangelo</strong>, nasce <strong>Short Talks</strong>: il format con cui CDL porta in sala il cinema corto, alternando cortometraggi indipendenti di giovani autori al dialogo con chi li ha realizzati. Il nome è un gioco di parole sull'inglese <em>small talk</em>, la conversazione leggera e informale, e richiama sia la brevità delle opere sia lo scambio diretto con il pubblico.</p>
                 </div>
             </div>
+        </section>
 
-            <h2 class="titoletto">Programma</h2>
-            <div class="programma-griglia">
-                <div class="programma">
-                    <div class="programma-gruppo">
+        <section class="blocco-pagina blocco-pagina--diviso entra" aria-labelledby="blocco-programma">
+            <div class="wrap">
+                <h2 class="sr-only" id="blocco-programma">Programma</h2>
+                <div class="serata giostra">
+                    <div class="serata__testa">
                         <h3 class="programma-gruppo-titolo">Doppia visione</h3>
                         <p class="programma-gruppo-nota">Ogni proiezione è seguita dal dialogo con il regista e la troupe.</p>
+                    </div>
+                    <div class="serata__lista">
                         <ol class="programma-lista">
-                            <li>
-                                <a class="programma-voce" href="opera.html?film=relativita">
-                                    <span class="programma-titolo">Relatività</span>
-                                    <span class="programma-dati">Francesco Pasquinelli · CDL · 2024 · 10'</span>
-                                    <span class="programma-cortoteca"><span>Nella Cortoteca</span> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></span>
-                                </a>
-                            </li>
-                            <li>
-                                <div class="programma-voce">
-                                    <span class="programma-titolo">Dettagli Temporanei</span>
-                                    <span class="programma-dati">Christian Dei · LVDA Film · 2023 · 9'</span>
-                                </div>
-                            </li>
+                        <li>
+                        <a class="programma-voce" href="opera.html?film=relativita">
+                        <span class="programma-titolo">Relatività</span>
+                        <span class="programma-dati">Francesco Pasquinelli · CDL · 2024 · 10'</span>
+                        <span class="programma-cortoteca"><span>Nella Cortoteca</span> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></span>
+                        </a>
+                        </li>
+                        <li>
+                        <div class="programma-voce">
+                        <span class="programma-titolo">Dettagli Temporanei</span>
+                        <span class="programma-dati">Christian Dei · LVDA Film · 2023 · 9'</span>
+                        </div>
+                        </li>
                         </ol>
                     </div>
+                    <div class="giostra__foto">
+                        <div class="giostra__pista" tabindex="0" role="group" aria-label="Foto della serata del 18 aprile">
+                            <img src="assets/img/eventi/short-talks-1/serate/serata-18-04-01.jpg" alt="Foto della serata del 18 aprile, 1 di 4" width="1080" height="1080">
+                            <img src="assets/img/eventi/short-talks-1/serate/serata-18-04-02.jpg" alt="Foto della serata del 18 aprile, 2 di 4" width="1080" height="1080">
+                            <img src="assets/img/eventi/short-talks-1/serate/serata-18-04-03.jpg" alt="Foto della serata del 18 aprile, 3 di 4" width="1080" height="1080">
+                            <img src="assets/img/eventi/short-talks-1/serate/serata-18-04-04.jpg" alt="Foto della serata del 18 aprile, 4 di 4" width="1080" height="1080">
+                        </div>
+                    </div>
+                    <div class="giostra__comandi">
+                        <span class="giostra__avanzamento" aria-hidden="true"><span class="giostra__linea"></span></span>
+                        <button class="giostra__tasto" type="button" aria-label="Foto precedenti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button>
+                        <button class="giostra__tasto" type="button" aria-label="Foto successive"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></button>
+                        <a class="giostra__post" href="https://www.instagram.com/p/C5_XntuoJj_/" target="_blank" rel="noopener">Vedi su Instagram <svg class="freccia" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h6"/></svg></a>
+                    </div>
                 </div>
-
-                <figure class="locandina">
-                    <img src="assets/img/eventi/short-talks-1/locandina.jpg" alt="Locandina di Short Talks #1: Relatività di Francesco Pasquinelli e Dettagli Temporanei di Christian Dei, giovedì 18 aprile alle 19:30 al Supercinema di Santarcangelo" width="786" height="1100" loading="lazy">
-                </figure>
-            </div>
-
-            <h2 class="titoletto">Galleria</h2>
-            <div class="galleria">
-                <img src="assets/img/eventi/short-talks-1/foto-1.jpg" alt="La sala del Supercinema piena prima delle proiezioni" width="1200" height="900" loading="lazy">
-                <img src="assets/img/eventi/short-talks-1/foto-2.jpg" alt="Lo schermo del Supercinema con il titolo di Short Talks" width="675" height="1200" loading="lazy">
-                <img src="assets/img/eventi/short-talks-1/foto-3.jpg" alt="Il dialogo con il pubblico dopo le proiezioni" width="1200" height="675" loading="lazy">
-                <img src="assets/img/eventi/short-talks-1/foto-4.jpg" alt="Il titolo di Dettagli Temporanei sullo schermo, davanti alla sala" width="675" height="1200" loading="lazy">
-                <img src="assets/img/eventi/short-talks-1/foto-5.jpg" alt="Registi e troupe seduti sul palco" width="1200" height="675" loading="lazy">
-                <img src="assets/img/eventi/short-talks-1/foto-6.jpg" alt="La troupe di Relatività presentata sul palco" width="1200" height="675" loading="lazy">
             </div>
         </section>
     </main>
 
-    <footer class="piede">
-        <div class="piede-interno">
-            <a href="index.html" class="piede-marchio" aria-label="Home">
-                <img src="assets/img/brand/logo-cdl.png" alt="CDL" width="1435" height="557" loading="lazy">
-            </a>
-            <nav class="piede-colonne" aria-label="Pagine e contatti">
-                <ul class="piede-elenco">
-                    <li><a href="produzioni.html">Produzioni</a></li>
-                    <li><a href="eventi.html">Eventi</a></li>
-                    <li><a href="cortoteca.html">Cortoteca</a></li>
-                    <li><a href="vantaggi-tesseramento.html">Vantaggi per i soci</a></li>
-                </ul>
-                <ul class="piede-elenco">
-                    <li><a href="https://instagram.com/cdl_aps" target="_blank" rel="noopener">Instagram</a></li>
-                    <li><a href="https://www.youtube.com/@cdl_aps" target="_blank" rel="noopener">YouTube</a></li>
-                    <li><a href="mailto:ciao@cdlaps.com">ciao@cdlaps.com</a></li>
-                </ul>
-            </nav>
-            <p class="piede-dati">Associazione di promozione del cinema giovane e indipendente<br>
-            CDL APS &bull; Viale Laurana 13, Rimini, 47921 &bull; CF: 91200080405 &bull; 2026</p>
+    <footer>
+        <div class="piede">
+            <div class="wrap piede__riga">
+                <a href="index.html" aria-label="CDL, pagina iniziale"><span class="logo"></span></a>
+                <nav class="piede__elenchi" aria-label="Pagine e contatti">
+                    <ul>
+                        <li><a href="eventi.html">Eventi</a></li>
+                        <li><a href="produzioni.html">Produzioni</a></li>
+                        <li><a href="cortoteca.html">Cortoteca</a></li>
+                        <li><a href="vantaggi-tesseramento.html">Vantaggi per i soci</a></li>
+                    </ul>
+                    <ul id="contatti">
+                        <li><a href="https://instagram.com/cdl_aps" target="_blank" rel="noopener">Instagram <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h6"/></svg></a></li>
+                        <li><a href="https://www.youtube.com/@cdl_aps" target="_blank" rel="noopener">YouTube <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h6"/></svg></a></li>
+                        <li><a href="mailto:ciao@cdlaps.com">ciao@cdlaps.com</a></li>
+                    </ul>
+                </nav>
+                <p class="piede__dati">Associazione di promozione del cinema giovane e indipendente<br>
+                CDL APS &bull; Viale Laurana 13, Rimini, 47921 &bull; CF: 91200080405 &bull; 2026</p>
+            </div>
         </div>
     </footer>
 
-    <script src="assets/js/barra.js?v=2026-11-11"></script>
+    <script src="assets/js/comune.js?v=2026-11-12"></script>
 </body>
 </html>

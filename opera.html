@@ -2,135 +2,101 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Il titolo viene sostituito da assets/js/opera.js col nome dell'opera -->
-    <title>Dettaglio Opera – CDL APS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Opera – CDL APS</title>
+    <meta name="description" content="Un cortometraggio della Cortoteca di CDL APS.">
 
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link rel="icon" type="image/png" href="assets/img/brand/favicon.png">
 
-    <link rel="stylesheet" href="assets/css/base.css?v=2026-11-11">
-    <link rel="stylesheet" href="assets/css/components.css?v=2026-11-11">
-    <link rel="stylesheet" href="assets/css/pages/opera.css?v=2026-11-11">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800;900&display=swap">
+    <link rel="stylesheet" href="assets/css/base.css?v=2026-11-12">
+    <link rel="stylesheet" href="assets/css/components.css?v=2026-11-12">
+    <link rel="stylesheet" href="assets/css/pages/opera.css?v=2026-11-12">
 </head>
-<body>
+<body class="pagina-corto">
 
-    <nav class="barra" aria-label="Navigazione principale">
-        <a href="index.html" class="barra-logo" aria-label="Home">
-            <img src="assets/img/brand/logo-cdl.png" alt="CDL" width="62" height="24">
-        </a>
-
-        <div class="barra-gruppo">
-            <span class="indicatore" aria-hidden="true"></span>
-            <a href="produzioni.html" class="voce">Produzioni</a>
-            <a href="eventi.html" class="voce">Eventi</a>
-            <a href="cortoteca.html" class="voce is-active"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.14v13.72L19 12 8 5.14Z"/></svg>Cortoteca</a>
+    <header class="nav">
+        <div class="wrap nav__riga">
+            <a class="skip-link" href="#top">Vai al contenuto</a>
+            <a class="nav__logo" href="index.html" aria-label="CDL, pagina iniziale"><span class="logo"></span></a>
+            <a class="nav__voce nav__voce--eventi" href="eventi.html">Eventi</a>
+            <a class="nav__voce nav__voce--produzioni" href="produzioni.html">Produzioni</a>
+            <a class="nav__voce nav__voce--contatti" href="contatti.html#contatti">Contatti</a>
+            <a class="nav__cortoteca" href="cortoteca.html" aria-current="page"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.14v13.72L19 12 8 5.14Z"/></svg>Cortoteca</a>
+            <a class="btn btn--pieno nav__socio" href="contatti.html">Diventa socio</a>
         </div>
+    </header>
 
-        <a href="vantaggi-tesseramento.html#socio" class="barra-socio">Diventa socio</a>
-    </nav>
+    <main id="top">
 
-    <!-- Velo di caricamento: resta finché i dati dell'opera non sono pronti.
-         Sta sotto la barra, così anche "Opera non trovata" lascia una via
-         d'uscita. -->
-    <div id="loader" class="caricamento">
-        <span class="ruota" aria-hidden="true"></span>
-        <p id="loader-text" class="etichetta">Sincronizzazione archivio...</p>
-    </div>
-
-    <main class="sezione sezione--prima">
-        <div id="main-content" class="opera-pagina">
-
-            <a href="cortoteca.html" id="back-link" class="indietro">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
-                Torna alla Cortoteca
-            </a>
-
-            <!-- Testata: titolo e anno, la tagline in corsivo, generi e
-                 Letterboxd -->
-            <header class="testata">
-                <div class="testata-riga">
-                    <h1 id="movie-title">---</h1>
-                    <span id="movie-year" class="anno">----</span>
+        <section class="hero hero--corto">
+            <div class="wrap">
+                <h1 class="sr-only" id="titolo-corto">Opera</h1>
+                <div class="still schermo" id="schermo">
+                    <span class="cornice"></span>
+                    <span class="targa" id="schermo-titolo"></span>
                 </div>
-
-                <p id="tagline-row" class="tagline" hidden><span id="movie-tagline"></span></p>
-
-                <div class="testata-extra">
-                    <div id="genre-container" class="generi"></div>
-                    <a id="letterboxd-link" href="#" target="_blank" rel="noopener" class="letterboxd" aria-label="Scheda su Letterboxd" hidden>
-                        <img src="assets/img/partner/letterboxd.png" id="letterboxd-icon" alt="Letterboxd">
-                    </a>
-                </div>
-            </header>
-
-            <!-- Lo schermo: video o fotogramma a tutta larghezza, prima di
-                 ogni testo -->
-            <div id="media-section" class="media">
-                <!-- Mostrato quando l'opera non ha ancora un video pubblicato -->
-                <div id="coming-soon" class="in-arrivo" hidden>
-                    <span class="in-arrivo-avviso"><span class="rec-dot"></span> Streaming del corto in arrivo</span>
-                </div>
-
-                <div id="video-wrapper" class="video-container" hidden>
-                    <iframe id="video-player" src="" title="Player video" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
-                </div>
-
-                <img id="movie-still" src="" alt="Fotogramma dell'opera" class="fotogramma" hidden>
             </div>
+        </section>
 
-            <div class="opera-griglia">
-                <!-- Colonna principale: sinossi e note di regia -->
-                <div class="opera-principale">
-                    <p id="movie-synopsis" class="sinossi">---</p>
-
-                    <section id="notes-section" class="blocco-dati" hidden>
-                        <h2 class="etichetta">Note di regia</h2>
-                        <p id="movie-notes" class="note">---</p>
-                    </section>
+        <section class="blocco-pagina entra" aria-label="Il corto">
+            <div class="wrap grid corto" id="corto" hidden>
+                <div class="corto__testo span-7">
+                    <p class="corto__frase" id="corto-frase"></p>
+                    <p class="corto__sinossi" id="corto-sinossi"></p>
+                    <div class="btn-riga" id="corto-azioni" hidden></div>
                 </div>
-
-                <!-- Colonna laterale: troupe e cast -->
-                <aside class="opera-laterale">
-                    <section id="troupe-box" class="blocco-dati">
-                        <h2 class="etichetta">Troupe</h2>
-                        <dl id="troupe-container" class="dati"></dl>
-                    </section>
-
-                    <section id="cast-box" class="blocco-dati" hidden>
-                        <h2 class="etichetta">Con</h2>
-                        <ul id="movie-cast" class="cast"></ul>
-                    </section>
-                </aside>
+                <dl class="corto__dati span-4 start-9" id="corto-dati"></dl>
             </div>
-        </div>
+            <div class="wrap">
+                <p class="avviso" id="corto-avviso" hidden>Opera non trovata.</p>
+            </div>
+        </section>
+
+        <section class="blocco-pagina blocco-pagina--diviso entra" aria-labelledby="titolo-note" id="blocco-note" hidden>
+            <div class="wrap">
+                <h2 class="blocco-pagina__testa" id="titolo-note">Note di regia</h2>
+                <div class="note-regia" id="note-regia"></div>
+            </div>
+        </section>
+
+        <section class="blocco-pagina blocco-pagina--diviso entra" aria-labelledby="titolo-crediti" id="blocco-crediti" hidden>
+            <div class="wrap">
+                <h2 class="blocco-pagina__testa" id="titolo-crediti">Crediti</h2>
+                <dl class="crediti" id="crediti"></dl>
+            </div>
+        </section>
     </main>
 
-    <footer class="piede">
-        <div class="piede-interno">
-            <a href="index.html" class="piede-marchio" aria-label="Home">
-                <img src="assets/img/brand/logo-cdl.png" alt="CDL" width="1435" height="557" loading="lazy">
-            </a>
-            <nav class="piede-colonne" aria-label="Pagine e contatti">
-                <ul class="piede-elenco">
-                    <li><a href="produzioni.html">Produzioni</a></li>
-                    <li><a href="eventi.html">Eventi</a></li>
-                    <li><a href="cortoteca.html">Cortoteca</a></li>
-                    <li><a href="vantaggi-tesseramento.html">Vantaggi per i soci</a></li>
-                </ul>
-                <ul class="piede-elenco">
-                    <li><a href="https://instagram.com/cdl_aps" target="_blank" rel="noopener">Instagram</a></li>
-                    <li><a href="https://www.youtube.com/@cdl_aps" target="_blank" rel="noopener">YouTube</a></li>
-                    <li><a href="mailto:ciao@cdlaps.com">ciao@cdlaps.com</a></li>
-                </ul>
-            </nav>
-            <p class="piede-dati">Associazione di promozione del cinema giovane e indipendente<br>
-            CDL APS &bull; Viale Laurana 13, Rimini, 47921 &bull; CF: 91200080405 &bull; 2026</p>
+    <footer>
+        <div class="piede">
+            <div class="wrap piede__riga">
+                <a href="index.html" aria-label="CDL, pagina iniziale"><span class="logo"></span></a>
+                <nav class="piede__elenchi" aria-label="Pagine e contatti">
+                    <ul>
+                        <li><a href="eventi.html">Eventi</a></li>
+                        <li><a href="produzioni.html">Produzioni</a></li>
+                        <li><a href="cortoteca.html">Cortoteca</a></li>
+                        <li><a href="vantaggi-tesseramento.html">Vantaggi per i soci</a></li>
+                    </ul>
+                    <ul id="contatti">
+                        <li><a href="https://instagram.com/cdl_aps" target="_blank" rel="noopener">Instagram <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h6"/></svg></a></li>
+                        <li><a href="https://www.youtube.com/@cdl_aps" target="_blank" rel="noopener">YouTube <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h6"/></svg></a></li>
+                        <li><a href="mailto:ciao@cdlaps.com">ciao@cdlaps.com</a></li>
+                    </ul>
+                </nav>
+                <p class="piede__dati">Associazione di promozione del cinema giovane e indipendente<br>
+                CDL APS &bull; Viale Laurana 13, Rimini, 47921 &bull; CF: 91200080405 &bull; 2026</p>
+            </div>
         </div>
     </footer>
 
-    <script src="assets/js/barra.js?v=2026-11-11"></script>
-    <script src="assets/js/dati.js?v=2026-11-11"></script>
+    <script src="assets/js/dati.js?v=2026-11-12"></script>
+    <script src="assets/js/comune.js?v=2026-11-12"></script>
+    <script src="assets/js/corto.js?v=2026-11-12"></script>
     <script src="assets/js/opera.js?v=2026-11-12"></script>
 </body>
 </html>
