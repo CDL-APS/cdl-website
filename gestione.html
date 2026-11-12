@@ -9,9 +9,13 @@
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link rel="icon" type="image/png" href="assets/img/brand/favicon.png">
 
-    <link rel="stylesheet" href="assets/css/base.css?v=2026-11-11">
-    <link rel="stylesheet" href="assets/css/components.css?v=2026-11-11">
-    <link rel="stylesheet" href="assets/css/pages/gestione.css?v=2026-11-12-2">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800;900&display=swap">
+    <link rel="stylesheet" href="assets/css/base.css?v=2026-11-12">
+    <link rel="stylesheet" href="assets/css/components.css?v=2026-11-12">
+    <link rel="stylesheet" href="assets/css/pages/riservato.css?v=2026-11-12">
+    <link rel="stylesheet" href="assets/css/pages/gestione.css?v=2026-11-12">
 </head>
 <body class="gestione">
 
@@ -24,25 +28,25 @@
 
     <!-- La barra del sito: al posto delle pagine, le schede da gestire.
          Compaiono solo a un redattore entrato. -->
-    <header class="barra g-barra">
-        <a href="index.html" class="barra-logo" aria-label="Torna al sito">
-            <img src="assets/img/brand/logo-cdl.png" alt="CDL" width="62" height="24">
-        </a>
-        <nav id="schede" class="g-schede" aria-label="Contenuti da gestire" hidden>
-            <button type="button" class="voce g-scheda" data-scheda="dashboard">Dashboard<span id="conta-avvisi" class="g-conta" hidden></span></button>
-            <button type="button" class="voce g-scheda" data-scheda="proposte">Proposte<span id="conta-proposte" class="g-conta" hidden></span></button>
-            <button type="button" class="voce g-scheda" data-scheda="opere">Opere</button>
-            <button type="button" class="voce g-scheda" data-scheda="eventi">Eventi</button>
-            <button type="button" class="voce g-scheda" data-scheda="soci">Soci</button>
-        </nav>
-        <div id="utente" class="g-utente" hidden>
-            <span id="utente-email" class="g-utente-email"></span>
-            <button type="button" id="apri-sicurezza" class="voce">Sicurezza 2FA</button>
-            <button type="button" id="esci" class="barra-socio">Esci</button>
+    <header class="nav g-barra">
+        <div class="wrap nav__riga">
+            <a class="nav__logo" href="index.html" aria-label="Torna al sito"><span class="logo"></span></a>
+            <nav id="schede" class="g-schede" aria-label="Contenuti da gestire" hidden>
+                <button type="button" class="g-scheda" data-scheda="dashboard">Dashboard<span id="conta-avvisi" class="g-conta" hidden></span></button>
+                <button type="button" class="g-scheda" data-scheda="proposte">Proposte<span id="conta-proposte" class="g-conta" hidden></span></button>
+                <button type="button" class="g-scheda" data-scheda="opere">Opere</button>
+                <button type="button" class="g-scheda" data-scheda="eventi">Eventi</button>
+                <button type="button" class="g-scheda" data-scheda="soci">Soci</button>
+            </nav>
+            <div id="utente" class="g-utente" hidden>
+                <span id="utente-email" class="g-utente-email"></span>
+                <button type="button" id="apri-sicurezza" class="g-voce">Sicurezza 2FA</button>
+                <button type="button" id="esci" class="btn btn--pieno g-esci">Esci</button>
+            </div>
         </div>
     </header>
 
-    <main class="sezione sezione--prima">
+    <main class="wrap g-pagina">
 
         <p id="avviso" class="g-avviso" role="status" aria-live="polite" hidden></p>
 
@@ -395,8 +399,8 @@
                         </label>
                         <label class="g-campo g-campo--largo">
                             <span>Pagina dedicata</span>
-                            <input type="text" name="pagina" placeholder="longstoryshort.html">
-                            <small>Se l'evento ha una pagina sul sito (o un indirizzo esterno), il riquadro porta lì.</small>
+                            <input type="text" name="pagina" placeholder="longstoryshort.html" pattern="[a-z0-9-]+\.html">
+                            <small>Il nome del file della pagina dell'evento sul sito (per esempio blue-hour.html), quando è già online: la scheda in Eventi porta lì e la apre sopra la pagina. Solo lettere minuscole, numeri e trattini, più .html.</small>
                         </label>
                     </div>
                 </fieldset>
@@ -470,8 +474,8 @@
     <!-- Copia locale di supabase-js 2.117.3: niente codice da server esterni
          in una pagina con accesso (vedi la CSP in netlify.toml) -->
     <script src="assets/js/vendor/supabase-2.117.3.min.js"></script>
-    <script src="assets/js/dati.js?v=2026-11-11"></script>
-    <script src="assets/js/riservato.js?v=2026-11-12-2"></script>
-    <script src="assets/js/gestione.js?v=2026-11-12-2"></script>
+    <script src="assets/js/dati.js?v=2026-11-12"></script>
+    <script src="assets/js/riservato.js?v=2026-11-12"></script>
+    <script src="assets/js/gestione.js?v=2026-11-12"></script>
 </body>
 </html>

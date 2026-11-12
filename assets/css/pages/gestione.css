@@ -1,200 +1,58 @@
 /* ==========================================================================
    GESTIONE (gestione.html) — pagina riservata ai redattori: accesso, avvisi,
    proposte dei soci, elenchi di opere, eventi e soci, moduli di modifica.
-   Barra, campi e righe servono anche a proponi.html, che carica questo
-   foglio prima del proprio.
-
-   Stesso impianto delle pagine pubbliche: la barra del sito (qui le voci
-   sono le schede da gestire), il nome della scheda a caratteri cubitali,
-   filetti neri a separare i gruppi, angoli quasi vivi, lavanda a campiture
-   piene e mai come velo.
+   Barra, campi e righe comuni con proponi.html stanno in riservato.css,
+   caricato prima di questo foglio.
    ========================================================================== */
 
-/* --------------------------------------------------------------------------
-   Barra: quella del sito, ma resta nel flusso (sticky) perché sul telefono
-   va su due righe e la sua altezza non è fissa
-   -------------------------------------------------------------------------- */
-body.gestione { padding-top: 0; }
-
-.g-barra {
-  position: sticky;
-  height: auto;
-  min-height: var(--barra-h);
-}
-
-/* Le voci qui sono pulsanti: niente bordo né fondo del browser */
-.g-barra button.voce {
-  border: 0;
-  background: none;
-  cursor: pointer;
-}
-
-.g-schede {
-  display: flex;
-  align-items: stretch;
-}
-
-/* Filetto sotto la scheda aperta, come sotto la pagina corrente nel sito.
-   Al passaggio compare più chiaro sulle altre. */
-.g-scheda::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: -1px;
-  height: 3px;
-  background: var(--cdl-dark);
-  transform: scaleX(0);
-  transition: transform 0.4s var(--ease-out), opacity 0.25s var(--ease-out);
-}
-
-.g-scheda:hover::after { transform: scaleX(1); opacity: 0.25; }
-
-.g-scheda.is-active::after { transform: scaleX(1); opacity: 1; }
-
-/* Numero di proposte in attesa, accanto alla voce */
+/* Numero di proposte in attesa (o di cose da sistemare), accanto alla voce */
 .g-conta {
-  display: inline-grid;
-  place-items: center;
-  min-width: 1.6em;
-  height: 1.6em;
-  padding: 0 0.35em;
-  border-radius: var(--r-s);
-  background: var(--cdl-red);
-  color: #fff;
-  font-size: var(--etichetta);
-  letter-spacing: 0;
-}
-
-.g-utente {
-  display: flex;
-  align-items: stretch;
-  margin-left: 0.5rem;
-  padding-left: 0.5rem;
-  border-left: 1px solid var(--riga);
-}
-
-.g-utente-email {
-  align-self: center;
-  max-width: 16rem;
-  padding: 0 0.6rem;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  font-size: 0.8rem;
-  color: var(--testo-tenue);
-}
-
-/* "Esci" ha la forma di "Diventa socio": resta visibile anche sul telefono */
-.g-barra .barra-socio {
-  display: inline-flex;
-  min-height: 44px;
-  border: 0;
-  cursor: pointer;
+  display: inline-grid; place-items: center;
+  min-width: 22px; height: 22px; padding: 0 6px;
+  border-radius: 999px; background: var(--rosso); color: #fff;
+  font-size: 12px; font-weight: 700;
 }
 
 /* --------------------------------------------------------------------------
-   Messaggi
+   Testata delle schede: il nome a caratteri cubitali, una riga che dice
+   cosa contiene e, a destra, il pulsante per aggiungere
    -------------------------------------------------------------------------- */
-.g-avviso {
-  margin-bottom: var(--spazio);
-  padding: 0.9rem 1.1rem;
-  border-radius: var(--r-s);
-  background: var(--cdl-lavender);
-  font-weight: 600;
-  line-height: 1.45;
+.testa-pagina {
+  display: grid; gap: clamp(14px, 2vw, 24px);
+  margin-bottom: clamp(28px, 4vw, 48px); padding-bottom: clamp(18px, 2.5vw, 28px);
+  border-bottom: 2px solid var(--nero);
 }
+.testa-pagina h1 { margin-left: -0.04em; font-size: clamp(42px, 9vw, 128px); line-height: 0.82; }
+.testa-pagina-nota { max-width: 52ch; font-size: clamp(16px, 1.3vw, 18px); line-height: 1.55; color: var(--testo-medio); }
+.g-testa-riga { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px 32px; }
 
-.g-avviso--errore { background: var(--cdl-red); color: #fff; }
-
-.g-vuoto {
-  padding: 2rem 0;
-  font-family: var(--f-titoli);
-  font-size: var(--etichetta);
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-  color: var(--testo-tenue);
+/* Collegamento di testo ("Vedi sul sito"): il filo si disegna al passaggio */
+.rimando {
+  display: inline-flex; align-items: center; gap: 8px; min-height: 44px;
+  font-weight: 700;
+  background:
+    linear-gradient(currentColor, currentColor) 0 calc(100% - 9px) / 0 2px no-repeat,
+    linear-gradient(var(--filo), var(--filo)) 0 calc(100% - 9px) / 100% 2px no-repeat;
+  transition: background-size 0.2s var(--ease);
 }
-
-/* --------------------------------------------------------------------------
-   Accesso, codice, sicurezza: un solo blocco stretto, aperto da un filetto
-   -------------------------------------------------------------------------- */
-.g-accesso {
-  display: flex;
-  flex-direction: column;
-  gap: 1.1rem;
-  max-width: 460px;
-  margin: clamp(1rem, 6vw, 4.5rem) auto;
-  padding: 1.1rem 0 0;
-  border: 0;
-  border-top: 2px solid var(--riga-forte);
-  border-radius: 0;
-  background: none;
-}
-
-.g-accesso h1 { font-size: clamp(2.1rem, 6vw, 3.4rem); line-height: 0.88; }
-
-.g-accesso .btn { align-self: flex-start; }
-
-.g-accesso .azioni { margin-top: 0.4rem; }
-
-/* --------------------------------------------------------------------------
-   Testata delle schede: come Produzioni o Eventi, con il pulsante per
-   aggiungere a destra della riga di presentazione
-   -------------------------------------------------------------------------- */
-.g-testa-riga {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 1rem 2rem;
-}
-
-/* Testata dei moduli e intestazioni interne */
-.g-intestazione {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 0.5rem 1.5rem;
-  padding-bottom: clamp(1rem, 2vw, 1.4rem);
-  border-bottom: 2px solid var(--riga-forte);
-}
-
-.g-intestazione h1 { font-size: clamp(2.1rem, 5.4vw, 4.5rem); line-height: 0.88; }
+.rimando:hover { background-size: 100% 2px, 100% 2px; }
 
 /* --------------------------------------------------------------------------
    Da sistemare: ciò che richiede una decisione del direttivo. Il pallino
-   rosso del sito segnala che c'è qualcosa in sospeso.
+   rosso segnala che c'è qualcosa in sospeso.
    -------------------------------------------------------------------------- */
-.g-avvisi { margin-bottom: clamp(2rem, 4vw, 3rem); }
-
+.rec-dot { display: inline-block; width: 10px; height: 10px; flex: 0 0 auto; border-radius: 50%; background: var(--rosso); animation: pulsa 1.5s infinite; }
+.g-avvisi { margin-bottom: clamp(32px, 4vw, 48px); }
 .g-avvisi .titoletto {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  margin: 0;
-  padding-top: 0;
-  border-top: 0; /* il filetto è già quello della testata */
+  display: flex; align-items: center; gap: 10px;
+  margin: 0; padding-top: 0; border-top: 0; /* il filetto è già quello della testata */
 }
-
 .g-avvisi ul { list-style: none; }
-
 .g-avvisi li {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.5rem 1.5rem;
-  min-height: 64px;
-  padding: 0.7rem 0;
-  border-bottom: 1px solid var(--riga);
-  line-height: 1.5;
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 24px;
+  min-height: 64px; padding: 11px 0; border-bottom: 1px solid var(--filo); line-height: 1.5;
 }
-
 .g-avvisi li span { flex: 1; min-width: min(100%, 18rem); }
-
 .g-avvisi .btn { min-height: 44px; }
 
 /* --------------------------------------------------------------------------
@@ -202,437 +60,128 @@ body.gestione { padding-top: 0; }
    le ultime attività come un registro
    -------------------------------------------------------------------------- */
 .g-numeri {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-  margin-bottom: clamp(1rem, 3vw, 2rem);
-  border-top: 2px solid var(--riga-forte);
-  border-left: 1px solid var(--riga);
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  margin-bottom: clamp(16px, 3vw, 32px);
+  border-top: 2px solid var(--nero); border-left: 1px solid var(--filo);
 }
-
 .g-numero {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0.35rem;
-  min-height: 150px;
-  padding: 1.1rem 1.1rem 1.25rem;
-  border: 0;
-  border-right: 1px solid var(--riga);
-  border-bottom: 1px solid var(--riga);
-  background: none;
-  font: inherit;
-  text-align: left;
-  color: inherit;
-  cursor: pointer;
-  transition: background-color 0.3s var(--ease-out);
+  display: flex; flex-direction: column; align-items: flex-start; gap: 6px;
+  min-height: 150px; padding: 18px 18px 20px;
+  border: 0; border-right: 1px solid var(--filo); border-bottom: 1px solid var(--filo);
+  background: none; font: inherit; text-align: left; color: inherit; cursor: pointer;
+  transition: background-color 0.3s var(--ease);
 }
-
-.g-numero:hover { background: var(--cdl-lavender); }
-
-.g-numero-valore {
-  font-family: var(--f-titoli);
-  font-size: clamp(2.6rem, 5vw, 4rem);
-  font-weight: 900;
-  line-height: 0.9;
-  letter-spacing: -0.05em;
-}
-
-.g-numero-cosa {
-  font-family: var(--f-titoli);
-  font-size: var(--etichetta);
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-}
-
-.g-numero-dettaglio { margin-top: auto; font-size: 0.85rem; color: var(--testo-tenue); }
+.g-numero:hover { background: var(--lilla); }
+.g-numero-valore { font-family: var(--f-titoli); font-size: clamp(42px, 5vw, 64px); font-weight: 900; line-height: 0.9; letter-spacing: -0.05em; }
+.g-numero-cosa { font-size: 15px; font-weight: 800; }
+.g-numero-dettaglio { margin-top: auto; font-size: 14px; color: var(--tenue); }
 
 .g-attivita { list-style: none; margin: 0; padding: 0; }
-
 .g-attivita li {
-  display: grid;
-  grid-template-columns: 8.5rem 8.5rem minmax(0, 1fr);
-  align-items: baseline;
-  gap: 0.25rem 1rem;
-  padding: 0.75rem 0;
-  border-bottom: 1px solid var(--riga);
-  line-height: 1.45;
+  display: grid; grid-template-columns: 8.5rem 8.5rem minmax(0, 1fr); align-items: baseline; gap: 4px 16px;
+  padding: 12px 0; border-bottom: 1px solid var(--filo); line-height: 1.45;
 }
-
 .g-attivita li.g-vuoto { display: block; }
-
-.g-attivita time { font-size: 0.85rem; color: var(--testo-tenue); white-space: nowrap; }
-
-.g-attivita-tipo {
-  font-family: var(--f-titoli);
-  font-size: var(--etichetta);
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: var(--testo-medio);
-}
+.g-attivita time { font-size: 14px; color: var(--tenue); white-space: nowrap; }
+.g-attivita-tipo { font-size: 14px; font-weight: 700; color: var(--testo-medio); }
 
 /* --------------------------------------------------------------------------
-   Elenchi: righe a tutta larghezza fra due filetti, che si accendono di
-   lavanda al passaggio come le schede del sito
+   Elenchi di opere, eventi, proposte e soci: righe che si accendono di
+   lilla al passaggio
    -------------------------------------------------------------------------- */
-.g-elenco { list-style: none; }
-
 .g-riga {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: center;
-  gap: 0.35rem 1.25rem;
-  width: 100%;
-  min-height: 72px;
-  padding: 1rem 0;
-  border: 0;
-  border-bottom: 1px solid var(--riga);
-  background: none;
-  font: inherit;
-  text-align: left;
-  color: inherit;
-  cursor: pointer;
-  transition: background-color 0.3s var(--ease-out), box-shadow 0.3s var(--ease-out);
+  display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 6px 20px;
+  width: 100%; min-height: 72px; padding: 16px 0;
+  border: 0; border-bottom: 1px solid var(--filo); background: none;
+  font: inherit; text-align: left; color: inherit; cursor: pointer;
+  transition: background-color 0.3s var(--ease), box-shadow 0.3s var(--ease);
 }
-
 /* Il fondo deborda di poco ai lati con due ombre piene, così il testo resta
    allineato al margine della pagina */
 button.g-riga:hover,
-a.g-riga:hover {
-  background: var(--cdl-lavender);
-  box-shadow: -0.75rem 0 0 var(--cdl-lavender), 0.75rem 0 0 var(--cdl-lavender);
-}
+a.g-riga:hover { background: var(--lilla); box-shadow: -12px 0 0 var(--lilla), 12px 0 0 var(--lilla); }
 
-.g-riga-titolo {
-  font-family: var(--f-titoli);
-  font-size: clamp(1.05rem, 1.6vw, 1.3rem);
-  font-weight: 900;
-  text-transform: uppercase;
-  line-height: 1.02;
-  letter-spacing: -0.03em;
-}
-
-.g-riga-dati { grid-column: 1; font-size: 0.88rem; line-height: 1.45; color: var(--testo-tenue); }
-
-.g-segni {
-  grid-row: 1 / span 2;
-  grid-column: 2;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 0.5rem;
-}
-
-/* Bollini di stato: rettangoli pieni, come il marchio sulle schede della
-   Cortoteca */
+.g-segni { grid-row: 1 / span 2; grid-column: 2; display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 8px; }
+/* Bollini di stato: pillole piene */
 .g-segno {
-  display: inline-flex;
-  align-items: center;
-  min-height: 28px;
-  padding: 0 0.6rem;
-  border-radius: var(--r-s);
-  border: 1px solid transparent;
-  background: rgba(29, 29, 27, 0.08);
-  font-family: var(--f-titoli);
-  font-size: var(--etichetta);
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  white-space: nowrap;
+  display: inline-flex; align-items: center; min-height: 28px; padding: 0 11px;
+  border: 1px solid transparent; border-radius: 999px; background: rgba(29, 29, 27, 0.08);
+  font-size: 13px; font-weight: 700; white-space: nowrap;
 }
-
-.g-segno--pubblicata { background: var(--cdl-lavender); }
-
-/* Sulla riga accesa di lavanda il bollino lavanda passa al nero */
-.g-riga:hover .g-segno--pubblicata { background: var(--cdl-dark); color: var(--cdl-white); }
-
-.g-segno--bozza { background: none; border-color: var(--riga); color: var(--testo-tenue); }
-
-.g-segno--allarme { background: var(--cdl-red); color: #fff; }
-
+.g-segno--pubblicata { background: var(--lilla); }
+/* Sulla riga accesa di lilla il bollino lilla passa al nero */
+.g-riga:hover .g-segno--pubblicata { background: var(--nero); color: var(--chiaro); }
+.g-segno--bozza { background: none; border-color: var(--filo); color: var(--tenue); }
+.g-segno--allarme { background: var(--rosso); color: #fff; }
 /* Riga che non si apre: soci, proposte già decise */
 .g-riga--ferma { cursor: default; }
-
 .g-riga .btn { min-height: 44px; }
 
 /* Scheda Soci: stato della sincronizzazione e collegamento del foglio */
-.g-pannello {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  margin-bottom: var(--spazio);
-  line-height: 1.55;
-  color: var(--testo-medio);
-}
-
-.g-pannello summary {
-  display: flex;
-  align-items: center;
-  min-height: 44px;
-  font-family: var(--f-titoli);
-  font-size: 0.8rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--cdl-dark);
-  cursor: pointer;
-}
-
-.g-chiave { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 0.75rem; margin-top: 0.75rem; }
-
+.g-pannello { display: flex; flex-direction: column; gap: 8px; margin-bottom: var(--spazio); line-height: 1.55; color: var(--testo-medio); }
+.g-pannello summary { display: flex; align-items: center; min-height: 44px; font-weight: 800; color: var(--nero); cursor: pointer; }
+.g-chiave { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px; margin-top: 12px; }
 .g-chiave .g-campo { flex: 1; min-width: min(100%, 22rem); }
-
 .g-chiave input { font-family: ui-monospace, 'SF Mono', Menlo, monospace; }
 
 /* --------------------------------------------------------------------------
-   Moduli
+   Modulo dell'opera: titolo grafico, corti collegati a un evento, elimina
    -------------------------------------------------------------------------- */
-.g-modulo { display: flex; flex-direction: column; gap: clamp(1.5rem, 3vw, 2.25rem); }
-
-.g-gruppo { margin: 0; padding: 0; border: 0; min-width: 0; }
-
-.g-gruppo .titoletto { width: 100%; margin: 0 0 1.1rem; }
-
-.g-griglia {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1.1rem 1.5rem;
-}
-
-.g-campo { display: flex; flex-direction: column; gap: 0.45rem; }
-
-.g-campo--largo { grid-column: 1 / -1; }
-
-/* Etichette dei campi: le stesse dei dati delle schede (Regia, Genere…) */
-.g-campo > span:first-child {
-  font-family: var(--f-titoli);
-  font-size: var(--etichetta);
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-  color: var(--testo-medio);
-}
-
-.g-campo small,
-.g-spunta small { font-size: 0.8rem; line-height: 1.45; color: var(--testo-tenue); }
-
-.g-campo input,
-.g-campo select,
-.g-campo textarea,
-.g-interprete input {
-  width: 100%;
-  min-height: 48px;
-  padding: 0.7rem 0.9rem;
-  border: 1px solid var(--riga);
-  border-radius: var(--r-s);
-  background: rgba(255, 255, 255, 0.55);
-  font: inherit;
-  font-size: 0.95rem;
-  color: var(--cdl-dark);
-  transition: border-color 0.2s var(--ease-out), background-color 0.2s var(--ease-out);
-}
-
-.g-campo textarea { resize: vertical; line-height: 1.6; }
-
-.g-campo input:hover,
-.g-campo select:hover,
-.g-campo textarea:hover,
-.g-interprete input:hover { border-color: rgba(29, 29, 27, 0.4); }
-
-.g-campo input:focus,
-.g-campo select:focus,
-.g-campo textarea:focus,
-.g-interprete input:focus {
-  outline: none;
-  border-color: var(--cdl-dark);
-  background: #fff;
-}
-
-.g-campo input[readonly] { color: var(--testo-tenue); background: none; }
-
-/* Campo da correggere dopo un tentativo di salvataggio */
-.g-modulo.is-verificato :invalid { border-color: var(--cdl-red); }
-
-.g-spunta {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.65rem;
-  grid-column: 1 / -1;
-  min-height: 44px;
-  padding-top: 0.6rem;
-  font-weight: 600;
-  line-height: 1.4;
-  cursor: pointer;
-}
-
-.g-spunta input { flex: 0 0 auto; width: 20px; height: 20px; margin: 0; accent-color: var(--cdl-dark); }
-
-/* Immagini: a spigolo vivo, come tutte le fotografie del sito */
-.g-anteprima {
-  width: 100%;
-  max-width: 480px;
-  aspect-ratio: 16 / 9;
-  object-fit: cover;
-  background: var(--fondo-foto);
-}
-
-.g-immagine-azioni { display: flex; flex-wrap: wrap; gap: 0.6rem; }
-
 /* Titolo grafico in PNG: su fondo a scacchi, per vederne la trasparenza */
 .g-anteprima-titolo {
-  max-width: min(100%, 480px);
-  max-height: 160px;
-  padding: 1rem;
-  border: 1px solid var(--riga);
-  background:
-    repeating-conic-gradient(rgba(29, 29, 27, 0.06) 0 25%, transparent 0 50%) 0 0 / 16px 16px,
-    #fff;
+  max-width: min(100%, 480px); max-height: 160px; padding: 16px;
+  border: 1px solid var(--filo); border-radius: var(--r-s);
+  background: repeating-conic-gradient(rgba(29, 29, 27, 0.06) 0 25%, transparent 0 50%) 0 0 / 16px 16px, #fff;
   object-fit: contain;
 }
-
 .g-file-nome { font-weight: 600; }
+/* Il colore della pagina del corto: il selettore e il valore scritto */
+.g-colore { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.g-colore input[type='color'] { width: 64px; min-height: 48px; padding: 4px; cursor: pointer; }
 
-.g-campo input:disabled { color: var(--testo-tenue); background: none; cursor: not-allowed; }
-
-/* Cast */
-.g-interpreti { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 0.9rem; }
-
-.g-interprete {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) repeat(3, 48px);
-  gap: 0.4rem;
-  align-items: center;
-}
-
-.g-icona {
-  height: 48px;
-  border: 1px solid var(--riga);
-  border-radius: var(--r-s);
-  background: none;
-  font-size: 1rem;
-  color: var(--testo-medio);
-  cursor: pointer;
-  transition: border-color 0.2s var(--ease-out), color 0.2s var(--ease-out), background-color 0.2s var(--ease-out);
-}
-
-.g-icona:hover { border-color: var(--cdl-dark); color: var(--cdl-dark); background: #fff; }
-
-/* Corti collegati a un evento */
-.g-collegate {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 0.2rem 1.5rem;
-}
-
+.g-collegate { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 3px 24px; }
 .g-collegate .g-spunta { grid-column: auto; font-weight: 500; }
 
-/* Fondo del modulo: pubblicazione e pulsanti, sempre a portata */
-.g-piede-modulo {
-  position: sticky;
-  bottom: 0;
-  z-index: 5;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  padding: 1rem 0;
-  border-top: 2px solid var(--riga-forte);
-  background: var(--cdl-white);
-}
-
-.g-piede-modulo .azioni { margin-top: 0; }
-
-.g-piede-modulo .g-spunta { grid-column: auto; padding-top: 0; align-items: center; }
-
-.g-elimina { border-color: var(--cdl-red); color: var(--cdl-red); }
-
-.btn[disabled] { opacity: 0.45; pointer-events: none; }
+.g-elimina { border-color: var(--rosso); color: var(--rosso); }
+.g-elimina:hover { border-color: var(--rosso); background: var(--rosso); color: #fff; }
 
 /* --------------------------------------------------------------------------
    Revisione di una proposta: socio, quota, licenza, risposte. Campitura
-   lavanda piena, dati come nelle schede delle opere.
+   lilla piena, dati come nella pagina del corto.
    -------------------------------------------------------------------------- */
-.g-revisione {
-  display: flex;
-  flex-direction: column;
-  gap: 1.1rem;
-  padding: clamp(1.1rem, 2.5vw, 1.75rem);
-  background: var(--cdl-lavender);
-}
-
+.g-revisione { display: flex; flex-direction: column; gap: 18px; padding: clamp(18px, 2.5vw, 28px); border-radius: var(--r-m); background: var(--lilla); }
 .g-revisione-dati { display: flex; flex-direction: column; }
-
 .g-revisione-dati > div {
-  display: grid;
-  grid-template-columns: minmax(8rem, 15rem) minmax(0, 1fr);
-  gap: 0.25rem 1.25rem;
-  padding: 0.6rem 0;
-  border-bottom: 1px solid rgba(29, 29, 27, 0.2);
+  display: grid; grid-template-columns: minmax(8rem, 15rem) minmax(0, 1fr); gap: 4px 20px;
+  padding: 10px 0; border-bottom: 1px solid rgba(29, 29, 27, 0.2);
 }
-
-.g-revisione-dati dt {
-  padding-top: 0.15rem;
-  font-family: var(--f-titoli);
-  font-size: var(--etichetta);
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-  color: var(--cdl-dark);
-}
-
+.g-revisione-dati dt { padding-top: 2px; font-size: 14px; font-weight: 800; color: var(--nero); }
 .g-revisione-dati dd { overflow-wrap: anywhere; line-height: 1.5; }
-
-.g-revisione-attenzioni { padding-left: 1.2rem; font-weight: 600; line-height: 1.55; }
-
+.g-revisione-attenzioni { padding-left: 1.2rem; list-style: disc; font-weight: 600; line-height: 1.55; }
 .g-revisione-attenzioni a { text-decoration: underline; text-underline-offset: 3px; }
 
 /* --------------------------------------------------------------------------
    Sicurezza 2FA: attivazione del codice di verifica
    -------------------------------------------------------------------------- */
 .g-sicurezza { max-width: 560px; }
-
-.g-sicurezza form { display: flex; flex-direction: column; gap: 1rem; margin-top: 0.5rem; }
-
+.g-sicurezza form { display: flex; flex-direction: column; gap: 16px; margin-top: 8px; }
 .g-qr { width: 200px; height: 200px; background: #fff; }
-
 .g-sicurezza code { font-family: ui-monospace, 'SF Mono', Menlo, monospace; overflow-wrap: anywhere; }
 
 /* --------------------------------------------------------------------------
    Adattamenti
    -------------------------------------------------------------------------- */
-@media (max-width: 1100px) {
-  .g-utente-email { display: none; }
-}
-
 /* Sul telefono le schede scendono su una seconda riga, a tutta larghezza */
 @media (max-width: 760px) {
-  .g-barra { flex-wrap: wrap; }
+  .gestione .g-barra .nav__riga { flex-wrap: wrap; }
   .g-schede {
-    order: 3;
-    flex: 1 0 100%;
-    margin: 0 calc(var(--margine) * -1);
-    padding: 0 calc(var(--margine) - 0.45rem);
-    overflow-x: auto;
-    border-top: 1px solid var(--riga);
-    scrollbar-width: none;
+    order: 3; flex: 1 0 100%;
+    margin: 0 calc(var(--gut) * -1); padding: 0 calc(var(--gut) - 8px);
+    overflow-x: auto; border-top: 1px solid var(--filo); scrollbar-width: none;
   }
-  .g-schede .voce { min-height: 48px; }
-  .g-utente { margin-left: 0; padding-left: 0; border-left: 0; }
+  .g-schede .g-scheda { min-height: 48px; }
   .g-revisione-dati > div { grid-template-columns: 1fr; }
   .g-riga--ferma { grid-template-columns: 1fr; }
   .g-riga--ferma .g-segni { grid-row: auto; grid-column: 1; justify-content: flex-start; }
-  .g-griglia { grid-template-columns: 1fr; }
-  .g-interprete { grid-template-columns: minmax(0, 1fr) repeat(3, 48px); }
-  .g-interprete [data-ruolo] { grid-column: 1; grid-row: 2; }
-  /* Negli altri ruoli il ruolo viene prima del nome */
-  #altri-ruoli .g-interprete [data-ruolo] { grid-row: 1; }
-  #altri-ruoli .g-interprete [data-nome] { grid-column: 1; grid-row: 2; }
-  .g-attivita li { grid-template-columns: 1fr; gap: 0.15rem; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .g-scheda::after { transition: none; }
+  .g-attivita li { grid-template-columns: 1fr; gap: 2px; }
 }

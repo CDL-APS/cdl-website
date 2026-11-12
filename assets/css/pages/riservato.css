@@ -1,0 +1,208 @@
+/* ==========================================================================
+   PAGINE RISERVATE (gestione.html, proponi.html) — le parti comuni: la
+   barra ridotta, messaggi, accesso, elenchi, moduli e campi. Viene dopo
+   components.css e prima di pages/gestione.css o pages/proponi.css.
+
+   Stessa identità delle pagine pubbliche (barra, Montserrat, colori, angoli
+   del marchio) con l'impianto di un'interfaccia di lavoro: carta, filetti a
+   separare i gruppi, lilla a campiture piene. I fogli delle due pagine usano
+   ancora alcuni nomi vecchi dei colori (--cdl-*, --riga…): sono gli alias in
+   fondo a base.css.
+
+   Queste pagine hanno una Content-Security-Policy (netlify.toml): niente
+   style in linea nell'HTML, niente immagini o caratteri da altri indirizzi.
+   ========================================================================== */
+
+dl, dd { margin: 0; }
+
+/* --------------------------------------------------------------------------
+   Barra: quella del sito, ridotta. Resta nel flusso (sticky) perché sul
+   telefono va su due righe e la sua altezza non è fissa.
+   -------------------------------------------------------------------------- */
+.g-barra { position: sticky; top: 0; height: auto; min-height: var(--nav); border-bottom: 1px solid var(--filo); }
+.g-barra .nav__riga { min-height: var(--nav); }
+
+/* Le schede da gestire (solo in gestione): pulsanti con il filo sotto,
+   come la voce della pagina corrente nella barra del sito */
+.g-schede { display: flex; align-items: center; }
+.g-scheda,
+.g-voce {
+  position: relative; display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 8px;
+  border: 0; background: none; color: inherit; cursor: pointer;
+  font-size: 15px; font-weight: 700; white-space: nowrap;
+}
+.g-scheda::after,
+.g-voce::after {
+  content: ''; position: absolute; left: 8px; right: 8px; bottom: 9px; height: 2px; background: currentColor;
+  transform: scaleX(0); transform-origin: left; transition: transform 0.15s var(--ease);
+}
+.g-scheda:hover::after, .g-voce:hover::after { transform: scaleX(1); opacity: 0.3; }
+.g-scheda.is-active::after { transform: scaleX(1); opacity: 1; }
+
+.g-utente { display: flex; align-items: center; gap: 4px; margin-left: auto; }
+/* In proposta la Cortoteca sta subito prima dell'utente */
+.nav__cortoteca + .g-utente { margin-left: 8px; }
+.g-utente-email {
+  max-width: 16rem; padding: 0 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  font-size: 13px; color: var(--tenue);
+}
+/* "Esci" ha la forma di "Diventa socio": resta visibile anche sul telefono */
+.g-esci { min-height: 44px; padding: 0 20px; font-size: 15px; }
+
+/* --------------------------------------------------------------------------
+   Il contenuto della pagina
+   -------------------------------------------------------------------------- */
+.g-pagina { padding: clamp(32px, 4.5vw, 60px) 0 clamp(48px, 7vw, 96px); }
+/* Le viste sono sezioni di <main>, ma non quelle a tutto schermo del sito
+   pubblico (components.css): niente altezza minima né ritaglio, che
+   bloccherebbe il piede dei moduli fissato in basso */
+.g-pagina > section { position: static; overflow: visible; min-height: 0; padding: 0; background: none; color: inherit; }
+
+/* Superficie per un blocco di testo e azioni (accesso, ricevuta) */
+.scheda {
+  display: flex; flex-direction: column; gap: 10px;
+  padding: clamp(18px, 2vw, 24px); border: 1px solid var(--filo); border-radius: var(--r-m); background: rgba(255, 255, 255, 0.5);
+}
+.scheda-testo { font-size: 15px; line-height: 1.55; color: var(--testo-medio); }
+
+/* Titolo di un gruppo: sta sopra un filetto nero che corre da margine a margine */
+.titoletto {
+  margin: clamp(48px, 6.5vw, 88px) 0 clamp(18px, 2vw, 26px);
+  padding-top: 13px; border-top: 2px solid var(--nero);
+  font-family: var(--f-titoli); font-size: clamp(17px, 1.7vw, 22px); font-weight: 900;
+  text-transform: uppercase; line-height: 1; letter-spacing: -0.02em;
+}
+
+.azioni { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 26px; }
+.btn[disabled] { opacity: 0.45; pointer-events: none; }
+
+/* --------------------------------------------------------------------------
+   Messaggi
+   -------------------------------------------------------------------------- */
+.g-avviso {
+  margin-bottom: var(--spazio);
+  padding: 14px 18px;
+  border-radius: var(--r-s);
+  background: var(--lilla);
+  font-weight: 600;
+  line-height: 1.45;
+}
+.g-avviso--errore { background: var(--rosso); color: #fff; }
+
+.g-vuoto { padding: 32px 0; font-size: 15px; font-weight: 700; color: var(--tenue); }
+
+/* --------------------------------------------------------------------------
+   Accesso, codice, sicurezza: un solo blocco stretto, aperto da un filetto
+   -------------------------------------------------------------------------- */
+.g-accesso {
+  display: flex; flex-direction: column; gap: 18px;
+  max-width: 460px; margin: clamp(16px, 6vw, 72px) auto;
+  padding: 18px 0 0; border: 0; border-top: 2px solid var(--nero); border-radius: 0; background: none;
+}
+.g-accesso h1 { font-size: clamp(34px, 6vw, 54px); line-height: 0.88; }
+.g-accesso .btn { align-self: flex-start; }
+.g-accesso .azioni { margin-top: 6px; }
+
+/* Testata dei moduli e delle pagine: titolo grande, filetto sotto */
+.g-intestazione {
+  display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 8px 24px;
+  padding-bottom: clamp(16px, 2vw, 22px); border-bottom: 2px solid var(--nero);
+}
+.g-intestazione h1 { font-size: clamp(34px, 5.4vw, 72px); line-height: 0.88; }
+
+/* --------------------------------------------------------------------------
+   Elenchi: righe a tutta larghezza fra due filetti
+   -------------------------------------------------------------------------- */
+.g-elenco { list-style: none; }
+.g-riga-titolo {
+  font-family: var(--f-titoli); font-size: clamp(17px, 1.6vw, 21px); font-weight: 900;
+  text-transform: uppercase; line-height: 1.02; letter-spacing: -0.03em;
+}
+.g-riga-dati { grid-column: 1; font-size: 14px; line-height: 1.45; color: var(--tenue); }
+
+/* --------------------------------------------------------------------------
+   Moduli
+   -------------------------------------------------------------------------- */
+.g-modulo { display: flex; flex-direction: column; gap: clamp(24px, 3vw, 36px); }
+.g-gruppo { margin: 0; padding: 0; border: 0; min-width: 0; }
+.g-gruppo .titoletto { width: 100%; margin: 0 0 18px; }
+.g-griglia { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 24px; }
+.g-campo { display: flex; flex-direction: column; gap: 7px; }
+.g-campo--largo { grid-column: 1 / -1; }
+/* Etichette dei campi: come quelle del modulo di Contatti */
+.g-campo > span:first-child { font-size: 14px; font-weight: 700; color: var(--nero); }
+.g-campo small,
+.g-spunta small { font-size: 13px; font-weight: 500; line-height: 1.45; color: var(--tenue); }
+
+.g-campo input,
+.g-campo select,
+.g-campo textarea,
+.g-interprete input {
+  width: 100%; min-height: 48px; padding: 11px 14px;
+  border: 1px solid rgba(29, 29, 27, 0.32); border-radius: var(--r-s); background: #fff;
+  font: inherit; font-size: 15px; color: var(--nero);
+  transition: border-color 0.2s var(--ease), box-shadow 0.2s var(--ease);
+}
+.g-campo textarea { resize: vertical; line-height: 1.6; }
+.g-campo input:hover,
+.g-campo select:hover,
+.g-campo textarea:hover,
+.g-interprete input:hover { border-color: rgba(29, 29, 27, 0.6); }
+.g-campo input:focus,
+.g-campo select:focus,
+.g-campo textarea:focus,
+.g-interprete input:focus { outline: none; border-color: var(--nero); box-shadow: 0 0 0 2px var(--lilla); }
+.g-campo input[readonly] { color: var(--tenue); background: none; }
+.g-campo input:disabled { color: var(--tenue); background: none; cursor: not-allowed; }
+/* Campo da correggere dopo un tentativo di salvataggio */
+.g-modulo.is-verificato :invalid { border-color: var(--rosso); }
+
+.g-spunta {
+  display: flex; align-items: flex-start; gap: 10px; grid-column: 1 / -1;
+  min-height: 44px; padding-top: 10px;
+  font-weight: 600; line-height: 1.4; cursor: pointer;
+}
+.g-spunta input { flex: 0 0 auto; width: 20px; height: 20px; margin: 0; accent-color: var(--nero); }
+
+/* Immagini: anteprima del fotogramma, in cornice come nel sito */
+.g-anteprima { width: 100%; max-width: 480px; aspect-ratio: 16 / 9; object-fit: cover; border-radius: var(--r-s); background: var(--fondo-foto); }
+.g-immagine-azioni { display: flex; flex-wrap: wrap; gap: 10px; }
+
+/* Cast e altri ruoli: una riga per voce, con i tasti per spostarla o toglierla */
+.g-interpreti { list-style: none; display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
+.g-interprete { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) repeat(3, 48px); gap: 6px; align-items: center; }
+.g-icona {
+  height: 48px; border: 1px solid rgba(29, 29, 27, 0.32); border-radius: var(--r-s); background: none;
+  font-size: 16px; color: var(--testo-medio); cursor: pointer;
+  transition: border-color 0.2s var(--ease), color 0.2s var(--ease), background-color 0.2s var(--ease);
+}
+.g-icona:hover { border-color: var(--nero); color: var(--nero); background: #fff; }
+
+/* Fondo del modulo: pubblicazione e pulsanti, sempre a portata */
+.g-piede-modulo {
+  position: sticky; bottom: 0; z-index: 5;
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px;
+  padding: 16px 0; border-top: 2px solid var(--nero); background: var(--chiaro);
+}
+.g-piede-modulo .azioni { margin-top: 0; }
+.g-piede-modulo .g-spunta { grid-column: auto; padding-top: 0; align-items: center; }
+
+/* --------------------------------------------------------------------------
+   Adattamenti
+   -------------------------------------------------------------------------- */
+@media (max-width: 1100px) {
+  .g-utente-email { display: none; }
+}
+
+@media (max-width: 760px) {
+  .g-griglia { grid-template-columns: 1fr; }
+  .g-interprete { grid-template-columns: minmax(0, 1fr) repeat(3, 48px); }
+  .g-interprete [data-ruolo] { grid-column: 1; grid-row: 2; }
+  /* Negli altri ruoli il ruolo viene prima del nome */
+  #altri-ruoli .g-interprete [data-ruolo] { grid-row: 1; }
+  #altri-ruoli .g-interprete [data-nome] { grid-column: 1; grid-row: 2; }
+}
+
+@media (max-width: 639px) {
+  .g-esci { min-height: 44px; padding: 0 16px; font-size: 14px; }
+}

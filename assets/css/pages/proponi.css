@@ -1,9 +1,10 @@
 /* ==========================================================================
-   PROPONI (proponi.html) — pagina dei soci per proporre un corto. Testata e
-   campi dei moduli arrivano da gestione.css, caricato prima di questo.
+   PROPONI (proponi.html) — pagina dei soci per proporre un corto. Barra,
+   testata e campi dei moduli arrivano da riservato.css, caricato prima di
+   questo foglio.
    ========================================================================== */
 
-.proponi main { max-width: 920px; }
+.proponi .g-pagina { width: min(100% - 2 * var(--gut), 920px); }
 
 .proponi .titoletto { margin-top: 2rem; }
 

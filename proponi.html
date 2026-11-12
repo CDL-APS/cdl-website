@@ -10,12 +10,15 @@
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link rel="icon" type="image/png" href="assets/img/brand/favicon.png">
 
-    <!-- Questa pagina e gestione.html condividono la testata e i moduli:
-         per questo carica anche il foglio di gestione, prima del proprio. -->
-    <link rel="stylesheet" href="assets/css/base.css?v=2026-11-11">
-    <link rel="stylesheet" href="assets/css/components.css?v=2026-11-11">
-    <link rel="stylesheet" href="assets/css/pages/gestione.css?v=2026-11-12-2">
-    <link rel="stylesheet" href="assets/css/pages/proponi.css?v=2026-11-12-2">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800;900&display=swap">
+    <!-- Questa pagina e gestione.html condividono barra e moduli: stanno in
+         riservato.css, caricato prima del foglio della pagina. -->
+    <link rel="stylesheet" href="assets/css/base.css?v=2026-11-12">
+    <link rel="stylesheet" href="assets/css/components.css?v=2026-11-12">
+    <link rel="stylesheet" href="assets/css/pages/riservato.css?v=2026-11-12">
+    <link rel="stylesheet" href="assets/css/pages/proponi.css?v=2026-11-12">
 </head>
 <body class="gestione proponi">
 
@@ -25,18 +28,18 @@
          decidono le regole del database, non questa pagina. -->
 
     <!-- La barra del sito, ridotta: il marchio, la Cortoteca e l'uscita -->
-    <header class="barra g-barra">
-        <a href="index.html" class="barra-logo" aria-label="Torna al sito">
-            <img src="assets/img/brand/logo-cdl.png" alt="CDL" width="62" height="24">
-        </a>
-        <a href="cortoteca.html" class="voce is-active"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.14v13.72L19 12 8 5.14Z"/></svg>Cortoteca</a>
-        <div id="utente" class="g-utente" hidden>
-            <span id="utente-nome" class="g-utente-email"></span>
-            <button type="button" id="esci" class="barra-socio">Esci</button>
+    <header class="nav g-barra">
+        <div class="wrap nav__riga">
+            <a class="nav__logo" href="index.html" aria-label="Torna al sito"><span class="logo"></span></a>
+            <a class="nav__cortoteca" href="cortoteca.html"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.14v13.72L19 12 8 5.14Z"/></svg>Cortoteca</a>
+            <div id="utente" class="g-utente" hidden>
+                <span id="utente-nome" class="g-utente-email"></span>
+                <button type="button" id="esci" class="btn btn--pieno g-esci">Esci</button>
+            </div>
         </div>
     </header>
 
-    <main class="sezione sezione--prima">
+    <main class="wrap g-pagina">
 
         <p id="avviso" class="g-avviso" role="status" aria-live="polite" hidden></p>
 
@@ -391,8 +394,8 @@
     </template>
 
     <script src="assets/js/vendor/supabase-2.117.3.min.js"></script>
-    <script src="assets/js/dati.js?v=2026-11-11"></script>
-    <script src="assets/js/riservato.js?v=2026-11-12-2"></script>
-    <script src="assets/js/proponi.js?v=2026-11-12-2"></script>
+    <script src="assets/js/dati.js?v=2026-11-12"></script>
+    <script src="assets/js/riservato.js?v=2026-11-12"></script>
+    <script src="assets/js/proponi.js?v=2026-11-12"></script>
 </body>
 </html>
