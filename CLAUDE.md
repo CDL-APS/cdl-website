@@ -11,10 +11,12 @@ com'è.
   caricano sempre in quest'ordine. Non reintrodurre blocchi `<style>` inline
   nelle pagine: erano la causa principale della duplicazione precedente.
 - **JS**: un file per pagina in `assets/js/`, caricato in fondo al `<body>`.
-  Fanno eccezione due file comuni: `barra.js` (indicatore della barra, su
-  tutte le pagine) e `dati.js` (lettura di opere ed eventi, da caricare prima
-  dello script della pagina). Non ci sono moduli ES né bundler: le
-  funzioni sono globali.
+  Fanno eccezione tre file comuni: `barra.js` (indicatore della barra, su
+  tutte le pagine), `dati.js` (lettura di opere ed eventi, da caricare prima
+  dello script della pagina) e `riservato.js` (parti condivise da
+  `gestione.html` e `proponi.html`, dopo `dati.js`). Non ci sono moduli ES né
+  bundler: le funzioni sono globali. Le librerie di terzi stanno copiate in
+  `assets/js/vendor/` con la versione nel nome.
 - **Identità visiva**: fondo carta, Montserrat 900 molto grande per i titoli,
   Instrument Serif in corsivo per tagline e frasi d'apertura, Inter per il
   testo. Le fotografie sono a spigolo vivo e non portano pannelli sopra: le
@@ -66,10 +68,70 @@ com'è.
 - Fra due produzioni CDL dello stesso anno conta come più recente quella
   inserita per ultima (id più alto).
 - `gestione.html` è la pagina dei redattori: accesso con email e password
-  via Supabase Auth, client `supabase-js` da CDN (versione fissata). Le
-  scritture sono protette dalla RLS, non dalla pagina. Le immagini caricate
-  vengono ridimensionate a 2000 px e salvate come
-  `<cartella>/<codice>-<campo>-<orario>.jpg` nel bucket `immagini`.
+  via Supabase Auth, più il codice di un'app di autenticazione per chi l'ha
+  attivato (pulsante Sicurezza 2FA). Le scritture sono protette dalla RLS, non
+  dalla pagina. Le immagini caricate vengono ridimensionate a 2000 px e
+  salvate come `<cartella>/<codice>-<campo>-<orario>.jpg` nel bucket
+  `immagini`.
+- **Chi è redattore** lo decide `privato.e_redattore()`: utente in
+  `privato.redattori`, sessione nata dall'accesso con password (voce
+  `password` nel campo `amr` del token) e, se l'utente ha un codice di
+  verifica attivo, sessione di livello `aal2`. La condizione sulla password
+  impedisce che il collegamento personale di un socio, che è anche redattore,
+  apra la gestione.
+- **Cortoteca, proposte dei soci.** Progetto e motivazioni in
+  `storico/2026-11-11-cortoteca-infrastruttura.md`; regolamento, licenza e
+  delibera sono bozze per il Consiglio direttivo. In breve:
+  - il socio entra in `proponi.html` con un collegamento personale
+    (`proponi.html#invito=<64 caratteri>`) che un redattore copia dalla
+    scheda Soci di gestione e gli manda a mano. La Edge Function
+    `accesso-socio` (in `supabase/functions/`, senza verifica del JWT) lo
+    scambia con una sessione. Niente password, niente email automatiche: è
+    una scelta del direttivo;
+  - il socio compila una proposta (`public.proposte`, contenuto in `dati`),
+    sceglie se il corto si potrà guardare in Cortoteca (`dati.modalita`:
+    `streaming`) o se propone la sola scheda (`scheda`: titolo, testi,
+    crediti, fotogramma, niente video), risponde al questionario, accetta e
+    invia. Le domande e il testo da accettare dipendono da quella scelta.
+    Durata, anno, regia, sinossi e fotogramma sono obbligatori. Lo stato
+    della proposta cambia solo tramite funzioni (`invia_proposta`,
+    `approva_proposta`, `chiedi_modifiche`, `rifiuta_proposta`,
+    `ritira_proposta`), mai scrivendo la colonna;
+  - `public.licenze` è un registro: nessuno lo modifica dalla Data API, si
+    revoca e basta. Ogni riga ha un `tipo`: `streaming` (la licenza
+    completa) o `scheda` (l'autorizzazione breve). Un'opera con il video ha
+    bisogno di una licenza `streaming`; senza video ne basta una qualsiasi
+    (`privato.licenza_valida()`), e `approva_proposta` rifiuta il video se il
+    socio ha autorizzato solo la scheda. I testi accettabili stanno in
+    `public.testi_licenza`, una riga per versione con il suo tipo, e in
+    `supabase/licenze/` (`cortoteca-v<n>.txt`, `cortoteca-scheda-v<n>.txt`):
+    file e database devono coincidere (colonna `sha256`). Un testo in vigore
+    non si corregge: si aggiunge una versione con una migrazione;
+  - troupe: i ruoli fissi sono colonne di `opere` (fra cui `suono`), gli
+    altri stanno in `altri_ruoli`, un elenco di `{ ruolo, nome }`. Il titolo
+    grafico, facoltativo, è un PNG (`titolo_png`) o un carattere
+    tipografico (`titolo_font`) nello spazio `immagini`, cartella `titoli/`:
+    si carica com'è, senza conversioni;
+  - il libro soci resta sul foglio Google "Gestione APS (fogli)", schede
+    `TESSERATI <anno>`. Lo script `supabase/foglio/sincronizza-soci.gs`,
+    incollato nel foglio, manda sei colonne a `public.sincronizza_soci()`
+    con una chiave che sta solo nelle proprietà dello script (nel database
+    c'è l'impronta). "In regola" = quota dell'anno pagata, o di quello
+    prima fino al sessantesimo giorno (`privato.giorni_tolleranza()`);
+  - le opere di un socio che non rinnova non spariscono da sole: compaiono
+    in "Da sistemare" in gestione e un redattore le nasconde
+    (`nascondi_per_quota`), poi le ripubblica al rinnovo;
+  - i fotogrammi e i titoli grafici delle proposte stanno nel bucket privato
+    `proposte` (cartella per utente); all'approvazione la pagina di gestione
+    li copia in `immagini`.
+- **Dashboard di gestione**: la prima scheda di `gestione.html`. "Da
+  sistemare" compare solo lì; i numeri e le ultime attività arrivano da
+  `public.cruscotto()`. Chi ha fatto l'ultima modifica a un'opera o a un
+  evento lo scrive un trigger in `modificato_da`.
+- **Header di sicurezza.** `netlify.toml` dà a `gestione.html` e
+  `proponi.html` una Content-Security-Policy: solo script del sito, solo
+  connessioni verso il progetto Supabase. Uno script, un font o
+  un'immagine da un altro indirizzo in quelle pagine va aggiunto anche lì.
 - `opera.html` legge il codice dell'opera dalla query string (`?film=codice`).
   Senza parametro mostra "Opera non trovata".
 - Le pagine dei singoli eventi (`short-talks-1.html`, `blue-hour.html`…) sono

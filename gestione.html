@@ -11,23 +11,34 @@
 
     <link rel="stylesheet" href="assets/css/base.css?v=2026-11-11">
     <link rel="stylesheet" href="assets/css/components.css?v=2026-11-11">
-    <link rel="stylesheet" href="assets/css/pages/gestione.css?v=2026-11-11">
+    <link rel="stylesheet" href="assets/css/pages/gestione.css?v=2026-11-12-2">
 </head>
 <body class="gestione">
 
-    <!-- Pagina riservata ai redattori: accesso con email e password, poi
-         modifica di opere ed eventi sul database. Le regole del database
-         impediscono comunque di scrivere a chi non è redattore: questa pagina
-         è solo l'interfaccia. -->
+    <!-- Pagina riservata ai redattori: accesso con email, password e, per
+         chi l'ha attivato, il codice di un'app di autenticazione. Da qui si
+         rivedono le proposte dei soci, si modificano opere ed eventi, si
+         consegnano i collegamenti ai soci. Le regole del database impediscono
+         comunque di scrivere a chi non è redattore: questa pagina è solo
+         l'interfaccia. -->
 
-    <header class="g-testata">
-        <a href="index.html" class="g-marchio" aria-label="Torna al sito">
-            <img src="assets/img/brand/logo-cdl.png" alt="CDL">
-            <span>Gestione</span>
+    <!-- La barra del sito: al posto delle pagine, le schede da gestire.
+         Compaiono solo a un redattore entrato. -->
+    <header class="barra g-barra">
+        <a href="index.html" class="barra-logo" aria-label="Torna al sito">
+            <img src="assets/img/brand/logo-cdl.png" alt="CDL" width="62" height="24">
         </a>
+        <nav id="schede" class="g-schede" aria-label="Contenuti da gestire" hidden>
+            <button type="button" class="voce g-scheda" data-scheda="dashboard">Dashboard<span id="conta-avvisi" class="g-conta" hidden></span></button>
+            <button type="button" class="voce g-scheda" data-scheda="proposte">Proposte<span id="conta-proposte" class="g-conta" hidden></span></button>
+            <button type="button" class="voce g-scheda" data-scheda="opere">Opere</button>
+            <button type="button" class="voce g-scheda" data-scheda="eventi">Eventi</button>
+            <button type="button" class="voce g-scheda" data-scheda="soci">Soci</button>
+        </nav>
         <div id="utente" class="g-utente" hidden>
             <span id="utente-email" class="g-utente-email"></span>
-            <button type="button" id="esci" class="btn">Esci</button>
+            <button type="button" id="apri-sicurezza" class="voce">Sicurezza 2FA</button>
+            <button type="button" id="esci" class="barra-socio">Esci</button>
         </div>
     </header>
 
@@ -54,6 +65,46 @@
             </form>
         </section>
 
+        <!-- Secondo passo dell'accesso, per chi ha attivato il codice -->
+        <section data-vista="codice" hidden>
+            <form id="modulo-codice" class="scheda g-accesso">
+                <h1>Codice di verifica</h1>
+                <p class="scheda-testo">Apri l'app di autenticazione e scrivi il codice a sei cifre di CDL.</p>
+                <label class="g-campo">
+                    <span>Codice</span>
+                    <input type="text" name="codice" required inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6}" maxlength="6">
+                </label>
+                <button type="submit" class="btn btn--pieno">Entra</button>
+            </form>
+        </section>
+
+        <!-- Secondo fattore: attivazione e stato -->
+        <section data-vista="sicurezza" hidden>
+            <div class="scheda g-accesso g-sicurezza">
+                <h1>Sicurezza 2FA</h1>
+                <p class="scheda-testo" id="sicurezza-stato"></p>
+
+                <div id="sicurezza-attiva" hidden>
+                    <p class="scheda-testo">Inquadra il codice con un'app di autenticazione (Google Authenticator, Aegis, 1Password…), poi scrivi qui il numero a sei cifre che l'app mostra.</p>
+                    <img id="sicurezza-qr" class="g-qr" alt="Codice QR da inquadrare con l'app di autenticazione" width="200" height="200">
+                    <p class="scheda-testo">Se non puoi inquadrarlo, scrivi nell'app questa chiave: <code id="sicurezza-chiave"></code></p>
+                    <form id="modulo-attiva">
+                        <label class="g-campo">
+                            <span>Codice dell'app</span>
+                            <input type="text" name="codice" required inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6}" maxlength="6">
+                        </label>
+                        <button type="submit" class="btn btn--pieno">Conferma</button>
+                    </form>
+                </div>
+
+                <div class="azioni">
+                    <button type="button" class="btn btn--pieno" id="sicurezza-avvia" hidden>Attiva il codice</button>
+                    <button type="button" class="btn g-elimina" id="sicurezza-togli" hidden>Disattiva il codice</button>
+                    <button type="button" class="btn" id="sicurezza-chiudi">Torna alla gestione</button>
+                </div>
+            </div>
+        </section>
+
         <!-- Account valido ma non abilitato -->
         <section data-vista="negato" hidden>
             <div class="scheda g-accesso">
@@ -70,13 +121,45 @@
              ELENCO DI OPERE O EVENTI
              ============================================================ -->
         <section data-vista="elenco" hidden>
-            <div class="g-intestazione">
-                <div class="g-schede" role="tablist" aria-label="Contenuti">
-                    <button type="button" role="tab" class="g-scheda" data-scheda="opere">Opere</button>
-                    <button type="button" role="tab" class="g-scheda" data-scheda="eventi">Eventi</button>
+            <!-- Testata come quella di Produzioni o Eventi: il nome della
+                 scheda, una riga che dice cosa contiene -->
+            <header class="testa-pagina">
+                <h1 id="titolo-scheda">Gestione</h1>
+                <div class="g-testa-riga">
+                    <p id="nota-scheda" class="testa-pagina-nota"></p>
+                    <button type="button" id="nuovo" class="btn btn--pieno">Nuova opera</button>
                 </div>
-                <button type="button" id="nuovo" class="btn btn--pieno">Nuova opera</button>
+            </header>
+
+            <!-- Dashboard: ciò che richiede una decisione (quota non
+                 rinnovata, opere senza licenza, foglio dei soci non
+                 aggiornato), qualche numero e le ultime cose successe -->
+            <div id="cruscotto" hidden>
+                <div id="avvisi" class="g-avvisi">
+                    <h2 class="titoletto"><span class="rec-dot" aria-hidden="true" id="avvisi-segno"></span>Da sistemare</h2>
+                    <ul id="elenco-avvisi"></ul>
+                </div>
+                <div id="numeri" class="g-numeri"></div>
+                <h2 class="titoletto">Ultime attività</h2>
+                <ol id="attivita" class="g-attivita"></ol>
             </div>
+
+            <!-- Scheda Soci: stato della sincronizzazione con il foglio -->
+            <div id="pannello-soci" class="g-pannello" hidden>
+                <p id="stato-sync"></p>
+                <details id="collega-foglio">
+                    <summary>Collega il foglio</summary>
+                    <p class="scheda-testo">Nel foglio dei soci scegli Cortoteca → Collega al sito, copia l'impronta che compare e incollala qui.</p>
+                    <form id="modulo-chiave" class="g-chiave">
+                        <label class="g-campo">
+                            <span>Impronta</span>
+                            <input type="text" name="impronta" required pattern="[0-9a-fA-F]{64}" maxlength="64" autocomplete="off" spellcheck="false">
+                        </label>
+                        <button type="submit" class="btn btn--pieno">Salva</button>
+                    </form>
+                </details>
+            </div>
+
             <ul id="elenco" class="g-elenco"></ul>
         </section>
 
@@ -88,6 +171,17 @@
                 <div class="g-intestazione">
                     <h1 id="titolo-modulo-opera">Nuova opera</h1>
                     <a id="vedi-opera" class="rimando" target="_blank" rel="noopener" hidden>Vedi sul sito</a>
+                </div>
+
+                <!-- Revisione di una proposta: chi la manda, quota, licenza,
+                     risposte al questionario. Compare solo aprendo una proposta. -->
+                <div id="revisione" class="g-revisione" hidden>
+                    <dl id="revisione-dati" class="g-revisione-dati"></dl>
+                    <ul id="revisione-attenzioni" class="g-revisione-attenzioni"></ul>
+                    <div class="g-immagine-azioni">
+                        <a id="revisione-scrivi" class="btn">Scrivi al socio</a>
+                        <button type="button" id="revisione-ricevuta" class="btn">Scarica la ricevuta</button>
+                    </div>
                 </div>
 
                 <fieldset class="g-gruppo">
@@ -166,6 +260,21 @@
                             <input type="hidden" name="fotogramma">
                             <small>JPEG o PNG. Viene ridimensionata e convertita in automatico.</small>
                         </div>
+                        <!-- Titolo grafico: PNG o carattere tipografico, caricati
+                             così come sono (niente conversione: il PNG
+                             perderebbe la trasparenza) -->
+                        <div class="g-campo g-campo--largo g-titolo-grafico">
+                            <span>Titolo grafico</span>
+                            <img id="titolo-anteprima" class="g-anteprima-titolo" alt="" hidden>
+                            <p id="titolo-font-nome" class="g-file-nome" hidden></p>
+                            <div class="g-immagine-azioni">
+                                <label class="btn">Scegli il file<input type="file" id="titolo-file" accept=".png,.ttf,.otf,.woff,.woff2,image/png" hidden></label>
+                                <button type="button" class="btn" id="titolo-togli" hidden>Togli</button>
+                            </div>
+                            <input type="hidden" name="titolo_png">
+                            <input type="hidden" name="titolo_font">
+                            <small>Facoltativo: il titolo in PNG (meglio con fondo trasparente) oppure il carattere tipografico (TTF, OTF, WOFF). Senza, la Cortoteca usa il carattere del sito.</small>
+                        </div>
                         <label class="g-campo">
                             <span>Video (YouTube o Vimeo)</span>
                             <input type="url" name="video_url" placeholder="https://">
@@ -181,15 +290,22 @@
                 <fieldset class="g-gruppo">
                     <legend class="titoletto">Troupe</legend>
                     <div class="g-griglia">
-                        <label class="g-campo"><span>Sceneggiatura</span><input type="text" name="sceneggiatura"></label>
-                        <label class="g-campo"><span>Produttore</span><input type="text" name="produttore"></label>
                         <label class="g-campo"><span>Fotografia (DOP)</span><input type="text" name="fotografia"></label>
+                        <label class="g-campo"><span>Sceneggiatura</span><input type="text" name="sceneggiatura"></label>
                         <label class="g-campo"><span>Montaggio</span><input type="text" name="montaggio"></label>
+                        <label class="g-campo"><span>Produttore</span><input type="text" name="produttore"></label>
                         <label class="g-campo"><span>Colonna sonora</span><input type="text" name="colonna_sonora"></label>
                         <label class="g-campo"><span>Scenografia</span><input type="text" name="scenografia"></label>
-                        <label class="g-campo"><span>Trucco</span><input type="text" name="trucco"></label>
+                        <label class="g-campo"><span>Suono</span><input type="text" name="suono"></label>
                         <label class="g-campo"><span>Costumi</span><input type="text" name="costumi"></label>
+                        <label class="g-campo"><span>Trucco</span><input type="text" name="trucco"></label>
                     </div>
+                </fieldset>
+
+                <fieldset class="g-gruppo">
+                    <legend class="titoletto">Altri ruoli</legend>
+                    <ol id="altri-ruoli" class="g-interpreti"></ol>
+                    <button type="button" id="aggiungi-ruolo" class="btn">Aggiungi un ruolo</button>
                 </fieldset>
 
                 <fieldset class="g-gruppo">
@@ -198,13 +314,27 @@
                     <button type="button" id="aggiungi-interprete" class="btn">Aggiungi interprete</button>
                 </fieldset>
 
+                <fieldset class="g-gruppo" id="gruppo-socio">
+                    <legend class="titoletto">Cortoteca</legend>
+                    <div class="g-griglia">
+                        <label class="g-campo g-campo--largo">
+                            <span>Socio a cui appartiene</span>
+                            <!-- Senza "name": non è una colonna di opere, si salva a parte -->
+                            <select id="socio-titolare"></select>
+                            <small id="socio-titolare-nota">Per le opere dei soci: serve a chiedere la licenza e a controllare la quota. Lascia vuoto per le produzioni CDL.</small>
+                        </label>
+                    </div>
+                </fieldset>
+
                 <div class="g-piede-modulo">
                     <label class="g-spunta">
                         <input type="checkbox" name="pubblicata">
                         <span>Pubblicata <small>(visibile sul sito)</small></span>
                     </label>
                     <div class="azioni">
-                        <button type="submit" class="btn btn--pieno">Salva</button>
+                        <button type="submit" class="btn btn--pieno" id="salva-opera">Salva</button>
+                        <button type="button" class="btn" id="chiedi-modifiche" hidden>Chiedi modifiche</button>
+                        <button type="button" class="btn g-elimina" id="rifiuta-proposta" hidden>Rifiuta</button>
                         <button type="button" class="btn" data-annulla>Annulla</button>
                         <button type="button" class="btn g-elimina" data-elimina hidden>Elimina</button>
                     </div>
@@ -326,8 +456,22 @@
         </li>
     </template>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.3/dist/umd/supabase.min.js"></script>
+    <!-- Riga di un ruolo della troupe senza campo proprio -->
+    <template id="modello-ruolo">
+        <li class="g-interprete">
+            <input type="text" data-ruolo placeholder="Ruolo" aria-label="Ruolo">
+            <input type="text" data-nome placeholder="Nome" aria-label="Nome">
+            <button type="button" class="g-icona" data-su aria-label="Sposta su">↑</button>
+            <button type="button" class="g-icona" data-giu aria-label="Sposta giù">↓</button>
+            <button type="button" class="g-icona" data-togli aria-label="Togli">✕</button>
+        </li>
+    </template>
+
+    <!-- Copia locale di supabase-js 2.117.3: niente codice da server esterni
+         in una pagina con accesso (vedi la CSP in netlify.toml) -->
+    <script src="assets/js/vendor/supabase-2.117.3.min.js"></script>
     <script src="assets/js/dati.js?v=2026-11-11"></script>
-    <script src="assets/js/gestione.js?v=2026-11-11"></script>
+    <script src="assets/js/riservato.js?v=2026-11-12-2"></script>
+    <script src="assets/js/gestione.js?v=2026-11-12-2"></script>
 </body>
 </html>

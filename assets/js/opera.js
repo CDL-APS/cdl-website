@@ -18,7 +18,8 @@ const RUOLI_TROUPE = [
   { label: 'Trucco', key: 'trucco' },
   { label: 'Costumi', key: 'costumi' },
   { label: 'Scenografia', key: 'scenografia' },
-  { label: 'Colonna Sonora', key: 'colonna_sonora' }
+  { label: 'Colonna Sonora', key: 'colonna_sonora' },
+  { label: 'Suono', key: 'suono' }
 ];
 
 function valorizzato(v) {
@@ -85,6 +86,13 @@ async function initPage() {
         div.innerHTML = `<dt>${role.label}</dt><dd>${esc(val)}</dd>`;
         troupeContainer.appendChild(div);
       }
+    });
+    // Poi i ruoli senza colonna propria, nell'ordine dato dal socio
+    (Array.isArray(movie.altri_ruoli) ? movie.altri_ruoli : []).forEach((voce) => {
+      if (!valorizzato(voce?.ruolo) || !valorizzato(voce?.nome)) return;
+      const div = document.createElement('div');
+      div.innerHTML = `<dt>${esc(voce.ruolo)}</dt><dd>${esc(voce.nome)}</dd>`;
+      troupeContainer.appendChild(div);
     });
 
     // Media: se c'è un video si mostra il player, altrimenti il fotogramma

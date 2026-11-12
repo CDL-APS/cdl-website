@@ -41,12 +41,17 @@ python3 -m http.server 5500
 ├── opera.html                 Scheda di un singolo corto (opera.html?film=codice)
 ├── vantaggi-tesseramento.html Vantaggi per i soci
 ├── gestione.html              Pagina riservata ai redattori (non indicizzata)
+├── proponi.html               Pagina dei soci per proporre un corto (non indicizzata)
 │
 ├── data/                      Copie di riserva del database (vedi sotto)
 │   ├── opere.json
 │   └── eventi.json
 │
-├── supabase/migrations/       Struttura del database, un file SQL per modifica
+├── supabase/
+│   ├── migrations/            Struttura del database, un file SQL per modifica
+│   ├── functions/             Edge Function (accesso dei soci alla Cortoteca)
+│   ├── licenze/               Testi della licenza della Cortoteca, uno per versione
+│   └── foglio/                Script da incollare nel foglio dei soci (Apps Script)
 │
 ├── assets/
 │   ├── css/
@@ -59,7 +64,10 @@ python3 -m http.server 5500
 │   │   ├── home.js            Caselle "ultimo evento" e "ultima produzione"
 │   │   ├── produzioni.js      Produzioni e collaborazioni CDL
 │   │   ├── eventi.js          Blocchi della pagina Eventi
+│   │   ├── riservato.js       Parti comuni a gestione e proponi
 │   │   ├── gestione.js        Pagina dei redattori
+│   │   ├── proponi.js         Pagina dei soci
+│   │   ├── vendor/            Librerie di terzi copiate nel sito (supabase-js)
 │   │   ├── cortoteca.js       Griglia, ricerca e ordinamento delle opere
 │   │   ├── opera.js           Riempimento della scheda opera
 │   │   └── cornice.js         Generatore del biglietto LSS

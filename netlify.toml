@@ -123,6 +123,25 @@
   [headers.values]
     Cache-Control = "public, max-age=300"
 
+# Le due pagine con accesso (redattori e soci) eseguono solo script del sito
+# e parlano solo con il progetto Supabase: se un testo arrivato dal database
+# riuscisse mai a diventare codice, il browser non lo eseguirebbe e non
+# potrebbe portare via la sessione. Vietano anche di essere mostrate dentro
+# un'altra pagina. Chi aggiunge a queste pagine uno script, un font o
+# un'immagine da un altro indirizzo deve aggiungerlo anche qui.
+[[headers]]
+  for = "/gestione.html"
+  [headers.values]
+    Content-Security-Policy = "default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob: https://rsspmqhhrykbmrkmwqcg.supabase.co; connect-src 'self' https://rsspmqhhrykbmrkmwqcg.supabase.co; object-src 'none'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'"
+    Cache-Control = "no-store"
+
+[[headers]]
+  for = "/proponi.html"
+  [headers.values]
+    Content-Security-Policy = "default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob: https://rsspmqhhrykbmrkmwqcg.supabase.co; connect-src 'self' https://rsspmqhhrykbmrkmwqcg.supabase.co; object-src 'none'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'"
+    Cache-Control = "no-store"
+    Referrer-Policy = "no-referrer"
+
 # Protezioni di base su tutte le pagine
 [[headers]]
   for = "/*"
