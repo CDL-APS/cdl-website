@@ -78,7 +78,7 @@ const COLONNE_OPERE = [
   'id', 'codice', 'titolo', 'anno', 'durata', 'regista', 'produzione', 'produzione_cdl', 'collaborazione_cdl',
   'generi', 'tagline', 'sinossi', 'note_regia', 'fotogramma', 'video_url', 'letterboxd_url',
   'sceneggiatura', 'produttore', 'fotografia', 'montaggio', 'colonna_sonora', 'scenografia', 'trucco', 'costumi',
-  'suono', 'altri_ruoli', 'titolo_png', 'titolo_font', 'pubblicata'
+  'suono', 'altri_ruoli', 'titolo_png', 'titolo_font', 'colore', 'solo_scheda', 'pubblicata'
 ].join(',');
 
 const COLONNE_EVENTI = [

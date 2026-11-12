@@ -665,6 +665,8 @@ function leggiModulo(modulo) {
     if (el.type === 'checkbox') dati[el.name] = el.checked;
     else if (el.name === 'generi') {
       dati.generi = el.value.split(',').map((g) => g.trim().toLowerCase()).filter(Boolean);
+    } else if (el.name === 'colore') {
+      dati.colore = el.value.trim() === '' ? null : el.value.trim().toLowerCase();
     } else if (el.type === 'number') dati[el.name] = el.value === '' ? null : Number(el.value);
     else dati[el.name] = el.value.trim() === '' ? null : el.value.trim();
   });
@@ -839,11 +841,26 @@ $('aggiungi-ruolo').addEventListener('click', () => {
   stato.modificato = true;
 });
 
+/* Colore della pagina del corto: si salva il campo di testo (vuoto vuol
+   dire automatico); il selettore lo compila e lo segue */
+function allineaColore() {
+  const testo = $('modulo-opera').colore.value.trim();
+  $('colore-scelta').value = /^#[0-9a-f]{6}$/i.test(testo) ? testo.toLowerCase() : '#b9bbf8';
+}
+$('colore-scelta').addEventListener('input', (e) => { $('modulo-opera').colore.value = e.target.value; });
+$('modulo-opera').colore.addEventListener('input', allineaColore);
+$('colore-togli').addEventListener('click', () => {
+  $('modulo-opera').colore.value = '';
+  allineaColore();
+  segnaModificato();
+});
+
 /* Riporta il modulo dell'opera al suo aspetto normale (fuori revisione) */
 function moduloOperaNormale(modulo) {
   stato.proposta = null;
   modulo.dataset.proposta = '';
   modulo.video_url.disabled = false;
+  modulo.solo_scheda.disabled = false;
   $('revisione').hidden = true;
   $('gruppo-socio').hidden = false;
   $('salva-opera').textContent = 'Salva';
@@ -916,6 +933,7 @@ async function apriOpera(id) {
   modulo.dataset.id = id || '';
   moduloOperaNormale(modulo);
   compilaModulo(modulo, opera);
+  allineaColore();
   preparaCodice(modulo, !id);
   preparaImmagini(modulo);
   preparaTitolo(modulo);
@@ -1002,13 +1020,17 @@ async function apriRevisione(proposta) {
     video_url: soloScheda ? '' : dati.video_url,
     produzione_cdl: false,
     collaborazione_cdl: false,
+    solo_scheda: soloScheda,
     pubblicata: true
   });
+  allineaColore();
   preparaCodice(modulo, true);
   preparaImmagini(modulo, iniziali);
   preparaTitolo(modulo, titolo);
-  // Con la sola scheda autorizzata il video non si può aggiungere
+  // Con la sola scheda autorizzata il video non si può aggiungere; la
+  // casella la decide la licenza (approva_proposta), qui si vede soltanto
   modulo.video_url.disabled = soloScheda;
+  modulo.solo_scheda.disabled = true;
 
   $('interpreti').innerHTML = '';
   (dati.interpreti || []).forEach((i) => aggiungiInterprete(i, segnaModificato));

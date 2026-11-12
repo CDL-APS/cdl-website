@@ -279,14 +279,30 @@
                             <input type="hidden" name="titolo_font">
                             <small>Facoltativo: il titolo in PNG (meglio con fondo trasparente) oppure il carattere tipografico (TTF, OTF, WOFF). Senza, la Cortoteca usa il carattere del sito.</small>
                         </div>
+                        <!-- Il colore della pagina del corto: scritte, fili e crocetta
+                             della sala. Il campo di testo è quello che si salva; il
+                             selettore lo compila. -->
+                        <div class="g-campo g-campo--largo">
+                            <span id="etichetta-colore">Colore della pagina</span>
+                            <div class="g-colore">
+                                <input type="color" id="colore-scelta" aria-labelledby="etichetta-colore" value="#b9bbf8">
+                                <input type="text" name="colore" placeholder="#b9bbf8" pattern="#[0-9a-fA-F]{6}" maxlength="7" autocomplete="off" spellcheck="false" aria-labelledby="etichetta-colore">
+                                <button type="button" class="btn" id="colore-togli">Automatico</button>
+                            </div>
+                            <small>Facoltativo: di solito il colore del titolo grafico. Vuoto, il sito usa il colore del titolo (se è uno dei titoli già nel sito) o il lilla. Un colore molto scuro diventa bianco, perché sul nero non si leggerebbe.</small>
+                        </div>
                         <label class="g-campo">
                             <span>Video (YouTube o Vimeo)</span>
                             <input type="url" name="video_url" placeholder="https://">
-                            <small>Se vuoto, la scheda mostra "streaming in arrivo".</small>
+                            <small>Se vuoto, la pagina del corto dice "Streaming in arrivo", a meno che l'opera sia segnata come sola scheda.</small>
                         </label>
                         <label class="g-campo">
                             <span>Letterboxd</span>
                             <input type="url" name="letterboxd_url" placeholder="https://letterboxd.com/film/…">
+                        </label>
+                        <label class="g-spunta">
+                            <input type="checkbox" name="solo_scheda">
+                            <span>Solo la scheda <small>(niente streaming, né ora né "in arrivo": la scrive la licenza del socio, si può cambiare per le opere senza licenza come le produzioni CDL)</small></span>
                         </label>
                     </div>
                 </fieldset>
