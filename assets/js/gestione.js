@@ -217,7 +217,9 @@ $('modulo-attiva').addEventListener('submit', async (e) => {
 });
 
 /* --------------------------------------------------------------------------
-   Da sistemare
+   Da sistemare: solo ciò che chiede un'azione. Le informazioni stanno
+   altrove: i ritiri e le revoche fra le ultime attività, i soci senza email
+   come nota nella scheda Soci (non tutti vogliono proporre un corto).
    -------------------------------------------------------------------------- */
 async function caricaAvvisi() {
   const { data, error } = await client.rpc('avvisi');
@@ -244,9 +246,6 @@ async function caricaAvvisi() {
   } else if (sync.vecchia) {
     voce(`Il foglio dei soci non si aggiorna dal ${formattaDataOra(sync.quando)}.`, 'soci', 'Vai a Soci');
   }
-  if (sync.senza_email?.length) {
-    voce(`Soci senza email nel foglio, non possono ricevere il collegamento: ${sync.senza_email.join(', ')}.`);
-  }
   data.non_in_regola.forEach((o) => {
     voce(`«${o.titolo}» è online, ma ${o.socio} non ha rinnovato la quota.`, 'nascondi', 'Nascondi', o.opera_id);
   });
@@ -263,9 +262,6 @@ async function caricaAvvisi() {
       testo = `«${o.titolo}» è online senza licenza: indica a quale socio appartiene.`;
     }
     voce(testo, 'apri', 'Apri', o.opera_id);
-  });
-  data.revoche_recenti.forEach((r) => {
-    voce(`${r.socio} ha ritirato «${r.titolo}» il ${formattaData(r.quando)}.`);
   });
 
   $('elenco-avvisi').innerHTML = voci.length
@@ -654,6 +650,13 @@ async function elencoSoci() {
     ? `${sync.righe} soci del ${sync.anno}, aggiornati dal foglio il ${formattaDataOra(sync.quando)}.`
     : 'Il foglio dei soci non è ancora collegato.';
   $('collega-foglio').open = !sync.quando;
+  // Una nota, non una cosa da sistemare: senza email il socio non riceve il
+  // collegamento, ma serve solo a chi vuole proporre un corto
+  const senzaEmail = sync.senza_email || [];
+  $('soci-senza-email').hidden = !senzaEmail.length;
+  $('soci-senza-email').textContent = senzaEmail.length
+    ? `Senza email nel foglio: ${senzaEmail.join(', ')}. Non possono ricevere il collegamento personale; serve solo a chi vuole proporre un corto alla Cortoteca.`
+    : '';
 
   let soci;
   try {

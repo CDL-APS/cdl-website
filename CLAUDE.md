@@ -255,7 +255,9 @@ Subito dopo il deploy:
     pagina del corto: l'immagine fa da maschera); in Produzioni resta nero
     (`colora: false`).
 - **Dashboard di gestione**: la prima scheda di `gestione.html`. "Da
-  sistemare" compare solo lì; i numeri e le ultime attività arrivano da
+  sistemare" compare solo lì e contiene solo ciò che chiede un'azione: le
+  informazioni vanno altrove (ritiri e revoche fra le ultime attività, i
+  soci senza email come nota nella scheda Soci); i numeri e le ultime attività arrivano da
   `public.cruscotto()`. Chi ha fatto l'ultima modifica a un'opera o a un
   evento lo scrive un trigger in `modificato_da`.
 - **Header di sicurezza.** `netlify.toml` dà a `gestione.html` e

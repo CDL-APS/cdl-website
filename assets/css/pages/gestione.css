@@ -140,6 +140,7 @@ a.g-riga:hover { background: #fff; box-shadow: -14px 0 0 #fff, 14px 0 0 #fff; }
   font-size: 16px; line-height: 1.55; color: var(--tenue);
 }
 /* "Collega il foglio" si apre e si chiude: la freccia lo dice */
+.g-nota-soci { max-width: 68ch; font-size: 15px; line-height: 1.5; color: var(--tenue); }
 .g-pannello summary { display: inline-flex; align-items: center; gap: 10px; align-self: flex-start; min-height: 44px; list-style: none; font-weight: 800; color: var(--nero); cursor: pointer; }
 .g-pannello summary::-webkit-details-marker { display: none; }
 .g-pannello summary::after {
