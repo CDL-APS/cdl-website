@@ -30,10 +30,10 @@ Subito dopo il deploy:
   (non prima: il sito vecchio legge con `select=*` e ripiegherebbe sulle
   copie di riserva). Poi aprire home, Cortoteca, Eventi e Produzioni: in
   console non deve comparire "uso la copia di riserva".
-- [ ] Netlify → Forms: attivare *Form detection* e una notifica email per
-  modulo (`contatti` → ciao@, `contatti-eventi` → eventi@,
-  `contatti-produzione` → produzione@cdlaps.com); un invio di prova per
-  ogni motivo del modulo di Contatti.
+- [ ] Un invio di prova per ogni motivo del modulo di Contatti, dal sito
+  online: deve arrivare la mail all'indirizzo giusto, con l'oggetto
+  "[Sito CDL] …" (rilevamento dei moduli e notifiche sono già attivi dal 13
+  novembre).
 - [ ] `curl -I` su `/gestione.html`, `/gestione`, `/area-socio.html`,
   `/area-socio`: devono avere la Content-Security-Policy e
   `Cache-Control: no-store`; sull'area socio anche
@@ -371,8 +371,14 @@ Subito dopo il deploy:
   (`contatti` → ciao@, `contatti-eventi` → eventi@, `contatti-produzione` →
   produzione@cdlaps.com): il motivo sceglie modulo e oggetto
   (`contatti.js`); `?motivo=socio` lo preseleziona. Dopo l'invio Netlify
-  apre `contatti.html#grazie`, che mostra la conferma. Le notifiche email si
-  impostano nel pannello di Netlify.
+  apre `contatti.html#grazie`, che mostra la conferma: per questo anche i
+  due moduli nascosti, che servono a Netlify per riconoscerli, hanno la
+  stessa `action` (Netlify usa quella del modulo che riceve il messaggio).
+  Il rilevamento dei moduli è attivo sul progetto e c'è una notifica email
+  per modulo (Netlify → Forms → Form notifications); un modulo con un nome
+  nuovo va riconosciuto da un deploy e ha bisogno della sua notifica. Netlify
+  scarta come spam, senza mandare mail, molti invii fatti da browser
+  automatici: le prove si fanno a mano.
 - `404.html` usa solo percorsi assoluti: Netlify la serve a qualsiasi
   profondità.
 - **Pubblicazione**: Netlify costruisce solo i commit il cui autore è membro

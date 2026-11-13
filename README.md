@@ -169,9 +169,9 @@ dopo, altrimenti la scheda porta a una pagina che non c'è ancora.
 `contatti.html` usa Netlify Forms: tre moduli, uno per destinatario
 (`contatti` → ciao@, `contatti-eventi` → eventi@, `contatti-produzione` →
 produzione@cdlaps.com). Il motivo scelto decide il modulo e l'oggetto della
-mail (`contatti.js`). Le notifiche email si impostano nel pannello di Netlify,
-*Forms → Form notifications*; dopo l'invio la pagina mostra la conferma
-(`contatti.html#grazie`). In locale il modulo non invia nulla.
+mail (`contatti.js`). Le notifiche email, una per modulo, stanno nel pannello
+di Netlify, *Forms → Form notifications*; dopo l'invio la pagina mostra la
+conferma (`contatti.html#grazie`). In locale il modulo non invia nulla.
 
 ### Chi può modificare
 
@@ -242,7 +242,7 @@ sbloccare basta unire con `cdl-aps` una pull request qualsiasi: il commit di
 unione pubblica `main` così com'è, compresi i commit precedenti.
 
 **Redesign (novembre 2026)**: le cose da fare prima di unire il branch
-`redesign` e subito dopo il deploy (una migrazione da applicare, le notifiche
+`redesign` e subito dopo il deploy (una migrazione da applicare, la prova
 dei moduli di Contatti, i controlli sugli header…) sono in cima a `CLAUDE.md`,
 come lista da spuntare.
 

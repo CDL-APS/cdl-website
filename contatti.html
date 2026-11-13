@@ -49,7 +49,7 @@
                     <a class="link" href="contatti.html#contatti">Scrivi un altro messaggio <svg class="freccia" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h15"/><path d="m13 6 6 6-6 6"/></svg></a>
                 </div>
 
-                <form class="modulo" name="contatti" method="POST" action="contatti.html#grazie" data-netlify="true" netlify-honeypot="campo-trappola">
+                <form class="modulo" name="contatti" method="POST" action="/contatti.html#grazie" data-netlify="true" netlify-honeypot="campo-trappola">
                     <input type="hidden" name="form-name" value="contatti">
                     <input type="hidden" name="subject" value="[Sito CDL] Messaggio dal sito">
                     <p class="sr-only"><label>Non compilare questo campo: <input name="campo-trappola" tabindex="-1" autocomplete="off"></label></p>
@@ -94,10 +94,13 @@
                         <button class="btn btn--pieno" type="submit">Invia il messaggio <svg class="freccia" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h15"/><path d="m13 6 6 6-6 6"/></svg></button>
                     </div>
                 </form>
-                <form name="contatti-eventi" data-netlify="true" netlify-honeypot="campo-trappola" hidden>
+                <!-- Copie per Netlify dei moduli che il motivo può scegliere (contatti.js
+                     cambia form-name): stessi campi e stessa action, perché dopo l'invio
+                     Netlify usa quella del modulo che riceve il messaggio -->
+                <form name="contatti-eventi" method="POST" action="/contatti.html#grazie" data-netlify="true" netlify-honeypot="campo-trappola" hidden>
                     <input name="campo-trappola"><input name="subject"><input name="motivo"><input name="nome"><input name="email"><textarea name="messaggio"></textarea><input name="consenso">
                 </form>
-                <form name="contatti-produzione" data-netlify="true" netlify-honeypot="campo-trappola" hidden>
+                <form name="contatti-produzione" method="POST" action="/contatti.html#grazie" data-netlify="true" netlify-honeypot="campo-trappola" hidden>
                     <input name="campo-trappola"><input name="subject"><input name="motivo"><input name="nome"><input name="email"><textarea name="messaggio"></textarea><input name="consenso">
                 </form>
             </div>
