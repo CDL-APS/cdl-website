@@ -138,6 +138,15 @@
   [headers.values]
     Cache-Control = "public, max-age=300"
 
+# Protezioni di base su tutte le pagine. Sta prima delle regole delle pagine
+# con accesso: quando più regole danno lo stesso header vince l'ultima, e
+# l'area socio deve tenere il suo Referrer-Policy.
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
 # Le due pagine con accesso (redattori e soci) eseguono solo script del sito
 # e parlano solo con il progetto Supabase: se un testo arrivato dal database
 # riuscisse mai a diventare codice, il browser non lo eseguirebbe e non
@@ -172,10 +181,3 @@
     Content-Security-Policy = "default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob: https://rsspmqhhrykbmrkmwqcg.supabase.co; connect-src 'self' https://rsspmqhhrykbmrkmwqcg.supabase.co; object-src 'none'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'"
     Cache-Control = "no-store"
     Referrer-Policy = "no-referrer"
-
-# Protezioni di base su tutte le pagine
-[[headers]]
-  for = "/*"
-  [headers.values]
-    X-Content-Type-Options = "nosniff"
-    Referrer-Policy = "strict-origin-when-cross-origin"
