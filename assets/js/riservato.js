@@ -1,6 +1,6 @@
 /* ==========================================================================
    RISERVATO — ciò che condividono le due pagine con accesso: gestione.html
-   (redattori) e proponi.html (soci). Va caricato dopo dati.js e prima dello
+   (redattori) e area-socio.html (soci). Va caricato dopo dati.js e prima dello
    script della pagina.
 
    Usa da dati.js: SUPABASE_URL, SUPABASE_CHIAVE.

@@ -634,7 +634,7 @@ async function elencoProposte() {
   });
 }
 
-/* Chi ha una bozza aperta in proponi.html: solo il nome, perché la bozza
+/* Chi ha una bozza aperta in area-socio.html: solo il nome, perché la bozza
    resta del socio finché non la invia (il database non fa leggere ai
    redattori né le bozze né i loro file) */
 async function mostraBozzeInCorso() {
@@ -656,6 +656,25 @@ async function caricaSoci(daCapo = false) {
   if (error) throw error;
   stato.soci = data;
   return data;
+}
+
+/* Il collegamento personale vale una volta sola e per 7 giorni (come in
+   public.verifica_invito, 20261113210000_collegamento_monouso.sql): serve a
+   scegliere la password, al primo accesso o quando il socio l'ha
+   dimenticata. Qui il suo stato, accanto ai dati del socio. */
+const GIORNI_COLLEGAMENTO = 7;
+
+function scadenzaCollegamento(creato) {
+  return new Date(new Date(creato).getTime() + GIORNI_COLLEGAMENTO * 864e5);
+}
+
+function statoCollegamento(s) {
+  if (s.ultimo_accesso) return 'collegamento usato il ' + formattaData(s.ultimo_accesso);
+  if (!s.invito_creato_il) return '';
+  const scade = scadenzaCollegamento(s.invito_creato_il);
+  return scade > new Date()
+    ? 'collegamento da usare entro il ' + formattaData(scade)
+    : 'collegamento scaduto';
 }
 
 async function elencoSoci() {
@@ -690,9 +709,7 @@ async function elencoSoci() {
     const quota = s.pagato
       ? 'quota ' + s.anno + (s.data_pagamento ? ' pagata il ' + formattaData(s.data_pagamento) : ' pagata')
       : 'quota ' + s.anno + ' non pagata';
-    const accesso = s.ultimo_accesso
-      ? 'entrato il ' + formattaData(s.ultimo_accesso)
-      : s.invito_creato_il ? 'collegamento creato il ' + formattaData(s.invito_creato_il) : '';
+    const accesso = statoCollegamento(s);
     const dati = ['n. ' + s.numero, s.email || 'senza email', quota, accesso].filter(Boolean).map(esc).join(' · ');
     return `
       <li>
@@ -714,8 +731,14 @@ $('elenco').addEventListener('click', async (e) => {
   const b = e.target.closest('[data-invito]');
   if (!b) return;
   const socio = stato.soci[Number(b.dataset.invito)];
-  if (socio.invito_creato_il &&
-      !confirm(`${socio.nome} ha già un collegamento, creato il ${formattaData(socio.invito_creato_il)}. Crearne uno nuovo annulla il precedente. Continuare?`)) {
+  const ancoraValido = socio.invito_creato_il && !socio.ultimo_accesso
+    && scadenzaCollegamento(socio.invito_creato_il) > new Date();
+  if (ancoraValido &&
+      !confirm(`${socio.nome} ha già un collegamento da usare, creato il ${formattaData(socio.invito_creato_il)}. Crearne uno nuovo annulla il precedente. Continuare?`)) {
+    return;
+  }
+  if (socio.ultimo_accesso &&
+      !confirm(`${socio.nome} ha già usato il suo collegamento e scelto una password. Un collegamento nuovo serve se l'ha dimenticata: gliene farà scegliere un'altra. Continuare?`)) {
     return;
   }
 
@@ -724,11 +747,13 @@ $('elenco').addEventListener('click', async (e) => {
     avviso(messaggioErrore(error), true);
     return;
   }
-  const indirizzo = `${location.origin}/proponi.html#invito=${segreto}`;
+  const indirizzo = `${location.origin}/area-socio.html#invito=${segreto}`;
   const messaggio =
-    `Ciao ${socio.nome.split(' ')[0]}! Questo è il tuo collegamento personale per proporre i tuoi corti alla Cortoteca di CDL:\n` +
+    `Ciao ${socio.nome.split(' ')[0]}! Questo è il tuo collegamento personale per l'area socio di CDL, da cui proponi i tuoi corti alla Cortoteca:\n` +
     `${indirizzo}\n` +
-    'È solo tuo, non girarlo ad altri: vale come la tua firma.';
+    `Aprilo entro ${GIORNI_COLLEGAMENTO} giorni: vale una volta sola e ti fa scegliere una password. ` +
+    `Poi entri da ${location.origin}/area-socio.html con la tua email e la password. ` +
+    'Non girarlo ad altri: è solo tuo.';
   try {
     await navigator.clipboard.writeText(messaggio);
     avviso(`Messaggio copiato: incollalo in una chat con ${socio.nome}.`);

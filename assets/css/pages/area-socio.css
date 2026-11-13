@@ -1,12 +1,14 @@
 /* ==========================================================================
-   PROPONI (proponi.html) — pagina dei soci per proporre un corto. Barra,
+   AREA SOCIO (area-socio.html) — pagina dei soci per proporre un corto. Barra,
    testata e campi dei moduli arrivano da riservato.css, caricato prima di
    questo foglio.
    ========================================================================== */
 
-.proponi .g-pagina { width: min(100% - 2 * var(--gut), 920px); }
+.area-socio .g-pagina { width: min(100% - 2 * var(--gut), 920px); }
 
-.proponi .titoletto { margin-top: 2rem; }
+.area-socio .titoletto { margin-top: 2rem; }
+/* nella scheda dell'accesso il titolo apre il riquadro: niente spazio sopra */
+.area-socio .g-accesso .titoletto { margin-top: 0; }
 
 /* Riga sotto il saluto: tessera e quota */
 .p-nota { margin-bottom: 0.5rem; color: var(--testo-medio); }
@@ -113,7 +115,7 @@
 .p-passi button:hover { color: var(--cdl-dark); }
 
 /* I passi fatti di più gruppi li distanziano come fa il modulo */
-.proponi div[data-pannello]:not([hidden]),
+.area-socio div[data-pannello]:not([hidden]),
 #blocco-diritti:not([hidden]) { display: flex; flex-direction: column; gap: calc(var(--spazio) * 2); }
 
 /* --------------------------------------------------------------------------

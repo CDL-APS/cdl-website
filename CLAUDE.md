@@ -38,13 +38,17 @@ Subito dopo il deploy:
   modulo (`contatti` → ciao@, `contatti-eventi` → eventi@,
   `contatti-produzione` → produzione@cdlaps.com); un invio di prova per
   ogni motivo del modulo di Contatti.
-- [ ] `curl -I` su `/gestione.html`, `/gestione`, `/proponi.html`,
-  `/proponi`: devono avere la Content-Security-Policy e
-  `Cache-Control: no-store`; su proponi anche `Referrer-Policy: no-referrer`.
+- [ ] `curl -I` su `/gestione.html`, `/gestione`, `/area-socio.html`,
+  `/area-socio`: devono avere la Content-Security-Policy e
+  `Cache-Control: no-store`; sull'area socio anche
+  `Referrer-Policy: no-referrer`. `/proponi.html` e `/proponi` devono
+  rispondere 301 verso `/area-socio.html`.
 - [ ] Rigenerare dal sito online ("Nuovo collegamento", scheda Soci) i
   collegamenti dei soci creati in locale: puntano a `localhost`.
 - [ ] Supabase → Authentication: attivare "Secure password change" (in più:
-  codice obbligatorio e inviti negati ai redattori sono già nel database).
+  codice obbligatorio e inviti negati ai redattori sono già nel database) e
+  portare la lunghezza minima delle password a 10 (Providers → Email), come
+  chiede l'area socio.
 - [ ] Ricaricare dalla gestione, come PNG, i titoli di Interzona, Quarto
   Livello, Relatività e Viva Revolution; poi togliere `TITOLI_GRAFICI` da
   `comune.js` e la cartella `assets/img/film/titoli/`.
@@ -67,7 +71,7 @@ Subito dopo il deploy:
   (oggi "Per anno" e "Per nome"). "Per regista" raggruppa i corti in
   blocchi sotto il nome di ciascun regista; il nome apre un pop-up con
   alcune informazioni sul regista, che ogni socio può modificare entrando
-  col proprio collegamento personale (come per `proponi.html`).
+  nell'area socio (`area-socio.html`).
 - [ ] Cortoteca, ricerca globale: cerca un nome in tutte le informazioni di
   un corto, non solo titolo e regista. Scrivendo "Andrea" escono il corto
   Andrea e tutti quelli con un attore o una maestranza che si chiama
@@ -82,13 +86,13 @@ Subito dopo il deploy:
   caricano sempre in quest'ordine. Eccezioni: `cortoteca.html` carica anche
   `pages/opera.css` (la sala del corto) ed `eventi.html` anche
   `pages/evento.css` (la sala dell'evento), prima del proprio;
-  `gestione.html` e `proponi.html` caricano `pages/riservato.css` (barra e
+  `gestione.html` e `area-socio.html` caricano `pages/riservato.css` (barra e
   moduli comuni) prima del proprio. Non reintrodurre blocchi `<style>` nelle
   pagine. Gli attributi `style=` restano solo per i dati di una singola
   pagina pubblica (occhi `--x`/`--y`/`--d`, larghezze dei partner `--w`,
   proporzioni delle foto `--rapporto`); mai in gestione e proposta, dove la
   CSP li blocca. In fondo a `base.css` ci sono gli alias dei nomi vecchi
-  (`--cdl-*`, `--riga`…), ormai solo per `proponi.css` e la cornice:
+  (`--cdl-*`, `--riga`…), ormai solo per `area-socio.css` e la cornice:
   `riservato.css` e `gestione.css` usano i nomi nuovi. Nelle pagine
   riservate i campi sono quelli del modulo di Contatti (bordo nero, angoli
   di 14 px), le superfici bianche con gli angoli del marchio, i gruppi
@@ -100,7 +104,7 @@ Subito dopo il deploy:
   c'è), `corto.js` (la pagina del corto: `opera.html` e la sala di
   `cortoteca.html`), `modello-evento.js` (la pagina di un evento composta
   dal database: `evento.html` e la sala di `eventi.html`) e `riservato.js` (parti condivise da `gestione.html` e
-  `proponi.html`, dopo `dati.js`). La scheda Rullino di gestione sta in
+  `area-socio.html`, dopo `dati.js`). La scheda Rullino di gestione sta in
   `gestione-rullino.js` e la pagina dell'evento (logo, colore, blocchi,
   anteprima) in `gestione-eventi.js`, caricati dopo `gestione.js` (ne usano
   client e stato). Non ci sono moduli ES né bundler: le
@@ -195,12 +199,19 @@ Subito dopo il deploy:
 - **Cortoteca, proposte dei soci.** Progetto e motivazioni in
   `storico/2026-11-11-cortoteca-infrastruttura.md`; regolamento, licenza e
   delibera sono bozze per il Consiglio direttivo. In breve:
-  - il socio entra in `proponi.html` con un collegamento personale
-    (`proponi.html#invito=<64 caratteri>`) che un redattore copia dalla
-    scheda Soci di gestione e gli manda a mano. La Edge Function
-    `accesso-socio` (in `supabase/functions/`, senza verifica del JWT) lo
-    scambia con una sessione. Niente password, niente email automatiche: è
-    una scelta del direttivo;
+  - il socio entra nell'**area socio** (`area-socio.html`, fino al 13
+    novembre 2026 `proponi.html`: `netlify.toml` rimanda i vecchi
+    indirizzi) con email e password. La password la sceglie con un
+    collegamento personale (`area-socio.html#invito=<64 caratteri>`) che un
+    redattore copia dalla scheda Soci di gestione e gli manda a mano, al
+    primo accesso o quando l'ha dimenticata. Il collegamento vale una volta
+    sola e per 7 giorni (`20261113210000_collegamento_monouso.sql`; in
+    gestione `GIORNI_COLLEGAMENTO`); la Edge Function `accesso-socio` (in
+    `supabase/functions/`, senza verifica del JWT) lo scambia con una
+    sessione, la pagina chiede subito la password (obbligatoria anche se
+    il socio chiude a metà: segno `cdl-socio-scegli-password` nel browser)
+    e chiude le altre sessioni del socio. Niente email automatiche: è una
+    scelta del direttivo;
   - il socio compila una proposta (`public.proposte`, contenuto in `dati`),
     sceglie se il corto si potrà guardare in Cortoteca (`dati.modalita`:
     `streaming`) o se propone la sola scheda (`scheda`: titolo, testi,
@@ -272,7 +283,7 @@ Subito dopo il deploy:
   `public.cruscotto()`. Chi ha fatto l'ultima modifica a un'opera o a un
   evento lo scrive un trigger in `modificato_da`.
 - **Header di sicurezza.** `netlify.toml` dà a `gestione.html` e
-  `proponi.html` (e agli stessi indirizzi senza `.html`) una
+  `area-socio.html` (e agli stessi indirizzi senza `.html`) una
   Content-Security-Policy: solo script del sito, solo connessioni verso il
   progetto Supabase, stili dal sito e da Google Fonts. Uno script, un font o
   un'immagine da un altro indirizzo in quelle pagine va aggiunto anche lì.

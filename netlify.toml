@@ -17,6 +17,21 @@
 # La query string (?film=quartolivello) viene mantenuta in automatico.
 # ---------------------------------------------------------------------------
 
+# L'area socio si chiamava proponi.html (fino al 13 novembre 2026): i
+# collegamenti già mandati ai soci la raggiungono. Il browser conserva la
+# parte dopo il cancelletto (#invito=…) anche dopo il rimando.
+[[redirects]]
+  from = "/proponi.html"
+  to = "/area-socio.html"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/proponi"
+  to = "/area-socio.html"
+  status = 301
+  force = true
+
 [[redirects]]
   from = "/cortoteca/info_film2"
   to = "/opera.html"
@@ -129,7 +144,7 @@
 # potrebbe portare via la sessione. Vietano anche di essere mostrate dentro
 # un'altra pagina. Chi aggiunge a queste pagine uno script, un font o
 # un'immagine da un altro indirizzo deve aggiungerlo anche qui.
-# Netlify serve le pagine anche senza ".html" (/gestione, /proponi): ogni
+# Netlify serve le pagine anche senza ".html" (/gestione, /area-socio): ogni
 # regola compare due volte, una per indirizzo, e le due copie vanno tenute
 # uguali.
 [[headers]]
@@ -145,14 +160,14 @@
     Cache-Control = "no-store"
 
 [[headers]]
-  for = "/proponi.html"
+  for = "/area-socio.html"
   [headers.values]
     Content-Security-Policy = "default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob: https://rsspmqhhrykbmrkmwqcg.supabase.co; connect-src 'self' https://rsspmqhhrykbmrkmwqcg.supabase.co; object-src 'none'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'"
     Cache-Control = "no-store"
     Referrer-Policy = "no-referrer"
 
 [[headers]]
-  for = "/proponi"
+  for = "/area-socio"
   [headers.values]
     Content-Security-Policy = "default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob: https://rsspmqhhrykbmrkmwqcg.supabase.co; connect-src 'self' https://rsspmqhhrykbmrkmwqcg.supabase.co; object-src 'none'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'"
     Cache-Control = "no-store"

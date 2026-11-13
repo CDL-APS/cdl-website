@@ -146,7 +146,7 @@ h2 { font-size: clamp(30px, 3.4vw, 48px); }
 }
 
 /* --------------------------------------------------------------------------
-   Alias per proponi.css e per la cornice narrativa: i loro fogli usano
+   Alias per area-socio.css e per la cornice narrativa: i loro fogli usano
    ancora i nomi del sito precedente (riservato.css e gestione.css no).
    Puntano ai valori nuovi; non usarli nei fogli delle pagine pubbliche.
    -------------------------------------------------------------------------- */

@@ -1,12 +1,15 @@
 // ==========================================================================
-// ACCESSO DEL SOCIO — scambia il collegamento personale di proponi.html con
-// una sessione Supabase, senza password e senza inviare email.
+// ACCESSO DEL SOCIO — scambia il collegamento personale di area-socio.html con
+// una sessione Supabase, senza inviare email. Con quella sessione il socio
+// sceglie la sua password (primo accesso, o password dimenticata); poi entra
+// con email e password.
 //
 // Riceve { "invito": "<64 caratteri>" }. Chiede al database a quale socio
 // appartiene (public.verifica_invito, riservata alla chiave segreta), crea
 // l'utente se è la prima volta e fa generare ad Auth un accesso monouso, che
-// la pagina consuma subito con verifyOtp(). L'invito non scade: lo annulla
-// solo un redattore creandone uno nuovo.
+// la pagina consuma subito con verifyOtp(). L'invito vale una volta sola e
+// per 7 giorni (20261113210000_collegamento_monouso.sql); uno nuovo,
+// creato da un redattore, annulla il precedente.
 //
 // Pubblicata senza verifica del JWT: chi chiama non ha ancora una sessione.
 // La chiave segreta la fornisce Supabase alla funzione; non sta nel codice.

@@ -47,7 +47,7 @@ a ogni salvataggio.
 ├── vantaggi-tesseramento.html Vantaggi per i soci
 ├── 404.html                   Pagina non trovata (percorsi assoluti)
 ├── gestione.html              Pagina riservata ai redattori (non indicizzata)
-├── proponi.html               Pagina dei soci per proporre un corto (non indicizzata)
+├── area-socio.html            Area socio: accesso con password, proposte (non indicizzata)
 │
 ├── data/                      Copie di riserva del database (vedi sotto)
 │   ├── opere.json
@@ -64,7 +64,7 @@ a ogni salvataggio.
 │   │   ├── base.css           Colori, misure, griglia e titoli del brand
 │   │   ├── components.css     Pezzi ricorrenti: barra, pulsanti, cornici, schede, piede
 │   │   └── pages/             Uno per pagina, solo ciò che è specifico
-│   │                          (riservato.css: comune a gestione e proponi)
+│   │                          (riservato.css: comune a gestione e area socio)
 │   ├── js/
 │   │   ├── dati.js            Lettura di opere ed eventi, comune a più pagine
 │   │   ├── comune.js          Scritte a tutta larghezza, occhi, rullini, schede,
@@ -76,9 +76,9 @@ a ogni salvataggio.
 │   │   ├── eventi.js          Blocchi della pagina Eventi e la sala dell'evento
 │   │   ├── produzioni.js      Produzioni e collaborazioni CDL
 │   │   ├── contatti.js        Modulo di Contatti: destinatario e oggetto
-│   │   ├── riservato.js       Parti comuni a gestione e proponi
+│   │   ├── riservato.js       Parti comuni a gestione e area socio
 │   │   ├── gestione.js        Pagina dei redattori
-│   │   ├── proponi.js         Pagina dei soci
+│   │   ├── area-socio.js      Area socio
 │   │   ├── vendor/            Librerie di terzi copiate nel sito (supabase-js)
 │   │   └── cornice.js         Generatore del biglietto LSS
 │   └── img/

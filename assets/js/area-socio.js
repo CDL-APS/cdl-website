@@ -1,9 +1,12 @@
 /* ==========================================================================
-   PROPONI — pagina dei soci per proporre un corto alla Cortoteca.
+   AREA SOCIO — la pagina dei soci, per proporre un corto alla Cortoteca.
 
-   Si entra con il collegamento personale (proponi.html#invito=…): la Edge
-   Function "accesso-socio" lo scambia con una sessione, senza password. Il
-   socio compila la scheda in quattro passi, salvata a ogni modifica, e sceglie
+   Si entra con email e password. La password il socio la sceglie con il
+   collegamento personale (area-socio.html#invito=…), che un redattore gli
+   manda al primo accesso o quando l'ha dimenticata: la Edge Function
+   "accesso-socio" lo scambia con una sessione, la pagina chiede subito la
+   password e chiude le altre sessioni del socio. Il collegamento vale una
+   volta sola e per 7 giorni. Il socio compila la scheda in quattro passi, salvata a ogni modifica, e sceglie
    se il corto si potrà guardare in Cortoteca ("streaming") o se propone la
    sola scheda ("scheda"). Da quella scelta dipendono le domande del
    questionario e il testo da accettare: la licenza completa, oppure
@@ -59,6 +62,39 @@ function senzaAccesso(titolo, testo) {
   mostraVista('senza-accesso');
 }
 
+/* L'accesso con email e password, con un messaggio facoltativo sopra */
+function mostraAccesso(messaggio = '', errore = false) {
+  stato.utente = null;
+  $('utente').hidden = true;
+  $('modulo-accesso').reset();
+  mostraVista('accesso');
+  if (messaggio) avviso(messaggio, errore);
+  else nascondiAvviso();
+}
+
+/* Entrati con il collegamento, la password va scelta prima di tutto il
+   resto. Il segno resta nel browser finché non è scelta, così chi chiude la
+   pagina a metà la ritrova chiesta, invece di entrare senza password. */
+const CHIAVE_PASSWORD_DA_SCEGLIERE = 'cdl-socio-scegli-password';
+const PASSWORD_MINIMA = 10; // caratteri
+
+function passwordDaScegliere(valore) {
+  try {
+    if (valore === true) localStorage.setItem(CHIAVE_PASSWORD_DA_SCEGLIERE, '1');
+    else if (valore === false) localStorage.removeItem(CHIAVE_PASSWORD_DA_SCEGLIERE);
+    return localStorage.getItem(CHIAVE_PASSWORD_DA_SCEGLIERE) === '1';
+  } catch (errore) {
+    return valore === true;
+  }
+}
+
+function mostraSceltaPassword() {
+  $('utente').hidden = true;
+  $('modulo-password').reset();
+  $('password-email').value = stato.utente?.email || '';
+  mostraVista('password');
+}
+
 /* Scambia il collegamento personale con una sessione */
 async function entraConInvito(invito) {
   const risposta = await fetch(FUNZIONE_ACCESSO, {
@@ -86,21 +122,30 @@ async function avvia() {
       console.error(errore);
     }
     if (!entrato) {
-      senzaAccesso(
-        'Il collegamento non è più valido',
-        'Può essere stato sostituito da uno più recente. Chiedine uno nuovo al direttivo.'
+      mostraAccesso(
+        'Il collegamento non è più valido: vale una volta sola e per 7 giorni. Se hai già scelto la password, entra qui sotto; altrimenti chiedine uno nuovo al direttivo.',
+        true
       );
       return;
     }
+    passwordDaScegliere(true);
   }
 
   const { data } = await client.auth.getSession();
   if (!data.session) {
-    senzaAccesso();
+    mostraAccesso();
     return;
   }
   stato.utente = data.session.user;
+  if (passwordDaScegliere()) {
+    mostraSceltaPassword();
+    return;
+  }
+  await entra();
+}
 
+/* Dentro: chi è il socio, i testi da accettare, poi la casa */
+async function entra() {
   const [socio, testi] = await Promise.all([
     client.rpc('stato_socio'),
     client.from('testi_licenza').select('*').lte('in_vigore_dal', new Date().toISOString())
@@ -123,13 +168,62 @@ async function avvia() {
   mostraCasa();
 }
 
+$('modulo-accesso').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const modulo = e.currentTarget;
+  const tasto = modulo.querySelector('[type=submit]');
+  tasto.disabled = true;
+  nascondiAvviso();
+  const { data, error } = await client.auth.signInWithPassword({
+    email: modulo.email.value.trim(),
+    password: modulo.password.value
+  });
+  tasto.disabled = false;
+  if (error) {
+    avviso('Email o password non corretti. Al primo accesso, o se hai dimenticato la password, serve un collegamento personale: chiedilo al direttivo.', true);
+    return;
+  }
+  passwordDaScegliere(false);
+  stato.utente = data.session.user;
+  await entra();
+});
+
+$('modulo-password').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const modulo = e.currentTarget;
+  nascondiAvviso();
+  const password = modulo.password.value;
+  if (password.length < PASSWORD_MINIMA) {
+    avviso(`La password deve avere almeno ${PASSWORD_MINIMA} caratteri.`, true);
+    return;
+  }
+  if (password !== modulo.ripeti.value) {
+    avviso('Le due password non coincidono: riscrivile.', true);
+    modulo.ripeti.select();
+    return;
+  }
+  const tasto = modulo.querySelector('[type=submit]');
+  tasto.disabled = true;
+  const { error } = await client.auth.updateUser({ password });
+  tasto.disabled = false;
+  // Uguale a quella di prima: la ricorda, va bene così
+  if (error && error.code !== 'same_password') {
+    avviso(error.code === 'weak_password'
+      ? 'Password troppo debole: allungala o mescola lettere, numeri e simboli.'
+      : messaggioErrore(error), true);
+    return;
+  }
+  // Chi aveva aperto l'area con un collegamento o una password vecchia esce
+  await client.auth.signOut({ scope: 'others' }).catch(() => {});
+  passwordDaScegliere(false);
+  await entra();
+  avviso('Password salvata: da ora entri con la tua email e questa password.');
+});
+
 $('esci').addEventListener('click', async () => {
   await salvaSubito();
   await client.auth.signOut({ scope: 'local' });
-  senzaAccesso(
-    'Sei uscito',
-    'Per rientrare apri di nuovo il tuo collegamento personale.'
-  );
+  mostraAccesso('Sei uscito.');
 });
 
 /* --------------------------------------------------------------------------
@@ -939,10 +1033,7 @@ window.addEventListener('hashchange', () => {
 });
 
 client.auth.onAuthStateChange((evento) => {
-  if (evento === 'SIGNED_OUT' && stato.utente) {
-    stato.utente = null;
-    senzaAccesso('Sei uscito', 'Per rientrare apri di nuovo il tuo collegamento personale.');
-  }
+  if (evento === 'SIGNED_OUT' && stato.utente) mostraAccesso('Sei uscito.');
 });
 
 avvia();

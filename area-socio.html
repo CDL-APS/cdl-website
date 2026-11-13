@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Proponi un corto – CDL APS</title>
+    <title>Area socio – CDL APS</title>
     <meta name="robots" content="noindex, nofollow">
     <meta name="referrer" content="no-referrer">
 
@@ -15,17 +15,19 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800;900&display=swap">
     <!-- Questa pagina e gestione.html condividono barra e moduli: stanno in
          riservato.css, caricato prima del foglio della pagina. -->
-    <link rel="stylesheet" href="assets/css/base.css?v=2026-11-13zj">
-    <link rel="stylesheet" href="assets/css/components.css?v=2026-11-13zj">
-    <link rel="stylesheet" href="assets/css/pages/riservato.css?v=2026-11-13zj">
-    <link rel="stylesheet" href="assets/css/pages/proponi.css?v=2026-11-13zj">
+    <link rel="stylesheet" href="assets/css/base.css?v=2026-11-13zk">
+    <link rel="stylesheet" href="assets/css/components.css?v=2026-11-13zk">
+    <link rel="stylesheet" href="assets/css/pages/riservato.css?v=2026-11-13zk">
+    <link rel="stylesheet" href="assets/css/pages/area-socio.css?v=2026-11-13zk">
 </head>
-<body class="gestione proponi">
+<body class="gestione area-socio">
 
-    <!-- Pagina dei soci: da qui propongono i propri corti alla Cortoteca.
-         Si entra con il collegamento personale ricevuto dal direttivo
-         (proponi.html#invito=…). Che cosa un socio può leggere e scrivere lo
-         decidono le regole del database, non questa pagina. -->
+    <!-- Area socio: da qui i soci propongono i propri corti alla Cortoteca.
+         Si entra con email e password; la password si sceglie con il
+         collegamento personale ricevuto dal direttivo
+         (area-socio.html#invito=…), che vale una volta sola e per 7 giorni.
+         Che cosa un socio può leggere e scrivere lo decidono le regole del
+         database, non questa pagina. -->
 
     <!-- La barra del sito, ridotta: il marchio, la Cortoteca e l'uscita -->
     <header class="nav g-barra">
@@ -48,15 +50,67 @@
         </section>
 
         <!-- ============================================================
-             SENZA ACCESSO
+             ACCESSO: email e password
+             ============================================================ -->
+        <section data-vista="accesso" hidden>
+            <form id="modulo-accesso" class="scheda g-accesso">
+                <h1>Area socio</h1>
+                <p class="scheda-testo">Entra con la tua email e la password che hai scelto al primo accesso.</p>
+                <label class="g-campo">
+                    <span>Email</span>
+                    <input type="email" name="email" required autocomplete="username">
+                </label>
+                <label class="g-campo">
+                    <span>Password</span>
+                    <input type="password" name="password" required autocomplete="current-password">
+                </label>
+                <button type="submit" class="btn btn--pieno">Entra</button>
+            </form>
+            <div class="scheda g-accesso">
+                <h2 class="titoletto">Primo accesso o password dimenticata?</h2>
+                <p class="scheda-testo">Serve il tuo collegamento personale: lo manda il direttivo, vale una volta sola e ti fa scegliere la password.</p>
+                <div class="azioni">
+                    <a class="btn btn--pieno" href="https://wa.me/393493290864?text=Ciao,%20vorrei%20il%20mio%20collegamento%20per%20l'area%20socio" target="_blank" rel="noopener">Chiedilo su WhatsApp</a>
+                    <a class="btn" href="mailto:ciao@cdlaps.com?subject=Collegamento%20per%20l'area%20socio">Scrivici</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================
+             SCELTA DELLA PASSWORD, appena entrati con il collegamento
+             ============================================================ -->
+        <section data-vista="password" hidden>
+            <form id="modulo-password" class="scheda g-accesso">
+                <h1>Scegli la password</h1>
+                <p class="scheda-testo">Con la tua email e questa password entrerai nell'area socio da qualsiasi dispositivo. Il collegamento che hai aperto non vale più.</p>
+                <!-- L'email, per i gestori di password del browser -->
+                <label class="g-campo">
+                    <span>Email</span>
+                    <input type="email" id="password-email" name="email" autocomplete="username" readonly>
+                </label>
+                <label class="g-campo">
+                    <span>Password</span>
+                    <input type="password" name="password" required minlength="10" autocomplete="new-password">
+                    <small>Almeno 10 caratteri.</small>
+                </label>
+                <label class="g-campo">
+                    <span>Ripeti la password</span>
+                    <input type="password" name="ripeti" required minlength="10" autocomplete="new-password">
+                </label>
+                <button type="submit" class="btn btn--pieno">Salva ed entra</button>
+            </form>
+        </section>
+
+        <!-- ============================================================
+             SENZA ACCESSO: l'indirizzo non è nel libro soci
              ============================================================ -->
         <section data-vista="senza-accesso" hidden>
             <div class="scheda g-accesso">
-                <h1 id="senza-accesso-titolo">Serve il tuo collegamento personale</h1>
-                <p class="scheda-testo" id="senza-accesso-testo">Per proporre un corto alla Cortoteca si entra con il collegamento che il direttivo consegna a ogni socio. Se non l'hai ancora ricevuto, o non funziona più, chiedilo.</p>
+                <h1 id="senza-accesso-titolo">Area riservata ai soci</h1>
+                <p class="scheda-testo" id="senza-accesso-testo">La Cortoteca è riservata ai soci di CDL APS.</p>
                 <div class="azioni">
-                    <a class="btn btn--pieno" href="https://wa.me/393493290864?text=Ciao,%20vorrei%20il%20mio%20collegamento%20per%20la%20Cortoteca" target="_blank" rel="noopener">Chiedilo su WhatsApp</a>
-                    <a class="btn" href="mailto:ciao@cdlaps.com?subject=Collegamento%20per%20la%20Cortoteca">Scrivici</a>
+                    <a class="btn btn--pieno" href="https://wa.me/393493290864?text=Ciao,%20vorrei%20il%20mio%20collegamento%20per%20l'area%20socio" target="_blank" rel="noopener">Chiedilo su WhatsApp</a>
+                    <a class="btn" href="mailto:ciao@cdlaps.com?subject=Collegamento%20per%20l'area%20socio">Scrivici</a>
                 </div>
             </div>
         </section>
@@ -398,8 +452,8 @@
     </template>
 
     <script src="assets/js/vendor/supabase-2.117.3.min.js"></script>
-    <script src="assets/js/dati.js?v=2026-11-13zj"></script>
-    <script src="assets/js/riservato.js?v=2026-11-13zj"></script>
-    <script src="assets/js/proponi.js?v=2026-11-13zj"></script>
+    <script src="assets/js/dati.js?v=2026-11-13zk"></script>
+    <script src="assets/js/riservato.js?v=2026-11-13zk"></script>
+    <script src="assets/js/area-socio.js?v=2026-11-13zk"></script>
 </body>
 </html>
