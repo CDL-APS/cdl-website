@@ -21,10 +21,6 @@ Prima di unire:
   `storico/2026-11-12-review-pre-deploy.md`. Richiesta dall'utente:
   ricordargliela sempre prima di pubblicare; se dopo questa data si
   aggiunge altro lavoro al branch, va rifatta sul nuovo.
-- [ ] Applicare `supabase/migrations/20261113180000_bozze_riservate.sql`
-  (serve la conferma dell'utente: cancella e ricrea due regole di accesso).
-  Fino ad allora la riga "Bozze in preparazione" in Proposte non compare e
-  i redattori possono ancora leggere le bozze dalla Data API.
 - [ ] Pull request `redesign` → `main`, unita da GitHub con l'account
   `cdl-aps` e un merge commit (vedi "Pubblicazione" più sotto).
 
