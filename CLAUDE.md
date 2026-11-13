@@ -21,12 +21,16 @@ Prima di unire:
   `storico/2026-11-12-review-pre-deploy.md`. Richiesta dall'utente:
   ricordargliela sempre prima di pubblicare; se dopo questa data si
   aggiunge altro lavoro al branch, va rifatta sul nuovo.
+- [ ] Applicare `supabase/migrations/20261113180000_bozze_riservate.sql`
+  (serve la conferma dell'utente: cancella e ricrea due regole di accesso).
+  Fino ad allora la riga "Bozze in preparazione" in Proposte non compare e
+  i redattori possono ancora leggere le bozze dalla Data API.
 - [ ] Pull request `redesign` → `main`, unita da GitHub con l'account
   `cdl-aps` e un merge commit (vedi "Pubblicazione" più sotto).
 
 Subito dopo il deploy:
 
-- [ ] Applicare `supabase/migrations/20261112220000_colonne_pubbliche.sql`
+- [ ] Applicare `supabase/migrations/20261113200000_colonne_pubbliche.sql`
   (non prima: il sito vecchio legge con `select=*` e ripiegherebbe sulle
   copie di riserva). Poi aprire home, Cortoteca, Eventi e Produzioni: in
   console non deve comparire "uso la copia di riserva".
@@ -156,7 +160,7 @@ Subito dopo il deploy:
   forma, da cui scarta ciò che non è pubblicato; le immagini, se mancano nel
   bucket `immagini`, ripiegano su `assets/img/`. La chiave segreta
   (*secret* / *service_role*) non va mai nel repository.
-- **Colonne pubbliche.** `20261112220000_colonne_pubbliche.sql` limita `anon`
+- **Colonne pubbliche.** `20261113200000_colonne_pubbliche.sql` limita `anon`
   alle colonne mostrate dal sito (niente `modificato_da` né date di lavoro).
   Va applicata solo quando il sito online usa già l'elenco esplicito di
   `dati.js`. Una colonna nuova da mostrare va aggiunta in `dati.js` e con un
@@ -216,6 +220,13 @@ Subito dopo il deploy:
     `supabase/licenze/` (`cortoteca-v<n>.txt`, `cortoteca-scheda-v<n>.txt`):
     file e database devono coincidere (colonna `sha256`). Un testo in vigore
     non si corregge: si aggiunge una versione con una migrazione;
+  - le bozze sono del socio finché non le invia: i redattori leggono solo
+    le proposte inviate e i loro file; in Proposte vedono solo chi ha una
+    bozza aperta (`soci_con_bozze()`, il nome e basta);
+  - Letterboxd e IMDb (`letterboxd_url`, `imdb_url`, solo indirizzi
+    imdb.com) si compilano nella proposta e in gestione; la pagina del
+    corto li mostra come tasti coi marchi dei due servizi (SVG in
+    `corto.js`);
   - troupe: i ruoli fissi sono colonne di `opere` (fra cui `suono`), gli
     altri stanno in `altri_ruoli`, un elenco di `{ ruolo, nome }`. Il titolo
     grafico, facoltativo, è un PNG (`titolo_png`) o un carattere

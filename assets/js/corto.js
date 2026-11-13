@@ -112,6 +112,11 @@ function lettore(schermo, embed, titolo, ritardo = null) {
   if (ritardo !== null) setTimeout(avvia, FERMO ? 0 : ritardo);
 }
 
+/* I marchi di Letterboxd (i tre punti) e IMDb (la targa gialla), disegnati
+   qui come le altre icone del sito, per i collegamenti della pagina del corto */
+const MARCHIO_LETTERBOXD = '<svg class="marchio-servizio" viewBox="0 0 46 18" aria-hidden="true"><circle cx="9" cy="9" r="8" fill="#ff8000"/><circle cx="23" cy="9" r="8" fill="#00e054"/><circle cx="37" cy="9" r="8" fill="#40bcf4"/></svg>';
+const MARCHIO_IMDB = '<svg class="marchio-servizio marchio-servizio--imdb" viewBox="0 0 64 32" aria-hidden="true"><rect width="64" height="32" rx="5" fill="#f5c518"/><text x="32" y="23" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="900" letter-spacing="-0.5" fill="#000">IMDb</text></svg>';
+
 /* Riempie la pagina del corto. radice è dove si posa il colore del corto
    (il body della pagina, o la sala aperta dentro la Cortoteca); con
    ritardoAvvio il video parte da solo dopo quel tempo. */
@@ -136,10 +141,18 @@ function mostraCorto(o, radice, ritardoAvvio = null) {
   if (embed) lettore(schermo, embed, o.titolo, ritardoAvvio);
   else if (!o.solo_scheda) schermo.insertAdjacentHTML('beforeend', '<span class="disco schermo__attesa">Streaming in arrivo</span>');
 
-  // Letterboxd: solo indirizzi web veri, il campo arriva da un modulo
+  // Letterboxd e IMDb, coi loro marchi: solo indirizzi web veri (IMDb solo
+  // imdb.com, come vuole anche il database), i campi arrivano da un modulo
+  const fuori = [];
   if (pieno(o.letterboxd_url) && /^https?:\/\//i.test(o.letterboxd_url)) {
+    fuori.push(`<a class="btn btn--servizio" href="${esc(o.letterboxd_url)}" target="_blank" rel="noopener">${MARCHIO_LETTERBOXD}Letterboxd ${ESTERNO}</a>`);
+  }
+  if (pieno(o.imdb_url) && /^https:\/\/(www\.|m\.)?imdb\.com\//i.test(o.imdb_url)) {
+    fuori.push(`<a class="btn btn--servizio" href="${esc(o.imdb_url)}" target="_blank" rel="noopener">${MARCHIO_IMDB}<span class="sr-only">IMDb</span>${ESTERNO}</a>`);
+  }
+  if (fuori.length) {
     const azioni = document.getElementById('corto-azioni');
-    azioni.innerHTML = `<a class="btn" href="${esc(o.letterboxd_url)}" target="_blank" rel="noopener">Su Letterboxd ${ESTERNO}</a>`;
+    azioni.innerHTML = fuori.join('');
     azioni.hidden = false;
   }
 

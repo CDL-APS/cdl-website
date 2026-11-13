@@ -31,7 +31,7 @@ const CAMPI = [
   'titolo', 'anno', 'durata', 'regista', 'generi', 'produzione', 'tagline',
   'sinossi', 'note_regia', 'fotografia', 'sceneggiatura', 'montaggio',
   'produttore', 'colonna_sonora', 'scenografia', 'suono', 'costumi',
-  'video_url', 'file_url', 'letterboxd_url'
+  'video_url', 'file_url', 'letterboxd_url', 'imdb_url'
 ];
 
 const stato = {

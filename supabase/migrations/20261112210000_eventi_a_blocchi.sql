@@ -10,7 +10,7 @@
 -- Piano: storico/2026-11-12-piano-pagine-evento.md.
 --
 -- Colonne nuove, tutte pubbliche come il resto dell'evento (sono anche in
--- COLONNE_EVENTI di assets/js/dati.js e in 20261112220000_colonne_pubbliche.sql):
+-- COLONNE_EVENTI di assets/js/dati.js e in 20261113200000_colonne_pubbliche.sql):
 -- - logo: il PNG senza fondo che fa da titolo, usato come maschera nel
 --   colore dell'evento. Un percorso nello spazio immagini
 --   (eventi/<codice>/logo-…png) o, per gli eventi di prima, una copia nel

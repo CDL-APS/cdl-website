@@ -58,6 +58,9 @@ html:has(.pagina-corto) { background: var(--nero-sala); }
 .corto__frase { font-size: clamp(24px, 2.6vw, 38px); font-weight: 600; line-height: 1.22; letter-spacing: -0.01em; color: var(--titolo); }
 .corto__sinossi { margin-top: 20px; max-width: 60ch; font-size: 17px; line-height: 1.6; color: var(--tenue); }
 .corto .btn-riga { margin-top: 28px; }
+/* Letterboxd e IMDb: il marchio del servizio dentro il tasto */
+.btn--servizio .marchio-servizio { flex: 0 0 auto; width: auto; height: 16px; }
+.btn--servizio .marchio-servizio--imdb { height: 24px; margin: 0 -4px; }
 .corto .btn--pieno { border-color: var(--titolo); background: var(--titolo); color: var(--sul-titolo, var(--nero-sala)); }
 .corto .btn--pieno:hover { border-color: var(--chiaro); background: var(--chiaro); color: var(--nero-sala); }
 .corto__dati, .crediti { display: grid; gap: 14px; }

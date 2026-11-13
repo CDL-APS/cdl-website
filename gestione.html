@@ -152,7 +152,7 @@
             <!-- Scheda Soci: stato della sincronizzazione con il foglio -->
             <div id="pannello-soci" class="g-pannello" hidden>
                 <p id="stato-sync"></p>
-                <p id="soci-senza-email" class="g-nota-soci" hidden></p>
+                <p id="soci-senza-email" class="g-nota-tenue" hidden></p>
                 <details id="collega-foglio">
                     <summary>Collega il foglio</summary>
                     <p class="scheda-testo">Nel foglio dei soci scegli Cortoteca → Collega al sito, copia l'impronta che compare e incollala qui.</p>
@@ -213,6 +213,9 @@
 
                 <div id="rullino-fonte" class="g-fonte"></div>
             </div>
+
+            <!-- Proposte: chi ha una bozza aperta, solo il nome (soci_con_bozze) -->
+            <p id="bozze-in-corso" class="g-nota-tenue g-bozze" hidden></p>
 
             <ul id="elenco" class="g-elenco"></ul>
         </section>
@@ -349,6 +352,10 @@
                         <label class="g-campo">
                             <span>Letterboxd</span>
                             <input type="url" name="letterboxd_url" placeholder="https://letterboxd.com/film/…">
+                        </label>
+                        <label class="g-campo">
+                            <span>IMDb</span>
+                            <input type="url" name="imdb_url" placeholder="https://www.imdb.com/title/…" pattern="https://(www\.|m\.)?imdb\.com/.+">
                         </label>
                         <label class="g-spunta">
                             <input type="checkbox" name="solo_scheda">

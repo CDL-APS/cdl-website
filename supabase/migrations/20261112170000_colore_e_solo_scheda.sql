@@ -15,7 +15,7 @@
 --    hanno licenza).
 --
 -- Le due colonne sono pubbliche: vanno anche nell'elenco delle colonne
--- leggibili da anon (20261112220000_colonne_pubbliche.sql) e in
+-- leggibili da anon (20261113200000_colonne_pubbliche.sql) e in
 -- COLONNE_OPERE di assets/js/dati.js.
 -- ==========================================================================
 

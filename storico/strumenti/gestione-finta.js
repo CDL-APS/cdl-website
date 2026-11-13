@@ -60,6 +60,7 @@ const RPC = {
     { id: 3, stato: 'approvata', socio_nome: 'Francesco Pasquinelli', inviata_il: iso(30), opera_id: opere[0].id, dati: { titolo: 'Interzona' } },
   ],
   elenco_soci: soci,
+  soci_con_bozze: [{ nome: 'Gabriele Rattini' }, { nome: 'Alessandra Maria Giovanna Bartolomei-Castiglioni' }],
   opere_titolari: [{ opera_id: opere[0].id, email: 'francesco@example.org', nome: 'Francesco Pasquinelli', licenza_attiva: true }],
 };
 

@@ -412,6 +412,7 @@ async function mostraElenco() {
   $('nuovo').hidden = !['opere', 'eventi'].includes(stato.scheda) || SCHEDE_IN_SVILUPPO.has(stato.scheda);
   $('nuovo').textContent = stato.scheda === 'eventi' ? 'Nuovo evento' : 'Nuova opera';
   $('pannello-soci').hidden = stato.scheda !== 'soci';
+  $('bozze-in-corso').hidden = true; // la riempie elencoProposte
   $('cruscotto').hidden = stato.scheda !== 'dashboard';
   $('rullino-gestione').hidden = stato.scheda !== 'rullino';
   $('elenco').hidden = ['dashboard', 'rullino'].includes(stato.scheda);
@@ -599,6 +600,7 @@ async function elencoProposte() {
     return;
   }
   stato.proposte = data;
+  mostraBozzeInCorso();
   if (!data.length) {
     elenco.innerHTML = '<li class="g-vuoto">Nessuna proposta. I soci propongono dal loro collegamento personale: lo trovi nella scheda Soci.</li>';
     return;
@@ -630,6 +632,19 @@ async function elencoProposte() {
       else apriOpera(proposta.opera_id);
     });
   });
+}
+
+/* Chi ha una bozza aperta in proponi.html: solo il nome, perché la bozza
+   resta del socio finché non la invia (il database non fa leggere ai
+   redattori né le bozze né i loro file) */
+async function mostraBozzeInCorso() {
+  const riga = $('bozze-in-corso');
+  const { data, error } = await client.rpc('soci_con_bozze');
+  if (stato.scheda !== 'proposte' || error || !data?.length) return;
+  const nomi = data.map((r) => r.nome);
+  riga.textContent = (nomi.length === 1 ? 'Ha una bozza in preparazione: ' : 'Hanno una bozza in preparazione: ')
+    + nomi.join(', ') + '. Il contenuto si vede quando la inviano.';
+  riga.hidden = false;
 }
 
 /* --------------------------------------------------------------------------

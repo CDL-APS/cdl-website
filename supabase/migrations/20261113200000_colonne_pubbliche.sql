@@ -16,8 +16,10 @@
 --
 -- La sveglia di GitHub (.github/workflows/sveglia-supabase.yml) legge
 -- eventi?select=id: id resta leggibile. Le regole RLS non cambiano.
--- Viene dopo 20261112210000_eventi_a_blocchi.sql, di cui elenca le colonne:
--- un revoke sulla tabella toglie anche i permessi per colonna dati prima.
+-- Viene dopo 20261112210000_eventi_a_blocchi.sql e
+-- 20261113190000_imdb_opere.sql, di cui elenca le colonne: un revoke sulla
+-- tabella toglie anche i permessi per colonna dati prima. (Era
+-- 20261112220000; spostata il 13 novembre 2026 per venire dopo imdb_url.)
 -- authenticated (gestione e soci) e service_role mantengono i permessi
 -- sulla tabella intera.
 -- ==========================================================================
@@ -25,7 +27,7 @@
 revoke select on public.opere from anon;
 grant select (
   id, codice, titolo, anno, durata, regista, produzione, produzione_cdl, collaborazione_cdl,
-  generi, tagline, sinossi, note_regia, fotogramma, video_url, letterboxd_url,
+  generi, tagline, sinossi, note_regia, fotogramma, video_url, letterboxd_url, imdb_url,
   sceneggiatura, produttore, fotografia, montaggio, colonna_sonora, scenografia, trucco, costumi,
   suono, altri_ruoli, titolo_png, titolo_font, colore, solo_scheda, pubblicata
 ) on public.opere to anon;
