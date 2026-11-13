@@ -21,6 +21,12 @@ Prima di unire:
   `storico/2026-11-12-review-pre-deploy.md`. Richiesta dall'utente:
   ricordargliela sempre prima di pubblicare; se dopo questa data si
   aggiunge altro lavoro al branch, va rifatta sul nuovo.
+- [ ] Prove sul deploy di prova `https://redesign--cdl-aps.netlify.app`
+  (caricato a mano con la CLI di Netlify, senza `--prod`), seguendo
+  `storico/2026-11-14-prove-sito-online.md`. Da ricordare all'utente
+  all'inizio della sessione dopo il 13 novembre. Se il branch cambia, il
+  deploy di prova va ricaricato (`git archive` in una cartella pulita, poi
+  `npx netlify-cli@17 deploy --dir . --site <id> --alias redesign`).
 - [ ] Pull request `redesign` → `main`, unita da GitHub con l'account
   `cdl-aps` e un merge commit (vedi "Pubblicazione" più sotto).
 
@@ -33,7 +39,8 @@ Subito dopo il deploy:
 - [ ] Un invio di prova per ogni motivo del modulo di Contatti, dal sito
   online: deve arrivare la mail all'indirizzo giusto, con l'oggetto
   "[Sito CDL] …" (rilevamento dei moduli e notifiche sono già attivi dal 13
-  novembre).
+  novembre). Controllare anche che rispondendo alla mail la risposta vada a
+  chi ha scritto; se no, annotarlo qui sotto "Contatti".
 - [ ] `curl -I` su `/gestione.html`, `/gestione`, `/area-socio.html`,
   `/area-socio`: devono avere la Content-Security-Policy e
   `Cache-Control: no-store`; sull'area socio anche

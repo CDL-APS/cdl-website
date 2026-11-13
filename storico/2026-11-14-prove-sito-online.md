@@ -73,8 +73,11 @@ arriva la mail all'indirizzo giusto, con oggetto "[Sito CDL] … – <nome>".
 - [ ] Un corto per la Cortoteca → ciao@
 - [ ] Collaborare a una produzione → produzione@
 - [ ] Altro → ciao@
-- [ ] Rispondendo alla mail, la risposta va a chi ha scritto (se no, va
-  copiato l'indirizzo dal messaggio: da annotare).
+- [ ] **Risposta alla mail**: premi "Rispondi" su una delle mail arrivate.
+  Il destinatario proposto deve essere l'indirizzo di chi ha scritto, non
+  `formresponses@netlify.com` né la casella dell'associazione. Se non lo
+  è, per rispondere bisogna copiare l'indirizzo dal testo della mail:
+  annotalo, si può valutare di cambiare il modo di inviare.
 
 Alla fine, se vuoi, cancella gli invii di prova da Netlify → Forms.
 
