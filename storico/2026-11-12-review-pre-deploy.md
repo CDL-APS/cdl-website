@@ -111,3 +111,40 @@ licenze (stato solo tramite funzioni, licenze non falsificabili), inviti
 (32 byte casuali, solo l'impronta), spazi `proposte` e `immagini`, XSS nelle
 pagine pubbliche, in gestione e in proposta, dati personali dei soci,
 nessuna chiave segreta nel repository.
+
+## Seconda review (13 novembre 2026, sera)
+
+Sul lavoro aggiunto dopo le review precedenti: code review (skill
+`anthropic-skills:code-review`, standard e specifica in parallelo) su
+`84bb79d...29612a7`, security review su `c0e6325...29612a7`; esclusi i file
+del modello delle pagine evento.
+
+**Sicurezza**: nessuna vulnerabilità sopra la soglia. Sotto la soglia
+(confidenza 2/10): la regola dello spazio `proposte` dà ai redattori un file
+citato da una proposta inviata anche se sta nella cartella di un altro
+socio; si rafforza aggiungendo `(storage.foldername(name))[1] = p.autore::text`
+alla sottoquery.
+
+**Da correggere** (testi e documentazione):
+- `gestione.js` righe 605, 1265 e 1318: l'elenco vuoto delle Proposte e le
+  mail di "Chiedi modifiche" e di approvazione mandano il socio "dal tuo
+  collegamento personale", che ora vale una volta sola: va detto di entrare
+  nell'area socio con email e password.
+- README, "Chi può modificare": non dice del codice obbligatorio e cita
+  "Nuovo evento", oggi fermo.
+- Conferma di "Nuovo collegamento": dice "ha scelto una password", ma
+  `usato_il` dice solo che il collegamento è stato aperto.
+
+**Da decidere**: "Secure password change" (lista dopo il deploy) chiede di
+riautenticarsi per cambiare password se l'accesso ha più di 24 ore: un socio
+che apre il collegamento e sceglie la password il giorno dopo verrebbe
+rifiutato. Provarlo o non attivarlo.
+
+**Giudizi** (nessuna urgenza): regola IMDb in quattro posti con regex non
+identiche (HTML `/.+`, SQL `/`, corto.js senza `indirizzoSicuro()` e con
+`/i`); 7 giorni e 6 caratteri ripetuti fra SQL, JS e HTML; validità del
+collegamento calcolata due volte in `gestione.js`; blocco WhatsApp/mailto
+ripetuto in `area-socio.html`; `passwordDaScegliere()` legge e scrive a
+seconda dell'argomento; l'obbligo della password dipende da `localStorage`
+(senza, il socio entra senza sceglierla: non è un confine di sicurezza);
+commento fuori posto in `gestione.css`.

@@ -17,7 +17,8 @@ Il redesign sta sul branch `redesign` (dettagli in
 Prima di unire:
 
 - [x] Review del diff `main...redesign` con `/code-review` e
-  `/security-review` (12 e 13 novembre): esiti in
+  `/security-review` (12 e 13 novembre, rifatte il 13 sera sul lavoro
+  nuovo): esiti in
   `storico/2026-11-12-review-pre-deploy.md`. Richiesta dall'utente:
   ricordargliela sempre prima di pubblicare; se dopo questa data si
   aggiunge altro lavoro al branch, va rifatta sul nuovo.
