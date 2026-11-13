@@ -84,3 +84,30 @@ rullino in quattro punti; `pubblicata`/`pubblicato` in più punti.
 due modi. `FRECCIA_SU` disegna ↗ (meglio `FRECCIA_APRI`). `comune.js`
 raccoglie molte cose diverse. Il commento di esempio in `dati.js` cita
 `select=*`.
+
+## Security review (13 novembre 2026)
+
+Fatta con la skill `security-review` sul diff `main...redesign` al commit
+`c0e6325` (un agente per cercare, uno per verificare ciò che trova). Nessuna
+vulnerabilità sopra la soglia. Un punto escluso dal filtro (confidenza 6/10),
+corretto lo stesso su richiesta dell'utente:
+
+- **Il collegamento personale di un socio che è anche redattore poteva
+  diventare l'accesso alla gestione**: dalla sessione aperta da
+  `accesso-socio` si può impostare una password (`auth.updateUser`) e poi
+  entrare con email e password; per un redattore senza codice di verifica
+  bastava. Non sfruttabile quel giorno (un solo redattore, col codice, e
+  non fra i soci). Corretto con due migrazioni applicate in produzione:
+  `20261113170000_inviti_non_per_redattori.sql` (nessun invito per l'email
+  di un redattore, nemmeno se creato prima) e
+  `20261113170100_codice_obbligatorio_redattori.sql` (`aal2` sempre
+  richiesto; `redattore_senza_codice()` per l'attivazione al primo accesso).
+  In gestione l'attivazione si apre da sola e "Disattiva il codice" non c'è
+  più. Verificato con sessioni simulate nel database e in locale.
+
+Controllato senza problemi: impostazioni di accesso (iscrizioni chiuse),
+funzioni `security definer` (`search_path` vuoto, permessi), proposte e
+licenze (stato solo tramite funzioni, licenze non falsificabili), inviti
+(32 byte casuali, solo l'impronta), spazi `proposte` e `immagini`, XSS nelle
+pagine pubbliche, in gestione e in proposta, dati personali dei soci,
+nessuna chiave segreta nel repository.

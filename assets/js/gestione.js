@@ -68,7 +68,11 @@ async function aggiornaSessione(sessione) {
 
   const { data: redattore, error } = await client.rpc('sono_redattore');
   if (error || !redattore) {
-    mostraVista('negato');
+    // Il codice di verifica è obbligatorio: un redattore entrato con la sola
+    // password lo attiva subito, poi entra
+    const { data: senzaCodice } = await client.rpc('redattore_senza_codice');
+    if (senzaCodice) mostraSicurezza(true);
+    else mostraVista('negato');
     return;
   }
   $('schede').hidden = false;
@@ -130,12 +134,17 @@ $('esci').addEventListener('click', async () => {
 /* --------------------------------------------------------------------------
    Sicurezza: codice di verifica (TOTP)
    -------------------------------------------------------------------------- */
-async function mostraSicurezza() {
+/* Il codice è obbligatorio per i redattori (privato.e_redattore vuole una
+   sessione aal2): non si disattiva da qui. Al primo accesso (obbligo) la
+   vista si apre da sola e "Torna alla gestione" non c'è: la gestione si apre
+   appena il codice è attivo. Chi cambia o perde il telefono va sbloccato in
+   Supabase (Authentication → utente → fattori), poi lo riattiva. */
+async function mostraSicurezza(obbligo = false) {
   nascondiAvviso();
   mostraVista('sicurezza');
   $('sicurezza-attiva').hidden = true;
   $('sicurezza-avvia').hidden = true;
-  $('sicurezza-togli').hidden = true;
+  $('sicurezza-chiudi').hidden = obbligo;
   $('sicurezza-stato').textContent = 'Controllo…';
 
   const { data, error } = await client.auth.mfa.listFactors();
@@ -146,12 +155,10 @@ async function mostraSicurezza() {
   const attivo = (data.totp || []).find((f) => f.status === 'verified');
   if (attivo) {
     $('sicurezza-stato').textContent =
-      'Il codice di verifica è attivo: per entrare servono la password e il codice dell\'app. Chi conosce solo la password non può modificare nulla.';
-    $('sicurezza-togli').hidden = false;
-    $('sicurezza-togli').dataset.fattore = attivo.id;
+      'Il codice di verifica è attivo: per entrare servono la password e il codice dell\'app. Se cambi o perdi il telefono, chiedi a chi amministra il progetto Supabase di toglierlo: al prossimo accesso lo riattivi.';
   } else {
     $('sicurezza-stato').textContent =
-      'Il codice di verifica non è attivo: oggi per entrare basta la password. Attivalo: da quel momento servirà anche il codice che un\'app sul tuo telefono genera ogni trenta secondi.';
+      'Per entrare nella gestione serve il codice di verifica: attivalo adesso. Da qui in poi per entrare serviranno la password e il numero che un\'app sul tuo telefono genera ogni trenta secondi.';
     $('sicurezza-avvia').hidden = false;
   }
 }
@@ -203,20 +210,10 @@ $('modulo-attiva').addEventListener('submit', async (e) => {
     return;
   }
   stato.fattoreInAttesa = null;
+  // la sessione è passata ad aal2: si entra
+  const { data } = await client.auth.getSession();
+  await aggiornaSessione(data.session);
   avviso('Codice di verifica attivato.');
-  mostraSicurezza();
-});
-
-$('sicurezza-togli').addEventListener('click', async (e) => {
-  if (!confirm('Disattivare il codice di verifica? Da quel momento per entrare basterà la password.')) return;
-  const { error } = await client.auth.mfa.unenroll({ factorId: e.currentTarget.dataset.fattore });
-  if (error) {
-    avviso(messaggioErrore(error), true);
-    return;
-  }
-  await client.auth.refreshSession();
-  avviso('Codice di verifica disattivato.');
-  mostraSicurezza();
 });
 
 /* --------------------------------------------------------------------------

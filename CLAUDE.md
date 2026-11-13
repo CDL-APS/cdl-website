@@ -16,13 +16,11 @@ Il redesign sta sul branch `redesign` (dettagli in
 
 Prima di unire:
 
-- [ ] Review del diff `main...redesign` con la skill `/code-review` (e
-  `/security-review` per gestione, proposta e migrazioni), a lavoro
-  committato e prima di aprire la pull request. Richiesta dall'utente:
-  ricordargliela sempre prima di pubblicare. Una prima `/code-review` è
-  fatta (esclusa la parte del modello degli eventi): esiti e decisioni
-  aperte in `storico/2026-11-12-review-pre-deploy.md`. Resta la
-  `/security-review`.
+- [x] Review del diff `main...redesign` con `/code-review` e
+  `/security-review` (12 e 13 novembre): esiti in
+  `storico/2026-11-12-review-pre-deploy.md`. Richiesta dall'utente:
+  ricordargliela sempre prima di pubblicare; se dopo questa data si
+  aggiunge altro lavoro al branch, va rifatta sul nuovo.
 - [ ] Pull request `redesign` → `main`, unita da GitHub con l'account
   `cdl-aps` e un merge commit (vedi "Pubblicazione" più sotto).
 
@@ -41,7 +39,8 @@ Subito dopo il deploy:
   `Cache-Control: no-store`; su proponi anche `Referrer-Policy: no-referrer`.
 - [ ] Rigenerare dal sito online ("Nuovo collegamento", scheda Soci) i
   collegamenti dei soci creati in locale: puntano a `localhost`.
-- [ ] Supabase → Authentication: attivare "Secure password change".
+- [ ] Supabase → Authentication: attivare "Secure password change" (in più:
+  codice obbligatorio e inviti negati ai redattori sono già nel database).
 - [ ] Ricaricare dalla gestione, come PNG, i titoli di Interzona, Quarto
   Livello, Relatività e Viva Revolution; poi togliere `TITOLI_GRAFICI` da
   `comune.js` e la cartella `assets/img/film/titoli/`.
@@ -171,17 +170,24 @@ Subito dopo il deploy:
 - Fra due produzioni CDL dello stesso anno conta come più recente quella
   inserita per ultima (id più alto).
 - `gestione.html` è la pagina dei redattori: accesso con email e password
-  via Supabase Auth, più il codice di un'app di autenticazione per chi l'ha
-  attivato (pulsante Sicurezza 2FA). Le scritture sono protette dalla RLS, non
+  via Supabase Auth, più il codice di un'app di autenticazione, obbligatorio
+  (un redattore nuovo lo attiva al primo accesso; non si disattiva dalla
+  gestione: chi cambia o perde il telefono va sbloccato in Supabase,
+  Authentication → utente → fattori). Le scritture sono protette dalla RLS, non
   dalla pagina. Le immagini caricate vengono ridimensionate a 2000 px e
   salvate come `<cartella>/<codice>-<campo>-<orario>.jpg` nel bucket
   `immagini`.
 - **Chi è redattore** lo decide `privato.e_redattore()`: utente in
   `privato.redattori`, sessione nata dall'accesso con password (voce
-  `password` nel campo `amr` del token) e, se l'utente ha un codice di
-  verifica attivo, sessione di livello `aal2`. La condizione sulla password
-  impedisce che il collegamento personale di un socio, che è anche redattore,
-  apra la gestione.
+  `password` nel campo `amr` del token) e di livello `aal2` (password più
+  codice; `20261113170100_codice_obbligatorio_redattori.sql`).
+  `public.redattore_senza_codice()` dice alla gestione quando mostrare
+  l'attivazione del codice, senza dare permessi. Il collegamento personale
+  dei soci **non vale per i redattori**: `crea_invito` rifiuta l'email di un
+  redattore e `verifica_invito` non la riconosce
+  (`20261113170000_inviti_non_per_redattori.sql`), perché da quella sessione
+  si potrebbe impostare una password e arrivare alla gestione. Un redattore
+  che vuole proporre corti come socio usa un altro indirizzo nel libro soci.
 - **Cortoteca, proposte dei soci.** Progetto e motivazioni in
   `storico/2026-11-11-cortoteca-infrastruttura.md`; regolamento, licenza e
   delibera sono bozze per il Consiglio direttivo. In breve:
