@@ -31,7 +31,11 @@ async function apriPaginaEvento() {
       console.error(errore);
     }
   }
-  if (!anteprima && evento && !conModello(evento) && paginaEvento(evento)) { location.replace(paginaEvento(evento)); return; }
+  if (!anteprima && evento && !conModello(evento)) {
+    if (paginaEvento(evento)) { location.replace(paginaEvento(evento)); return; }
+    // col modello in pausa un evento senza pagina scritta a mano non si compone
+    if (!MODELLO_EVENTI) evento = null;
+  }
   const main = document.querySelector('main');
   if (!evento) { document.getElementById('evento-avviso').hidden = false; return; }
 

@@ -205,4 +205,9 @@ dl, dd { margin: 0; }
 
 @media (max-width: 639px) {
   .g-esci { min-height: 44px; padding: 0 16px; font-size: 14px; }
+  /* Il fondo del modulo resta a portata ma occupa meno schermo: tasti più
+     piccoli (sempre alti 44 px) e più vicini */
+  .g-piede-modulo { gap: 8px; padding: 10px 0 calc(10px + env(safe-area-inset-bottom)); }
+  .g-piede-modulo .azioni { gap: 8px; }
+  .g-piede-modulo .btn { min-height: 44px; padding: 0 14px; font-size: 14px; }
 }

@@ -21,19 +21,8 @@ Prima di unire:
   committato e prima di aprire la pull request. Richiesta dall'utente:
   ricordargliela sempre prima di pubblicare. Una prima `/code-review` è
   fatta (esclusa la parte del modello degli eventi): esiti e decisioni
-  aperte in `storico/2026-11-12-review-pre-deploy.md`. Restano la
-  `/security-review` e una review del modello degli eventi dopo le prove.
-- [ ] Prova del modulo evento con un accesso vero (solo l'utente): un
-  evento di prova con logo, colore, presentazione, un programma con un
-  corto della Cortoteca e qualche foto, un testo; Anteprima prima di
-  salvare; salvarlo pubblicato, guardarlo in Eventi (sala) e da
-  `evento.html?e=<codice>`; poi eliminarlo. Insieme, decidere se Short
-  Talks #1 va online già composta dal database (oggi ha presentazione e
-  blocchi) o se svuotarli e tenerla sulla pagina scritta a mano fino alla
-  fase 3.
-- [ ] Check generale della visualizzazione da telefono (375 px, e qualche
-  larghezza intermedia) su tutte le pagine pubbliche e sulla gestione:
-  richiesta dell'utente.
+  aperte in `storico/2026-11-12-review-pre-deploy.md`. Resta la
+  `/security-review`.
 - [ ] Pull request `redesign` → `main`, unita da GitHub con l'account
   `cdl-aps` e un merge commit (vedi "Pubblicazione" più sotto).
 
@@ -60,6 +49,14 @@ Subito dopo il deploy:
   veri).
 
 ## Da fare più avanti (non prioritario)
+
+- [ ] Gestione degli eventi e pagine evento composte dal database: ferme
+  dal 13 novembre 2026, escluse dal deploy del redesign. Il piano completo
+  per riprenderle (cosa è spento e dove, cosa è emerso dalle verifiche,
+  review, prove, conversione delle altre pagine) è in
+  `storico/2026-11-13-piano-eventi-gestione.md`. Tre interruttori:
+  `MODELLO_EVENTI` in `dati.js`, `SCHEDE_IN_SVILUPPO` in `gestione.js`,
+  l'etichetta "In sviluppo" e i gruppi `hidden` in `gestione.html`.
 
 - [ ] Sostieni: aggiungere la possibilità di fare una donazione, oltre a
   diventare socio (blocco arancio in home, Contatti e Vantaggi).
@@ -276,7 +273,12 @@ Subito dopo il deploy:
   allarga il colore della sezione prima di cambiare pagina. Con
   `prefers-reduced-motion` i passaggi diventano cambi di pagina e i rullini
   restano fermi.
-- **Pagine evento composte dal database** (in corso, piano in
+- **Pagine evento composte dal database** (ferme, come la scheda Eventi
+  della gestione, che mostra "In sviluppo" al posto dell'elenco: vedi
+  `storico/2026-11-13-piano-eventi-gestione.md`. Finché `MODELLO_EVENTI` è
+  `false`, `conModello()` dà sempre falso e ogni evento usa la pagina
+  scritta a mano; nel modulo evento, se riaperto, ci sono di nuovo
+  miniatura e copertina. Piano originale in
   `storico/2026-11-12-piano-pagine-evento.md`): `evento.html?e=<codice>`
   disegna testata e blocchi dalle colonne `logo`, `colore`, `instagram`,
   `sfondo`, `presentazione` e `blocchi` di `eventi`
@@ -292,9 +294,9 @@ Subito dopo il deploy:
   apre `evento.html?anteprima`, che legge i dati del modulo dalla memoria
   del browser (`localStorage`, chiave `cdl-anteprima-evento`) e mostra le
   immagini non ancora caricate dagli indirizzi `blob:`. Il modulo non
-  mostra più copertina, miniatura e corti nati dall'evento (`eventi_opere`):
-  le colonne e la tabella restano; senza logo e senza miniatura la scheda di
-  Eventi usa la prima foto dei blocchi.
+  mostra i corti nati dall'evento (`eventi_opere`): la tabella resta. Col
+  modello acceso, senza logo e senza miniatura la scheda di Eventi usa la
+  prima foto dei blocchi.
 - Le pagine dei singoli eventi (`short-talks-1.html`, `blue-hour.html`…) sono
   statiche, sul modello di `longstoryshort.html`, e condividono
   `pages/evento.css`, dove stanno il colore di ciascuna (`evento--<pagina>`
@@ -319,9 +321,10 @@ Subito dopo il deploy:
   una presentazione (`.presentazione`) chiusa da un filo.
 - La home ha quattro parti: l'apertura sulla sala vista dall'alto, al buio,
   con la torcia che segue il puntatore e il nastro delle ultime notizie;
-  l'indice (Eventi, Produzioni, Cortoteca a tutta larghezza, misurati
-  sul disegno delle lettere con `data-preciso`, così i bordi coincidono coi
-  margini; al passaggio prendono il colore della sezione e, tranne la
+  l'indice (Eventi, Produzioni, Cortoteca tutti dello stesso corpo, centrati
+  e misurati sul disegno delle lettere con `data-preciso` e `data-uguali`:
+  il nome più lungo tocca i margini; nel cambio di pagina il nome
+  si allarga alla misura della testata; al passaggio prendono il colore della sezione e, tranne la
   Cortoteca, mostrano i tre più recenti e "Vedi tutti…");
   il rullino di fotografie, senza titolo; Sostieni in arancio. Nastro,
   elenchi e rullino li riempie `home.js`; il testo della quota ridotta del

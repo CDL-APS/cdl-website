@@ -199,10 +199,17 @@ function indirizzoSicuro(indirizzo) {
   return /^(https?:\/\/|[a-z0-9-]+\.html(\?.*)?$)/i.test(indirizzo) ? indirizzo : null;
 }
 
+/* Le pagine evento composte dal database sono in pausa (13 novembre 2026),
+   finché il modulo di gestione non è stato provato: ogni evento usa la sua
+   pagina scritta a mano, anche se nel database ha presentazione e blocchi
+   (Short Talks #1 li ha già, restano lì). Come riaccenderle:
+   storico/2026-11-13-piano-eventi-gestione.md. */
+const MODELLO_EVENTI = false;
+
 /* Vero se la pagina dell'evento si compone dal database (evento.html, vedi
    modello-evento.js): ha una presentazione o almeno un blocco */
 function conModello(evento) {
-  return Boolean(evento && evento.codice && ((evento.presentazione || '').trim()
+  return MODELLO_EVENTI && Boolean(evento && evento.codice && ((evento.presentazione || '').trim()
     || (Array.isArray(evento.blocchi) && evento.blocchi.length)));
 }
 

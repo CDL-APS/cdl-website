@@ -14,6 +14,16 @@
   font-size: 11px; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums;
 }
 
+/* Una scheda ferma, in sviluppo (Eventi): l'etichetta nella barra, tenue,
+   e l'avviso al posto dell'elenco */
+.g-sviluppo {
+  display: inline-flex; align-items: center; height: 20px; padding: 0 7px;
+  border: 1.5px solid currentColor; border-radius: 999px; opacity: 0.6;
+  font-size: 11px; font-weight: 700; line-height: 1; white-space: nowrap;
+}
+.g-in-sviluppo { max-width: 60ch; line-height: 1.5; }
+.g-in-sviluppo strong { color: var(--nero); }
+
 /* --------------------------------------------------------------------------
    Testata delle schede, come quella delle pagine pubbliche: il nome a
    caratteri cubitali, sotto la presentazione grande (cosa contiene) chiusa
@@ -290,18 +300,37 @@ h4.g-blocco__nome { font-size: 16px; }
 /* --------------------------------------------------------------------------
    Adattamenti
    -------------------------------------------------------------------------- */
-/* Sul telefono le schede scendono su una seconda riga, a tutta larghezza */
-@media (max-width: 760px) {
+/* Sul telefono e sui tablet stretti le schede scendono su una seconda riga,
+   a tutta larghezza: con "Sicurezza 2FA" ed "Esci" stanno su una riga sola
+   solo da 940 px circa */
+@media (max-width: 960px) {
   .gestione .g-barra .nav__riga { flex-wrap: wrap; }
   .g-schede {
     order: 3; flex: 1 0 100%;
     margin: 0 calc(var(--gut) * -1); padding: 0 calc(var(--gut) - 8px);
     overflow-x: auto; border-top: 1px solid var(--filo); scrollbar-width: none;
+    /* sfuma a destra, così si capisce che ci sono altre schede; il margine
+       in fondo lascia l'ultima fuori dalla sfumatura */
+    -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 40px), transparent);
+    mask-image: linear-gradient(90deg, #000 calc(100% - 40px), transparent);
   }
+  .g-schede::after { content: ''; flex: 0 0 32px; }
   .g-schede .g-scheda { min-height: 48px; }
+}
+
+/* Con le sei schede (e l'etichetta "In sviluppo") l'email nella barra
+   c'entra solo dai 1200 px */
+@media (max-width: 1200px) {
+  .gestione .g-utente-email { display: none; }
+}
+
+@media (max-width: 760px) {
   .g-revisione-dati > div { grid-template-columns: 1fr; }
-  .g-riga--ferma { grid-template-columns: 1fr; }
-  .g-riga--ferma .g-segni { grid-row: auto; grid-column: 1; justify-content: flex-start; }
-  .g-segni--soci { grid-template-columns: 8.5rem minmax(0, 1fr); width: 100%; }
+  /* i segni vanno sotto titolo e dati: a fianco li stringerebbero */
+  .g-riga { grid-template-columns: minmax(0, 1fr); }
+  .g-segni { grid-row: auto; grid-column: 1; justify-content: flex-start; }
+  /* Soci: bollino e tasto della loro misura, il tasto va a capo se non c'entra */
+  .g-segni--soci { display: flex; flex-wrap: wrap; }
+  .g-segni--soci .btn { width: auto; min-height: 44px; padding: 0 16px; font-size: 14px; }
   .g-attivita li { grid-template-columns: 1fr; gap: 2px; }
 }

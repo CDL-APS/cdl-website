@@ -165,6 +165,8 @@ html.sala-aperta { overflow: hidden; }
 }
 
 @media (max-width: 639px) {
+  /* la crocetta in alto coprirebbe il fotogramma: va in basso, sotto il pollice */
+  .sala-corto__chiudi { top: auto; bottom: calc(16px + env(safe-area-inset-bottom)); right: 16px; box-shadow: 0 0 0 3px var(--nero-sala); }
   .galleria { grid-template-columns: minmax(0, 1fr); }
   .galleria__vuoto, .galleria__vuoto:nth-child(3n + 1) { display: none; }
 }

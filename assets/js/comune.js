@@ -36,6 +36,7 @@ function adatta() {
     const largo = testo.getBoundingClientRect().width;
     if (largo) riga.style.fontSize = (99.4 * riga.clientWidth / largo).toFixed(2) + 'px';
   });
+  document.querySelectorAll('[data-uguali]').forEach(uguaglia);
 }
 
 /* ---- Righe a tutta larghezza misurate sull'inchiostro (.fit con
@@ -73,6 +74,35 @@ function adattaPreciso(riga, testo) {
   if (!(corpo > 0)) return;
   riga.style.fontSize = corpo.toFixed(2) + 'px';
   testo.style.marginLeft = (-aSinistra * corpo / 100).toFixed(2) + 'px';
+  // per uguaglia() e per il passaggio verso la pagina della sezione
+  riga.dataset.pieno = corpo.toFixed(2);
+  riga.dataset.sinistra = aSinistra / 100;
+  riga.dataset.destra = aDestra / 100;
+}
+
+/* ---- Righe dello stesso corpo (data-uguali sul contenitore, i nomi
+   dell'indice della home): tutte prendono il corpo della più lunga e il
+   disegno delle lettere si centra nella riga. ---- */
+function uguaglia(gruppo) {
+  const righe = [...gruppo.querySelectorAll('.fit[data-preciso]')].filter((r) => r.dataset.pieno && !r.dataset.fermo);
+  if (righe.length < 2) return;
+  // Il disegno di ogni riga a un corpo dato, misurato nella pagina
+  const disegno = (riga, corpo) => {
+    const testo = riga.querySelector('.fit-testo');
+    riga.style.fontSize = corpo.toFixed(2) + 'px';
+    testo.style.marginLeft = '0px';
+    return testo.getBoundingClientRect().width - (Number(riga.dataset.sinistra) + Number(riga.dataset.destra)) * corpo;
+  };
+  let corpo = Math.min(...righe.map((r) => Number(r.dataset.pieno)));
+  // la stima dalla tela può sbagliare di qualche px: la riga più larga si
+  // riporta esattamente alla misura (spaziatura in em, quindi in proporzione)
+  const largo = Math.max(...righe.map((r) => disegno(r, corpo)));
+  if (largo > 0) corpo *= righe[0].clientWidth / largo;
+  righe.forEach((riga) => {
+    const inchiostro = disegno(riga, corpo);
+    const sinistra = riga.dataset.sinistra * corpo;
+    riga.querySelector('.fit-testo').style.marginLeft = ((riga.clientWidth - inchiostro) / 2 - sinistra).toFixed(2) + 'px';
+  });
 }
 
 /* ---- Occhi: la pupilla va verso il punto guardato; ogni tanto un battito ---- */
@@ -390,11 +420,22 @@ function passaggio(indice, link, [fondo, scritta]) {
   copia.classList.add('passaggio__parola');
   Object.assign(copia.style, { left: t.left + 'px', top: t.top + 'px', width: t.width + 'px', color: getComputedStyle(titolo).color });
   document.body.append(copia);
+  // Nell'indice i nomi hanno tutti lo stesso corpo, centrati: in volo il
+  // nome si allarga a tutta la riga e va al margine, come nella testata
+  const riga = titolo.querySelector('.fit');
+  const pieno = Number(riga.dataset.pieno);
+  const corpo = pieno ? pieno.toFixed(2) + 'px' : riga.style.fontSize;
+  const volo = { duration: DURATA_PASSAGGIO, easing: CURVA_PASSAGGIO, fill: 'forwards' };
+  if (pieno) {
+    copia.querySelector('.fit').animate([{ fontSize: riga.style.fontSize }, { fontSize: corpo }], volo);
+    copia.querySelector('.fit-testo').animate(
+      [{ marginLeft: riga.querySelector('.fit-testo').style.marginLeft }, { marginLeft: (-riga.dataset.sinistra * pieno).toFixed(2) + 'px' }], volo);
+  }
   // La pagina d'arrivo userà lo stesso corpo, senza aspettare di misurarlo
   try {
     sessionStorage.setItem('cdl-passaggio', JSON.stringify({
       pagina: percorsoPagina(new URL(link.href).pathname),
-      corpo: titolo.querySelector('.fit').style.fontSize,
+      corpo,
       larghezza: innerWidth,
     }));
   } catch (errore) { /* senza memoria di sessione si arriva lo stesso */ }

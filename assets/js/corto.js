@@ -143,7 +143,7 @@ function mostraCorto(o, radice, ritardoAvvio = null) {
     azioni.hidden = false;
   }
 
-  const voce = (nome, valore) => (pieno(valore) ? `<div><dt>${esc(nome)}</dt><dd>${esc(valore)}</dd></div>` : '');
+  const voce = (nome, valore, classe = '') => (pieno(valore) ? `<div${classe ? ` class="${classe}"` : ''}><dt>${esc(nome)}</dt><dd>${esc(valore)}</dd></div>` : '');
   document.getElementById('corto-dati').innerHTML = [
     voce('Regia', o.regista),
     voce('Anno', o.anno),
@@ -166,7 +166,7 @@ function mostraCorto(o, radice, ritardoAvvio = null) {
   const crediti = [
     ...CREDITI.map(([nome, colonna]) => voce(nome, o[colonna])),
     ...altri.map((r) => voce(r.ruolo, r.nome)),
-    voce('Interpreti', interpreti),
+    voce('Interpreti', interpreti, 'crediti__interpreti'), // lungo: su telefono prende tutta la riga
   ].join('');
   if (crediti) {
     document.getElementById('crediti').innerHTML = crediti;

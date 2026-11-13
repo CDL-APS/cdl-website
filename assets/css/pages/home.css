@@ -22,12 +22,19 @@
 }
 
 /* Due veli: uno fisso a sinistra, che tiene leggibile il testo; uno che
-   lascia un cerchio di luce attorno al punto (--mx, --my) seguito da home.js */
+   lascia un cerchio di luce attorno al punto (--mx, --my) seguito da home.js,
+   col bordo netto e il resto della sala quasi al buio. Sopra, la luce del
+   riflettore schiarisce e scalda un poco l'interno del cerchio. */
 .hero__buio {
   position: absolute; inset: 0;
   background:
     linear-gradient(90deg, rgba(29, 29, 27, 0.84) 0%, rgba(29, 29, 27, 0.45) 40%, rgba(29, 29, 27, 0) 64%),
-    radial-gradient(circle clamp(240px, 28vw, 430px) at var(--mx, 70%) var(--my, 42%), rgba(29, 29, 27, 0) 0%, rgba(29, 29, 27, 0.2) 55%, rgba(29, 29, 27, 0.66) 100%);
+    radial-gradient(circle clamp(200px, 22vw, 360px) at var(--mx, 70%) var(--my, 42%), rgba(29, 29, 27, 0) 0%, rgba(29, 29, 27, 0) 50%, rgba(29, 29, 27, 0.72) 78%, rgba(29, 29, 27, 0.93) 100%);
+}
+.hero__buio::after {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(circle clamp(200px, 22vw, 360px) at var(--mx, 70%) var(--my, 42%), rgba(255, 244, 224, 0.6) 0%, rgba(255, 244, 224, 0.3) 45%, rgba(255, 244, 224, 0) 70%);
+  mix-blend-mode: overlay;
 }
 
 .hero--sala .wrap { position: relative; z-index: 1; }
@@ -82,9 +89,10 @@
    L'indice: tre nomi larghi quanto la pagina, e nient'altro. Al passaggio
    su un nome tutta la sezione prende il colore di quella parte del sito, gli
    altri nomi si spengono e sotto compare l'elenco breve dei tre più recenti,
-   con a destra "Vedi tutti…" (non sulla Cortoteca). I nomi sono misurati sul
-   disegno delle lettere (data-preciso, adattaPreciso in comune.js): i loro
-   bordi coincidono con i margini della pagina.
+   con a destra "Vedi tutti…" (non sulla Cortoteca). I nomi hanno tutti lo
+   stesso corpo, quello del più lungo, e sono centrati sul disegno delle
+   lettere (data-preciso e data-uguali, adattaPreciso e uguaglia in
+   comune.js): il più lungo tocca i margini della pagina.
    Sulla Cortoteca la sezione si fa sala: si aprono gli occhi nelle O e
    altri si affacciano dai bordi della pagina.
    -------------------------------------------------------------------------- */
@@ -100,7 +108,9 @@
 .sezioni { border-top: 1px solid var(--filo); transition: border-color 0.3s var(--ease); }
 .sezione { padding-top: clamp(18px, 2.2vw, 30px); border-bottom: 1px solid var(--filo); transition: color 0.3s var(--ease), border-color 0.3s var(--ease); }
 .sezione__nome { margin-left: 0; }
-.sezione__nome a { display: block; }
+.sezione__nome a { position: relative; display: block; }
+/* su telefono il nome è alto 40 px: l'area da toccare si allarga di poco sopra e sotto */
+.sezione__nome a::after { content: ''; position: absolute; inset: -4px 0; }
 .sezione__nome a:focus-visible { outline: 3px solid currentColor; outline-offset: 6px; }
 #indice:has(.sezione:is(:hover, :focus-within)) .sezione:not(:hover, :focus-within) { color: var(--spento); }
 

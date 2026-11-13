@@ -357,11 +357,19 @@ document.querySelectorAll('.g-scheda').forEach((b) => {
   });
 });
 
+/* Schede ferme "in sviluppo": si vedono nella barra con l'etichetta, ma al
+   posto dell'elenco c'è un avviso e i moduli non si aprono. Eventi è ferma
+   per il deploy del redesign (13 novembre 2026): il modulo a blocchi e le
+   pagine composte dal database non sono ancora stati provati. Piano per
+   riprenderla in storico/2026-11-13-piano-eventi-gestione.md. Per
+   riaccenderla: togliere 'eventi' da qui e l'etichetta in gestione.html. */
+const SCHEDE_IN_SVILUPPO = new Set(['eventi']);
+
 const SCHEDE = {
   dashboard: ['Dashboard', 'Ciò che aspetta una decisione, lo stato della Cortoteca e le ultime cose successe.'],
   proposte: ['Proposte', 'I corti che i soci mandano dalla loro pagina. Si rileggono, si approvano e vanno in Cortoteca.'],
   opere: ['Opere', 'Tutte le opere del sito, pubblicate e non. Le produzioni CDL e i corti dei soci.'],
-  eventi: ['Eventi', 'Gli eventi del sito, pubblicati e non, con i corti nati da ciascuno.'],
+  eventi: ['Eventi', 'Gli eventi del sito, pubblicati e non.'],
   rullino: ['Rullino', 'Le foto che scorrono in home. Sceglile da ogni provenienza: al clic ognuna porta al suo evento, al suo corto o alla pagina indicata.'],
   soci: ['Soci', 'Il libro soci arriva dal foglio Google. Da qui si manda a ciascuno il collegamento personale per la Cortoteca.']
 };
@@ -372,6 +380,13 @@ function segnaScheda() {
     b.classList.toggle('is-active', attiva);
     if (attiva) b.setAttribute('aria-current', 'page');
     else b.removeAttribute('aria-current');
+    // sul telefono la barra delle schede scorre: quella attiva va in mezzo
+    const barra = b.parentElement;
+    if (attiva && barra.scrollWidth > barra.clientWidth) {
+      const r = b.getBoundingClientRect();
+      const rb = barra.getBoundingClientRect();
+      barra.scrollBy({ left: r.left + r.width / 2 - (rb.left + rb.width / 2), behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+    }
   });
   const [titolo, nota] = SCHEDE[stato.scheda];
   $('titolo-scheda').textContent = titolo;
@@ -401,7 +416,7 @@ async function mostraElenco() {
     history.replaceState({ scheda: stato.scheda }, '', '#' + stato.scheda);
   }
   segnaScheda();
-  $('nuovo').hidden = !['opere', 'eventi'].includes(stato.scheda);
+  $('nuovo').hidden = !['opere', 'eventi'].includes(stato.scheda) || SCHEDE_IN_SVILUPPO.has(stato.scheda);
   $('nuovo').textContent = stato.scheda === 'eventi' ? 'Nuovo evento' : 'Nuova opera';
   $('pannello-soci').hidden = stato.scheda !== 'soci';
   $('cruscotto').hidden = stato.scheda !== 'dashboard';
@@ -411,11 +426,21 @@ async function mostraElenco() {
   // Gli avvisi servono sempre: contatore nella barra, segni negli elenchi
   await caricaAvvisi();
 
+  if (SCHEDE_IN_SVILUPPO.has(stato.scheda)) return mostraInSviluppo();
   if (stato.scheda === 'dashboard') return mostraCruscotto();
   if (stato.scheda === 'rullino') return mostraRullino();
   if (stato.scheda === 'proposte') return elencoProposte();
   if (stato.scheda === 'soci') return elencoSoci();
   return elencoOpereEventi();
+}
+
+function mostraInSviluppo() {
+  $('elenco').innerHTML = `
+    <li class="g-vuoto g-in-sviluppo">
+      <strong>In sviluppo.</strong> La gestione degli eventi tornerà con un prossimo
+      aggiornamento del sito. Gli eventi già pubblicati restano online come sono; per
+      aggiungerne uno o correggerlo, per ora, chiedi a chi cura il sito.
+    </li>`;
 }
 
 async function elencoOpereEventi() {
@@ -1299,6 +1324,7 @@ $('modulo-opera').addEventListener('submit', async (e) => {
    Evento
    -------------------------------------------------------------------------- */
 async function apriEvento(id) {
+  if (SCHEDE_IN_SVILUPPO.has('eventi')) return; // scheda ferma: il modulo non si apre
   nascondiAvviso();
   apriModulo();
   const modulo = $('modulo-evento');

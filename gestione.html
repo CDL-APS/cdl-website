@@ -12,10 +12,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800;900&display=swap">
-    <link rel="stylesheet" href="assets/css/base.css?v=2026-11-12zi">
-    <link rel="stylesheet" href="assets/css/components.css?v=2026-11-12zi">
-    <link rel="stylesheet" href="assets/css/pages/riservato.css?v=2026-11-12zi">
-    <link rel="stylesheet" href="assets/css/pages/gestione.css?v=2026-11-12zi">
+    <link rel="stylesheet" href="assets/css/base.css?v=2026-11-13zi">
+    <link rel="stylesheet" href="assets/css/components.css?v=2026-11-13zi">
+    <link rel="stylesheet" href="assets/css/pages/riservato.css?v=2026-11-13zi">
+    <link rel="stylesheet" href="assets/css/pages/gestione.css?v=2026-11-13zi">
 </head>
 <body class="gestione">
 
@@ -35,7 +35,7 @@
                 <button type="button" class="g-scheda" data-scheda="dashboard">Dashboard<span id="conta-avvisi" class="g-conta" hidden></span></button>
                 <button type="button" class="g-scheda" data-scheda="proposte">Proposte<span id="conta-proposte" class="g-conta" hidden></span></button>
                 <button type="button" class="g-scheda" data-scheda="opere">Opere</button>
-                <button type="button" class="g-scheda" data-scheda="eventi">Eventi</button>
+                <button type="button" class="g-scheda" data-scheda="eventi">Eventi<span class="g-sviluppo">In sviluppo</span></button>
                 <button type="button" class="g-scheda" data-scheda="rullino">Rullino</button>
                 <button type="button" class="g-scheda" data-scheda="soci">Soci</button>
             </nav>
@@ -466,13 +466,41 @@
                         <label class="g-campo g-campo--largo">
                             <span>Pagina scritta a mano</span>
                             <input type="text" name="pagina" placeholder="blue-hour.html" pattern="[a-z0-9-]+\.html">
-                            <small>Solo per gli eventi che hanno ancora una pagina a parte (per esempio blue-hour.html). Appena l'evento ha una presentazione o un blocco, la sua pagina si compone da sola con i campi qui sotto e questo campo non serve più.</small>
+                            <small>Il nome del file della pagina dell'evento (per esempio blue-hour.html). Si compila quando la pagina è già online: da lì la scheda di Eventi porta alla pagina.</small>
                         </label>
                     </div>
                 </fieldset>
 
-                <!-- La testata della pagina dell'evento: logo, colore, racconto -->
                 <fieldset class="g-gruppo">
+                    <legend class="titoletto">Immagini</legend>
+                    <div class="g-griglia">
+                        <div class="g-campo g-immagine" data-campo="miniatura" data-cartella="eventi">
+                            <span>Miniatura (home ed Eventi)</span>
+                            <img class="g-anteprima" alt="" hidden>
+                            <div class="g-immagine-azioni">
+                                <label class="btn">Scegli immagine<input type="file" accept="image/*" hidden></label>
+                                <button type="button" class="btn g-togli" hidden>Togli</button>
+                            </div>
+                            <input type="hidden" name="miniatura">
+                            <small>La foto della scheda, se l'evento non ha un logo.</small>
+                        </div>
+                        <div class="g-campo g-immagine" data-campo="copertina" data-cartella="eventi">
+                            <span>Copertina</span>
+                            <img class="g-anteprima" alt="" hidden>
+                            <div class="g-immagine-azioni">
+                                <label class="btn">Scegli immagine<input type="file" accept="image/*" hidden></label>
+                                <button type="button" class="btn g-togli" hidden>Togli</button>
+                            </div>
+                            <input type="hidden" name="copertina">
+                        </div>
+                    </div>
+                </fieldset>
+
+                <!-- Pagine evento composte dal database: in pausa (MODELLO_EVENTI
+                     in dati.js). I due gruppi restano nel modulo, nascosti, così
+                     un salvataggio conserva quello che c'è già nel database. -->
+                <!-- La testata della pagina dell'evento: logo, colore, racconto -->
+                <fieldset class="g-gruppo" hidden>
                     <legend class="titoletto">Pagina dell'evento</legend>
                     <div class="g-griglia">
                         <div class="g-campo g-campo--largo">
@@ -518,7 +546,7 @@
                 </fieldset>
 
                 <!-- I blocchi sotto la testata: li disegna gestione-eventi.js -->
-                <fieldset class="g-gruppo">
+                <fieldset class="g-gruppo" hidden>
                     <legend class="titoletto">Blocchi</legend>
                     <p class="g-nota-blocchi">Sotto la testata, nell'ordine. Un programma è l'elenco di una serata (corti, ospiti, musica), con le foto accanto se ce ne sono; più programmi di fila diventano serate separate da un filo. Un testo è un racconto, con o senza titolo.</p>
                     <ol id="blocchi-evento" class="g-blocchi"></ol>
@@ -535,7 +563,7 @@
                     </label>
                     <div class="azioni">
                         <button type="submit" class="btn btn--pieno">Salva</button>
-                        <button type="button" class="btn" id="anteprima-evento">Anteprima</button>
+                        <button type="button" class="btn" id="anteprima-evento" hidden>Anteprima</button>
                         <button type="button" class="btn" data-annulla>Annulla</button>
                         <button type="button" class="btn g-elimina" data-elimina hidden>Elimina</button>
                     </div>
@@ -569,10 +597,10 @@
     <!-- Copia locale di supabase-js 2.117.3: niente codice da server esterni
          in una pagina con accesso (vedi la CSP in netlify.toml) -->
     <script src="assets/js/vendor/supabase-2.117.3.min.js"></script>
-    <script src="assets/js/dati.js?v=2026-11-12zi"></script>
-    <script src="assets/js/riservato.js?v=2026-11-12zi"></script>
-    <script src="assets/js/gestione.js?v=2026-11-12zi"></script>
-    <script src="assets/js/gestione-rullino.js?v=2026-11-12zi"></script>
-    <script src="assets/js/gestione-eventi.js?v=2026-11-12zi"></script>
+    <script src="assets/js/dati.js?v=2026-11-13zi"></script>
+    <script src="assets/js/riservato.js?v=2026-11-13zi"></script>
+    <script src="assets/js/gestione.js?v=2026-11-13zi"></script>
+    <script src="assets/js/gestione-rullino.js?v=2026-11-13zi"></script>
+    <script src="assets/js/gestione-eventi.js?v=2026-11-13zi"></script>
 </body>
 </html>

@@ -72,3 +72,7 @@ html:has(.pagina-eventi) { background: var(--blu); }
 html.evento-aperto { overflow: hidden; }
 html.evento-aperto .pagina-eventi { --barra: var(--chiaro); }
 html.evento-aperto .pagina-eventi .nav { color: var(--nero); }
+/* Su telefono, come nella sala del corto: la crocetta in basso a destra */
+@media (max-width: 639px) {
+  .sala-evento__chiudi { top: auto; bottom: calc(16px + env(safe-area-inset-bottom)); right: 16px; box-shadow: 0 0 0 3px var(--fondo); }
+}

@@ -34,13 +34,11 @@ licenze uguali al database.
 
 ## Da decidere con l'utente prima di unire
 
-1. **Short Talks #1 va online col modello.** L'utente decide dopo le sue
-   prove del modello degli eventi. Nel database ha già
-   presentazione e blocchi: dal deploy home, Eventi e rullino portano a
-   `evento.html?e=short-talks-1`. Nei controlli era identica al pixel alla
-   pagina scritta a mano, ma l'utente non l'ha ancora provata. In
-   alternativa si svuotano presentazione e blocchi (torna alla pagina
-   scritta a mano).
+1. ~~Short Talks #1 va online col modello~~ — deciso il 13 novembre: no.
+   Le pagine composte e la scheda Eventi della gestione sono ferme per
+   questo deploy; Short Talks #1 resta sulla pagina scritta a mano, coi
+   blocchi conservati nel database. Piano in
+   `storico/2026-11-13-piano-eventi-gestione.md`.
 2. ~~Contatti dal telefono~~ — risolto: "Contatti" è nel piede, sulla riga
    di Instagram e YouTube, su tutte le pagine (decisione dell'utente).
 
