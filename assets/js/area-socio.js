@@ -76,7 +76,7 @@ function mostraAccesso(messaggio = '', errore = false) {
    resto. Il segno resta nel browser finché non è scelta, così chi chiude la
    pagina a metà la ritrova chiesta, invece di entrare senza password. */
 const CHIAVE_PASSWORD_DA_SCEGLIERE = 'cdl-socio-scegli-password';
-const PASSWORD_MINIMA = 10; // caratteri
+const PASSWORD_MINIMA = 6; // caratteri
 
 function passwordDaScegliere(valore) {
   try {

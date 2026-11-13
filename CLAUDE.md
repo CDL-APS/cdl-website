@@ -42,9 +42,9 @@ Subito dopo il deploy:
 - [ ] Rigenerare dal sito online ("Nuovo collegamento", scheda Soci) i
   collegamenti dei soci creati in locale: puntano a `localhost`.
 - [ ] Supabase → Authentication: attivare "Secure password change" (in più:
-  codice obbligatorio e inviti negati ai redattori sono già nel database) e
-  portare la lunghezza minima delle password a 10 (Providers → Email), come
-  chiede l'area socio.
+  codice obbligatorio e inviti negati ai redattori sono già nel database).
+  La lunghezza minima delle password resta 6, quella di Supabase, come
+  chiede l'area socio (`PASSWORD_MINIMA`): scelta dell'utente, 13 novembre.
 - [ ] Ricaricare dalla gestione, come PNG, i titoli di Interzona, Quarto
   Livello, Relatività e Viva Revolution; poi togliere `TITOLI_GRAFICI` da
   `comune.js` e la cartella `assets/img/film/titoli/`.
