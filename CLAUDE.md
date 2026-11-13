@@ -28,10 +28,6 @@ Prima di unire:
   all'inizio della sessione dopo il 13 novembre. Se il branch cambia, il
   deploy di prova va ricaricato (`git archive` in una cartella pulita, poi
   `npx netlify-cli@17 deploy --dir . --site <id> --alias redesign`).
-- [ ] Applicare `supabase/migrations/20261113220000_file_proposte_nella_cartella_autore.sql`
-  (dalla seconda review; la conferma dal permesso automatico è stata
-  negata: l'utente la applica dal SQL Editor di Supabase o dà il permesso).
-  Non rompe niente: nessuna proposta inviata ha file.
 - [ ] Pull request `redesign` → `main`, unita da GitHub con l'account
   `cdl-aps` e un merge commit (vedi "Pubblicazione" più sotto).
 

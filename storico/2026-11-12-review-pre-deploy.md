@@ -142,7 +142,8 @@ rifiutato).
 
 **Corretti** (commit successivo): i tre testi di `gestione.js`, il README e
 la conferma di "Nuovo collegamento"; la regola dello spazio `proposte` in
-`20261113220000_file_proposte_nella_cartella_autore.sql` (da applicare).
+`20261113220000_file_proposte_nella_cartella_autore.sql` (applicata il 13
+novembre).
 
 **Giudizi** (nessuna urgenza): regola IMDb in quattro posti con regex non
 identiche (HTML `/.+`, SQL `/`, corto.js senza `indirizzoSicuro()` e con
