@@ -110,9 +110,12 @@ interno: `cortoteca.html` carica `pages/opera.css` (la sala del corto) ed
 Opere ed eventi stanno in un database **Supabase**, nell'organizzazione *CDL
 APS* (account `ciao@cdlaps.com`). Non si modificano più file né si fa un push:
 
-1. Vai su `cdlaps.com/gestione.html` e accedi con email e password.
-2. Scegli *Opere* o *Eventi*, poi *Nuova opera* / *Nuovo evento*, oppure
-   clicca su una voce esistente per modificarla.
+1. Vai su `cdlaps.com/gestione.html` e accedi con email, password e il
+   codice dell'app di autenticazione (al primo accesso la pagina chiede di
+   attivarla).
+2. Scegli *Opere*, poi *Nuova opera*, oppure clicca su un'opera esistente
+   per modificarla. La scheda *Eventi* è ferma ("In sviluppo"): per ora gli
+   eventi si cambiano dalla dashboard di Supabase.
 3. Compila i campi e scegli l'immagine: viene ridimensionata e caricata da
    sola.
 4. Spunta **Pubblicata** quando è pronta e salva. Senza spunta resta una
@@ -180,7 +183,11 @@ Gli account si creano dalla dashboard di Supabase: *Authentication* → *Users*
 da solo non basta: va anche aggiunto ai redattori, dal *Table Editor*, schema
 `privato`, tabella `redattori` (serve l'id dell'utente, che si copia dalla
 lista degli utenti). Le regole del database lasciano scrivere solo chi è in
-quella tabella.
+quella tabella, e solo con il codice dell'app di autenticazione: il redattore
+nuovo lo attiva al primo accesso, e chi cambia o perde il telefono va
+sbloccato da Supabase (*Authentication* → utente → fattori). Un redattore non
+può usare il collegamento dei soci: se vuole proporre corti come socio, usa
+un altro indirizzo nel libro soci.
 
 ### Copie di riserva
 

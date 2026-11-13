@@ -602,7 +602,7 @@ async function elencoProposte() {
   stato.proposte = data;
   mostraBozzeInCorso();
   if (!data.length) {
-    elenco.innerHTML = '<li class="g-vuoto">Nessuna proposta. I soci propongono dal loro collegamento personale: lo trovi nella scheda Soci.</li>';
+    elenco.innerHTML = '<li class="g-vuoto">Nessuna proposta. I soci propongono dall\'area socio: il collegamento per scegliere la password lo crei nella scheda Soci.</li>';
     return;
   }
 
@@ -738,7 +738,7 @@ $('elenco').addEventListener('click', async (e) => {
     return;
   }
   if (socio.ultimo_accesso &&
-      !confirm(`${socio.nome} ha già usato il suo collegamento e scelto una password. Un collegamento nuovo serve se l'ha dimenticata: gliene farà scegliere un'altra. Continuare?`)) {
+      !confirm(`${socio.nome} ha già aperto il suo collegamento. Un collegamento nuovo serve se non ha finito di scegliere la password o se l'ha dimenticata: gliene farà scegliere un'altra. Continuare?`)) {
     return;
   }
 
@@ -1262,7 +1262,7 @@ async function decidi(funzione, domanda, esito) {
     location.href = indirizzoPosta(
       proposta.socio_email,
       `Cortoteca: «${titolo}»`,
-      `Ciao ${(proposta.socio_nome || '').split(' ')[0]},\n\nabbiamo guardato «${titolo}».\n\n${nota.trim()}\n\nTrovi tutto nella tua pagina della Cortoteca, dal tuo collegamento personale.\n`
+      `Ciao ${(proposta.socio_nome || '').split(' ')[0]},\n\nabbiamo guardato «${titolo}».\n\n${nota.trim()}\n\nTrovi tutto nell'area socio: ${location.origin}/area-socio.html (entri con la tua email e la password).\n`
     );
   }
   mostraElenco();
@@ -1315,7 +1315,7 @@ $('modulo-opera').addEventListener('submit', async (e) => {
         location.href = indirizzoPosta(
           proposta.socio_email,
           `«${dati.titolo}» è in Cortoteca`,
-          `Ciao ${(proposta.socio_nome || '').split(' ')[0]},\n\n«${dati.titolo}» è in Cortoteca:\n${location.origin}/opera.html?film=${encodeURIComponent(codice)}\n\nLa ricevuta della licenza resta nella tua pagina, dal tuo collegamento personale. Da lì puoi anche ritirare il corto quando vuoi.\n`
+          `Ciao ${(proposta.socio_nome || '').split(' ')[0]},\n\n«${dati.titolo}» è in Cortoteca:\n${location.origin}/opera.html?film=${encodeURIComponent(codice)}\n\nLa ricevuta della licenza resta nell'area socio: ${location.origin}/area-socio.html (entri con la tua email e la password). Da lì puoi anche ritirare il corto quando vuoi.\n`
         );
       }
       mostraElenco();

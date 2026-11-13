@@ -28,6 +28,10 @@ Prima di unire:
   all'inizio della sessione dopo il 13 novembre. Se il branch cambia, il
   deploy di prova va ricaricato (`git archive` in una cartella pulita, poi
   `npx netlify-cli@17 deploy --dir . --site <id> --alias redesign`).
+- [ ] Applicare `supabase/migrations/20261113220000_file_proposte_nella_cartella_autore.sql`
+  (dalla seconda review; la conferma dal permesso automatico è stata
+  negata: l'utente la applica dal SQL Editor di Supabase o dà il permesso).
+  Non rompe niente: nessuna proposta inviata ha file.
 - [ ] Pull request `redesign` → `main`, unita da GitHub con l'account
   `cdl-aps` e un merge commit (vedi "Pubblicazione" più sotto).
 
@@ -49,10 +53,6 @@ Subito dopo il deploy:
   rispondere 301 verso `/area-socio.html`.
 - [ ] Rigenerare dal sito online ("Nuovo collegamento", scheda Soci) i
   collegamenti dei soci creati in locale: puntano a `localhost`.
-- [ ] Supabase → Authentication: attivare "Secure password change" (in più:
-  codice obbligatorio e inviti negati ai redattori sono già nel database).
-  La lunghezza minima delle password resta 6, quella di Supabase, come
-  chiede l'area socio (`PASSWORD_MINIMA`): scelta dell'utente, 13 novembre.
 - [ ] Ricaricare dalla gestione, come PNG, i titoli di Interzona, Quarto
   Livello, Relatività e Viva Revolution; poi togliere `TITOLI_GRAFICI` da
   `comune.js` e la cartella `assets/img/film/titoli/`.
@@ -214,7 +214,11 @@ Subito dopo il deploy:
     `supabase/functions/`, senza verifica del JWT) lo scambia con una
     sessione, la pagina chiede subito la password (obbligatoria anche se
     il socio chiude a metà: segno `cdl-socio-scegli-password` nel browser)
-    e chiude le altre sessioni del socio. Niente email automatiche: è una
+    e chiude le altre sessioni del socio. In Supabase → Authentication
+    restano la password minima di 6 caratteri (`PASSWORD_MINIMA`) e
+    "Secure password change" spento: con quella regola un socio che sceglie
+    la password più di 24 ore dopo aver aperto il collegamento verrebbe
+    rifiutato (scelta dell'utente, 13 novembre 2026). Niente email automatiche: è una
     scelta del direttivo;
   - il socio compila una proposta (`public.proposte`, contenuto in `dati`),
     sceglie se il corto si potrà guardare in Cortoteca (`dati.modalita`:

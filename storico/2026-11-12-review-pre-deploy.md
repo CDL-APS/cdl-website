@@ -135,10 +135,14 @@ alla sottoquery.
 - Conferma di "Nuovo collegamento": dice "ha scelto una password", ma
   `usato_il` dice solo che il collegamento è stato aperto.
 
-**Da decidere**: "Secure password change" (lista dopo il deploy) chiede di
-riautenticarsi per cambiare password se l'accesso ha più di 24 ore: un socio
-che apre il collegamento e sceglie la password il giorno dopo verrebbe
-rifiutato. Provarlo o non attivarlo.
+**Deciso** con l'utente: "Secure password change" resta spento (chiederebbe
+di riautenticarsi per cambiare password se l'accesso ha più di 24 ore: un
+socio che apre il collegamento e sceglie la password il giorno dopo verrebbe
+rifiutato).
+
+**Corretti** (commit successivo): i tre testi di `gestione.js`, il README e
+la conferma di "Nuovo collegamento"; la regola dello spazio `proposte` in
+`20261113220000_file_proposte_nella_cartella_autore.sql` (da applicare).
 
 **Giudizi** (nessuna urgenza): regola IMDb in quattro posti con regex non
 identiche (HTML `/.+`, SQL `/`, corto.js senza `indirizzoSicuro()` e con
