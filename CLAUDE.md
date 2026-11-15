@@ -19,9 +19,12 @@ Prima di unire:
 - [x] Review del diff `main...redesign` con `/code-review` e
   `/security-review` (12 e 13 novembre, rifatte il 13 sera sul lavoro
   nuovo): esiti in
-  `storico/2026-11-12-review-pre-deploy.md`. Richiesta dall'utente:
-  ricordargliela sempre prima di pubblicare; se dopo questa data si
-  aggiunge altro lavoro al branch, va rifatta sul nuovo.
+  `storico/2026-11-12-review-pre-deploy.md`. Fatte: non vanno rifatte per
+  ritocchi grafici, di impaginazione o di testi (come quelli del 15
+  novembre: icona della home, lente del rullino, Prossimamente, scheda del
+  corto). Si rifanno solo se il branch riceve lavoro sostanziale: nuove
+  funzioni, dati, permessi, Supabase, header di sicurezza (decisione
+  dell'utente, 15 novembre 2026).
 - [ ] Prove sul deploy di prova `https://redesign--cdl-aps.netlify.app`
   (caricato a mano con la CLI di Netlify, senza `--prod`), seguendo
   `storico/2026-11-14-prove-sito-online.md`. Da ricordare all'utente
@@ -265,10 +268,16 @@ Subito dopo il deploy:
     cambiano in gestione. Senza video e senza `solo_scheda` la pagina del
     corto dice "Streaming in arrivo";
   - il **titolo grafico** sul sito (`titoloGrafico()` in `comune.js`, in
-    galleria, sala, pagina del corto e primo piano di Produzioni): prima
+    galleria, nella pagina del corto sotto la copertina e in Prossimamente
+    di Produzioni; nelle schede di Produzioni il titolo resta scritto, per
+    leggibilità): prima
     `titolo_png`, poi `titolo_font` (caricato con `FontFace` dallo spazio
     `immagini`), poi gli SVG provvisori in `assets/img/film/titoli/` per i
-    codici di `TITOLI_GRAFICI`, poi il titolo in Montserrat. Quei quattro
+    codici di `TITOLI_GRAFICI`, poi il titolo in Montserrat. Nella pagina
+    del corto l'immagine passa da
+    `ritagliaTitolo()`, che toglie i margini trasparenti del file (tutti i
+    titoli vengono della stessa altezza, `--alto`) e segna i disegni scuri.
+    Quei quattro
     SVG (Interzona, Quarto Livello, Relatività, Viva Revolution) vanno
     ricaricati dalla gestione come PNG, poi si tolgono `TITOLI_GRAFICI` e i
     file;
@@ -280,6 +289,14 @@ Subito dopo il deploy:
     l'opera ha un colore, anche il titolo grafico lo prende (galleria, sala,
     pagina del corto: l'immagine fa da maschera); in Produzioni resta nero
     (`colora: false`).
+  - la **pagina del corto**: copertina pulita (il fotogramma, senza
+    scritte), sotto titolo, tagline e logline (la colonna `sinossi`), a
+    destra i dati; dove la produzione è CDL c'è il marchio, alto quanto le
+    maiuscole. La tagline va a capo dopo la prima virgola, se prima non
+    finisce già una frase. Note di regia su tutta la larghezza; poi il Cast
+    (attore e personaggio, da `interpreti`) e i Crediti della troupe, un nome
+    per riga (i valori separati da virgole diventano un elenco). Un titolo
+    grafico scuro diventa bianco, uno con `colore` prende `--titolo`.
 - **Dashboard di gestione**: la prima scheda di `gestione.html`. "Da
   sistemare" compare solo lì e contiene solo ciò che chiede un'azione: le
   informazioni vanno altrove (ritiri e revoche fra le ultime attività, i
@@ -303,7 +320,10 @@ Subito dopo il deploy:
   indietro, Esc e la crocetta chiudono. Per questo `cortoteca.html` contiene
   il modello della pagina del corto (`<template id="modello-corto">`, da
   tenere allineato a `opera.html`) ed `eventi.html` scarica il `<main>`
-  delle pagine evento. Dalla home, il clic su Eventi, Produzioni o Cortoteca
+  delle pagine evento. Da Produzioni, il clic su un corto fa volare il
+  fotogramma al posto della copertina di `opera.html`
+  (`passaggioScheda` in `produzioni.js`, segno `cdl-passaggio-scheda` in
+  `sessionStorage`). Dalla home, il clic su Eventi, Produzioni o Cortoteca
   allarga il colore della sezione prima di cambiare pagina. Con
   `prefers-reduced-motion` i passaggi diventano cambi di pagina e i rullini
   restano fermi.
@@ -345,7 +365,7 @@ Subito dopo il deploy:
   dal modulo di gestione): l'ultima edizione con `long-story-short` va in
   evidenza col lettering, `short-talks` ha un blocco suo, gli eventi senza
   serie finiscono in "Altri eventi".
-- La pagina Produzioni mette in evidenza il lavoro più recente, poi il
+- La pagina Produzioni mette in "Prossimamente" il lavoro più recente, poi il
   blocco delle produzioni originali (`produzione_cdl`) e quello delle
   collaborazioni (`collaborazione_cdl`, nascosto finché è vuoto). Le due
   colonne di `opere` si escludono (vincolo nel database). Le schede
@@ -354,7 +374,7 @@ Subito dopo il deploy:
   pagina a tutta larghezza (`.parola` con `.fit`, misurato da `adatta()`) e
   una presentazione (`.presentazione`) chiusa da un filo.
 - La home ha quattro parti: l'apertura sulla sala vista dall'alto, al buio,
-  con la torcia che segue il puntatore e il nastro delle ultime notizie;
+  con l'icona CDL (`assets/img/brand/icona-cdl.png`), la torcia che segue il puntatore e il nastro delle ultime notizie;
   l'indice (Eventi, Produzioni, Cortoteca tutti dello stesso corpo, centrati
   e misurati sul disegno delle lettere con `data-preciso` e `data-uguali`:
   il nome più lungo tocca i margini; nel cambio di pagina il nome
@@ -363,7 +383,10 @@ Subito dopo il deploy:
   il rullino di fotografie, senza titolo; Sostieni in arancio. Nastro,
   elenchi e rullino li riempie `home.js`; il testo della quota ridotta del
   nastro sta in `data-quota`, nell'HTML.
-- **Il rullino della home** si sceglie in gestione, scheda Rullino (tabella
+- **Il rullino della home**: fermandosi sopra una foto per 1,5 secondi
+  (`ATTESA_LENTE` in `home.js`, solo con un puntatore vero) la foto si
+  ingrandisce di una volta e mezza e mostra la didascalia (evento e data,
+  corto e produzione, o la descrizione). Si sceglie in gestione, scheda Rullino (tabella
   `public.rullino`, `20261112200000_rullino_home.sql`; copia di riserva
   `data/rullino.json`, da aggiornare a mano come le altre). Tre
   provenienze: le gallerie delle pagine evento (lette dall'HTML della

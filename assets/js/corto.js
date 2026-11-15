@@ -1,15 +1,18 @@
 /* ==========================================================================
    LA PAGINA DEL CORTO — la riempie mostraCorto(), usata da opera.html e
    dalla sala della Cortoteca (lo stesso modello HTML, in una <template>).
-   In alto lo schermo: il fotogramma col titolo grafico; se il corto è in
-   streaming lo schermo è anche il lettore. Sotto frase, sinossi, dati, note
-   di regia e crediti. Si appoggia a dati.js e comune.js.
+   In alto lo schermo, la copertina: il fotogramma pulito; se il corto è in
+   streaming lo schermo è anche il lettore. Sotto, a sinistra, il titolo
+   (grafico se c'è), la tagline e la logline (la sinossi); a destra i dati.
+   Poi le note di regia, per tutta la larghezza, il cast (attore e
+   personaggio) e i crediti della troupe, un nome per riga. Si appoggia a
+   dati.js e comune.js.
    ========================================================================== */
 
 /* I crediti, nell'ordine in cui compaiono. Regia e produzione stanno già
    nei dati accanto alla sinossi. La chiave è la colonna di opere; i ruoli
    vuoti si saltano. Poi vengono i ruoli senza colonna (altri_ruoli), nel
-   loro ordine, e il cast. */
+   loro ordine. Il cast ha una sezione sua. */
 const CREDITI = [
   ['Produttore', 'produttore'],
   ['Fotografia', 'fotografia'],
@@ -72,8 +75,7 @@ function coloraCorto(o, radice) {
   else if (!o.titolo_png && !o.titolo_font && TITOLI_GRAFICI.has(o.codice)) coloreTitolo(o.codice).then(applica).catch(console.error);
 }
 
-/* Lo schermo del corto come lettore. Il fotogramma col titolo fa da
-   copertina; toccando lo schermo (o con Invio) il video parte e la
+/* Lo schermo del corto come lettore. Il fotogramma fa da copertina; toccando lo schermo (o con Invio) il video parte e la
    copertina si dissolve. Arrivando dalla Cortoteca col passaggio parte da
    solo, appena ricomparso il titolo: dove il browser non lascia partire un
    video con l'audio senza un tocco su questa pagina, resta il lettore
@@ -112,6 +114,16 @@ function lettore(schermo, embed, titolo, ritardo = null) {
   if (ritardo !== null) setTimeout(avvia, FERMO ? 0 : ritardo);
 }
 
+/* La produzione nei dati del corto: dove c'è CDL (da sola, o fra più
+   case separate da virgole) al posto della scritta va il marchio, alto
+   quanto le maiuscole del testo accanto (vedi .logo--testo in opera.css) */
+function vocePresentata(nome, valore) {
+  if (!pieno(valore)) return '';
+  const produttori = String(valore).split(/\s*,\s*/).filter(pieno)
+    .map((c) => (/^CDL(\s+APS)?$/i.test(c) ? `<span class="logo logo--testo" role="img" aria-label="${esc(c)}"></span>` : esc(c)));
+  return `<div><dt>${esc(nome)}</dt><dd>${produttori.join(', ')}</dd></div>`;
+}
+
 /* I marchi di Letterboxd (i tre punti) e IMDb (la targa gialla), disegnati
    qui come le altre icone del sito, per i collegamenti della pagina del corto */
 const MARCHIO_LETTERBOXD = '<svg class="marchio-servizio" viewBox="0 0 46 18" aria-hidden="true"><circle cx="9" cy="9" r="8" fill="#ff8000"/><circle cx="23" cy="9" r="8" fill="#00e054"/><circle cx="37" cy="9" r="8" fill="#40bcf4"/></svg>';
@@ -122,16 +134,32 @@ const MARCHIO_IMDB = '<svg class="marchio-servizio marchio-servizio--imdb" viewB
    ritardoAvvio il video parte da solo dopo quel tempo. */
 function mostraCorto(o, radice, ritardoAvvio = null) {
   document.title = `${o.titolo} – CDL APS`;
-  document.getElementById('titolo-corto').textContent = o.titolo;
   coloraCorto(o, radice);
 
-  // Lo schermo: il fotogramma col titolo grafico (o scritto)
+  // Lo schermo: il fotogramma, senza scritte
   const schermo = document.getElementById('schermo');
   schermo.querySelector('.cornice').append(nuovaImmagine(o.fotogramma));
-  document.getElementById('schermo-titolo').replaceChildren(
-    titoloGrafico(o, { classe: 'targa__titolo', alt: '' }) || titoloScritto(o, 'targa__titolo'));
+  // Sotto, il titolo: grafico (l'immagine ha il titolo come alt), o scritto.
+  // Sul fondo nero il titolo grafico prende il colore della pagina (--titolo)
+  // se l'opera ne ha uno, o se il disegno è troppo scuro (vedi opera.css)
+  const grafica = titoloGrafico(o, { classe: 'corto__titolo-font', colora: false });
+  const titolo = document.getElementById('titolo-corto');
+  if (grafica && grafica.tagName === 'IMG') {
+    const riquadro = ritagliaTitolo(grafica);
+    riquadro.classList.toggle('is-tinto', /^#[0-9a-f]{6}$/i.test(o.colore || ''));
+    titolo.replaceChildren(riquadro);
+  } else if (grafica) titolo.replaceChildren(grafica);
+  else titolo.textContent = o.titolo;
+  titolo.classList.toggle('corto__titolo--grafico', Boolean(grafica));
 
-  document.getElementById('corto-frase').textContent = o.tagline || '';
+  // La tagline va a capo dopo la prima virgola quando la virgola divide la
+  // frase in due ("Non c'eri per l'inizio, / non ci sarai per la fine."):
+  // non se prima della virgola una frase è già finita ("Andiamo al mare. Sì, …")
+  const frase = document.getElementById('corto-frase');
+  const virgola = (o.tagline || '').search(/,\s/);
+  if (virgola > 0 && !/[.!?…]\s/.test(o.tagline.slice(0, virgola))) {
+    frase.replaceChildren(o.tagline.slice(0, virgola + 1), document.createElement('br'), o.tagline.slice(virgola + 1).trim());
+  } else frase.textContent = o.tagline || '';
   document.getElementById('corto-sinossi').textContent = o.sinossi || '';
 
   // In streaming lo schermo è già il lettore; senza video lo schermo resta
@@ -162,7 +190,7 @@ function mostraCorto(o, radice, ritardoAvvio = null) {
     voce('Anno', o.anno),
     voce('Genere', (o.generi || []).map((g) => g.charAt(0).toUpperCase() + g.slice(1)).join(', ')),
     voce('Durata', durata(o)),
-    voce('Produzione', o.produzione),
+    vocePresentata('Produzione', o.produzione),
   ].join('');
   document.getElementById('corto').hidden = false;
 
@@ -173,16 +201,30 @@ function mostraCorto(o, radice, ritardoAvvio = null) {
     document.getElementById('blocco-note').hidden = false;
   }
 
+  // Cast e troupe: un nome per riga, senza virgole. Un ruolo con più nomi
+  // (scritti nel modulo separati da virgole) diventa un elenco.
+  const elenco = (nome, nomi, classe = '') => {
+    const righe = nomi.filter(pieno);
+    return righe.length ? `<div${classe ? ` class="${classe}"` : ''}><dt>${esc(nome)}</dt>${righe.map((n) => `<dd>${esc(n)}</dd>`).join('')}</div>` : '';
+  };
+  const nomi = (valore) => (pieno(valore) ? String(valore).split(/\s*[,;\n]\s*/) : []);
   const altri = (Array.isArray(o.altri_ruoli) ? o.altri_ruoli : [])
     .filter((r) => r && pieno(r.ruolo) && pieno(r.nome));
-  const interpreti = (o.interpreti || []).map((i) => (i.ruolo ? `${i.nome} (${i.ruolo})` : i.nome)).join(', ');
   const crediti = [
-    ...CREDITI.map(([nome, colonna]) => voce(nome, o[colonna])),
-    ...altri.map((r) => voce(r.ruolo, r.nome)),
-    voce('Interpreti', interpreti, 'crediti__interpreti'), // lungo: su telefono prende tutta la riga
+    ...CREDITI.map(([nome, colonna]) => elenco(nome, nomi(o[colonna]))),
+    ...altri.map((r) => elenco(r.ruolo, nomi(r.nome))),
   ].join('');
   if (crediti) {
     document.getElementById('crediti').innerHTML = crediti;
     document.getElementById('blocco-crediti').hidden = false;
+  }
+
+  // Il cast: l'attore in grande e, sotto, il personaggio, nell'ordine scelto
+  // in gestione (posizione)
+  const interpreti = (o.interpreti || []).filter((i) => i && pieno(i.nome));
+  if (interpreti.length) {
+    document.getElementById('cast').innerHTML = interpreti.map((i) =>
+      `<li><span class="cast__nome">${esc(i.nome)}</span>${pieno(i.ruolo) ? `<span class="cast__ruolo">${esc(i.ruolo)}</span>` : ''}</li>`).join('');
+    document.getElementById('blocco-cast').hidden = false;
   }
 }

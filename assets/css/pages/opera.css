@@ -3,8 +3,9 @@
    anche questo foglio)
    Fondo nero; il colore è quello del corto (--titolo, messo da corto.js:
    la colonna colore, o il colore del titolo grafico, o --cortoteca). In alto lo
-   schermo: il fotogramma col titolo, con le stesse proporzioni della
-   galleria, perché il passaggio dalla Cortoteca sia solo un ingrandimento.
+   schermo: il fotogramma pulito, con le stesse proporzioni della galleria,
+   perché il passaggio dalla Cortoteca (e da Produzioni) sia solo un
+   ingrandimento.
    ========================================================================== */
 .pagina-corto {
   --fondo: var(--nero-sala); --barra: var(--nero-sala); --inchiostro: var(--chiaro);
@@ -20,28 +21,19 @@ html:has(.pagina-corto) { background: var(--nero-sala); }
 .hero--corto { padding-bottom: 0; }
 
 /* --------------------------------------------------------------------------
-   Lo schermo: le stesse proporzioni della targa in galleria
+   Lo schermo: le stesse proporzioni della still in galleria
    -------------------------------------------------------------------------- */
 .schermo { --r-still: 14px; }
-.schermo .targa {
-  inset: 0;
-  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
-  padding: 7% 10%; border-radius: 0; background: none; color: var(--chiaro); text-align: center;
-  opacity: 1; translate: none;
-  animation: affiora 0.6s ease-out 0.15s both;
-}
-.schermo .targa__titolo { font-size: clamp(36px, 5vw, 72px); line-height: 0.95; }
 .schermo iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
 
-/* Lo schermo come lettore: la copertina (fotogramma e titolo) sta sopra il
+/* Lo schermo come lettore: la copertina (il fotogramma) sta sopra il
    video e si dissolve quando parte. Al passaggio il puntatore lascia il
    posto al disco "Guarda". */
 .schermo--lettore { cursor: pointer; }
 .schermo--lettore:focus-visible { outline: 3px solid var(--titolo); outline-offset: 4px; }
-.schermo .cornice img, .schermo .targa, .schermo__play { transition: opacity 0.5s var(--ease); }
-.schermo.is-in-onda .cornice img, .schermo.is-in-onda .targa, .schermo.is-in-onda .schermo__play { opacity: 0; pointer-events: none; }
+.schermo .cornice img, .schermo__play { transition: opacity 0.5s var(--ease); }
+.schermo.is-in-onda .cornice img, .schermo.is-in-onda .schermo__play { opacity: 0; pointer-events: none; }
 .schermo .cornice img { z-index: 1; }
-.schermo .targa { z-index: 2; }
 .schermo__play { z-index: 2; background: var(--titolo); color: var(--sul-titolo, var(--nero)); }
 @media (hover: hover) and (pointer: fine) {
   .schermo--lettore[data-cursore]:hover { cursor: none; }
@@ -50,11 +42,26 @@ html:has(.pagina-corto) { background: var(--nero-sala); }
 .schermo__attesa { z-index: 2; border: 2px solid var(--titolo); background: var(--nero-sala); color: var(--titolo); }
 
 /* --------------------------------------------------------------------------
-   Il corto: la frase e la sinossi a sinistra, i dati a destra; sotto le
-   note di regia e i crediti
+   Il corto: sotto la copertina, a sinistra, il titolo (grafico se c'è), la
+   tagline e la logline; i dati a destra. Sotto le note di regia, per tutta
+   la larghezza, e i crediti, un nome per riga.
    -------------------------------------------------------------------------- */
 .corto { align-items: start; }
 .corto[hidden] { display: none; }
+.corto__titolo { margin: 0 0 clamp(20px, 2.4vw, 36px); font-size: clamp(40px, 5.4vw, 80px); line-height: 0.92; color: var(--titolo); overflow-wrap: anywhere; }
+/* Il titolo grafico: tutti della stessa altezza, appoggiati a sinistra (la
+   larghezza segue il disegno, al massimo quella della colonna) */
+.corto__titolo--grafico { --alto: clamp(120px, 15vw, 230px); }
+.corto__titolo--grafico img { display: block; width: auto; max-width: 100%; height: var(--alto); object-fit: contain; }
+/* Ricolorato: l'immagine fa da maschera a un fondo pieno (come in
+   titoloGrafico). Se l'opera ha un colore, prende quello della pagina; se
+   no, un disegno che sul nero non si vedrebbe (is-scuro) diventa bianco */
+.corto__titolo :is(.is-tinto, .is-scuro) img {
+  background-color: var(--chiaro); object-position: -99999px 0;
+  -webkit-mask: var(--disegno) center / contain no-repeat; mask: var(--disegno) center / contain no-repeat;
+}
+.corto__titolo .is-tinto img { background-color: var(--titolo); }
+.corto__titolo .corto__titolo-font { display: block; font-size: 1.15em; line-height: 1; }
 .corto__frase { font-size: clamp(24px, 2.6vw, 38px); font-weight: 600; line-height: 1.22; letter-spacing: -0.01em; color: var(--titolo); }
 .corto__sinossi { margin-top: 20px; max-width: 60ch; font-size: 17px; line-height: 1.6; color: var(--tenue); }
 .corto .btn-riga { margin-top: 28px; }
@@ -66,16 +73,26 @@ html:has(.pagina-corto) { background: var(--nero-sala); }
 .corto__dati, .crediti { display: grid; gap: 14px; }
 .corto__dati { padding-top: 14px; border-top: 2px solid var(--titolo); }
 .corto__dati dt, .crediti dt { font-size: 14px; color: var(--titolo); }
+/* Il marchio CDL al posto della scritta, nella riga Produzione: alto quanto
+   le maiuscole del testo (0,7 em in Montserrat) e posato sulla linea di base */
+.logo--testo { display: inline-block; vertical-align: baseline; height: 0.7em; width: auto; color: currentColor; }
 .corto__dati dd, .crediti dd { margin: 2px 0 0; font-size: 17px; font-weight: 600; }
 .crediti { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px var(--gap); }
 .crediti > div { padding-top: 12px; border-top: 1px solid var(--filo); }
-.note-regia { display: grid; gap: 1em; max-width: 68ch; font-size: 17px; line-height: 1.6; color: var(--tenue); }
+
+/* Il cast: quattro colonne, l'attore in grande e il personaggio sotto, nel
+   colore del corto; un filo sopra ogni nome come nei crediti */
+.cast { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 22px var(--gap); }
+.cast li { display: grid; gap: 4px; align-content: start; padding-top: 12px; border-top: 1px solid var(--filo); }
+.cast__nome { font-size: clamp(17px, 1.45vw, 21px); font-weight: 700; line-height: 1.2; }
+.cast__ruolo { font-size: 14px; line-height: 1.35; color: var(--titolo); }
+/* Le note di regia per esteso, su tutta la larghezza del contenuto */
+.note-regia { display: grid; gap: 1em; font-size: clamp(17px, 1.35vw, 19px); line-height: 1.6; color: var(--tenue); }
 
 /* Pagina del corto: il colore del corto anche per le piccole intestazioni */
 .pagina-corto .blocco-pagina__testa { color: var(--titolo); }
 
 @media (max-width: 1023px) {
   .corto__testo, .corto__dati { grid-column: 1 / -1; }
-  .crediti { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .crediti > .crediti__interpreti { grid-column: 1 / -1; }
+  .crediti, .cast { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }

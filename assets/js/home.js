@@ -59,6 +59,53 @@ function indirizzoRullino(foto, eventi, opere) {
   return paginaEvento({ pagina: foto.pagina });
 }
 
+/* La didascalia di una foto del rullino: l'evento e la sua data, il corto
+   e chi l'ha fatto, o per le altre foto la loro descrizione */
+function didascaliaRullino(foto, eventi, opere) {
+  const evento = foto.evento_id && eventi.find((e) => e.id === foto.evento_id);
+  if (evento) return [evento.titolo, evento.data_inizio ? dataLunga(evento.data_inizio) : ''];
+  const opera = foto.opera_id && opere.find((o) => o.id === foto.opera_id);
+  if (opera) {
+    const chi = opera.produzione_cdl ? 'Produzione CDL' : opera.collaborazione_cdl ? 'Collaborazione CDL' : 'Cortoteca';
+    return [opera.titolo, [chi, opera.anno].filter(Boolean).join(', ')];
+  }
+  return [foto.descrizione || '', ''];
+}
+
+/* Fermandosi con il puntatore su una foto del rullino per un secondo e
+   mezzo, la foto si ingrandisce di una volta e mezza, sopra le vicine, e
+   al piede compare la didascalia. Il punto da cui cresce si sposta verso
+   l'interno vicino ai bordi della finestra, perché resti tutta visibile.
+   Solo con un puntatore vero: sul telefono il dito tocca e apre. */
+const ATTESA_LENTE = 1500;
+
+function preparaLente(blocco) {
+  if (!PUNTATORE) return;
+  blocco.querySelectorAll('.scorre__pista > .cornice').forEach((cornice) => {
+    let attesa = null;
+    cornice.addEventListener('pointerenter', () => {
+      clearTimeout(attesa);
+      attesa = setTimeout(() => {
+        const r = cornice.getBoundingClientRect();
+        const margine = 16;
+        // con l'origine a ox px dal bordo sinistro la foto ingrandita va da
+        // r.left - ox/2 a r.left + 1.5 larghezza - ox/2
+        const minimo = 2 * (r.left + 1.5 * r.width - innerWidth + margine);
+        const massimo = 2 * (r.left - margine);
+        const ox = Math.min(r.width, Math.max(0, Math.min(massimo, Math.max(minimo, r.width / 2))));
+        cornice.style.transformOrigin = `${ox.toFixed(1)}px 50%`;
+        cornice.classList.add('is-lente');
+        blocco.classList.add('ha-lente');
+      }, ATTESA_LENTE);
+    });
+    cornice.addEventListener('pointerleave', () => {
+      clearTimeout(attesa);
+      cornice.classList.remove('is-lente');
+      if (!blocco.querySelector('.is-lente')) blocco.classList.remove('ha-lente');
+    });
+  });
+}
+
 function riempiRullino(rullino, eventi, opere) {
   const blocco = document.getElementById('sale');
   const pista = blocco.querySelector('.scorre__pista');
@@ -77,10 +124,27 @@ function riempiRullino(rullino, eventi, opere) {
     }
     img.loading = 'lazy';
     cornice.append(img);
+    const [titolo, dettaglio] = didascaliaRullino(foto, eventi, opere);
+    if (titolo) {
+      // la didascalia ripete in chiaro il collegamento: per i lettori di schermo basta l'alt
+      const didascalia = document.createElement('span');
+      didascalia.className = 'didascalia';
+      didascalia.setAttribute('aria-hidden', 'true');
+      const forte = document.createElement('strong');
+      forte.textContent = titolo;
+      didascalia.append(forte);
+      if (dettaglio) {
+        const piccolo = document.createElement('small');
+        piccolo.textContent = dettaglio;
+        didascalia.append(piccolo);
+      }
+      cornice.append(didascalia);
+    }
     return cornice;
   }));
   blocco.hidden = !rullino.length;
   preparaScorre(blocco);
+  preparaLente(blocco);
 }
 
 function meseAnno(giorno) {

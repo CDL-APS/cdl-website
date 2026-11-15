@@ -12,10 +12,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800;900&display=swap">
-    <link rel="stylesheet" href="assets/css/base.css?v=2026-11-13zm">
-    <link rel="stylesheet" href="assets/css/components.css?v=2026-11-13zm">
-    <link rel="stylesheet" href="assets/css/pages/opera.css?v=2026-11-13zm">
-    <link rel="stylesheet" href="assets/css/pages/cortoteca.css?v=2026-11-13zm">
+    <link rel="stylesheet" href="assets/css/base.css?v=2026-11-15b">
+    <link rel="stylesheet" href="assets/css/components.css?v=2026-11-15b">
+    <link rel="stylesheet" href="assets/css/pages/opera.css?v=2026-11-15b">
+    <link rel="stylesheet" href="assets/css/pages/cortoteca.css?v=2026-11-15b">
 </head>
 <body class="fondo-sala stanza barra-ridotta">
 
@@ -62,17 +62,17 @@
 
         <section class="hero hero--corto">
             <div class="wrap">
-                <h1 class="sr-only" id="titolo-corto">Opera</h1>
                 <div class="still schermo" id="schermo">
                     <span class="cornice"></span>
-                    <span class="targa" id="schermo-titolo"></span>
                 </div>
             </div>
         </section>
 
         <section class="blocco-pagina entra" aria-label="Il corto">
             <div class="wrap grid corto" id="corto" hidden>
+                <!-- sotto la copertina: titolo (grafico, se c'è), tagline, logline -->
                 <div class="corto__testo span-7">
+                    <h1 class="corto__titolo" id="titolo-corto">Opera</h1>
                     <p class="corto__frase" id="corto-frase"></p>
                     <p class="corto__sinossi" id="corto-sinossi"></p>
                     <div class="btn-riga" id="corto-azioni" hidden></div>
@@ -88,6 +88,13 @@
             <div class="wrap">
                 <h2 class="blocco-pagina__testa" id="titolo-note">Note di regia</h2>
                 <div class="note-regia" id="note-regia"></div>
+            </div>
+        </section>
+
+        <section class="blocco-pagina blocco-pagina--diviso entra" aria-labelledby="titolo-cast" id="blocco-cast" hidden>
+            <div class="wrap">
+                <h2 class="blocco-pagina__testa" id="titolo-cast">Cast</h2>
+                <ul class="cast" id="cast"></ul>
             </div>
         </section>
 
@@ -126,9 +133,9 @@
         </div>
     </footer>
 
-    <script src="assets/js/dati.js?v=2026-11-13zm"></script>
-    <script src="assets/js/comune.js?v=2026-11-13zm"></script>
-    <script src="assets/js/corto.js?v=2026-11-13zm"></script>
-    <script src="assets/js/cortoteca.js?v=2026-11-13zm"></script>
+    <script src="assets/js/dati.js?v=2026-11-15b"></script>
+    <script src="assets/js/comune.js?v=2026-11-15b"></script>
+    <script src="assets/js/corto.js?v=2026-11-15b"></script>
+    <script src="assets/js/cortoteca.js?v=2026-11-15b"></script>
 </body>
 </html>

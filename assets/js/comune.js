@@ -293,6 +293,67 @@ function titoloGrafico(opera, { classe = '', alt = opera.titolo, colora = true }
   return null;
 }
 
+/* ---- Il titolo grafico senza i margini vuoti del file: i PNG e gli SVG
+   dei titoli hanno spesso molto spazio trasparente intorno, diverso da un
+   corto all'altro, e a parità di riquadro i disegni verrebbero di misure
+   diverse. Una copia dell'immagine, disegnata su una tela, dice dove sta
+   il disegno; il riquadro (.titolo-ritagliato) prende le sue proporzioni e
+   l'immagine vi si sposta dentro (components.css). L'altezza la dà --alto,
+   messa dalla pagina. Dalla stessa lettura si sa se il disegno è scuro
+   (is-scuro: su un fondo nero non si vedrebbe) e --disegno porta
+   l'immagine, per chi la vuole usare come maschera e ricolorarla (la
+   pagina del corto). Se la copia non si può leggere (un indirizzo senza
+   CORS) il titolo resta com'è. ---- */
+function ritagliaTitolo(img) {
+  const riquadro = document.createElement('span');
+  riquadro.className = 'titolo-ritagliato';
+  riquadro.style.setProperty('--disegno', `url(${JSON.stringify(img.src)})`);
+  riquadro.append(img);
+  const sonda = new Image();
+  sonda.crossOrigin = 'anonymous';
+  sonda.onload = () => {
+    try {
+      const scala = Math.min(1, 600 / Math.max(sonda.naturalWidth, sonda.naturalHeight));
+      const w = Math.max(1, Math.round(sonda.naturalWidth * scala));
+      const h = Math.max(1, Math.round(sonda.naturalHeight * scala));
+      const tela = document.createElement('canvas');
+      tela.width = w;
+      tela.height = h;
+      const ctx = tela.getContext('2d', { willReadFrequently: true });
+      ctx.drawImage(sonda, 0, 0, w, h);
+      const { data } = ctx.getImageData(0, 0, w, h);
+      let x0 = w, y0 = h, x1 = -1, y1 = -1, luce = 0, pieni = 0;
+      for (let y = 0; y < h; y++) {
+        for (let x = 0; x < w; x++) {
+          const i = (y * w + x) * 4;
+          if (data[i + 3] > 24) {
+            if (x < x0) x0 = x;
+            if (x > x1) x1 = x;
+            if (y < y0) y0 = y;
+            if (y > y1) y1 = y;
+            luce += (0.2126 * data[i] + 0.7152 * data[i + 1] + 0.0722 * data[i + 2]) / 255;
+            pieni++;
+          }
+        }
+      }
+      if (x1 < 0) return;
+      // la stessa soglia di coloraCorto (corto.js) per un colore che sul nero non si legge
+      riquadro.classList.toggle('is-scuro', luce / pieni <= 0.12);
+      const bw = (x1 + 1 - x0) / w;
+      const bh = (y1 + 1 - y0) / h;
+      if (bw > 0.97 && bh > 0.97) return; // già senza margini
+      riquadro.style.setProperty('--l', (x0 / w).toFixed(4));
+      riquadro.style.setProperty('--t', (y0 / h).toFixed(4));
+      riquadro.style.setProperty('--w', bw.toFixed(4));
+      riquadro.style.setProperty('--h', bh.toFixed(4));
+      riquadro.style.setProperty('--rapporto', ((bw * w) / (bh * h)).toFixed(4));
+      riquadro.classList.add('is-ritagliato');
+    } catch (errore) { /* immagine non leggibile: resta com'è */ }
+  };
+  sonda.src = img.src;
+  return riquadro;
+}
+
 // Il carattere del titolo, caricato una volta sola per opera
 function caricaCarattereTitolo(opera) {
   if (!caratteriTitolo.has(opera.codice)) {

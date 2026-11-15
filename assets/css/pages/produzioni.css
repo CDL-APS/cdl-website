@@ -1,7 +1,7 @@
 /* ==========================================================================
    PRODUZIONI (produzioni.html)
    Lilla pieno con le scritte nere; anche la barra prende il colore. In
-   evidenza il lavoro più recente, poi le produzioni originali e le
+   Prossimamente il lavoro più recente, poi le produzioni originali e le
    collaborazioni (il blocco compare con la prima).
    ========================================================================== */
 .pagina-produzioni {
@@ -12,10 +12,12 @@
 html:has(.pagina-produzioni) { background: var(--lilla); }
 .pagina-produzioni .nav__voce[aria-current]::before { background: var(--nero); }
 
-/* In evidenza: il fotogramma grande e, a fianco, quel che serve sapere */
+/* Prossimamente: il fotogramma grande e, a fianco, quel che serve sapere */
 .primo-piano { align-items: stretch; }
 .primo-piano[hidden] { display: none; }
-.primo-piano > .cornice { aspect-ratio: 16 / 10; border-radius: 0; }
+/* larga quanto la sua colonna: col testo più alto del 16:10 (un titolo
+   grafico alto) le proporzioni la farebbero uscire sopra il testo */
+.primo-piano > .cornice { aspect-ratio: 16 / 10; width: 100%; min-width: 0; border-radius: 0; }
 .primo-piano__testo { display: flex; flex-direction: column; gap: 12px; padding-top: 14px; border-top: 2px solid var(--inchiostro); }
 .primo-piano__titolo { font-size: clamp(36px, 4.2vw, 64px); line-height: 0.92; }
 .primo-piano__frase { font-size: clamp(17px, 1.4vw, 20px); font-weight: 600; line-height: 1.4; }

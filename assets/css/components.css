@@ -317,6 +317,15 @@ a:hover > .cornice img, a.cornice:hover img { transform: scale(1.03); }
 /* Il titolo grafico: un'immagine (PNG o SVG) o il titolo scritto nel
    carattere del corto (titolo_font) */
 .targa__grafica { display: block; min-height: 0; max-width: 100%; max-height: 62%; object-fit: contain; }
+/* Il titolo grafico ritagliato sul disegno (ritagliaTitolo in comune.js):
+   il riquadro ha le proporzioni del disegno, alto --alto (o meno, se
+   sarebbe più largo della colonna); l'immagine intera vi si sposta dentro */
+.titolo-ritagliato { display: block; max-width: 100%; }
+.titolo-ritagliato.is-ritagliato { position: relative; overflow: hidden; aspect-ratio: var(--rapporto); width: min(100%, var(--alto, 64px) * var(--rapporto)); }
+.titolo-ritagliato.is-ritagliato img {
+  position: absolute; max-width: none; max-height: none; width: auto;
+  height: calc(100% / var(--h)); top: calc(-100% * var(--t) / var(--h)); left: calc(-100% * var(--l) / var(--w));
+}
 .targa__font { font-weight: 400; text-transform: none; letter-spacing: 0; line-height: 1.05; }
 /* Il titolo sopra la still (galleria e schermo del corto): un alone scuro
    lo stacca da qualsiasi fotogramma. Sta sul contenitore, così vale anche
