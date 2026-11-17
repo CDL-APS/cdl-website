@@ -12,10 +12,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800;900&display=swap">
-    <link rel="stylesheet" href="assets/css/base.css?v=2026-11-15b">
-    <link rel="stylesheet" href="assets/css/components.css?v=2026-11-15b">
-    <link rel="stylesheet" href="assets/css/pages/riservato.css?v=2026-11-15b">
-    <link rel="stylesheet" href="assets/css/pages/gestione.css?v=2026-11-15b">
+    <link rel="stylesheet" href="assets/css/base.css?v=2026-11-18">
+    <link rel="stylesheet" href="assets/css/components.css?v=2026-11-18">
+    <link rel="stylesheet" href="assets/css/pages/riservato.css?v=2026-11-18">
+    <link rel="stylesheet" href="assets/css/pages/gestione.css?v=2026-11-18">
 </head>
 <body class="gestione">
 
@@ -32,12 +32,12 @@
         <div class="wrap nav__riga">
             <a class="nav__logo" href="index.html" aria-label="Torna al sito"><span class="logo"></span></a>
             <nav id="schede" class="g-schede" aria-label="Contenuti da gestire" hidden>
-                <button type="button" class="g-scheda" data-scheda="dashboard">Dashboard<span id="conta-avvisi" class="g-conta" hidden></span></button>
-                <button type="button" class="g-scheda" data-scheda="proposte">Proposte<span id="conta-proposte" class="g-conta" hidden></span></button>
+                <button type="button" class="g-scheda" data-scheda="dashboard">Dashboard<span id="conta-avvisi" class="g-conta" hidden></span><span class="g-sviluppo">In sviluppo</span></button>
+                <button type="button" class="g-scheda" data-scheda="proposte">Proposte<span id="conta-proposte" class="g-conta" hidden></span><span class="g-sviluppo">In sviluppo</span></button>
                 <button type="button" class="g-scheda" data-scheda="opere">Opere</button>
                 <button type="button" class="g-scheda" data-scheda="eventi">Eventi<span class="g-sviluppo">In sviluppo</span></button>
                 <button type="button" class="g-scheda" data-scheda="rullino">Rullino</button>
-                <button type="button" class="g-scheda" data-scheda="soci">Soci</button>
+                <button type="button" class="g-scheda" data-scheda="soci">Soci<span class="g-sviluppo">In sviluppo</span></button>
             </nav>
             <div id="utente" class="g-utente" hidden>
                 <span id="utente-email" class="g-utente-email"></span>
@@ -180,7 +180,7 @@
                 <h2 class="titoletto">Scegli le foto</h2>
                 <div class="g-provenienze" role="group" aria-label="Provenienza delle foto">
                     <button type="button" class="btn g-provenienza" data-provenienza="eventi" aria-pressed="true">Eventi</button>
-                    <button type="button" class="btn g-provenienza" data-provenienza="cortoteca" aria-pressed="false">Cortoteca</button>
+                    <button type="button" class="btn g-provenienza" data-provenienza="cortoteca" aria-pressed="false">Fotogrammi delle opere</button>
                     <button type="button" class="btn g-provenienza" data-provenienza="altre" aria-pressed="false">Altre foto</button>
                 </div>
                 <p id="rullino-nota" class="g-rullino-nota"></p>
@@ -260,7 +260,7 @@
                         <label class="g-campo">
                             <span>Durata</span>
                             <input type="number" name="durata" min="1" max="600" step="1" inputmode="numeric">
-                            <small>In minuti. Compare in Cortoteca sotto il titolo.</small>
+                            <small>In minuti. Compare nella pagina del corto, sotto il titolo.</small>
                         </label>
                         <label class="g-campo">
                             <span>Regia *</span>
@@ -330,7 +330,7 @@
                             </div>
                             <input type="hidden" name="titolo_png">
                             <input type="hidden" name="titolo_font">
-                            <small>Facoltativo: il titolo in PNG (meglio con fondo trasparente) oppure il carattere tipografico (TTF, OTF, WOFF). Senza, la Cortoteca usa il carattere del sito.</small>
+                            <small>Facoltativo: il titolo in PNG (meglio con fondo trasparente) oppure il carattere tipografico (TTF, OTF, WOFF). Senza, il sito usa il suo carattere.</small>
                         </div>
                         <!-- Il colore della pagina del corto: scritte, fili e crocetta
                              della sala. Il campo di testo è quello che si salva; il
@@ -342,7 +342,7 @@
                                 <input type="text" name="colore" placeholder="#b9bbf8" pattern="#[0-9a-fA-F]{6}" maxlength="7" autocomplete="off" spellcheck="false" aria-labelledby="etichetta-colore">
                                 <button type="button" class="btn" id="colore-togli">Automatico</button>
                             </div>
-                            <small>Facoltativo: di solito il colore del titolo grafico. Vuoto, il sito usa il colore del titolo (se è uno dei titoli già nel sito) o l'arancio della Cortoteca. Un colore molto scuro diventa bianco, perché sul nero non si leggerebbe; su Guarda la scritta diventa bianca se il nero non si leggerebbe.</small>
+                            <small>Facoltativo: di solito il colore del titolo grafico. Vuoto, il sito usa il colore del titolo (se è uno dei titoli già nel sito) o l'arancio del sito. Un colore molto scuro diventa bianco, perché sul nero non si leggerebbe; su Guarda la scritta diventa bianca se il nero non si leggerebbe.</small>
                         </div>
                         <label class="g-campo">
                             <span>Video (YouTube o Vimeo)</span>
@@ -604,10 +604,10 @@
     <!-- Copia locale di supabase-js 2.117.3: niente codice da server esterni
          in una pagina con accesso (vedi la CSP in netlify.toml) -->
     <script src="assets/js/vendor/supabase-2.117.3.min.js"></script>
-    <script src="assets/js/dati.js?v=2026-11-15b"></script>
-    <script src="assets/js/riservato.js?v=2026-11-15b"></script>
-    <script src="assets/js/gestione.js?v=2026-11-15b"></script>
-    <script src="assets/js/gestione-rullino.js?v=2026-11-15b"></script>
-    <script src="assets/js/gestione-eventi.js?v=2026-11-15b"></script>
+    <script src="assets/js/dati.js?v=2026-11-18"></script>
+    <script src="assets/js/riservato.js?v=2026-11-18"></script>
+    <script src="assets/js/gestione.js?v=2026-11-18"></script>
+    <script src="assets/js/gestione-rullino.js?v=2026-11-18"></script>
+    <script src="assets/js/gestione-eventi.js?v=2026-11-18"></script>
 </body>
 </html>

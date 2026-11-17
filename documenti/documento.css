@@ -1,0 +1,43 @@
+/* Stile dei documenti in PDF (informative): A4, Montserrat, niente colori
+   oltre al nero e all'arancio del marchio */
+@page { size: A4; margin: 22mm 20mm 22mm; }
+html { font-family: 'Montserrat', Helvetica, Arial, sans-serif; font-size: 10.5pt; line-height: 1.5; color: #1d1d1b; }
+body { margin: 0; }
+h1 { margin: 0 0 4mm; font-size: 17pt; font-weight: 900; text-transform: uppercase; letter-spacing: -0.01em; line-height: 1.1; }
+h2 { margin: 6mm 0 2mm; font-size: 11pt; font-weight: 800; }
+p, li { margin: 0 0 2.4mm; }
+ul { margin: 0 0 2.4mm; padding-left: 5mm; }
+.sotto { margin-bottom: 6mm; font-weight: 600; }
+.bozza { margin: 0 0 6mm; padding: 3mm 4mm; border: 1.5pt solid #ef7d00; font-weight: 700; }
+.piede { margin-top: 8mm; padding-top: 3mm; border-top: 0.75pt solid #1d1d1b; font-size: 9pt; }
+
+/* Il modulo cartaceo (domanda-ammissione-socio-<anno>.html): righe da
+   compilare a mano, caselle, spazi per le firme */
+@page carta { size: A4; margin: 14mm 18mm 14mm; }
+.carta { page: carta; font-size: 9.6pt; line-height: 1.4; }
+.carta p, .carta li { margin-bottom: 1.8mm; }
+.carta h1 { margin: 0; font-size: 13pt; }
+.carta h3 { margin: 4mm 0 1.5mm; font-size: 10pt; font-weight: 800; }
+.carta__testa { display: flex; align-items: center; justify-content: space-between; gap: 8mm; margin-bottom: 4mm; }
+.carta__logo { width: 20mm; height: auto; filter: brightness(0); }
+.carta__destinatario { margin-bottom: 4mm; text-align: right; }
+.campi { margin-bottom: 3mm; }
+.carta .campo { display: flex; align-items: baseline; gap: 2mm; margin: 0 0 3mm; white-space: nowrap; }
+.riga-punti { flex: 1 1 auto; border-bottom: 1pt dotted #1d1d1b; min-width: 20mm; transform: translateY(-1mm); }
+.riga-punti.in-linea { display: inline-block; width: 70mm; flex: none; }
+.corto { display: inline-block; width: 22mm; border-bottom: 1pt dotted #1d1d1b; transform: translateY(-1mm); }
+.giustificato { text-align: justify; }
+.scelte { margin: 0 0 2mm; padding: 0; list-style: none; }
+.scelte > li { margin-bottom: 1.5mm; }
+.scelte ul { margin: 1mm 0 0 10mm; padding-left: 4mm; list-style: circle; }
+.scelte ul li { margin: 0; }
+.casella { display: inline-block; width: 3.4mm; height: 3.4mm; margin-right: 2.5mm; border: 1pt solid #1d1d1b; vertical-align: -0.5mm; }
+.nota { font-size: 9pt; font-weight: 600; }
+.firme { margin: 3mm 0; }
+.carta .firma { display: flex; align-items: baseline; justify-content: flex-end; gap: 3mm; margin-top: 6mm; white-space: nowrap; }
+.linea { display: inline-block; width: 60mm; border-bottom: 1pt solid #1d1d1b; }
+.minori { margin-top: 4mm; padding-top: 3mm; border-top: 0.75pt solid #1d1d1b; }
+.minori h2 { margin-top: 0; text-transform: uppercase; font-size: 10pt; text-decoration: underline; }
+.carta__informativa { break-before: page; }
+.carta__informativa .sotto { margin-bottom: 3mm; }
+.carta .piede { margin-top: 4mm; font-size: 8pt; text-align: center; }

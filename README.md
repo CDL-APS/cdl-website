@@ -42,12 +42,12 @@ a ogni salvataggio.
 ├── longstoryshort.html        Pagina dell'evento Long Story Short
 ├── short-talks-1.html, …      Pagine degli altri eventi, una per evento (vedi sotto)
 ├── cornicenarrativa.html      Generatore del "biglietto" di LSS 2026
-├── cortoteca.html             Archivio dei cortometraggi
+├── cortoteca.html             Archivio dei cortometraggi (in pausa: rimanda a Produzioni)
 ├── opera.html                 Pagina di un singolo corto (opera.html?film=codice)
-├── vantaggi-tesseramento.html Vantaggi per i soci
+├── vantaggi-tesseramento.html Vantaggi per i soci e domanda di ammissione online
 ├── 404.html                   Pagina non trovata (percorsi assoluti)
 ├── gestione.html              Pagina riservata ai redattori (non indicizzata)
-├── area-socio.html            Area socio: accesso con password, proposte (non indicizzata)
+├── area-socio.html            Area socio: accesso con password, proposte (in pausa: rimanda alla home)
 │
 ├── data/                      Copie di riserva del database (vedi sotto)
 │   ├── opere.json
@@ -58,6 +58,9 @@ a ogni salvataggio.
 │   ├── functions/             Edge Function (accesso dei soci alla Cortoteca)
 │   ├── licenze/               Testi della licenza della Cortoteca, uno per versione
 │   └── foglio/                Script da incollare nel foglio dei soci (Apps Script)
+│
+├── google/iscrizioni/         Web app Apps Script della domanda di ammissione (vedi il suo README)
+├── documenti/                 Sorgenti HTML dei PDF in assets/doc/ (informative, statuto)
 │
 ├── assets/
 │   ├── css/
@@ -139,7 +142,8 @@ sapere:
   compare solo quando ce n'è almeno una. Le due spunte si escludono.
 - In testa alla pagina Produzioni, a tutta larghezza, c'è il lavoro più
   recente fra produzioni e collaborazioni.
-- Se manca il **video**, la pagina del corto dice "Streaming in arrivo",
+- Se manca il **video**, la pagina del corto dice "Streaming in arrivo"
+  (non durante la pausa della Cortoteca, dal 17 novembre 2026),
   a meno che l'opera sia segnata **Solo la scheda** (il socio ha autorizzato
   la sola scheda, o la redazione ha deciso così): allora la pagina mostra la
   scheda e basta.

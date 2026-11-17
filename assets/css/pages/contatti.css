@@ -21,35 +21,9 @@
 .pagina-contatti .contatti-sostieni { min-height: 0; padding-top: calc(var(--nav) + 32px); }
 .contatti__frase { max-width: 40ch; font-size: clamp(19px, 1.7vw, 24px); font-weight: 600; line-height: 1.35; }
 
-/* --------------------------------------------------------------------------
-   Il modulo: prima il motivo, a pillole come gli strumenti della Cortoteca,
-   poi nome, email e messaggio
-   -------------------------------------------------------------------------- */
-.modulo { display: grid; gap: 26px; margin-top: clamp(32px, 4vw, 56px); }
-.modulo__gruppo { margin: 0; padding: 0; border: 0; }
-.modulo__gruppo legend { margin-bottom: 14px; padding: 0; font-family: var(--f-titoli); font-weight: 900; text-transform: uppercase; letter-spacing: var(--titoli-spazio); font-size: clamp(22px, 2vw, 28px); line-height: 1; }
-.modulo__motivi { display: flex; flex-wrap: wrap; gap: 8px; }
-.modulo__motivi input { position: absolute; opacity: 0; pointer-events: none; }
-.modulo__motivi .scelta { min-height: 44px; border: 2px solid var(--nero); }
-.modulo__motivi input:checked + .scelta { border-color: var(--nero); background: var(--arancio); color: var(--nero); }
-.modulo__motivi input:focus-visible + .scelta { outline: 3px solid var(--nero); outline-offset: 3px; }
-.modulo__motivi .scelta:hover { background: rgba(29, 29, 27, 0.08); }
-.modulo__coppia { display: grid; grid-template-columns: 1fr 1fr; gap: 22px var(--gap); }
-.modulo__campo { display: grid; gap: 8px; }
-.modulo__campo span { font-size: 14px; font-weight: 700; }
-.modulo__campo input, .modulo__campo textarea {
-  width: 100%; min-height: 52px; padding: 12px 16px;
-  border: 2px solid var(--nero); border-radius: 14px; background: #fff;
-  font: inherit; font-size: 16px; color: var(--nero);
-}
-.modulo__campo textarea { resize: vertical; min-height: 160px; }
-.modulo__campo input:focus-visible, .modulo__campo textarea:focus-visible { outline: 3px solid var(--arancio); outline-offset: 2px; }
-.modulo__consenso { display: flex; align-items: flex-start; gap: 12px; font-size: 15px; line-height: 1.45; }
-.modulo__consenso input { width: 22px; height: 22px; margin: 0; flex: 0 0 auto; accent-color: var(--arancio); }
-.modulo__piede { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 20px 32px; }
-.modulo__piede .modulo__consenso { flex: 1 1 320px; }
-.modulo .btn--pieno:hover { border-color: var(--nero); background: var(--nero); color: var(--chiaro); }
-.modulo .btn--pieno:active, .modulo .btn--pieno.is-inviato { border-color: var(--arancio); background: var(--arancio); color: var(--nero); }
+/* Il modulo (motivo, nome, email, messaggio) usa gli stili comuni di
+   .modulo in components.css; qui solo la distanza dalla testa */
+.contatti .modulo { margin-top: clamp(32px, 4vw, 56px); }
 
 /* --------------------------------------------------------------------------
    La conferma: c'è solo quando l'indirizzo finisce con #grazie (Netlify ci
@@ -63,5 +37,5 @@
 .grazie .link { margin-top: 4px; }
 
 @media (max-width: 639px) {
-  .modulo__coppia, .contatti__testa { grid-template-columns: 1fr; }
+  .contatti__testa { grid-template-columns: 1fr; }
 }

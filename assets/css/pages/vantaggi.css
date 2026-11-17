@@ -32,3 +32,47 @@ a.vantaggio-g:hover { border-top-color: var(--arancio); }
 a.vantaggio-g:hover .vantaggio-g__freccia { transform: translate(3px, -3px); background: var(--arancio); border-color: var(--nero); }
 @media (max-width: 1023px) { .vantaggi-g { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 639px) { .vantaggi-g { grid-template-columns: 1fr; } }
+
+/* --------------------------------------------------------------------------
+   La domanda di ammissione (#associati): il modulo comune (.modulo in
+   components.css) su una colonna larga quanto si legge bene; al suo posto,
+   dopo l'invio, la conferma con il codice e i dati per pagare
+   -------------------------------------------------------------------------- */
+.domanda { scroll-margin-top: var(--nav); }
+/* Il titolo è il tasto che apre la sezione: il cerchio col + diventa una × */
+.domanda__testa { display: flex; align-items: center; justify-content: space-between; gap: 20px; list-style: none; cursor: pointer; }
+.domanda__testa::-webkit-details-marker { display: none; }
+.domanda__testa .blocco-pagina__testa { margin-bottom: 0; }
+.domanda__testa:focus-visible { outline: 3px solid var(--nero); outline-offset: 6px; border-radius: 4px; }
+.domanda__segno { display: grid; place-items: center; flex: 0 0 auto; width: 48px; height: 48px; border: 2px solid var(--nero); border-radius: 50%; transition: transform 0.3s var(--ease), background-color 0.2s var(--ease); }
+.domanda__segno svg { width: 22px; height: 22px; }
+.domanda__testa:hover .domanda__segno { background: var(--arancio); }
+.domanda__apri[open] .domanda__segno { transform: rotate(45deg); }
+.domanda__apri[open] > .domanda__testa { margin-bottom: clamp(18px, 2vw, 28px); }
+.domanda__intro { display: grid; gap: 10px; max-width: 62ch; font-size: clamp(17px, 1.4vw, 19px); font-weight: 600; line-height: 1.5; }
+.domanda__intro a, .domanda__avviso a { text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 2px; }
+.domanda__modulo, .domanda__conferma { max-width: 880px; margin-top: clamp(32px, 4vw, 48px); }
+.domanda__nota { font-size: 15px; font-weight: 500; line-height: 1.45; color: var(--tenue); }
+/* "Indirizzo di residenza" dentro "Chi sei": come un'etichetta più forte,
+   non un titolo */
+.domanda__sotto { margin: 26px 0 14px; font-size: 17px; font-weight: 800; }
+.domanda__chi-paga { margin-top: 18px; }
+.domanda__dichiarazioni { display: grid; gap: 16px; }
+.domanda__avviso, .domanda__errore {
+  max-width: 880px; margin-top: 24px; padding: 14px 18px;
+  border: 2px solid var(--nero); border-radius: 14px; background: #fff; font-weight: 600; line-height: 1.45;
+}
+.domanda__errore { margin-top: 0; border-color: var(--arancio); }
+.domanda__conferma { display: grid; gap: 16px; justify-items: start; padding: clamp(22px, 3vw, 36px); border: 2px solid var(--nero); border-radius: var(--r); background: #fff; font-size: 17px; line-height: 1.5; }
+.domanda__conferma[hidden] { display: none; }
+.domanda__conferma:focus { outline: none; }
+.domanda__conferma-titolo { font-size: clamp(26px, 2.6vw, 38px); }
+.domanda__conferma p { max-width: 60ch; }
+.domanda__dati { display: grid; grid-template-columns: auto 1fr; gap: 8px 20px; width: 100%; margin: 0; padding: 16px 0; border-top: 1px solid var(--filo); border-bottom: 1px solid var(--filo); }
+.domanda__dati dt { font-weight: 800; }
+.domanda__dati dd { margin: 0; font-weight: 600; overflow-wrap: anywhere; user-select: all; }
+.domanda__altra { padding: 0; border: 0; background: none; font: inherit; font-weight: 700; color: inherit; cursor: pointer; min-height: 44px; }
+@media (max-width: 639px) {
+  .domanda__dati { grid-template-columns: 1fr; gap: 2px; }
+  .domanda__dati dd + dt { margin-top: 10px; }
+}

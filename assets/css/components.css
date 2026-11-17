@@ -77,9 +77,11 @@ main > section,
 
 /* --------------------------------------------------------------------------
    Barra: chiara, il marchio a sinistra con Eventi, Produzioni e Contatti
-   (ognuna col pallino del colore della sua sezione); a destra Cortoteca,
-   pillola nera con la scritta nel colore della Cortoteca, e l'invito ai soci, pillola arancio.
-   La voce della pagina corrente ha aria-current.
+   (ognuna col pallino del colore della sua sezione); a destra l'invito ai
+   soci, pillola arancio. La voce della pagina corrente ha aria-current.
+   Con la Cortoteca in pausa (dal 17 novembre 2026) la sua pillola, nera
+   con la scritta arancio, non c'è nelle pagine: le regole .nav__cortoteca
+   restano per la ripresa.
    -------------------------------------------------------------------------- */
 .nav { position: fixed; inset: 0 0 auto 0; z-index: 10; height: var(--nav); background: var(--barra); color: var(--nero); }
 .nav__riga { height: 100%; display: flex; align-items: center; gap: clamp(4px, 1.4vw, 20px); }
@@ -121,8 +123,9 @@ main > section,
 .nav__cortoteca[aria-current] { border-color: var(--cortoteca); }
 .nav__cortoteca:active { transform: translateY(1px) scale(0.985); }
 
-/* Diventa socio: alto come Cortoteca, arancio col bordino nero */
-.nav .nav__socio { position: relative; min-height: 44px; padding: 0 20px; font-size: 15px; border-color: var(--nero); background: var(--arancio); color: var(--nero); }
+/* Diventa socio: arancio col bordino nero, in fondo a destra (dopo la
+   pillola della Cortoteca, quando c'è, il margine non conta) */
+.nav .nav__socio { position: relative; min-height: 44px; margin-left: auto; padding: 0 20px; font-size: 15px; border-color: var(--nero); background: var(--arancio); color: var(--nero); }
 .nav .nav__socio:hover { border-color: var(--nero); background: var(--giallo); color: var(--nero); }
 
 @media (max-width: 759px) {
@@ -142,8 +145,10 @@ main > section,
   .nav__cortoteca::after, .nav .nav__socio::after { content: ''; position: absolute; inset: -4px -2px; }
 }
 
-@media (max-width: 519px) {
-  .nav__voce--contatti { display: none; } /* sotto i 520 px restano Eventi, Produzioni e Cortoteca; Contatti è nel piede */
+/* Sotto i 360 px restano Eventi e Produzioni; Contatti è nel piede.
+   (Con la Cortoteca la soglia era 520 px: alla ripresa va rimessa.) */
+@media (max-width: 359px) {
+  .nav__voce--contatti { display: none; }
 }
 
 /* Schermi molto stretti (320 px): la barra stringe ancora */
@@ -299,6 +304,61 @@ a:hover > .cornice img, a.cornice:hover img { transform: scale(1.03); }
 .scelta svg { width: 15px; height: 15px; }
 .scelte input:checked + .scelta { background: var(--inchiostro); color: var(--fondo); }
 .scelte input:focus-visible + .scelta { outline: 3px solid var(--inchiostro); outline-offset: 3px; }
+
+/* --------------------------------------------------------------------------
+   I moduli delle pagine pubbliche (Contatti, domanda di ammissione in
+   Vantaggi): gruppi con un titolo, scelte a pillole, campi col bordo nero e
+   gli angoli di 14 px, caselle da spuntare, il tasto in fondo
+   -------------------------------------------------------------------------- */
+.modulo { display: grid; gap: 26px; }
+.modulo__gruppo { margin: 0; padding: 0; border: 0; }
+.modulo__gruppo legend { margin-bottom: 14px; padding: 0; font-family: var(--f-titoli); font-weight: 900; text-transform: uppercase; letter-spacing: var(--titoli-spazio); font-size: clamp(22px, 2vw, 28px); line-height: 1; }
+.modulo__motivi { display: flex; flex-wrap: wrap; gap: 8px; }
+.modulo__motivi input { position: absolute; opacity: 0; pointer-events: none; }
+.modulo__motivi .scelta { min-height: 44px; border: 2px solid var(--nero); }
+.modulo__motivi input:checked + .scelta { border-color: var(--nero); background: var(--arancio); color: var(--nero); }
+.modulo__motivi input:focus-visible + .scelta { outline: 3px solid var(--nero); outline-offset: 3px; }
+.modulo__motivi .scelta:hover { background: rgba(29, 29, 27, 0.08); }
+.modulo__coppia { display: grid; grid-template-columns: 1fr 1fr; gap: 22px var(--gap); }
+.modulo__campo { display: grid; gap: 8px; }
+.modulo__campo span { font-size: 14px; font-weight: 700; }
+.modulo__campo input, .modulo__campo textarea, .modulo__campo select {
+  width: 100%; min-height: 52px; padding: 12px 16px;
+  border: 2px solid var(--nero); border-radius: 14px; background: #fff;
+  font: inherit; font-size: 16px; color: var(--nero);
+}
+.modulo__campo textarea { resize: vertical; min-height: 160px; }
+.modulo__campo select {
+  appearance: none; padding-right: 44px; cursor: pointer;
+  background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231d1d1b' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") right 14px center / 18px no-repeat;
+}
+.modulo__campo input:focus-visible, .modulo__campo textarea:focus-visible, .modulo__campo select:focus-visible { outline: 3px solid var(--arancio); outline-offset: 2px; }
+.modulo__campo small { font-size: 13px; line-height: 1.4; }
+.modulo__consenso { display: flex; align-items: flex-start; gap: 12px; font-size: 15px; line-height: 1.45; }
+.modulo__consenso input { width: 22px; height: 22px; margin: 0; flex: 0 0 auto; accent-color: var(--arancio); }
+.modulo__consenso a { font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
+/* Casella "dopo lettura" (caselleDopoLettura in comune.js): finché il
+   documento non è stato aperto la casella non si spunta, e sotto c'è il
+   perché */
+.modulo__consenso input[aria-disabled="true"] { opacity: 0.4; cursor: not-allowed; }
+.modulo__nota-lettura { display: block; margin-top: 4px; font-size: 13px; font-weight: 600; }
+.modulo__nota-lettura.is-evidente { color: var(--nero); text-decoration: underline; text-decoration-color: var(--arancio); text-decoration-thickness: 3px; }
+.modulo__piede { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 20px 32px; }
+.modulo__piede .modulo__consenso { flex: 1 1 320px; }
+.modulo .btn--pieno:hover { border-color: var(--nero); background: var(--nero); color: var(--chiaro); }
+.modulo .btn--pieno:active, .modulo .btn--pieno.is-inviato { border-color: var(--arancio); background: var(--arancio); color: var(--nero); }
+
+/* Più campi in griglia (domanda di ammissione): due colonne; nell'indirizzo
+   la via su tutta la riga, poi comune, provincia e CAP */
+.modulo__griglia { display: grid; grid-template-columns: 1fr 1fr; gap: 22px var(--gap); }
+.modulo__griglia--indirizzo { grid-template-columns: 2fr 1fr 1fr; }
+.modulo__campo--largo { grid-column: 1 / -1; }
+
+@media (max-width: 639px) {
+  .modulo__coppia, .modulo__griglia { grid-template-columns: 1fr; }
+  .modulo__griglia--indirizzo { grid-template-columns: 1fr 1fr; }
+  .modulo__griglia--indirizzo .modulo__campo:nth-child(2) { grid-column: 1 / -1; }
+}
 
 /* --------------------------------------------------------------------------
    Still: il fotogramma di un corto con il suo titolo sovrapposto (la targa).

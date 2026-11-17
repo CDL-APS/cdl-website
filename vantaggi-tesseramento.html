@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Vantaggi per i soci – CDL APS</title>
-    <meta name="description" content="Cosa riserva CDL APS ai suoi soci: supporto ai progetti, la Cortoteca, sconti dai partner ed eventi dedicati.">
+    <meta name="description" content="Cosa riserva CDL APS ai suoi soci: supporto ai progetti, sconti dai partner ed eventi dedicati.">
 
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link rel="icon" type="image/png" href="assets/img/brand/favicon.png">
@@ -12,9 +12,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800;900&display=swap">
-    <link rel="stylesheet" href="assets/css/base.css?v=2026-11-15b">
-    <link rel="stylesheet" href="assets/css/components.css?v=2026-11-15b">
-    <link rel="stylesheet" href="assets/css/pages/vantaggi.css?v=2026-11-15b">
+    <link rel="stylesheet" href="assets/css/base.css?v=2026-11-18">
+    <link rel="stylesheet" href="assets/css/components.css?v=2026-11-18">
+    <link rel="stylesheet" href="assets/css/pages/vantaggi.css?v=2026-11-18">
 </head>
 <body class="pagina-vantaggi">
 
@@ -25,7 +25,6 @@
             <a class="nav__voce nav__voce--eventi" href="eventi.html">Eventi</a>
             <a class="nav__voce nav__voce--produzioni" href="produzioni.html">Produzioni</a>
             <a class="nav__voce nav__voce--contatti" href="contatti.html#contatti">Contatti</a>
-            <a class="nav__cortoteca" href="cortoteca.html"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.14v13.72L19 12 8 5.14Z"/></svg>Cortoteca</a>
             <a class="btn btn--pieno nav__socio" href="vantaggi-tesseramento.html" aria-current="page">Diventa socio</a>
         </div>
     </header>
@@ -46,10 +45,6 @@
                         <span class="vantaggio-g__titolo">Sviluppo di nuovi progetti</span>
                         <span class="vantaggio-g__testo">Collabora alle produzioni originali, o ricevi supporto logistico e creativo per la tua prossima idea. La prima consulenza di produzione &egrave; gratuita.</span>
                     </div></li>
-                    <li><a class="vantaggio-g" href="cortoteca.html">
-                        <span class="vantaggio-g__titolo">Cortoteca<span class="vantaggio-g__freccia"><svg class="freccia" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h15"/><path d="m13 6 6 6-6 6"/></svg></span></span>
-                        <span class="vantaggio-g__testo">L&rsquo;archivio delle opere realizzate dai soci, da guardare in streaming sul sito.</span>
-                    </a></li>
                 </ul>
             </div>
         </section>
@@ -89,6 +84,144 @@
                 </ul>
             </div>
         </section>
+
+        <!-- LA DOMANDA DI AMMISSIONE (storico/2026-11-17-piano-iscrizione-online.md).
+             La manda vantaggi-tesseramento.js alla web app di Google Apps Script
+             (google/iscrizioni/), che scrive nel libro soci e manda le mail.
+             data-indirizzo: l'indirizzo della web app (vuoto: modulo non ancora
+             attivo). data-quote: le quote per anno, solo per il testo in cima; quelle
+             che contano sono nelle impostazioni dello script. IBAN e PayPal arrivano
+             solo con la risposta, mai nella pagina: nessuno paga senza domanda. -->
+        <section class="blocco-pagina blocco-pagina--diviso domanda" id="associati" aria-labelledby="titolo-domanda">
+            <div class="wrap">
+                <!-- Sezione a comparsa: si apre da sola arrivando su #associati
+                     (Sostieni, "Diventa socio") e con una conferma già data -->
+                <details class="domanda__apri" id="domanda-apri">
+                    <summary class="domanda__testa">
+                        <h2 class="blocco-pagina__testa" id="titolo-domanda">Domanda di ammissione a socio</h2>
+                        <span class="domanda__segno" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14"/><path d="M5 12h14"/></svg></span>
+                    </summary>
+
+                    <div class="domanda__intro">
+                        <!-- data-quota-testo: l'anno del testo scritto qui; in un altro
+                             anno vantaggi-tesseramento.js lo riscrive da data-quote -->
+                        <p>Compila la domanda di ammissione: ci vogliono due minuti. La quota associativa <span data-quota-testo="2026">per gli ultimi mesi del 2026 &egrave; di 5 &euro;</span>, e la puoi pagare con PayPal, con un bonifico istantaneo o in contanti.</p>
+                        <p class="domanda__nota">Se qualcosa va storto o la domanda dovesse essere respinta, la quota ti sar&agrave; rimborsata. Sei minorenne? Usa il <a href="/assets/doc/domanda-ammissione-socio-2026.pdf" target="_blank" rel="noopener">modulo cartaceo</a>, da firmare insieme a un genitore.</p>
+                    </div>
+
+                    <noscript><p class="domanda__avviso">Per inviare la domanda dal sito serve JavaScript. Puoi usare il <a href="/assets/doc/domanda-ammissione-socio-2026.pdf">modulo cartaceo</a> o scriverci a <a href="mailto:ciao@cdlaps.com">ciao@cdlaps.com</a>.</p></noscript>
+
+                    <form class="modulo domanda__modulo" id="domanda" novalidate data-indirizzo="" data-quote='{"2026":5,"2027":10}'>
+                        <p class="sr-only"><label>Non compilare questo campo: <input name="trappola" tabindex="-1" autocomplete="off"></label></p>
+
+                        <fieldset class="modulo__gruppo">
+                            <legend>Chi sei</legend>
+                            <div class="modulo__griglia">
+                                <label class="modulo__campo">
+                                    <span>Nome</span>
+                                    <input type="text" name="nome" autocomplete="given-name" maxlength="60" required>
+                                </label>
+                                <label class="modulo__campo">
+                                    <span>Cognome</span>
+                                    <input type="text" name="cognome" autocomplete="family-name" maxlength="60" required>
+                                </label>
+                                <label class="modulo__campo">
+                                    <span>Luogo di nascita</span>
+                                    <input type="text" name="luogo_nascita" maxlength="80" required>
+                                </label>
+                                <label class="modulo__campo">
+                                    <span>Data di nascita</span>
+                                    <input type="date" name="data_nascita" autocomplete="bday" min="1900-01-01" required>
+                                </label>
+                            </div>
+                            <p class="domanda__sotto" id="titolo-residenza">Indirizzo di residenza</p>
+                            <div class="modulo__griglia modulo__griglia--indirizzo" role="group" aria-labelledby="titolo-residenza">
+                                <label class="modulo__campo modulo__campo--largo">
+                                    <span>Via e numero civico</span>
+                                    <input type="text" name="via" autocomplete="street-address" maxlength="120" required>
+                                </label>
+                                <label class="modulo__campo">
+                                    <span>Comune</span>
+                                    <input type="text" name="comune" autocomplete="address-level2" maxlength="80" required>
+                                </label>
+                                <label class="modulo__campo">
+                                    <span>Provincia</span>
+                                    <input type="text" name="provincia" autocomplete="address-level1" maxlength="2" pattern="[A-Za-z]{2}" placeholder="RN" required>
+                                </label>
+                                <label class="modulo__campo">
+                                    <span>CAP</span>
+                                    <input type="text" name="cap" autocomplete="postal-code" inputmode="numeric" maxlength="5" pattern="[0-9]{5}" required>
+                                </label>
+                            </div>
+                        </fieldset>
+
+                        <fieldset class="modulo__gruppo">
+                            <legend>Contatti</legend>
+                            <div class="modulo__coppia">
+                                <label class="modulo__campo">
+                                    <span>Email</span>
+                                    <input type="email" name="email" autocomplete="email" maxlength="120" required>
+                                </label>
+                                <label class="modulo__campo">
+                                    <span>Cellulare (facoltativo)</span>
+                                    <input type="tel" name="cellulare" autocomplete="tel" maxlength="20" pattern="[0-9+ ]{6,20}">
+                                </label>
+                            </div>
+                        </fieldset>
+
+                        <fieldset class="modulo__gruppo">
+                            <legend>Metodo di pagamento</legend>
+                            <div class="modulo__motivi">
+                                <input type="radio" name="pagamento" id="pagamento-paypal" value="paypal" required>
+                                <label for="pagamento-paypal" class="scelta">PayPal</label>
+                                <input type="radio" name="pagamento" id="pagamento-bonifico" value="bonifico">
+                                <label for="pagamento-bonifico" class="scelta">Bonifico istantaneo</label>
+                                <input type="radio" name="pagamento" id="pagamento-contanti" value="contanti">
+                                <label for="pagamento-contanti" class="scelta">Contanti</label>
+                            </div>
+                            <label class="modulo__campo domanda__chi-paga">
+                                <span>Paga un&rsquo;altra persona? Scrivi il suo nome (facoltativo)</span>
+                                <input type="text" name="chi_paga" maxlength="80">
+                            </label>
+                        </fieldset>
+
+                        <fieldset class="modulo__gruppo">
+                            <legend class="sr-only">Dichiarazioni</legend>
+                            <div class="domanda__dichiarazioni">
+                                <label class="modulo__consenso">
+                                    <input type="checkbox" name="ammissione" required>
+                                    <span>Chiedo di essere ammesso/a come socio ordinario dell&rsquo;Associazione di Promozione Sociale CDL APS. Mi impegno a rispettare lo statuto, i regolamenti interni e le delibere degli organi dell&rsquo;associazione, e mi assumo la responsabilit&agrave; di quanto dichiaro in questa domanda.</span>
+                                </label>
+                                <label class="modulo__consenso">
+                                    <input type="checkbox" name="maggiorenne" required>
+                                    <span>Dichiaro di essere maggiorenne.</span>
+                                </label>
+                                <!-- Le versioni (data-versione) devono essere quelle nelle
+                                     impostazioni dello script: con un documento nuovo,
+                                     file nuovo e versione nuova in tutti e due i posti -->
+                                <label class="modulo__consenso">
+                                    <input type="checkbox" name="statuto" required data-versione="statuto-cdl-aps-v1" data-dopo-lettura="link-statuto" data-nota-lettura="Apri lo statuto per poter spuntare la casella.">
+                                    <span>Ho letto e accetto lo <a id="link-statuto" href="/assets/doc/statuto-cdl-aps-v1.pdf" target="_blank" rel="noopener">statuto di CDL APS</a>.</span>
+                                </label>
+                                <label class="modulo__consenso">
+                                    <input type="checkbox" name="informativa" required data-versione="informativa-soci-v1" data-dopo-lettura="link-informativa-soci" data-nota-lettura="Apri l'informativa per poter spuntare la casella.">
+                                    <span>Ho letto l&rsquo;<a id="link-informativa-soci" href="/assets/doc/informativa-soci-v1.pdf" target="_blank" rel="noopener">informativa sulla privacy</a>.</span>
+                                </label>
+                            </div>
+                        </fieldset>
+
+                        <p class="domanda__errore" role="alert" hidden></p>
+                        <div class="modulo__piede">
+                            <button class="btn btn--pieno" type="submit">Invia la domanda <svg class="freccia" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h15"/><path d="m13 6 6 6-6 6"/></svg></button>
+                        </div>
+                    </form>
+
+                    <!-- La conferma: la riempie vantaggi-tesseramento.js con la risposta
+                         della web app (codice, quota, istruzioni per pagare) -->
+                    <div class="domanda__conferma" id="domanda-conferma" tabindex="-1" hidden></div>
+                </details>
+            </div>
+        </section>
     </main>
 
     <footer class="closing fondo-arancio" id="socio">
@@ -102,7 +235,7 @@
                     <p class="sostieni__stato"><span class="rec"></span>La quota associativa &egrave; stata ridotta per gli ultimi mesi del 2026.</p>
                     <p class="sostieni__frase">Associarti a CDL significa contribuire attivamente al nostro progetto di diffusione della cultura cinematografica indipendente.</p>
                     <div class="btn-riga">
-                        <a class="btn btn--socio" href="contatti.html?motivo=socio#contatti">Diventa socio</a>
+                        <a class="btn btn--socio" href="#associati">Diventa socio</a>
                         <a class="btn btn--scuro" href="contatti.html#contatti">Contattaci</a>
                     </div>
                     <a class="link" href="#top">Tutti i vantaggi per i soci <svg class="freccia freccia--su" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20V5"/><path d="m6 11 6-6 6 6"/></svg></a>
@@ -128,6 +261,7 @@
         </div>
     </footer>
 
-    <script src="assets/js/comune.js?v=2026-11-15b"></script>
+    <script src="assets/js/comune.js?v=2026-11-18"></script>
+    <script src="assets/js/vantaggi-tesseramento.js?v=2026-11-18"></script>
 </body>
 </html>

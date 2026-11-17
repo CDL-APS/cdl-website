@@ -22,7 +22,9 @@
 
 const PROVENIENZE = {
   eventi: ['Eventi', 'Le foto delle gallerie delle pagine evento, più copertina e miniatura di ogni evento. Al clic portano all\'evento. Una galleria nuova compare da sola appena la pagina dell\'evento è nel sito.'],
-  cortoteca: ['Cortoteca', 'Il fotogramma di ogni corto. Al clic porta alla pagina del corto.'],
+  // la chiave resta "cortoteca", ma sono i fotogrammi di tutte le opere,
+  // produzioni comprese (e la Cortoteca è in pausa dal 17 novembre 2026)
+  cortoteca: ['Fotogrammi delle opere', 'Il fotogramma di ogni corto. Al clic porta alla pagina del corto.'],
   altre: ['Altre foto', 'Foto caricate apposta per il rullino: backstage, associazione, serate senza pagina. Per ognuna scegli dove porta. Un clic su una foto già caricata la rimette nel rullino.']
 };
 
@@ -30,7 +32,7 @@ const PROVENIENZE = {
 const PAGINE_SITO = [
   ['eventi.html', 'Eventi'],
   ['produzioni.html', 'Produzioni'],
-  ['cortoteca.html', 'Cortoteca'],
+  ...(CORTOTECA_ATTIVA ? [['cortoteca.html', 'Cortoteca']] : []),
   ['vantaggi-tesseramento.html', 'Vantaggi per i soci'],
   ['contatti.html', 'Contatti']
 ];
@@ -126,7 +128,7 @@ function collegamentoInParole(riga) {
   }
   if (riga.opera_id) {
     const opera = rullino.opere.find((o) => o.id === riga.opera_id);
-    return 'porta a ' + (opera ? opera.titolo : 'Cortoteca');
+    return 'porta a ' + (opera ? opera.titolo : 'un corto');
   }
   const pagina = PAGINE_SITO.find(([file]) => file === riga.pagina);
   return pagina ? 'porta a ' + pagina[1] : 'non porta da nessuna parte';
@@ -253,7 +255,7 @@ function disegnaScelte() {
   const conta = { eventi: 0, cortoteca: 0, altre: 0 };
   righe.forEach((r) => { conta[provenienzaDi(r.immagine)] += 1; });
   $('rullino-equilibrio').textContent = righe.length
-    ? `${righe.length} foto: ${conta.eventi} dagli eventi, ${conta.cortoteca} dalla Cortoteca, ${conta.altre} ${conta.altre === 1 ? 'altra' : 'altre'}.`
+    ? `${righe.length} foto: ${conta.eventi} dagli eventi, ${conta.cortoteca} dalle opere, ${conta.altre} ${conta.altre === 1 ? 'altra' : 'altre'}.`
     : '';
   $('mescola-rullino').disabled = righe.length < 2;
   if (!righe.length) {

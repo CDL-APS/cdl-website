@@ -332,7 +332,7 @@ window.addEventListener('popstate', (e) => {
   }
   stato.modificato = false;
   nascondiAvviso();
-  const scheda = SCHEDE[e.state?.scheda] ? e.state.scheda : 'dashboard';
+  const scheda = SCHEDE[e.state?.scheda] ? e.state.scheda : SCHEDA_INIZIALE;
   // Avanti verso un modulo già chiuso: si resta sull'elenco
   if (e.state?.modulo) history.replaceState({ scheda }, '', '#' + scheda);
   stato.scheda = scheda;
@@ -355,8 +355,22 @@ document.querySelectorAll('.g-scheda').forEach((b) => {
    per il deploy del redesign (13 novembre 2026): il modulo a blocchi e le
    pagine composte dal database non sono ancora stati provati. Piano per
    riprenderla in storico/2026-11-13-piano-eventi-gestione.md. Per
-   riaccenderla: togliere 'eventi' da qui e l'etichetta in gestione.html. */
-const SCHEDE_IN_SVILUPPO = new Set(['eventi']);
+   riaccenderla: togliere 'eventi' da qui e l'etichetta in gestione.html.
+   Dashboard, Proposte e Soci sono ferme con la Cortoteca (CORTOTECA_ATTIVA
+   in dati.js, 17 novembre 2026): per riaccenderle basta l'interruttore,
+   più le etichette in gestione.html. */
+const SCHEDE_CORTOTECA = ['dashboard', 'proposte', 'soci'];
+const SCHEDE_IN_SVILUPPO = new Set(['eventi', ...(CORTOTECA_ATTIVA ? [] : SCHEDE_CORTOTECA)]);
+// La scheda di partenza: la Dashboard, oppure Opere se la Dashboard è ferma
+const SCHEDA_INIZIALE = SCHEDE_IN_SVILUPPO.has('dashboard') ? 'opere' : 'dashboard';
+
+// Il testo che sostituisce l'elenco di una scheda ferma
+const TESTI_IN_SVILUPPO = {
+  eventi: 'La gestione degli eventi tornerà con un prossimo aggiornamento del sito. Gli eventi già pubblicati restano online come sono; per aggiungerne uno o correggerlo, per ora, chiedi a chi cura il sito.',
+  dashboard: 'La Dashboard tornerà con la Cortoteca, oggi in pausa. Opere e Rullino funzionano come sempre.',
+  proposte: 'Le proposte dei soci torneranno con la Cortoteca, oggi in pausa. Quelle già arrivate restano salvate.',
+  soci: 'I collegamenti personali dei soci torneranno con la Cortoteca, oggi in pausa. Il libro soci resta sul foglio Google.'
+};
 
 const SCHEDE = {
   dashboard: ['Dashboard', 'Ciò che aspetta una decisione, lo stato della Cortoteca e le ultime cose successe.'],
@@ -402,25 +416,28 @@ async function mostraElenco() {
   elenco.innerHTML = '<li class="g-vuoto">Caricamento…</li>';
 
   // Alla prima apertura si parte dalla scheda dell'indirizzo (#opere…),
-  // o dalla Dashboard
+  // o dalla Dashboard (da Opere, se la Dashboard è ferma)
   if (!stato.scheda) {
     const daIndirizzo = location.hash.slice(1).split('/')[0];
-    stato.scheda = SCHEDE[daIndirizzo] ? daIndirizzo : 'dashboard';
+    stato.scheda = SCHEDE[daIndirizzo] ? daIndirizzo : SCHEDA_INIZIALE;
     history.replaceState({ scheda: stato.scheda }, '', '#' + stato.scheda);
   }
   segnaScheda();
   $('nuovo').hidden = !['opere', 'eventi'].includes(stato.scheda) || SCHEDE_IN_SVILUPPO.has(stato.scheda);
   $('nuovo').textContent = stato.scheda === 'eventi' ? 'Nuovo evento' : 'Nuova opera';
-  $('pannello-soci').hidden = stato.scheda !== 'soci';
+  // Una scheda ferma mostra solo l'avviso, nell'elenco: niente pannelli
+  const ferma = SCHEDE_IN_SVILUPPO.has(stato.scheda);
+  $('pannello-soci').hidden = ferma || stato.scheda !== 'soci';
   $('bozze-in-corso').hidden = true; // la riempie elencoProposte
-  $('cruscotto').hidden = stato.scheda !== 'dashboard';
-  $('rullino-gestione').hidden = stato.scheda !== 'rullino';
-  $('elenco').hidden = ['dashboard', 'rullino'].includes(stato.scheda);
+  $('cruscotto').hidden = ferma || stato.scheda !== 'dashboard';
+  $('rullino-gestione').hidden = ferma || stato.scheda !== 'rullino';
+  $('elenco').hidden = !ferma && ['dashboard', 'rullino'].includes(stato.scheda);
 
-  // Gli avvisi servono sempre: contatore nella barra, segni negli elenchi
-  await caricaAvvisi();
+  // Gli avvisi (contatore nella barra, segni negli elenchi) riguardano la
+  // Cortoteca: con la Cortoteca in pausa non si chiedono
+  if (CORTOTECA_ATTIVA) await caricaAvvisi();
 
-  if (SCHEDE_IN_SVILUPPO.has(stato.scheda)) return mostraInSviluppo();
+  if (ferma) return mostraInSviluppo();
   if (stato.scheda === 'dashboard') return mostraCruscotto();
   if (stato.scheda === 'rullino') return mostraRullino();
   if (stato.scheda === 'proposte') return elencoProposte();
@@ -431,9 +448,7 @@ async function mostraElenco() {
 function mostraInSviluppo() {
   $('elenco').innerHTML = `
     <li class="g-vuoto g-in-sviluppo">
-      <strong>In sviluppo.</strong> La gestione degli eventi tornerà con un prossimo
-      aggiornamento del sito. Gli eventi già pubblicati restano online come sono; per
-      aggiungerne uno o correggerlo, per ora, chiedi a chi cura il sito.
+      <strong>In sviluppo.</strong> ${esc(TESTI_IN_SVILUPPO[stato.scheda] || '')}
     </li>`;
 }
 
@@ -996,7 +1011,7 @@ function moduloOperaNormale(modulo) {
   modulo.video_url.disabled = false;
   modulo.solo_scheda.disabled = false;
   $('revisione').hidden = true;
-  $('gruppo-socio').hidden = false;
+  $('gruppo-socio').hidden = !CORTOTECA_ATTIVA;
   $('salva-opera').textContent = 'Salva';
   $('chiedi-modifiche').hidden = true;
   $('rifiuta-proposta').hidden = true;
@@ -1010,6 +1025,10 @@ async function preparaTitolare(operaId) {
   stato.titolare = '';
   menu.innerHTML = '<option value="">Nessuno</option>';
   nota.textContent = notaBase;
+  // Con la Cortoteca in pausa il gruppo è nascosto e il titolare non si
+  // tocca: menu vuoto e stato vuoto, quindi il salvataggio non chiama
+  // assegna_socio e il titolare già nel database resta com'è
+  if (!CORTOTECA_ATTIVA) return;
 
   let soci = [];
   let titolari = [];
@@ -1342,7 +1361,7 @@ $('modulo-opera').addEventListener('submit', async (e) => {
     }
 
     const titolare = $('socio-titolare').value;
-    if (titolare !== stato.titolare) {
+    if (CORTOTECA_ATTIVA && titolare !== stato.titolare) {
       const { error } = await client.rpc('assegna_socio', { p_opera_id: operaId, p_email: titolare || null });
       if (error) throw error;
     }

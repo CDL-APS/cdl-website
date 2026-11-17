@@ -164,10 +164,10 @@ function mostraCorto(o, radice, ritardoAvvio = null) {
 
   // In streaming lo schermo è già il lettore; senza video lo schermo resta
   // un'immagine, e dice "Streaming in arrivo" solo se il socio non ha
-  // scelto la sola scheda
+  // scelto la sola scheda (e mai con la Cortoteca in pausa)
   const embed = getEmbedUrl(o.video_url);
   if (embed) lettore(schermo, embed, o.titolo, ritardoAvvio);
-  else if (!o.solo_scheda) schermo.insertAdjacentHTML('beforeend', '<span class="disco schermo__attesa">Streaming in arrivo</span>');
+  else if (CORTOTECA_ATTIVA && !o.solo_scheda) schermo.insertAdjacentHTML('beforeend', '<span class="disco schermo__attesa">Streaming in arrivo</span>');
 
   // Letterboxd e IMDb, coi loro marchi: solo indirizzi web veri (IMDb solo
   // imdb.com, come vuole anche il database), i campi arrivano da un modulo

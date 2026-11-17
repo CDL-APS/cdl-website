@@ -12,9 +12,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800;900&display=swap">
-    <link rel="stylesheet" href="assets/css/base.css?v=2026-11-15b">
-    <link rel="stylesheet" href="assets/css/components.css?v=2026-11-15b">
-    <link rel="stylesheet" href="assets/css/pages/home.css?v=2026-11-15b">
+    <link rel="stylesheet" href="assets/css/base.css?v=2026-11-18">
+    <link rel="stylesheet" href="assets/css/components.css?v=2026-11-18">
+    <link rel="stylesheet" href="assets/css/pages/home.css?v=2026-11-18">
 </head>
 <body>
 
@@ -25,7 +25,6 @@
             <a class="nav__voce nav__voce--eventi" href="eventi.html">Eventi</a>
             <a class="nav__voce nav__voce--produzioni" href="produzioni.html">Produzioni</a>
             <a class="nav__voce nav__voce--contatti" href="contatti.html#contatti">Contatti</a>
-            <a class="nav__cortoteca" href="cortoteca.html"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.14v13.72L19 12 8 5.14Z"/></svg>Cortoteca</a>
             <a class="btn btn--pieno nav__socio" href="vantaggi-tesseramento.html">Diventa socio</a>
         </div>
     </header>
@@ -47,7 +46,7 @@
                 </div>
             </div>
             <!-- data-quota: la voce del nastro sulla quota ridotta (vuota, la voce non c'è) -->
-            <div class="nastro scorre" id="nastro" role="group" aria-label="Ultime notizie" data-quota="Quota associativa ridotta per gli ultimi mesi del 2026">
+            <div class="nastro scorre" id="nastro" role="group" aria-label="Ultime notizie" data-quota="Quota associativa ridotta a 5 € fino al 31 dicembre">
                 <div class="scorre__pista"></div>
                 <button class="scorre__pausa" type="button" aria-pressed="false">
                     <span class="sr-only">Ferma lo scorrimento delle notizie</span><svg class="icona-ferma" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="5" width="4.5" height="14" rx="1"/><rect x="13.5" y="5" width="4.5" height="14" rx="1"/></svg><svg class="icona-riprendi" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.14v13.72L19 12 8 5.14Z"/></svg>
@@ -55,17 +54,13 @@
             </div>
         </section>
 
-        <!-- L'INDICE: le tre sezioni del sito, solo i nomi a tutta larghezza.
+        <!-- L'INDICE: le sezioni del sito, solo i nomi a tutta larghezza.
              Al passaggio su un nome tutta la sezione prende il suo colore e
-             sotto compare l'elenco breve dei più recenti (lo mette home.js). La
-             Cortoteca non ha elenco: si aprono gli occhi, nelle O e ai bordi. -->
+             sotto compare l'elenco breve dei più recenti (lo mette home.js).
+             La Cortoteca (terza voce, senza elenco, con gli occhi nelle O e
+             ai bordi della sezione) è in pausa dal 17 novembre 2026: per
+             rimetterla vedi storico/2026-11-17-cortoteca-in-pausa.md. -->
         <section id="indice" aria-label="Le sezioni del sito">
-            <div class="occhi-bordo" aria-hidden="true">
-                <span class="occhio" style="--x:0%;--y:26%;--d:58px"><span class="pupilla"></span></span>
-                <span class="occhio" style="--x:0%;--y:64%;--d:36px"><span class="pupilla"></span></span>
-                <span class="occhio" style="--x:100%;--y:16%;--d:44px"><span class="pupilla"></span></span>
-                <span class="occhio" style="--x:100%;--y:78%;--d:62px"><span class="pupilla"></span></span>
-            </div>
             <div class="wrap">
                 <ul class="sezioni" data-uguali>
                     <li class="sezione sezione--eventi">
@@ -81,10 +76,6 @@
                             <ul class="sezione__recenti" id="elenco-produzioni" aria-label="Produzioni: i più recenti"></ul>
                             <a class="link sezione__tutti" href="produzioni.html">Vedi tutte le produzioni <svg class="freccia" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h15"/><path d="m13 6 6 6-6 6"/></svg></a>
                         </div>
-                    </li>
-                    <li class="sezione sezione--cortoteca">
-                        <h2 class="sezione__nome"><a href="cortoteca.html"><span class="sr-only">Cortoteca</span><span class="fit" data-preciso aria-hidden="true"><span class="fit-testo">C<span class="o">O<span class="occhio"><span class="pupilla"></span></span></span>RT<span class="o">O<span class="occhio"><span class="pupilla"></span></span></span>TECA</span></span></a></h2>
-                        <div class="sezione__elenco" aria-hidden="true"></div>
                     </li>
                 </ul>
             </div>
@@ -113,7 +104,7 @@
                     <p class="sostieni__stato"><span class="rec"></span>La quota associativa &egrave; stata ridotta per gli ultimi mesi del 2026.</p>
                     <p class="sostieni__frase">Associarti a CDL significa contribuire attivamente al nostro progetto di diffusione della cultura cinematografica indipendente.</p>
                     <div class="btn-riga">
-                        <a class="btn btn--socio" href="contatti.html?motivo=socio#contatti">Diventa socio</a>
+                        <a class="btn btn--socio" href="vantaggi-tesseramento.html#associati">Diventa socio</a>
                         <a class="btn btn--scuro" href="contatti.html#contatti">Contattaci</a>
                     </div>
                     <a class="link" href="vantaggi-tesseramento.html">Tutti i vantaggi per i soci <svg class="freccia" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h15"/><path d="m13 6 6 6-6 6"/></svg></a>
@@ -139,8 +130,8 @@
         </div>
     </footer>
 
-    <script src="assets/js/dati.js?v=2026-11-15b"></script>
-    <script src="assets/js/comune.js?v=2026-11-15b"></script>
-    <script src="assets/js/home.js?v=2026-11-15b"></script>
+    <script src="assets/js/dati.js?v=2026-11-18"></script>
+    <script src="assets/js/comune.js?v=2026-11-18"></script>
+    <script src="assets/js/home.js?v=2026-11-18"></script>
 </body>
 </html>

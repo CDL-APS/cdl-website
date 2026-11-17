@@ -206,6 +206,14 @@ function indirizzoSicuro(indirizzo) {
    storico/2026-11-13-piano-eventi-gestione.md. */
 const MODELLO_EVENTI = false;
 
+/* La Cortoteca è in pausa (17 novembre 2026). Spento: la voce del nastro
+   della home, "Streaming in arrivo" sulle pagine dei corti, ogni rimando a
+   cortoteca.html; in gestione le schede Dashboard, Proposte e Soci e il
+   titolare delle opere. Le voci di barra e indice sono tolte dall'HTML e
+   netlify.toml rimanda galleria e area socio. Come riprendere:
+   storico/2026-11-17-cortoteca-in-pausa.md. */
+const CORTOTECA_ATTIVA = false;
+
 /* Vero se la pagina dell'evento si compone dal database (evento.html, vedi
    modello-evento.js): ha una presentazione o almeno un blocco */
 function conModello(evento) {

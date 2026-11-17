@@ -179,7 +179,7 @@ function voceProgramma(voce, opere) {
     : `<span class="programma-titolo">${esc(voce.titolo)}</span>`;
   const riga = voce.riga ? `<span class="programma-dati">${inRiga(voce.riga, !opera)}</span>` : '';
   const dentro = opera
-    ? `<a class="programma-voce" href="${esc(indirizzoOpera(opera))}">${nome}${riga}<span class="programma-cortoteca"><span>Nella Cortoteca</span> ${ICONA_CORTOTECA}</span></a>`
+    ? `<a class="programma-voce" href="${esc(indirizzoOpera(opera))}">${nome}${riga}<span class="programma-cortoteca"><span>Scheda del corto</span> ${ICONA_CORTOTECA}</span></a>`
     : `<div class="programma-voce">${nome}${riga}</div>`;
   const sotto = Array.isArray(voce.voci) && voce.voci.length
     ? `<ol class="programma-lista programma-lista--corti">${voce.voci.map((v) => voceProgramma(v, opere)).join('')}</ol>` : '';

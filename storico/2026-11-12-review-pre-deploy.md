@@ -1,5 +1,14 @@
 # Review prima del deploy del redesign (12 novembre 2026, notte)
 
+> **17 novembre 2026: da rifare sul lavoro nuovo.** Il deploy ora comprende
+> la Cortoteca in pausa, l'informativa obbligatoria nel modulo di Contatti e
+> la domanda di ammissione online, con una web app Google Apps Script
+> (`google/iscrizioni/`) che riceve dati personali, scrive nel libro soci e
+> manda mail, più header nuovi in `netlify.toml`. È lavoro sostanziale:
+> `/code-review` e `/security-review` vanno rifatte su quanto cambiato dal
+> 17 novembre, ed esiti aggiunti in fondo a questo file. Le review qui sotto
+> restano valide per il resto.
+
 Fatta con la skill `code-review` (due revisori in parallelo: regole del
 progetto in `CLAUDE.md` e specifiche in `storico/`) sul diff
 `main...redesign` al commit `89093fe`. **Esclusi dal controllo**, su

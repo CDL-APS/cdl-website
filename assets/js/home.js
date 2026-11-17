@@ -54,7 +54,8 @@ function indirizzoRullino(foto, eventi, opere) {
   if (foto.evento_id) return paginaEvento(eventi.find((e) => e.id === foto.evento_id)) || 'eventi.html';
   if (foto.opera_id) {
     const opera = opere.find((o) => o.id === foto.opera_id);
-    return opera ? indirizzoOpera(opera) : 'cortoteca.html';
+    if (opera) return indirizzoOpera(opera);
+    return CORTOTECA_ATTIVA ? 'cortoteca.html' : null;
   }
   return paginaEvento({ pagina: foto.pagina });
 }
@@ -66,7 +67,8 @@ function didascaliaRullino(foto, eventi, opere) {
   if (evento) return [evento.titolo, evento.data_inizio ? dataLunga(evento.data_inizio) : ''];
   const opera = foto.opera_id && opere.find((o) => o.id === foto.opera_id);
   if (opera) {
-    const chi = opera.produzione_cdl ? 'Produzione CDL' : opera.collaborazione_cdl ? 'Collaborazione CDL' : 'Cortoteca';
+    const chi = opera.produzione_cdl ? 'Produzione CDL' : opera.collaborazione_cdl ? 'Collaborazione CDL'
+      : CORTOTECA_ATTIVA ? 'Cortoteca' : 'Cortometraggio';
     return [opera.titolo, [chi, opera.anno].filter(Boolean).join(', ')];
   }
   return [foto.descrizione || '', ''];
@@ -162,7 +164,6 @@ async function home() {
   const [evento] = eventi;
   const produzioni = produzioniCdl(opere);
   const [produzione] = produzioni;
-  const guardabili = opere.filter(streamingDisponibile).length;
 
   elencoBreve('eventi', eventi.slice(0, 3).map((e) => ({
     titolo: e.titolo, quando: meseAnno(e.data_inizio), href: paginaEvento(e) || 'eventi.html',
@@ -175,8 +176,11 @@ async function home() {
   const voci = [];
   if (evento) voci.push(voceNastro(`Ultimo evento: ${evento.titolo}, ${dataLunga(evento.data_inizio)}`, paginaEvento(evento) || 'eventi.html'));
   if (produzione) voci.push(voceNastro(`Ultima produzione: ${produzione.titolo} (${produzione.anno})`, indirizzoOpera(produzione)));
-  if (opere.length) voci.push(voceNastro(`In Cortoteca ${opere.length} opere, ${guardabili} da guardare ora`, 'cortoteca.html'));
-  if (nastro.dataset.quota) voci.push(voceNastro(nastro.dataset.quota, 'contatti.html#socio'));
+  if (CORTOTECA_ATTIVA && opere.length) {
+    const guardabili = opere.filter(streamingDisponibile).length;
+    voci.push(voceNastro(`In Cortoteca ${opere.length} opere, ${guardabili} da guardare ora`, 'cortoteca.html'));
+  }
+  if (nastro.dataset.quota) voci.push(voceNastro(nastro.dataset.quota, 'vantaggi-tesseramento.html#associati'));
 
   nastro.querySelector('.scorre__pista').innerHTML = voci.join('');
   preparaScorre(nastro);

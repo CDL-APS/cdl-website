@@ -4,8 +4,9 @@
    riceve la mail: contatti → ciao@, contatti-eventi → eventi@,
    contatti-produzione → produzione@cdlaps.com) e l'oggetto della mail:
    "[Sito CDL] <oggetto> – <nome>". Motivi, moduli e oggetti stanno
-   nell'HTML (data-modulo, data-oggetto). ?motivo=socio sceglie già il
-   motivo. Dopo l'invio Netlify riapre la pagina su #grazie.
+   nell'HTML (data-modulo, data-oggetto). ?motivo=<id senza "motivo-">
+   (per esempio ?motivo=short-talks) sceglie già il motivo. Per diventare
+   soci c'è la domanda di ammissione in vantaggi-tesseramento.html. Dopo l'invio Netlify riapre la pagina su #grazie.
    ========================================================================== */
 
 /* "Scrivici" alto quanto la frase a fianco: le maiuscole del titolo vanno
@@ -74,6 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (!modulo) return;
   const invia = modulo.querySelector('button[type="submit"]');
   const testoInvia = invia.innerHTML;
+  caselleDopoLettura(modulo);
 
   const motivo = new URLSearchParams(location.search).get('motivo');
   const scelta = motivo && /^[a-z-]+$/.test(motivo) && document.getElementById('motivo-' + motivo);

@@ -17,19 +17,54 @@
 # La query string (?film=quartolivello) viene mantenuta in automatico.
 # ---------------------------------------------------------------------------
 
-# L'area socio si chiamava proponi.html (fino al 13 novembre 2026): i
-# collegamenti già mandati ai soci la raggiungono. Il browser conserva la
-# parte dopo il cancelletto (#invito=…) anche dopo il rimando.
+# CORTOTECA IN PAUSA (dal 17 novembre 2026, storico/2026-11-17-cortoteca-in-pausa.md).
+# La galleria rimanda a Produzioni, l'area socio (e il suo vecchio nome
+# proponi.html) alla home: 302, perché il rimando è temporaneo. Vanno prima
+# della regola /cortoteca/* delle immagini. /cortoteca/info_film2 (più sotto)
+# resta attivo: porta alla pagina del corto, che è ancora pubblica.
+# Alla ripresa: togliere questo blocco e rimettere i 301 da /proponi.html e
+# /proponi a /area-socio.html (i collegamenti mandati ai soci, il browser
+# conserva il #invito=… anche dopo il rimando).
+[[redirects]]
+  from = "/cortoteca.html"
+  to = "/produzioni.html"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/cortoteca"
+  to = "/produzioni.html"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/cortoteca/"
+  to = "/produzioni.html"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/area-socio.html"
+  to = "/"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/area-socio"
+  to = "/"
+  status = 302
+  force = true
+
 [[redirects]]
   from = "/proponi.html"
-  to = "/area-socio.html"
-  status = 301
+  to = "/"
+  status = 302
   force = true
 
 [[redirects]]
   from = "/proponi"
-  to = "/area-socio.html"
-  status = 301
+  to = "/"
+  status = 302
   force = true
 
 [[redirects]]
@@ -116,6 +151,24 @@
   status = 404
   force = true
 
+[[redirects]]
+  from = "/google/*"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/documenti/*"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/revisione-design-2026-11-11.md"
+  to = "/404.html"
+  status = 404
+  force = true
+
 # ---------------------------------------------------------------------------
 # HEADER
 # ---------------------------------------------------------------------------
@@ -133,6 +186,14 @@
 
 # Il database dei film cambia spesso: cache breve, così un corto aggiunto
 # oggi si vede subito.
+# Lo statuto si apre solo dal modulo della domanda di ammissione: niente
+# motori di ricerca (decisione del 17 novembre 2026). L'header, non
+# robots.txt, perché Google deve poter leggere il file per vedere il divieto.
+[[headers]]
+  for = "/assets/doc/statuto-*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+
 [[headers]]
   for = "/data/*"
   [headers.values]

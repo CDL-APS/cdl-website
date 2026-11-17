@@ -12,9 +12,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800;900&display=swap">
-    <link rel="stylesheet" href="assets/css/base.css?v=2026-11-15b">
-    <link rel="stylesheet" href="assets/css/components.css?v=2026-11-15b">
-    <link rel="stylesheet" href="assets/css/pages/contatti.css?v=2026-11-15b">
+    <link rel="stylesheet" href="assets/css/base.css?v=2026-11-18">
+    <link rel="stylesheet" href="assets/css/components.css?v=2026-11-18">
+    <link rel="stylesheet" href="assets/css/pages/contatti.css?v=2026-11-18">
 </head>
 <body class="pagina-contatti">
 
@@ -25,7 +25,6 @@
             <a class="nav__voce nav__voce--eventi" href="eventi.html">Eventi</a>
             <a class="nav__voce nav__voce--produzioni" href="produzioni.html">Produzioni</a>
             <a class="nav__voce nav__voce--contatti" href="contatti.html#contatti" aria-current="page">Contatti</a>
-            <a class="nav__cortoteca" href="cortoteca.html"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.14v13.72L19 12 8 5.14Z"/></svg>Cortoteca</a>
             <a class="btn btn--pieno nav__socio" href="vantaggi-tesseramento.html">Diventa socio</a>
         </div>
     </header>
@@ -59,12 +58,8 @@
                         <div class="modulo__motivi">
                             <input type="radio" name="motivo" id="motivo-informazioni" value="Informazioni" data-modulo="contatti" data-oggetto="Richiesta di informazioni" checked>
                             <label for="motivo-informazioni" class="scelta">Informazioni</label>
-                            <input type="radio" name="motivo" id="motivo-socio" value="Diventare socio" data-modulo="contatti" data-oggetto="Richiesta di tesseramento">
-                            <label for="motivo-socio" class="scelta">Diventare socio</label>
                             <input type="radio" name="motivo" id="motivo-short-talks" value="Short Talks nel tuo cinema" data-modulo="contatti-eventi" data-oggetto="Short Talks nel tuo cinema">
                             <label for="motivo-short-talks" class="scelta">Short Talks nel tuo cinema</label>
-                            <input type="radio" name="motivo" id="motivo-cortoteca" value="Un corto per la Cortoteca" data-modulo="contatti" data-oggetto="Proposta di un corto per la Cortoteca">
-                            <label for="motivo-cortoteca" class="scelta">Un corto per la Cortoteca</label>
                             <input type="radio" name="motivo" id="motivo-collaborazione" value="Collaborare a una produzione" data-modulo="contatti-produzione" data-oggetto="Proposta di produzione in collaborazione">
                             <label for="motivo-collaborazione" class="scelta">Collaborare a una produzione</label>
                             <input type="radio" name="motivo" id="motivo-altro" value="Altro" data-modulo="contatti" data-oggetto="Messaggio dal sito">
@@ -87,9 +82,13 @@
                         <textarea name="messaggio" rows="6" required></textarea>
                     </label>
                     <div class="modulo__piede">
+                        <!-- La casella si spunta solo dopo aver aperto l'informativa
+                             (caselleDopoLettura in comune.js). Il valore porta la
+                             versione del documento: cambiandolo, va cambiato il nome
+                             del PDF e il valore qui -->
                         <label class="modulo__consenso">
-                            <input type="checkbox" name="consenso" required>
-                            <span>Acconsento al trattamento dei dati per ricevere una risposta.</span>
+                            <input type="checkbox" name="informativa" value="Letta (informativa-contatti-v1)" required data-dopo-lettura="link-informativa" data-nota-lettura="Apri l'informativa per poter spuntare la casella.">
+                            <span>Ho letto l&rsquo;<a id="link-informativa" href="/assets/doc/informativa-contatti-v1.pdf" target="_blank" rel="noopener">informativa sulla privacy</a>.</span>
                         </label>
                         <button class="btn btn--pieno" type="submit">Invia il messaggio <svg class="freccia" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h15"/><path d="m13 6 6 6-6 6"/></svg></button>
                     </div>
@@ -98,17 +97,17 @@
                      cambia form-name): stessi campi e stessa action, perché dopo l'invio
                      Netlify usa quella del modulo che riceve il messaggio -->
                 <form name="contatti-eventi" method="POST" action="/contatti.html#grazie" data-netlify="true" netlify-honeypot="campo-trappola" hidden>
-                    <input name="campo-trappola"><input name="subject"><input name="motivo"><input name="nome"><input name="email"><textarea name="messaggio"></textarea><input name="consenso">
+                    <input name="campo-trappola"><input name="subject"><input name="motivo"><input name="nome"><input name="email"><textarea name="messaggio"></textarea><input name="informativa">
                 </form>
                 <form name="contatti-produzione" method="POST" action="/contatti.html#grazie" data-netlify="true" netlify-honeypot="campo-trappola" hidden>
-                    <input name="campo-trappola"><input name="subject"><input name="motivo"><input name="nome"><input name="email"><textarea name="messaggio"></textarea><input name="consenso">
+                    <input name="campo-trappola"><input name="subject"><input name="motivo"><input name="nome"><input name="email"><textarea name="messaggio"></textarea><input name="informativa">
                 </form>
             </div>
         </section>
     </main>
 
     <!-- SOSTIENI: lo stesso invito che chiude la home, sotto il modulo
-         (meta di "Diventa socio", contatti.html#socio). Come nella home
+         (contatti.html#socio; "Diventa socio" porta alla domanda in vantaggi-tesseramento.html#associati). Come nella home
          contiene il piede, che così ha l'arancio dietro gli angoli tondi -->
     <footer class="closing fondo-arancio contatti-sostieni" id="socio">
         <div class="wrap sostieni">
@@ -121,7 +120,7 @@
                     <p class="sostieni__stato"><span class="rec"></span>La quota associativa &egrave; stata ridotta per gli ultimi mesi del 2026.</p>
                     <p class="sostieni__frase">Associarti a CDL significa contribuire attivamente al nostro progetto di diffusione della cultura cinematografica indipendente.</p>
                     <div class="btn-riga">
-                        <a class="btn btn--socio" href="contatti.html?motivo=socio#contatti">Diventa socio</a>
+                        <a class="btn btn--socio" href="vantaggi-tesseramento.html#associati">Diventa socio</a>
                         <a class="btn btn--scuro" href="contatti.html#contatti">Contattaci</a>
                     </div>
                     <a class="link" href="vantaggi-tesseramento.html">Tutti i vantaggi per i soci <svg class="freccia" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h15"/><path d="m13 6 6 6-6 6"/></svg></a>
@@ -147,7 +146,7 @@
         </div>
     </footer>
 
-    <script src="assets/js/comune.js?v=2026-11-15b"></script>
-    <script src="assets/js/contatti.js?v=2026-11-15b"></script>
+    <script src="assets/js/comune.js?v=2026-11-18"></script>
+    <script src="assets/js/contatti.js?v=2026-11-18"></script>
 </body>
 </html>

@@ -603,3 +603,40 @@ document.addEventListener('DOMContentLoaded', () => {
     preparaGiostre(document);
   }
 });
+
+/* Caselle "dopo lettura" (informativa privacy, statuto): una casella con
+   data-dopo-lettura="<id del link>" si spunta solo dopo aver aperto quel
+   link. Non è disabilitata (una casella disabilitata non viene controllata
+   dal browser, e il modulo partirebbe senza): finché il link non è stato
+   aperto il clic sulla casella non ha effetto e la nota sotto dice perché.
+   Lo fa lo script, non l'HTML: senza JavaScript la casella funziona come
+   una casella qualsiasi. La nota si può cambiare con data-nota-lettura. */
+function caselleDopoLettura(radice = document) {
+  radice.querySelectorAll('input[type="checkbox"][data-dopo-lettura]').forEach((casella) => {
+    const link = document.getElementById(casella.dataset.dopoLettura);
+    if (!link) return;
+    const nota = document.createElement('small');
+    nota.className = 'modulo__nota-lettura';
+    nota.id = link.id + '-nota';
+    nota.textContent = casella.dataset.notaLettura || 'Apri il documento per poter spuntare la casella.';
+    (casella.closest('label')?.querySelector('span') || casella.parentElement).append(nota);
+    casella.setAttribute('aria-disabled', 'true');
+    casella.setAttribute('aria-describedby', nota.id);
+
+    let aperto = false;
+    casella.addEventListener('click', (e) => {
+      if (aperto) return;
+      e.preventDefault();
+      nota.classList.add('is-evidente');
+    });
+    const apri = () => {
+      if (aperto) return;
+      aperto = true;
+      casella.removeAttribute('aria-disabled');
+      casella.removeAttribute('aria-describedby');
+      nota.remove();
+    };
+    link.addEventListener('click', apri);
+    link.addEventListener('auxclick', apri);
+  });
+}

@@ -14,22 +14,55 @@ Il redesign sta sul branch `redesign` (dettagli in
 `storico/2026-11-12-handoff-redesign-nel-sito.md`). Finché questa lista non
 è vuota, ricordala all'utente quando si parla di pubblicare.
 
-Prima di unire:
+**Cambio di piano del 17 novembre 2026** (decisione dell'utente): la
+Cortoteca va in pausa ed esce dal deploy; il deploy comprende invece la
+domanda di ammissione a socio online e l'informativa obbligatoria nel
+modulo di Contatti. Il piano approvato, fase per fase, è riassunto qui; i
+dettagli stanno nei due documenti dello storico.
 
-- [x] Review del diff `main...redesign` con `/code-review` e
-  `/security-review` (12 e 13 novembre, rifatte il 13 sera sul lavoro
-  nuovo): esiti in
-  `storico/2026-11-12-review-pre-deploy.md`. Fatte: non vanno rifatte per
-  ritocchi grafici, di impaginazione o di testi (come quelli del 15
-  novembre: icona della home, lente del rullino, Prossimamente, scheda del
-  corto). Si rifanno solo se il branch riceve lavoro sostanziale: nuove
-  funzioni, dati, permessi, Supabase, header di sicurezza (decisione
-  dell'utente, 15 novembre 2026).
-- [ ] Prove sul deploy di prova `https://redesign--cdl-aps.netlify.app`
+Prima di unire, in quest'ordine:
+
+- [ ] **Cortoteca in pausa**: nascosta dal sito pubblico, area socio
+  irraggiungibile, in gestione Dashboard, Proposte e Soci "In sviluppo".
+  Cosa si spegne e dove, cosa resta acceso e come riprendere:
+  `storico/2026-11-17-cortoteca-in-pausa.md`.
+- [ ] **Privacy nel modulo di Contatti**: "Ho letto l'informativa", con la
+  casella che si spunta solo dopo aver aperto il PDF
+  (`assets/doc/informativa-contatti-v1.pdf`, `caselleDopoLettura()` in
+  `comune.js`).
+- [ ] **Domanda di ammissione a socio online** in
+  `vantaggi-tesseramento.html#associati`, con la web app Google Apps Script
+  (`google/iscrizioni/`) che scrive nel libro soci e manda le mail:
+  `storico/2026-11-17-piano-iscrizione-online.md`. Prima di aprirla
+  servono le decisioni del direttivo elencate lì ("Fuori dal codice") e i
+  testi approvati di informativa e statuto.
+  Stato al 18 novembre: pausa della Cortoteca, privacy di Contatti,
+  sezione del sito (a comparsa), web app, modulo cartaceo a 5 €
+  (`domanda-ammissione-socio-2026.pdf`) e PDF di informative e statuto
+  **fatti**, controllati a occhio in locale; non ancora committati né
+  provati con un vero Apps Script. Nel libro soci tolti i numeri di tessera
+  scritti in anticipo (035-150): ora i numeri li dà solo lo script, anche
+  alle domande cartacee. Mancano: l'installazione della web app con ciao@
+  e il suo indirizzo in `data-indirizzo` (`google/iscrizioni/README.md`:
+  l'utente vuole essere guidato passo per passo quando è il momento) e
+  l'account PayPal da verificare (`cdlaps` o `cdl-aps`).
+- [ ] **Rilettura finale delle due informative** e del modulo cartaceo
+  (`assets/doc/`), da parte dell'utente: i testi sono approvati, l'utente
+  può ancora segnalare correzioni. Prima della pubblicazione si correggono
+  tenendo lo stesso nome; dopo, nome e versione nuovi
+  (`documenti/README.md`).
+- [ ] **Review di nuovo** con `/code-review` e `/security-review` sul
+  lavoro dal 17 novembre (dati personali, web app esterna, header nuovi):
+  esiti in `storico/2026-11-12-review-pre-deploy.md`. Le review del 12-13
+  novembre restano valide per il resto. Regola dell'utente (15 novembre
+  2026): non si rifanno per ritocchi grafici, di impaginazione o di testi;
+  si rifanno per lavoro sostanziale (nuove funzioni, dati, permessi,
+  Supabase, header di sicurezza).
+- [ ] **Prove sul deploy di prova** `https://redesign--cdl-aps.netlify.app`
   (caricato a mano con la CLI di Netlify, senza `--prod`), seguendo
-  `storico/2026-11-14-prove-sito-online.md`. Da ricordare all'utente
-  all'inizio della sessione dopo il 13 novembre. Se il branch cambia, il
-  deploy di prova va ricaricato (`git archive` in una cartella pulita, poi
+  `storico/2026-11-14-prove-sito-online.md` (aggiornata il 17 novembre),
+  fino a un pagamento vero da 5 €. Il deploy di prova va ricaricato dopo le
+  tre voci sopra (`git archive` in una cartella pulita, poi
   `npx netlify-cli@17 deploy --dir . --site <id> --alias redesign`).
 - [ ] Pull request `redesign` → `main`, unita da GitHub con l'account
   `cdl-aps` e un merge commit (vedi "Pubblicazione" più sotto).
@@ -38,25 +71,42 @@ Subito dopo il deploy:
 
 - [ ] Applicare `supabase/migrations/20261113200000_colonne_pubbliche.sql`
   (non prima: il sito vecchio legge con `select=*` e ripiegherebbe sulle
-  copie di riserva). Poi aprire home, Cortoteca, Eventi e Produzioni: in
-  console non deve comparire "uso la copia di riserva".
+  copie di riserva). Poi aprire home, Eventi, Produzioni e una pagina di un
+  corto: in console non deve comparire "uso la copia di riserva".
 - [ ] Un invio di prova per ogni motivo del modulo di Contatti, dal sito
   online: deve arrivare la mail all'indirizzo giusto, con l'oggetto
   "[Sito CDL] …" (rilevamento dei moduli e notifiche sono già attivi dal 13
   novembre). Controllare anche che rispondendo alla mail la risposta vada a
   chi ha scritto; se no, annotarlo qui sotto "Contatti".
-- [ ] `curl -I` su `/gestione.html`, `/gestione`, `/area-socio.html`,
-  `/area-socio`: devono avere la Content-Security-Policy e
-  `Cache-Control: no-store`; sull'area socio anche
-  `Referrer-Policy: no-referrer`. `/proponi.html` e `/proponi` devono
-  rispondere 301 verso `/area-socio.html`.
-- [ ] Rigenerare dal sito online ("Nuovo collegamento", scheda Soci) i
-  collegamenti dei soci creati in locale: puntano a `localhost`.
+- [ ] Domanda di ammissione: la web app passa dalla copia di prova al
+  foglio vero (`FOGLIO_ID`), poi un invio di prova dal sito online, da
+  togliere subito dopo dal foglio e dalla cartella "Domande di ammissione".
+- [ ] `curl -I` su `/gestione.html` e `/gestione`: devono avere la
+  Content-Security-Policy e `Cache-Control: no-store`.
+  `/cortoteca.html` e `/cortoteca` devono rispondere 302 verso
+  `/produzioni.html`; `/area-socio.html`, `/area-socio`, `/proponi.html` e
+  `/proponi` 302 verso `/`; lo statuto in `assets/doc/` deve avere
+  `X-Robots-Tag: noindex`.
 - [ ] Ricaricare dalla gestione, come PNG, i titoli di Interzona, Quarto
   Livello, Relatività e Viva Revolution; poi togliere `TITOLI_GRAFICI` da
   `comune.js` e la cartella `assets/img/film/titoli/`.
 - [ ] Un giro del sito su un iPhone e su Safari (mai provati su dispositivi
   veri).
+
+## Cortoteca in pausa (dal 17 novembre 2026)
+
+Galleria pubblica, area socio, proposte, licenze e le schede Dashboard,
+Proposte e Soci della gestione sono spente; database, Edge Function e
+sincronizzazione del foglio restano accesi. `opera.html` (la pagina del
+corto) resta pubblica: la usano Produzioni, il rullino e le pagine evento.
+Interruttori: `CORTOTECA_ATTIVA` in `dati.js` (lo leggono anche
+`gestione.js` e `gestione-rullino.js`), `SCHEDE_IN_SVILUPPO` in
+`gestione.js`, i redirect 302 in `netlify.toml`, le voci tolte dall'HTML
+(barra, indice della home, Vantaggi, Contatti, 404). Tutto, compreso come
+riprendere e il da fare congelato (ordinamenti e ricerca globale della
+Cortoteca, collegamenti dei soci da rigenerare, prove di area socio e
+proposte), è in `storico/2026-11-17-cortoteca-in-pausa.md`. Le sezioni sulla
+Cortoteca più sotto descrivono il sistema com'è, spento.
 
 ## Da fare più avanti (non prioritario)
 
@@ -67,20 +117,25 @@ Subito dopo il deploy:
   `storico/2026-11-13-piano-eventi-gestione.md`. Tre interruttori:
   `MODELLO_EVENTI` in `dati.js`, `SCHEDE_IN_SVILUPPO` in `gestione.js`,
   l'etichetta "In sviluppo" e i gruppi `hidden` in `gestione.html`.
-
+- [ ] Riprendere la Cortoteca: `storico/2026-11-17-cortoteca-in-pausa.md`.
 - [ ] Sostieni: aggiungere la possibilità di fare una donazione, oltre a
-  diventare socio (blocco arancio in home, Contatti e Vantaggi).
-- [ ] Cortoteca, ordinamenti: diventano "Per nome", "Per regista" e "A-Z"
-  (oggi "Per anno" e "Per nome"). "Per regista" raggruppa i corti in
-  blocchi sotto il nome di ciascun regista; il nome apre un pop-up con
-  alcune informazioni sul regista, che ogni socio può modificare entrando
-  nell'area socio (`area-socio.html`).
-- [ ] Cortoteca, ricerca globale: cerca un nome in tutte le informazioni di
-  un corto, non solo titolo e regista. Scrivendo "Andrea" escono il corto
-  Andrea e tutti quelli con un attore o una maestranza che si chiama
-  Andrea; per restringere si scrive una ricerca più precisa.
-- [ ] Iscrizione online: quando ci sarà il modulo per associarsi solo per
-  via telematica, metterlo sul sito con il pagamento integrato PayPal.
+  diventare socio (blocco arancio in home, Contatti e Vantaggi). Può usare
+  lo stesso conto PayPal della domanda di ammissione (paypal.me senza
+  importo).
+- [ ] **Dal 1° gennaio 2027** (quota a 10 €): modulo cartaceo nuovo
+  (`documenti/domanda-ammissione-socio-2027.html`, da quello del 2026, e
+  link in `vantaggi-tesseramento.html`); togliere la quota ridotta dal
+  nastro della home (`data-quota` in `index.html`) e da Sostieni ("La
+  quota associativa è stata ridotta…" in home, Contatti e Vantaggi). Il
+  testo in cima alla domanda si aggiorna da solo (`data-quote`), la web app
+  pure (proprietà `QUOTE`). Chi rinnova tiene il suo numero di tessera: lo
+  riprende lo script dalla scheda dell'anno prima (stessa email), i nuovi
+  soci continuano la numerazione (`google/iscrizioni/README.md`).
+- [ ] Rinnovo online per chi è già socio: per l'art. 3 dello statuto lo
+  status di socio è permanente, quindi non serve una nuova domanda, basta
+  pagare la quota dell'anno. La domanda di ammissione online è solo per i
+  nuovi soci; il rinnovo potrebbe usare la stessa web app con un modulo
+  ridotto (nome, email, modalità di pagamento).
 
 ## Convenzioni
 
@@ -128,10 +183,12 @@ Subito dopo il deploy:
   SVG scritte nell'HTML.
 - **Barra e piede** sono ripetuti in ogni pagina: una modifica va portata su
   tutti i file HTML. La voce della pagina corrente ha `aria-current="page"`
-  (le pagine dei corti accendono Cortoteca, le pagine evento e la cornice
-  narrativa Eventi); il pallino colorato di una voce è una classe
-  (`nav__voce--eventi`, `--produzioni`, `--contatti`). La Cortoteca ha la
-  barra ridotta (solo Diventa socio) e il piede arancio.
+  (le pagine evento e la cornice narrativa accendono Eventi); il pallino
+  colorato di una voce è una classe (`nav__voce--eventi`, `--produzioni`,
+  `--contatti`). Con la Cortoteca in pausa la barra non ha la pillola
+  Cortoteca e le pagine dei corti non accendono nessuna voce; alla ripresa,
+  le pagine dei corti accendono Cortoteca, che ha la barra ridotta (solo
+  Diventa socio) e il piede arancio.
 - **Frecce**: ↗ per aprire un contenuto, → per andare a un elenco o a
   un'altra pagina del sito, l'icona del link esterno solo per ciò che porta
   fuori (Instagram e YouTube nel piede, i tag Instagram nelle pagine evento).
@@ -199,7 +256,9 @@ Subito dopo il deploy:
   (`20261113170000_inviti_non_per_redattori.sql`), perché da quella sessione
   si potrebbe impostare una password e arrivare alla gestione. Un redattore
   che vuole proporre corti come socio usa un altro indirizzo nel libro soci.
-- **Cortoteca, proposte dei soci.** Progetto e motivazioni in
+- **Cortoteca, proposte dei soci** (in pausa dal 17 novembre 2026, vedi
+  "Cortoteca in pausa" in cima: tutto quanto segue è spento, non
+  cancellato). Progetto e motivazioni in
   `storico/2026-11-11-cortoteca-infrastruttura.md`; regolamento, licenza e
   delibera sono bozze per il Consiglio direttivo. In breve:
   - il socio entra nell'**area socio** (`area-socio.html`, fino al 13
@@ -297,7 +356,8 @@ Subito dopo il deploy:
     (attore e personaggio, da `interpreti`) e i Crediti della troupe, un nome
     per riga (i valori separati da virgole diventano un elenco). Un titolo
     grafico scuro diventa bianco, uno con `colore` prende `--titolo`.
-- **Dashboard di gestione**: la prima scheda di `gestione.html`. "Da
+- **Dashboard di gestione** (in pausa con la Cortoteca: la gestione si
+  apre su Opere): la prima scheda di `gestione.html`. "Da
   sistemare" compare solo lì e contiene solo ciò che chiede un'azione: le
   informazioni vanno altrove (ritiri e revoche fra le ultime attività, i
   soci senza email come nota nella scheda Soci); i numeri e le ultime attività arrivano da
@@ -314,7 +374,8 @@ Subito dopo il deploy:
   database (`.editorconfig` impedisce all'editor di toccarli).
 - `opera.html` legge il codice dell'opera dalla query string (`?film=codice`).
   Senza parametro mostra "Opera non trovata".
-- **Le sale.** Un corto si apre dentro la Cortoteca e un evento dentro
+- **Le sale** (quella del corto è spenta con la Cortoteca). Un corto si
+  apre dentro la Cortoteca e un evento dentro
   Eventi, sopra la pagina (`apriSala` in `cortoteca.js`, `apriEvento` in
   `eventi.js`): l'indirizzo diventa quello del corto o dell'evento, e
   indietro, Esc e la crocetta chiudono. Per questo `cortoteca.html` contiene
@@ -375,7 +436,7 @@ Subito dopo il deploy:
   una presentazione (`.presentazione`) chiusa da un filo.
 - La home ha quattro parti: l'apertura sulla sala vista dall'alto, al buio,
   con l'icona CDL (`assets/img/brand/icona-cdl.png`), la torcia che segue il puntatore e il nastro delle ultime notizie;
-  l'indice (Eventi, Produzioni, Cortoteca tutti dello stesso corpo, centrati
+  l'indice (Eventi e Produzioni, più la Cortoteca quando non è in pausa, tutti dello stesso corpo, centrati
   e misurati sul disegno delle lettere con `data-preciso` e `data-uguali`:
   il nome più lungo tocca i margini; nel cambio di pagina il nome
   si allarga alla misura della testata; al passaggio prendono il colore della sezione e, tranne la
@@ -401,7 +462,7 @@ Subito dopo il deploy:
   della barra porta invece a `vantaggi-tesseramento.html`. Tre moduli, uno per indirizzo
   (`contatti` → ciao@, `contatti-eventi` → eventi@, `contatti-produzione` →
   produzione@cdlaps.com): il motivo sceglie modulo e oggetto
-  (`contatti.js`); `?motivo=socio` lo preseleziona. Dopo l'invio Netlify
+  (`contatti.js`); `?motivo=short-talks` (l'id senza `motivo-`) lo preseleziona; il motivo "Diventare socio" non c'è più dal 17 novembre 2026, perché c'è la domanda di ammissione. Dopo l'invio Netlify
   apre `contatti.html#grazie`, che mostra la conferma: per questo anche i
   due moduli nascosti, che servono a Netlify per riconoscerli, hanno la
   stessa `action` (Netlify usa quella del modulo che riceve il messaggio).
@@ -409,7 +470,38 @@ Subito dopo il deploy:
   per modulo (Netlify → Forms → Form notifications); un modulo con un nome
   nuovo va riconosciuto da un deploy e ha bisogno della sua notifica. Netlify
   scarta come spam, senza mandare mail, molti invii fatti da browser
-  automatici: le prove si fanno a mano.
+  automatici: le prove si fanno a mano. La casella in fondo è "Ho letto
+  l'informativa" (campo `informativa`, il valore porta la versione del
+  PDF; dal 17 novembre 2026 al posto di `consenso`, anche nei due moduli
+  nascosti) e si spunta solo dopo aver aperto il PDF.
+- **Caselle "dopo lettura"** (`caselleDopoLettura()` in `comune.js`): una
+  casella con `data-dopo-lettura="<id del link>"` non si spunta finché il
+  link non è stato aperto (clic o clic centrale); non è `disabled`, perché
+  il browser non controllerebbe il `required`. La usano Contatti e la
+  domanda di ammissione.
+- **Documenti in PDF** (informative, statuto, modulo cartaceo) in
+  `assets/doc/`, sorgenti HTML in `documenti/` (come rifarli:
+  `documenti/README.md`). Una versione nuova prende un nome nuovo, per la
+  cache di `/assets/*` e perché la versione letta resta registrata.
+- **Domanda di ammissione a socio** (`vantaggi-tesseramento.html#associati`,
+  `vantaggi-tesseramento.js`): la riceve una web app di Google Apps Script
+  (`google/iscrizioni/`, progetto autonomo dell'account ciao@, indirizzo in
+  `data-indirizzo` del modulo; vuoto = modulo non attivo), che scrive in
+  `TESSERATI <anno>` senza numero di tessera e con `Pagato? = No`, crea il
+  PDF riepilogativo e manda le mail a ciao@ e al candidato. Il tesoriere
+  mette `Pagato? = Sì` e lo script assegna il numero e manda la conferma.
+  **I numeri di tessera li assegna solo lo script**, anche alle righe
+  scritte a mano (domande cartacee): nessuno li scrive in anticipo. Il
+  numero è della persona: chi rinnova riprende il suo, un socio nuovo prende
+  il successivo al più alto di tutte le schede `TESSERATI`. Nella
+  pagina la domanda è una sezione a comparsa (`<details>`), aperta da sola
+  su `#associati`; il modulo cartaceo è
+  `assets/doc/domanda-ammissione-socio-<anno>.pdf`.
+  IBAN e PayPal ("amici e familiari") compaiono solo dopo la risposta della
+  web app. Quote (`QUOTE`) e versioni dei documenti stanno nelle proprietà
+  dello script; `data-versione` delle caselle deve coincidere. Progetto,
+  decisioni e casi limite: `storico/2026-11-17-piano-iscrizione-online.md`;
+  installazione e lavoro del tesoriere: `google/iscrizioni/README.md`.
 - `404.html` usa solo percorsi assoluti: Netlify la serve a qualsiasi
   profondità.
 - **Pubblicazione**: Netlify costruisce solo i commit il cui autore è membro
@@ -421,7 +513,8 @@ Subito dopo il deploy:
   è bloccato anche un deploy caricato a mano (connettore o CLI). Si sblocca
   unendo con `cdl-aps` una pull request qualsiasi.
 - Netlify pubblica tutta la radice: `netlify.toml` risponde 404 a
-  `README.md`, `CLAUDE.md`, `supabase/`, `.github/` e `storico/`. Nuovi file
+  `README.md`, `CLAUDE.md`, `supabase/`, `.github/`, `storico/`, `google/`,
+  `documenti/` e `revisione-design-2026-11-11.md`. Nuovi file
   interni vanno aggiunti lì.
 - `storico/` raccoglie i passaggi di consegne fra una sessione di lavoro e
   l'altra (handoff e specifiche di design), con la data nel nome.
@@ -449,9 +542,9 @@ python3 -m json.tool data/rullino.json > /dev/null
 python3 -m http.server 5500                        # poi http://localhost:5500
 ```
 
-Aprire almeno home, cortoteca, produzioni, eventi e una pagina di un corto:
-sono le pagine che dipendono dal database, e quindi le prime a rompersi.
-Provare anche una sala (clic su una still della Cortoteca e su una scheda di
-Eventi, poi Esc e indietro) e le pagine a 375 px. Il server Python non manda
+Aprire almeno home, produzioni, eventi e una pagina di un corto: sono le
+pagine che dipendono dal database, e quindi le prime a rompersi. Provare
+anche la sala di Eventi (clic su una scheda, poi Esc e indietro), la
+domanda di ammissione in Vantaggi e le pagine a 375 px. Il server Python non manda
 gli header di `netlify.toml`: la CSP di gestione e proposta si vede solo
 online (o con un server che li aggiunga).

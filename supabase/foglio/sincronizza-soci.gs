@@ -165,7 +165,7 @@ function leggiScheda(scheda) {
     }
   });
 
-  return valori.slice(1)
+  const righe = valori.slice(1)
     .map((riga) => ({
       numero: riga[posizione.numero].trim(),
       nome: riga[posizione.nome].trim(),
@@ -175,6 +175,18 @@ function leggiScheda(scheda) {
       data_tesseramento: dataIso(riga[posizione.data_tesseramento])
     }))
     .filter((riga) => riga.numero && riga.nome);
+
+  // Un numero di tessera ripetuto farebbe sparire un socio nel database (la
+  // chiave è anno + numero): meglio fermarsi e dirlo (17 novembre 2026)
+  const visti = {};
+  righe.forEach((riga) => {
+    if (visti[riga.numero]) {
+      throw new Error('Nella scheda "' + scheda.getName() + '" il numero ' + riga.numero + ' compare due volte ('
+        + visti[riga.numero] + ', ' + riga.nome + '): correggilo e risincronizza.');
+    }
+    visti[riga.numero] = riga.nome;
+  });
+  return righe;
 }
 
 /* "24/12/2025" → "2025-12-24"; qualsiasi altra cosa → vuoto */
