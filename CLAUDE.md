@@ -33,19 +33,18 @@ Prima di unire, in quest'ordine:
 - [ ] **Domanda di ammissione a socio online** in
   `vantaggi-tesseramento.html#associati`, con la web app Google Apps Script
   (`google/iscrizioni/`) che scrive nel libro soci e manda le mail:
-  `storico/2026-11-17-piano-iscrizione-online.md`. Prima di aprirla
-  servono le decisioni del direttivo elencate lì ("Fuori dal codice") e i
-  testi approvati di informativa e statuto.
-  Stato al 18 novembre: pausa della Cortoteca, privacy di Contatti,
-  sezione del sito (a comparsa), web app, modulo cartaceo a 5 €
-  (`domanda-ammissione-socio-2026.pdf`) e PDF di informative e statuto
-  **fatti**, controllati a occhio in locale; non ancora committati né
-  provati con un vero Apps Script. Nel libro soci tolti i numeri di tessera
-  scritti in anticipo (035-150): ora i numeri li dà solo lo script, anche
-  alle domande cartacee. Mancano: l'installazione della web app con ciao@
-  e il suo indirizzo in `data-indirizzo` (`google/iscrizioni/README.md`:
-  l'utente vuole essere guidato passo per passo quando è il momento) e
-  l'account PayPal da verificare (`cdlaps` o `cdl-aps`).
+  `storico/2026-11-17-piano-iscrizione-online.md`. Decisioni del
+  direttivo e testi a posto (vedi lì "Fuori dal codice").
+  Stato al 18 novembre: tutto **scritto, committato (`3c54237`) e caricato
+  sul deploy di prova**, ma non ancora provato con un vero Apps Script; il
+  modulo dice "non ancora attiva" finché `data-indirizzo` è vuoto. Nel
+  libro soci tolti i numeri di tessera scritti in anticipo (035-150): i
+  numeri li dà solo lo script, anche alle domande cartacee, e chi rinnova
+  tiene il suo. Mancano: l'installazione della web app con ciao@ e il suo
+  indirizzo in `data-indirizzo` (`google/iscrizioni/README.md`: l'utente
+  vuole essere guidato passo per passo) e l'account PayPal da verificare
+  (`cdlaps` o `cdl-aps`). Punto di ripartenza:
+  `storico/2026-11-18-handoff-domanda-ammissione.md`.
 - [ ] **Rilettura finale delle due informative** e del modulo cartaceo
   (`assets/doc/`), da parte dell'utente: i testi sono approvati, l'utente
   può ancora segnalare correzioni. Prima della pubblicazione si correggono
