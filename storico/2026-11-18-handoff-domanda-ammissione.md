@@ -6,7 +6,7 @@ ripartire senza rileggere la conversazione.
 
 ## Dove siamo
 
-- Commit `3c54237` su `redesign`, già su GitHub, e caricato sul deploy di
+- Commit su `redesign` (ultimo: le correzioni delle review), già su GitHub, e caricato sul deploy di
   prova `https://redesign--cdl-aps.netlify.app` (CLI di Netlify, sito
   `f4a10032-1dee-4d84-944d-8e2708a5c8cd`, `--alias redesign`, mai
   `--prod`). Controllati lì con `curl`: i 302 di Cortoteca e area socio, i
@@ -47,8 +47,8 @@ ripartire senza rileggere la conversazione.
 
 ## Prossimi passi, in ordine
 
-1. `/code-review` e `/security-review` sul lavoro dal 17 novembre; esiti
-   in fondo a `storico/2026-11-12-review-pre-deploy.md`.
+1. ~~`/code-review` e `/security-review`~~: fatte il 18 novembre, con le
+   correzioni (esiti in fondo a `storico/2026-11-12-review-pre-deploy.md`).
 2. Installare la web app con l'account ciao@, **guidando l'utente un passo
    alla volta** (cosa aprire, cosa cliccare, cosa incollare):
    `google/iscrizioni/README.md`, prima su una **copia** del foglio soci.

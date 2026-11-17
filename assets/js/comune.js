@@ -623,6 +623,9 @@ function caselleDopoLettura(radice = document) {
     casella.setAttribute('aria-disabled', 'true');
     casella.setAttribute('aria-describedby', nota.id);
 
+    // Una spunta rimessa dal browser ricaricando la pagina (Firefox) non
+    // vale: il documento va riaperto in questa pagina
+    casella.checked = false;
     let aperto = false;
     casella.addEventListener('click', (e) => {
       if (aperto) return;

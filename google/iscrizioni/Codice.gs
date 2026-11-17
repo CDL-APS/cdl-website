@@ -59,7 +59,12 @@ const LIMITI = {
   attesaSi: 9 * 60000,   // un Sì vale dopo che è rimasto almeno questo
   promemoria: 7,         // giorni senza pagamento prima del riepilogo
   decadenza: 30,         // giorni senza pagamento: la domanda decade
-  ratifica: 20           // giorni dal pagamento senza "Conferma assemblea?"
+  ratifica: 20,          // giorni dal pagamento senza "Conferma assemblea?"
+  // controllaPagamenti lascia stare per questo tempo una domanda appena
+  // arrivata: PDF e mail li sta ancora facendo doPost (una web app non
+  // dura più di 6 minuti)
+  attesaNuova: 7 * 60000,
+  tentativi: 6           // giri falliti di PDF e mail prima di arrendersi
 };
 const LUNGHEZZE = {
   nome: 60, cognome: 60, luogo_nascita: 80, via: 120, comune: 80,
@@ -109,6 +114,15 @@ const registro = {
   },
   togli(nome) {
     PropertiesService.getScriptProperties().deleteProperty(nome);
+  },
+  // Rilegge la domanda, la cambia e la riscrive: mai scrivere una copia
+  // letta prima, che cancellerebbe quello che ha scritto un'altra esecuzione
+  aggiorna(codice, cambia) {
+    const domanda = this.leggi('domanda:' + codice);
+    if (!domanda) return null;
+    cambia(domanda);
+    this.scrivi('domanda:' + codice, domanda);
+    return domanda;
   },
   domande() {
     const tutte = PropertiesService.getScriptProperties().getProperties();
@@ -183,7 +197,9 @@ function riceviDomanda(e) {
     const segni = [];
     if (cercaEmail(scheda, col, v.email)) segni.push('possibile doppione (email già in questa scheda)');
     const prima = foglio.getSheetByName('TESSERATI ' + (anno - 1));
-    if (prima && cercaEmail(prima, colonne(prima), v.email)) segni.push('email presente anche in TESSERATI ' + (anno - 1));
+    let colPrima = null;
+    try { colPrima = prima && colonne(prima, ['email']); } catch (_) { /* scheda vecchia senza Email */ }
+    if (colPrima && cercaEmail(prima, colPrima, v.email)) segni.push('email presente anche in TESSERATI ' + (anno - 1));
 
     const quando = Utilities.formatDate(adesso, FUSO, "dd/MM/yyyy 'alle' HH:mm");
     const note = [
@@ -233,7 +249,10 @@ function riceviDomanda(e) {
       dati: v,
       stato: 'da pagare',
       pdf: '',
-      mailDomanda: false,
+      mailNoi: false,
+      mailCandidato: false,
+      tentativi: 0,
+      errore: '',
       siDal: 0
     };
     registro.scrivi('domanda:' + codice, domanda);
@@ -244,7 +263,7 @@ function riceviDomanda(e) {
 
   // Fuori dal lock: PDF e mail. Se falliscono la domanda è comunque salvata
   // e la risposta resta ok; controllaPagamenti riprova.
-  completaDomanda(domanda, imp);
+  completaDomanda(domanda.codice, imp);
   return esito;
 }
 
@@ -254,7 +273,8 @@ function riceviDomanda(e) {
 function valida(d, imp) {
   const v = {};
   Object.keys(LUNGHEZZE).forEach((campo) => {
-    const valore = String(d[campo] == null ? '' : d[campo]).replace(/\s+/g, ' ').trim();
+    // L'apostrofo tipografico (’), che iPhone e Mac mettono da soli, vale come '
+    const valore = String(d[campo] == null ? '' : d[campo]).replace(/[\u2018\u2019\u02BC`´]/g, "'").replace(/\s+/g, ' ').trim();
     if (valore.length > LUNGHEZZE[campo]) throw new Rifiuto('Un campo è troppo lungo: ricontrollalo.');
     v[campo] = valore;
   });
@@ -267,7 +287,10 @@ function valida(d, imp) {
   if (!/^[A-Za-z]{2}$/.test(v.provincia)) throw new Rifiuto('La provincia va scritta con la sigla di due lettere.');
   v.provincia = v.provincia.toUpperCase();
   if (!/^\d{5}$/.test(v.cap)) throw new Rifiuto('Il CAP ha cinque cifre.');
-  if (!/^[^\s@<>()"',;:]+@[^\s@<>()"',;:]+\.[A-Za-z]{2,}$/.test(v.email)) throw new Rifiuto('Controlla l\'indirizzo email.');
+  // Niente punti all'inizio, alla fine o doppi: MailApp rifiuterebbe l'indirizzo
+  if (!/^[^\s@<>()"',;:]+@[^\s@<>()"',;:]+\.[A-Za-z]{2,}$/.test(v.email) || /\.\.|^\.|\.@|@\./.test(v.email)) {
+    throw new Rifiuto('Controlla l\'indirizzo email.');
+  }
   v.email = v.email.toLowerCase();
   if (v.cellulare && !/^[0-9+ ]{6,20}$/.test(v.cellulare)) throw new Rifiuto('Controlla il numero di cellulare.');
   if (v.chi_paga && !nomeProprio.test(v.chi_paga)) throw new Rifiuto('Controlla il nome di chi paga.');
@@ -283,7 +306,7 @@ function valida(d, imp) {
   if (eta > 120 || mese < 1 || mese > 12 || giorno < 1 || giorno > 31) throw new Rifiuto('Controlla la data di nascita.');
   v.data_nascita = String(giorno).padStart(2, '0') + '/' + String(mese).padStart(2, '0') + '/' + anno;
 
-  if (!MODALITA[d.pagamento]) throw new Rifiuto('Scegli come paghi la quota.');
+  if (!Object.prototype.hasOwnProperty.call(MODALITA, d.pagamento)) throw new Rifiuto('Scegli come paghi la quota.');
   v.pagamento = d.pagamento;
   if (d.ammissione !== true || d.maggiorenne !== true) throw new Rifiuto('Mancano le dichiarazioni.');
   if (d.statuto !== imp.statuto || d.informativa !== imp.informativa) {
@@ -342,11 +365,13 @@ function schedaAnno(foglio, anno) {
   return nuova;
 }
 
-// La posizione (1, 2, …) di ogni intestazione
-function colonne(scheda) {
+// La posizione (1, 2, …) di ogni intestazione. Senza `campi` servono tutte
+// (la scheda dove si scrive); per leggere le schede degli anni prima, che
+// possono avere meno colonne, si chiedono solo quelle che servono.
+function colonne(scheda, campi) {
   const intestazioni = scheda.getRange(1, 1, 1, scheda.getLastColumn()).getDisplayValues()[0].map((t) => t.trim());
   const col = {};
-  Object.keys(INTESTAZIONI).forEach((campo) => {
+  (campi || Object.keys(INTESTAZIONI)).forEach((campo) => {
     const i = intestazioni.indexOf(INTESTAZIONI[campo]);
     if (i < 0) throw new Error('Nella scheda ' + scheda.getName() + ' manca la colonna "' + INTESTAZIONI[campo] + '"');
     col[campo] = i + 1;
@@ -405,32 +430,50 @@ function normalizza(testo) {
   return String(testo || '').toLowerCase().replace(/\s+/g, ' ').trim();
 }
 
-function numeroPerRiga(scheda, col, riga) {
-  const foglio = scheda.getParent();
-  const email = normalizza(scheda.getRange(riga, col.email).getDisplayValue());
-  const nome = normalizza(scheda.getRange(riga, col.nome).getDisplayValue());
-  const giaQui = {};
-  numeriUsati(scheda, col).forEach((u) => { giaQui[parseInt(u.numero, 10)] = true; });
-
-  let piuAlto = 0;
-  let suo = '';
-  let suoPerNome = '';
-  schedeTesserati(foglio).forEach((s) => {
-    const c = s.getSheetId() === scheda.getSheetId() ? col : colonne(s);
+/* Tutto quello che serve per numerare, letto una volta sola: i numeri già
+   usati in questa scheda, il più alto di tutte le schede, e i numeri delle
+   altre schede per email e per nome. Le schede senza le colonne # e Nome
+   cognome si saltano; senza Email si cerca solo per nome. */
+function indiceTesserati(scheda, col) {
+  const indice = { giaQui: {}, piuAlto: 0, perEmail: {}, perNome: {} };
+  numeriUsati(scheda, col).forEach((u) => { indice.giaQui[parseInt(u.numero, 10)] = true; });
+  schedeTesserati(scheda.getParent()).forEach((s) => {
+    const questa = s.getSheetId() === scheda.getSheetId();
+    let c = col;
+    if (!questa) {
+      try { c = colonne(s, ['numero', 'nome']); } catch (_) { return; }
+      try { c.email = colonne(s, ['email']).email; } catch (_) { c.email = 0; }
+    }
     const nomi = valoriColonna(s, c.nome);
-    const emails = valoriColonna(s, c.email);
+    const emails = c.email ? valoriColonna(s, c.email) : [];
     numeriUsati(s, c).forEach((u) => {
       const n = parseInt(u.numero, 10);
-      if (n > piuAlto) piuAlto = n;
-      if (s.getSheetId() === scheda.getSheetId()) return;
+      if (n > indice.piuAlto) indice.piuAlto = n;
+      if (questa) return;
       const i = u.riga - 2;
-      if (email && normalizza(emails[i]) === email) suo = suo || u.numero;
-      else if (!email && nome && normalizza(nomi[i]) === nome) suoPerNome = suoPerNome || u.numero;
+      const email = normalizza(emails[i]);
+      const nome = normalizza(nomi[i]);
+      if (email && !indice.perEmail[email]) indice.perEmail[email] = u.numero;
+      if (nome && !indice.perNome[nome]) indice.perNome[nome] = u.numero;
     });
   });
-  const ripreso = suo || suoPerNome;
-  if (ripreso && !giaQui[parseInt(ripreso, 10)]) return ripreso;
-  return String(piuAlto + 1).padStart(3, '0');
+  return indice;
+}
+
+// Il numero per una riga (vedi sopra). Con più righe da numerare si passa
+// lo stesso indice: tiene conto dei numeri appena dati.
+function numeroPerRiga(scheda, col, riga, indice) {
+  indice = indice || indiceTesserati(scheda, col);
+  const email = normalizza(scheda.getRange(riga, col.email).getDisplayValue());
+  const nome = normalizza(scheda.getRange(riga, col.nome).getDisplayValue());
+  const ripreso = email ? indice.perEmail[email] : indice.perNome[nome];
+  if (ripreso && !indice.giaQui[parseInt(ripreso, 10)]) {
+    indice.giaQui[parseInt(ripreso, 10)] = true;
+    return ripreso;
+  }
+  indice.piuAlto += 1;
+  indice.giaQui[indice.piuAlto] = true;
+  return String(indice.piuAlto).padStart(3, '0');
 }
 
 // I numeri che compaiono su più righe: "2 righe con 036 (righe 37, 40)"
@@ -457,7 +500,14 @@ function collegaPdf(scheda, riga, col, file, testoLink) {
 /* --------------------------------------------------------------------------
    PDF e mail della domanda
    -------------------------------------------------------------------------- */
-function completaDomanda(domanda, imp) {
+/* PDF, mail a ciao@, mail al candidato: tre passi, ognuno segnato nel
+   registro appena fatto, così un nuovo tentativo rifà solo quello che manca
+   (e ciao@ non riceve la stessa domanda due volte). Legge sempre la domanda
+   fresca dal registro. */
+function completaDomanda(codice, imp) {
+  const domanda = registro.leggi('domanda:' + codice);
+  if (!domanda || domanda.stato !== 'da pagare') return domanda;
+  const salva = () => registro.scrivi('domanda:' + codice, domanda);
   try {
     if (!domanda.pdf) {
       const modello = HtmlService.createTemplateFromFile('domanda');
@@ -468,24 +518,35 @@ function completaDomanda(domanda, imp) {
       const blob = modello.evaluate().getBlob().getAs('application/pdf').setName(nome + '.pdf');
       const file = DriveApp.getFolderById(imp.cartella).createFile(blob);
       domanda.pdf = file.getId();
-      registro.scrivi('domanda:' + domanda.codice, domanda);
+      salva();
       const scheda = SpreadsheetApp.openById(imp.foglio).getSheetByName('TESSERATI ' + domanda.anno);
       const col = colonne(scheda);
       const riga = rigaDomanda(scheda, col, domanda.codice);
       if (riga) collegaPdf(scheda, riga, col, file, nome);
     }
-    if (!domanda.mailDomanda) {
+    if (!domanda.mailNoi || !domanda.mailCandidato) {
       if (MailApp.getRemainingDailyQuota() < 3) throw new Error('Quota giornaliera delle mail quasi finita');
-      mandaMailDomanda(domanda, imp);
-      domanda.mailDomanda = true;
-      registro.scrivi('domanda:' + domanda.codice, domanda);
+      const pdf = DriveApp.getFileById(domanda.pdf).getBlob();
+      if (!domanda.mailNoi) {
+        mandaMailNoi(domanda, imp, pdf);
+        domanda.mailNoi = true;
+        salva();
+      }
+      if (!domanda.mailCandidato) {
+        mandaMailCandidato(domanda, imp, pdf);
+        domanda.mailCandidato = true;
+        salva();
+      }
     }
     domanda.errore = '';
+    salva();
   } catch (errore) {
     console.error(errore);
+    domanda.tentativi = (domanda.tentativi || 0) + 1;
     domanda.errore = String(errore.message || errore);
-    registro.scrivi('domanda:' + domanda.codice, domanda);
+    salva();
   }
+  return domanda;
 }
 
 function istruzioniPagamento(domanda, imp) {
@@ -510,9 +571,8 @@ function istruzioniPagamento(domanda, imp) {
     + 'Causale, da ricordare: ' + domanda.causale;
 }
 
-function mandaMailDomanda(domanda, imp) {
+function mandaMailNoi(domanda, imp, pdf) {
   const d = domanda.dati;
-  const pdf = DriveApp.getFileById(domanda.pdf).getBlob();
   const nomeCompleto = d.nome + ' ' + d.cognome;
 
   const perNoi = [
@@ -542,7 +602,10 @@ function mandaMailDomanda(domanda, imp) {
     body: perNoi,
     attachments: [pdf]
   });
+}
 
+function mandaMailCandidato(domanda, imp, pdf) {
+  const d = domanda.dati;
   const allegati = [pdf];
   try {
     allegati.push(UrlFetchApp.fetch(imp.statutoUrl).getBlob().setName('Statuto CDL APS.pdf'));
@@ -587,7 +650,12 @@ function controllaPagamenti() {
 
   aperte.forEach((domanda) => {
     try {
-      if (!domanda.pdf || !domanda.mailDomanda) completaDomanda(domanda, imp);
+      const incompleta = !domanda.pdf || !domanda.mailNoi || !domanda.mailCandidato;
+      if (incompleta) {
+        // Appena arrivata: ci sta ancora lavorando doPost
+        if (Date.now() - domanda.ricevuta < LIMITI.attesaNuova) return;
+        if ((domanda.tentativi || 0) < LIMITI.tentativi) domanda = completaDomanda(domanda.codice, imp) || domanda;
+      }
       const scheda = foglio.getSheetByName('TESSERATI ' + domanda.anno);
       if (!scheda) return;
       const col = colonne(scheda);
@@ -595,13 +663,12 @@ function controllaPagamenti() {
       if (!riga) return; // riga tolta o Note cambiate: lo dice il riepilogo
       const pagato = /^s[iì]$/i.test(scheda.getRange(riga, col.pagato).getDisplayValue().trim());
       if (!pagato) {
-        if (domanda.siDal) { domanda.siDal = 0; registro.scrivi('domanda:' + domanda.codice, domanda); }
+        if (domanda.siDal) registro.aggiorna(domanda.codice, (x) => { x.siDal = 0; });
         return;
       }
       // Il Sì vale dal giro dopo: c'è il tempo di toglierlo se era uno sbaglio
       if (!domanda.siDal) {
-        domanda.siDal = Date.now();
-        registro.scrivi('domanda:' + domanda.codice, domanda);
+        registro.aggiorna(domanda.codice, (x) => { x.siDal = Date.now(); });
         return;
       }
       if (Date.now() - domanda.siDal < LIMITI.attesaSi) return;
@@ -659,11 +726,12 @@ function numeraRigheCartacee(foglio, codiciAperti) {
   const lock = LockService.getScriptLock();
   if (!lock.tryLock(30000)) return;
   try {
+    const indice = indiceTesserati(scheda, col);
     daNumerare.forEach((r) => {
       // Ricontrollo sotto il lock: la riga potrebbe essere cambiata
       if (scheda.getRange(r.riga, col.nome).getDisplayValue().trim() !== r.nome) return;
       if (scheda.getRange(r.riga, col.numero).getDisplayValue().trim()) return;
-      scheda.getRange(r.riga, col.numero).setValue(testo(numeroPerRiga(scheda, col, r.riga)));
+      scheda.getRange(r.riga, col.numero).setValue(testo(numeroPerRiga(scheda, col, r.riga, indice)));
       const cellaData = scheda.getRange(r.riga, col.dataPagamento);
       if (!cellaData.getDisplayValue().trim()) {
         cellaData.setValue(giornoSenzaOra(new Date())).setNumberFormat('dd/mm/yyyy');
@@ -701,6 +769,9 @@ function registraQuota(domanda, scheda, col, riga, imp) {
     SpreadsheetApp.flush();
 
     const d = attuale.dati;
+    // Il numero è già scritto: se la mail non parte (indirizzo rifiutato) la
+    // quota resta registrata e l'errore va nel riepilogo, senza riprovare
+    try {
     MailApp.sendEmail({
       to: d.email,
       bcc: imp.destinatario,
@@ -719,6 +790,11 @@ function registraQuota(domanda, scheda, col, riga, imp) {
         'cdlaps.com'
       ].join('\n')
     });
+      attuale.errore = '';
+    } catch (errore) {
+      console.error(errore);
+      attuale.errore = 'mail "quota ricevuta" non partita (' + (errore.message || errore) + '): scrivi tu al socio, numero ' + numero;
+    }
 
     attuale.stato = 'pagata';
     attuale.numero = numero;
@@ -743,12 +819,23 @@ function riepilogoQuotidiano() {
   const sezioni = { promemoria: [], decadute: [], ratifica: [], errori: [], sparite: [] };
 
   registro.domande().forEach((d) => {
-    if (d.errore) sezioni.errori.push(d.codice + ' ' + nome(d) + ': ' + d.errore);
+    if (d.errore) {
+      sezioni.errori.push(d.codice + ' ' + nome(d) + ': ' + d.errore);
+      // Una domanda già pagata non riprova più: l'errore si segnala una volta
+      if (d.stato === 'pagata') registro.aggiorna(d.codice, (x) => { x.errore = ''; });
+    }
     const scheda = foglio.getSheetByName('TESSERATI ' + d.anno);
     const col = scheda && colonne(scheda);
     const riga = scheda ? rigaDomanda(scheda, col, d.codice) : 0;
     if (d.stato === 'da pagare') {
-      if (!riga) { sezioni.sparite.push(d.codice + ' ' + nome(d)); return; }
+      // Segnalata una volta sola, poi esce dal registro: se la riga c'è
+      // ancora (Note cambiate), al Sì il numero lo dà numeraRigheCartacee
+      if (!riga) {
+        // Decaduta e riga tolta, come chiede il riepilogo: niente da dire
+        if (giorni(d.ricevuta) < LIMITI.decadenza) sezioni.sparite.push(d.codice + ' ' + nome(d));
+        registro.togli('domanda:' + d.codice);
+        return;
+      }
       const n = giorni(d.ricevuta);
       if (n >= LIMITI.decadenza) sezioni.decadute.push(d.codice + ' ' + nome(d) + ', ' + d.dati.pagamento + ', da ' + n + ' giorni');
       else if (n >= LIMITI.promemoria) sezioni.promemoria.push(d.codice + ' ' + nome(d) + ', ' + d.dati.pagamento + ', da ' + n + ' giorni');
@@ -773,18 +860,12 @@ function riepilogoQuotidiano() {
   const doppi = schedaOggi ? numeriDoppi(schedaOggi, colonne(schedaOggi)) : [];
 
   const parti = [];
-  if (doppi.length) parti.push('Numeri di tessera usati due volte in ' + schedaOggi.getName() + ' (cancella il # sbagliato e lascia Pagato? = Sì: entro venti minuti lo script dà il numero successivo):\n' + doppi.join('\n'));
+  if (doppi.length) parti.push('Numeri di tessera usati due volte in ' + schedaOggi.getName() + ' (cancella il # sbagliato e lascia Pagato? = Sì: entro venti minuti lo script gli dà il numero giusto):\n' + doppi.join('\n'));
   if (sezioni.decadute.length) parti.push('Non pagate da più di ' + LIMITI.decadenza + ' giorni (decadute: togli la riga e sposta il PDF; poi la domanda esce da qui il giorno dopo):\n' + sezioni.decadute.join('\n'));
   if (sezioni.promemoria.length) parti.push('Non ancora pagate da più di ' + LIMITI.promemoria + ' giorni (un promemoria al candidato?):\n' + sezioni.promemoria.join('\n'));
   if (sezioni.ratifica.length) parti.push('Pagate e non ancora ratificate dal direttivo ("Conferma assemblea?"), lo statuto chiede 30 giorni:\n' + sezioni.ratifica.join('\n'));
-  if (sezioni.errori.length) parti.push('PDF o mail non riusciti (lo script riprova ogni 10 minuti):\n' + sezioni.errori.join('\n'));
-  if (sezioni.sparite.length) parti.push('Domande dal sito di cui non trovo più la riga (Note cambiate o riga tolta):\n' + sezioni.sparite.join('\n'));
-
-  // Le decadute, una volta segnalate, si tolgono dal registro se la riga non c'è più
-  registro.domande().filter((d) => d.stato === 'da pagare' && giorni(d.ricevuta) >= LIMITI.decadenza).forEach((d) => {
-    const scheda = foglio.getSheetByName('TESSERATI ' + d.anno);
-    if (!scheda || !rigaDomanda(scheda, colonne(scheda), d.codice)) registro.togli('domanda:' + d.codice);
-  });
+  if (sezioni.errori.length) parti.push('PDF o mail non riusciti (per le domande da pagare lo script riprova ogni 10 minuti per un\'ora, poi si ferma: controlla l\'indirizzo e scrivi tu al candidato):\n' + sezioni.errori.join('\n'));
+  if (sezioni.sparite.length) parti.push('Domande dal sito di cui non trovo più la riga (Note cambiate o riga tolta; da oggi non le seguo più: se la riga c\'è ancora, al Sì il numero lo do come a una domanda cartacea, senza mail):\n' + sezioni.sparite.join('\n'));
 
   if (!parti.length) return;
   MailApp.sendEmail({

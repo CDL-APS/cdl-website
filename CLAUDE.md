@@ -35,7 +35,7 @@ Prima di unire, in quest'ordine:
   (`google/iscrizioni/`) che scrive nel libro soci e manda le mail:
   `storico/2026-11-17-piano-iscrizione-online.md`. Decisioni del
   direttivo e testi a posto (vedi lì "Fuori dal codice").
-  Stato al 18 novembre: tutto **scritto, committato (`3c54237`) e caricato
+  Stato al 18 novembre: tutto **scritto, rivisto, committato e caricato
   sul deploy di prova**, ma non ancora provato con un vero Apps Script; il
   modulo dice "non ancora attiva" finché `data-indirizzo` è vuoto. Nel
   libro soci tolti i numeri di tessera scritti in anticipo (035-150): i
@@ -50,9 +50,11 @@ Prima di unire, in quest'ordine:
   può ancora segnalare correzioni. Prima della pubblicazione si correggono
   tenendo lo stesso nome; dopo, nome e versione nuovi
   (`documenti/README.md`).
-- [ ] **Review di nuovo** con `/code-review` e `/security-review` sul
-  lavoro dal 17 novembre (dati personali, web app esterna, header nuovi):
-  esiti in `storico/2026-11-12-review-pre-deploy.md`. Le review del 12-13
+- [x] **Review di nuovo** con `/code-review` e `/security-review` sul
+  lavoro dal 17 novembre: fatte il 18 novembre, nessuna vulnerabilità,
+  dieci correzioni alla web app e al modulo; esiti in
+  `storico/2026-11-12-review-pre-deploy.md`. Vanno rifatte solo se la web
+  app cambia in modo sostanziale dopo le prove. Le review del 12-13
   novembre restano valide per il resto. Regola dell'utente (15 novembre
   2026): non si rifanno per ritocchi grafici, di impaginazione o di testi;
   si rifanno per lavoro sostanziale (nuove funzioni, dati, permessi,

@@ -14,9 +14,11 @@
 
 // Tempo massimo per la risposta: la web app si avvia a freddo e prepara un
 // PDF, ci mette qualche secondo
-const ATTESA_DOMANDA = 45000;
-// La chiave della domanda in corso (sessionStorage): se la risposta si perde
-// e il candidato riprova, la web app riconosce la domanda già registrata
+const ATTESA_DOMANDA = 60000;
+// La chiave della domanda in corso (sessionStorage), insieme ai dati a cui
+// vale: se la risposta si perde e il candidato riprova con gli stessi dati,
+// la web app riconosce la domanda già registrata; se ha cambiato qualcosa,
+// è una domanda nuova, con una chiave nuova
 const CHIAVE_DOMANDA = 'cdl-domanda-chiave';
 // L'esito della domanda, per rimostrare la conferma se si ricarica la pagina
 const ESITO_DOMANDA = 'cdl-domanda-esito';
@@ -226,10 +228,15 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    let chiave = leggiSessione(CHIAVE_DOMANDA);
+    const datiSenzaChiave = JSON.stringify(datiDomanda(modulo, '', 0), (k, v) => (k === 'tempo_ms' ? undefined : v));
+    let chiave = '';
+    try {
+      const salvata = JSON.parse(leggiSessione(CHIAVE_DOMANDA) || 'null');
+      if (salvata && salvata.dati === datiSenzaChiave) chiave = salvata.chiave;
+    } catch { /* chiave illeggibile: se ne fa una nuova */ }
     if (!chiave) {
       chiave = nuovaChiave();
-      scriviSessione(CHIAVE_DOMANDA, chiave);
+      scriviSessione(CHIAVE_DOMANDA, JSON.stringify({ chiave, dati: datiSenzaChiave }));
     }
 
     invia.disabled = true;
@@ -253,7 +260,9 @@ document.addEventListener('DOMContentLoaded', () => {
       scriviSessione(CHIAVE_DOMANDA, null);
       mostraConferma(esito, modulo, conferma);
     } catch (err) {
-      sbaglio('La domanda non è stata registrata: la connessione non ha risposto. Riprova tra poco, o scrivici a ciao@cdlaps.com.');
+      // Senza risposta la domanda può essere arrivata lo stesso: riprovando
+      // con gli stessi dati la web app non la registra due volte
+      sbaglio('Non abbiamo ricevuto risposta: la domanda potrebbe essere arrivata lo stesso. Controlla la tua mail tra qualche minuto (anche nello spam); se non trovi niente, invia di nuovo senza cambiare i dati: non verrà registrata due volte. Se il problema continua, scrivici a ciao@cdlaps.com.');
     } finally {
       invia.disabled = false;
       invia.classList.remove('is-inviato');

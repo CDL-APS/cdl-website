@@ -1,6 +1,6 @@
 # Review prima del deploy del redesign (12 novembre 2026, notte)
 
-> **17 novembre 2026: da rifare sul lavoro nuovo.** Il deploy ora comprende
+> **Rifatte il 18 novembre 2026 sul lavoro nuovo: esiti in fondo.** (Nota del 17 novembre:) Il deploy ora comprende
 > la Cortoteca in pausa, l'informativa obbligatoria nel modulo di Contatti e
 > la domanda di ammissione online, con una web app Google Apps Script
 > (`google/iscrizioni/`) che riceve dati personali, scrive nel libro soci e
@@ -162,3 +162,55 @@ ripetuto in `area-socio.html`; `passwordDaScegliere()` legge e scrive a
 seconda dell'argomento; l'obbligo della password dipende da `localStorage`
 (senza, il socio entra senza sceglierla: non è un confine di sicurezza);
 commento fuori posto in `gestione.css`.
+
+## Review del 18 novembre 2026 (lavoro dal 17 novembre, `6c5edbf..d7197a6`)
+
+Rifatte sul lavoro nuovo: Cortoteca in pausa, informativa in Contatti,
+domanda di ammissione online con la web app `google/iscrizioni/`.
+
+**`/security-review`**: nessuna vulnerabilità alta o media. Controllati:
+formule nel foglio (tutto il testo del candidato passa da `testo()`),
+modello del PDF (solo `<?= ?>`), intestazioni e destinatari delle mail,
+risposta della web app (solo i dati di chi ha inviato; i doppioni non si
+vedono), chiave della domanda, nomi dei file su Drive, `UrlFetchApp` (solo
+`STATUTO_URL`), conferma costruita con `textContent`, 404 su `google/` e
+`documenti/`, 302 verso indirizzi fissi. Sotto soglia: chiunque può far
+partire da ciao@ la mail di conferma verso un indirizzo a scelta (testo
+libero molto limitato, al massimo 10 domande all'ora); da rivedere solo se
+diventa un problema.
+
+**`/code-review`**: dieci punti, tutti corretti nel commit successivo:
+
+1. Il trigger dei 10 minuti poteva rifare PDF e mail di una domanda appena
+   arrivata, mentre `doPost` li stava ancora facendo (doppie mail, flag
+   sovrascritti): ora la lascia stare per 7 minuti (`attesaNuova`) e ogni
+   scrittura rilegge la domanda dal registro (`registro.aggiorna`).
+2. Mail a ciao@ e al candidato con un solo segno: se la seconda falliva, la
+   prima ripartiva a ogni giro. Ora due segni (`mailNoi`, `mailCandidato`)
+   e al massimo 6 tentativi; email con punti doppi o iniziali rifiutate
+   subito.
+3. Una scheda `TESSERATI` vecchia senza tutte le colonne bloccava la
+   numerazione e le domande: `colonne()` ora chiede solo le colonne che
+   servono per leggere gli anni prima.
+4. L'apostrofo tipografico (’) di iPhone e Mac era rifiutato: ora vale
+   come `'`.
+5. La numerazione rileggeva tutte le schede per ogni riga tenendo il lock:
+   ora le legge una volta (`indiceTesserati`).
+6. Un errore risolto restava nel registro e nel riepilogo: ora si azzera.
+7. Dopo 45 secondi senza risposta la pagina diceva "non registrata" anche
+   se la domanda era arrivata, e un nuovo invio con dati corretti tornava
+   la vecchia risposta: ora la chiave vale solo per gli stessi dati, l'attesa
+   è di 60 secondi e il messaggio dice di controllare la mail prima di
+   riprovare.
+8. `pagamento: "constructor"` passava il controllo: ora
+   `hasOwnProperty`.
+9. Una domanda tolta dal foglio restava segnalata ogni giorno per 30
+   giorni: ora si segnala una volta ed esce dal registro.
+10. Una casella "dopo lettura" rimessa spuntata dal browser (Firefox) non
+    si poteva più togliere: ora parte sempre vuota.
+
+Provati con dati finti in Node: numerazione con rinnovi (per email, per
+nome, numero già preso, scheda senza Email), PDF e mail con la mail al
+candidato che fallisce e poi riesce, validazione (apostrofi, email,
+`constructor`, formule). Restano da provare con un vero Apps Script
+(`storico/2026-11-14-prove-sito-online.md`, sezione 4).
