@@ -1,168 +1,172 @@
 /* ==========================================================================
-   CORTOTECA (cortoteca.html) — griglia delle opere
+   CORTOTECA (cortoteca.html)
+   Nero pieno, scritte e dettagli nel colore della Cortoteca (--cortoteca). Il nome a tutta larghezza, la frase,
+   il filo, poi strumenti e opere in due viste: galleria (solo i fotogrammi,
+   col titolo sopra) e lista (i titoli, col fotogramma a fianco). In fondo
+   restano solo gli occhi, che spuntano da dietro il piede colorato.
+   Un corto si apre qui sopra, nella sala: la pagina carica anche
+   pages/opera.css, prima di questo foglio.
    ========================================================================== */
 
-/* --------------------------------------------------------------------------
-   Ricerca e ordinamento
-   -------------------------------------------------------------------------- */
-.strumenti {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
-  margin: clamp(2rem, 5vw, 3rem) 0 var(--spazio);
-}
+/* La barra della Cortoteca: scura, e per ora porta solo il marchio e
+   l'invito ad associarsi, visibile anche su telefono */
+.stanza { --barra: var(--nero-sala); }
+.stanza .nav { color: var(--cortoteca); }
+.stanza .skip-link { background: var(--cortoteca); color: var(--nero); }
+.barra-ridotta .nav__socio { display: inline-flex; margin-left: auto; }
+html:has(.fondo-sala) { background: var(--nero-sala); }
 
+/* --------------------------------------------------------------------------
+   Testata e strumenti: ricerca, vista, ordine
+   -------------------------------------------------------------------------- */
+.hero--cortoteca .presentazione { color: var(--inchiostro); }
+.strumenti { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.hero--cortoteca .strumenti { margin-top: clamp(28px, 3.4vw, 48px); }
 .campo {
-  flex: 1 1 320px;
-  max-width: 520px;
-  display: flex;
-  align-items: center;
-  gap: 0.7rem;
-  padding: 0 1.1rem;
-  height: 48px;
-  border-radius: var(--r-s);
-  border: 1px solid var(--riga);
-  background: rgba(29, 29, 27, 0.025);
-  color: var(--testo-medio);
-  cursor: text;
-  transition: border-color 0.25s var(--ease-out), background-color 0.25s var(--ease-out);
+  flex: 1 1 240px; max-width: 420px; height: 48px;
+  display: flex; align-items: center; gap: 10px; padding: 0 18px;
+  border: 2px solid var(--inchiostro); border-radius: 999px; cursor: text;
 }
-
-.campo:focus-within {
-  border-color: var(--cdl-dark);
-  background: var(--cdl-white);
-}
-
-.campo input {
-  flex: 1;
-  min-width: 0;
-  height: 100%;
-  border: 0;
-  outline: 0;
-  background: none;
-  font: inherit;
-  font-size: 0.95rem;
-  color: var(--cdl-dark);
-}
-
-.campo input::placeholder { color: var(--testo-tenue); }
-
-/* L'anello del focus lo disegna già il bordo del campo */
+.campo svg { width: 17px; height: 17px; flex: 0 0 auto; }
+.campo input { flex: 1; min-width: 0; height: 100%; border: 0; outline: 0; background: none; font: inherit; color: var(--inchiostro); }
+.campo input::placeholder { color: var(--tenue); }
+.campo:focus-within { outline: 3px solid var(--inchiostro); outline-offset: 2px; }
 .campo input:focus-visible { outline: none; }
+.scelte--vista { margin-left: auto; }
 
-/* Interruttore a due posizioni: due radio nascosti, le etichette fanno da
-   pulsanti. Quello scelto è pieno. */
-.ordine {
-  display: flex;
-  gap: 4px;
-  padding: 4px;
-  border-radius: 999px;
-  border: 1px solid var(--riga);
-}
-
-.ordine input { position: absolute; opacity: 0; pointer-events: none; }
-
-.scelta {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  padding: 0.6rem 0.95rem;
-  border-radius: 999px;
-  font-family: 'Montserrat', sans-serif;
-  font-size: 9.5px;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-  color: var(--testo-tenue);
-  cursor: pointer;
-  transition: background-color 0.25s var(--ease-out), color 0.25s var(--ease-out);
-}
-
-.scelta svg { width: 13px; height: 13px; }
-
-.scelta:hover { color: var(--cdl-dark); }
-
-.ordine input:checked + .scelta { background: var(--cdl-dark); color: var(--cdl-white); }
-
-.ordine input:focus-visible + .scelta { outline: 3px solid var(--cdl-lavender); outline-offset: 2px; }
+#opere { margin-top: 24px; }
 
 /* --------------------------------------------------------------------------
-   Griglia delle opere
+   Lista: l'indice dei titoli e, a fianco, il fotogramma di quello su cui ci
+   si trova. Il fotogramma resta fermo sotto la barra mentre la lista scorre,
+   così si vede anche quando la lista è lunga.
    -------------------------------------------------------------------------- */
-.griglia-opere {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: var(--spazio);
+#opere > .grid { align-items: start; }
+.righe { border-top: 1px solid var(--filo); }
+.riga {
+  display: grid; grid-template-columns: 18px minmax(0, 1fr); align-items: center; gap: 3px 16px;
+  padding: 12px 0; border-bottom: 1px solid var(--filo);
+  color: var(--tenue); transition: color 0.15s var(--ease);
+}
+.riga__play { width: 12px; height: 12px; grid-row: 1 / span 2; }
+.riga__titolo { grid-column: 2; font-family: var(--f-titoli); font-weight: 900; text-transform: uppercase; font-size: clamp(19px, 1.85vw, 26px); line-height: 1.02; letter-spacing: var(--titoli-spazio); }
+.riga__dati { grid-column: 2; font-size: 15px; line-height: 1.4; }
+.riga__mini { display: none; }
+.riga.is-attiva, .riga:hover, .riga:focus-visible { color: var(--inchiostro); }
+.riga.is-attiva .riga__titolo { color: var(--chiaro); }
+
+/* Il fotogramma a fianco è uno schermo acceso in sala: un filo colorato lo
+   stacca dal nero e un alone lo fa emergere. Parte all'altezza della prima
+   riga; l'unico comando è un pulsantino nell'angolo. */
+.palco { position: sticky; top: calc(var(--nav) + 24px); }
+.palco__schermo {
+  border-radius: 14px;
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--cortoteca) 32%, transparent), 0 24px 90px -24px color-mix(in srgb, var(--cortoteca) 32%, transparent);
+}
+.palco__schermo img { animation: accendi 0.35s var(--ease) both; }
+@keyframes accendi { from { opacity: 0; } }
+.palco__azione {
+  position: absolute; left: 16px; bottom: 16px; z-index: 1;
+  display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 18px;
+  border-radius: 999px; background: var(--cortoteca); color: var(--nero); font-size: 15px; font-weight: 700;
+  transition: background-color 0.15s var(--ease), transform 0.15s var(--ease);
+}
+.palco__azione svg { width: 11px; height: 11px; }
+.palco__azione .freccia { width: 15px; height: 15px; }
+.palco__azione:hover { background: var(--chiaro); transform: translateY(-1px); }
+.palco__azione:active { transform: translateY(1px) scale(0.985); }
+
+/* --------------------------------------------------------------------------
+   Galleria: su ogni fotogramma sta il suo titolo, graficato come nei titoli
+   di testa del corto (in testo, finché la grafica non c'è). Al passaggio il
+   titolo svanisce e resta il fotogramma pulito; gli altri intorno si
+   spengono e il puntatore sparisce.
+   -------------------------------------------------------------------------- */
+.galleria { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; --r-still: 14px; }
+.still { transition: opacity 0.25s var(--ease); }
+.galleria.ha-fuoco .still:not(.is-fuoco) { opacity: 0.3; }
+
+.galleria .targa {
+  inset: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
+  padding: 7% 10%; border-radius: 0; background: none; color: var(--chiaro); text-align: center;
+  opacity: 1; translate: none;
+  transition: opacity 0.35s var(--ease);
+}
+.galleria .targa__titolo { font-size: clamp(22px, 2.4vw, 34px); line-height: 0.95; }
+@media (hover: hover) {
+  .galleria .still:hover .targa, .galleria .still:focus-visible .targa { opacity: 0; }
+}
+@media (hover: hover) and (pointer: fine) {
+  .galleria .still:hover { cursor: none; }
 }
 
-.griglia-opere .riquadro {
-  min-height: 0;
-  aspect-ratio: 1;
+/* Occhi della Cortoteca: pochi, piccoli, solo dove non c'è contenuto. In
+   galleria occupano l'ultimo posto della griglia, se l'ultima fila ha
+   davvero un vuoto; in chiusura spuntano da dietro il piede. */
+.galleria__vuoto { position: relative; grid-column-end: -1; aspect-ratio: 16 / 9; }
+.occhi-chiusura { position: relative; align-self: stretch; min-height: 150px; }
+.occhi-chiusura .occhio, .galleria__vuoto .occhio { position: absolute; left: var(--x); top: var(--y); width: var(--d); translate: -50% -50%; }
+.galleria__vuoto:nth-child(3n + 1) { display: none; }
+@media (max-width: 1023px) {
+  .occhi-chiusura { min-height: 96px; max-width: 260px; }
 }
 
-/* Ingresso a cascata: ogni card parte bassa e trasparente, il ritardo
-   crescente lo imposta cortoteca.js */
-.opera {
-  opacity: 0;
-  transform: translateY(15px);
-  transition: opacity 0.4s ease, transform 0.4s ease, box-shadow 0.4s var(--ease-out);
+.closing--breve { min-height: 0; padding-top: clamp(48px, 7vw, 96px); }
+.closing--occhi { padding-top: clamp(64px, 8vw, 120px); }
+.occhi-chiusura--piede { align-self: end; min-height: 0; height: 0; }
+.occhi-chiusura--piede .occhio { top: calc(var(--padb) + var(--y)); }
+.stanza .piede { position: relative; z-index: 1; }
+
+/* Il piede nel colore della Cortoteca: chiude la pagina scura */
+.piede--cortoteca { background: var(--cortoteca); color: var(--nero); --inchiostro: var(--nero); }
+.piede--cortoteca .logo { color: var(--nero); }
+.piede--cortoteca .piede__dati { color: rgba(29, 29, 27, 0.82); }
+
+/* --------------------------------------------------------------------------
+   La sala: il corto aperto dentro la Cortoteca, sopra la galleria e sotto
+   la barra. Ha le stesse misure della pagina del corto (opera.css), così il
+   fotogramma ingrandito dal passaggio ci si posa sopra esatto.
+   -------------------------------------------------------------------------- */
+html.sala-aperta { overflow: hidden; }
+.sala-corto {
+  position: fixed; inset: 0; z-index: 9; overflow-y: auto; overscroll-behavior: contain;
+  padding-bottom: clamp(96px, 11vw, 168px);
+  background: var(--nero-sala); color: var(--inchiostro);
+}
+.sala-corto > section { position: relative; }
+.sala-corto__chiudi {
+  /* nel margine destro, all'altezza dello schermo */
+  position: fixed; z-index: 3; top: calc(var(--nav) + 40px); right: max(12px, calc(max(var(--gut), (100vw - 1280px) / 2) - 56px));
+  display: grid; place-items: center; width: 44px; height: 44px; border: 0; border-radius: 50%;
+  background: var(--titolo); color: var(--sul-titolo, var(--nero)); cursor: pointer;
+  transition: transform 0.15s var(--ease), background-color 0.15s var(--ease);
+}
+.sala-corto__chiudi svg { width: 18px; height: 18px; }
+.sala-corto__chiudi:hover { transform: rotate(90deg); background: var(--chiaro); color: var(--nero); }
+.sala-corto__chiudi:focus-visible { outline: 3px solid var(--chiaro); outline-offset: 3px; }
+
+/* --------------------------------------------------------------------------
+   Adattamenti
+   -------------------------------------------------------------------------- */
+@media (max-width: 1023px) {
+  .galleria { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .galleria__vuoto:nth-child(3n + 1) { display: block; }
+  .galleria__vuoto:nth-child(2n + 1) { display: none; }
+  .palco { display: none; }
+  .riga { grid-template-columns: 112px minmax(0, 1fr); gap: 2px 14px; color: var(--inchiostro); }
+  .riga__mini { display: block; grid-column: 1; grid-row: 1 / span 2; position: relative; width: 112px; aspect-ratio: 16 / 10; overflow: hidden; border-radius: 10px; background: #000; }
+  .riga__mini img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .riga__play { display: none; }
 }
 
-.opera.is-visibile { opacity: 1; transform: none; }
-
-/* Bollino CDL sulle opere prodotte dall'associazione: stessa pastiglia di
-   vetro della freccia, nell'angolo opposto */
-.bollino-cdl {
-  position: absolute;
-  top: 14px;
-  left: 14px;
-  z-index: 3;
-  display: grid;
-  place-items: center;
-  height: 38px;
-  padding: 0 0.9rem;
-  border-radius: 999px;
-  corner-shape: squircle;
-  background: rgba(247, 247, 247, 0.72);
-  backdrop-filter: blur(14px) saturate(150%);
-  -webkit-backdrop-filter: blur(14px) saturate(150%);
-  border: 1px solid rgba(255, 255, 255, 0.7);
+@media (max-width: 759px) {
+  .scelte--vista { margin-left: 0; }
 }
 
-.bollino-cdl img { width: 31px; height: 12px; filter: brightness(0); }
-
-/* Play o info nell'angolo: la pastiglia della freccia, ferma al passaggio
-   del mouse perché non indica una direzione */
-a.riquadro:hover .icona-stato { transform: none; }
-
-/* Il triangolo, a parità di riquadro, sembra spostato a sinistra: lo si
-   accosta di poco al centro ottico */
-.icona-stato--play { transform: translateX(1px); }
-
-/* Ricerca senza risultati o database non raggiungibile */
-.avviso {
-  grid-column: 1 / -1;
-  padding: 3rem 1rem;
-  text-align: center;
-  font-family: 'Montserrat', sans-serif;
-  font-size: 10px;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.18em;
-  color: var(--testo-tenue);
-}
-
-@media (max-width: 1000px) {
-  .griglia-opere { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-}
-
-@media (max-width: 620px) {
-  .griglia-opere { grid-template-columns: 1fr; }
-  .campo { max-width: none; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .opera { opacity: 1; transform: none; }
+@media (max-width: 639px) {
+  /* la crocetta in alto coprirebbe il fotogramma: va in basso, sotto il pollice */
+  .sala-corto__chiudi { top: auto; bottom: calc(16px + env(safe-area-inset-bottom)); right: 16px; box-shadow: 0 0 0 3px var(--nero-sala); }
+  .galleria { grid-template-columns: minmax(0, 1fr); }
+  .galleria__vuoto, .galleria__vuoto:nth-child(3n + 1) { display: none; }
 }

@@ -1,98 +1,111 @@
 /* ==========================================================================
-   PRODUZIONI — i lavori di CDL, divisi in blocchi.
-
-   Come la Cortoteca, la pagina non contiene le opere nell'HTML: le prende
-   dal database (vedi dati.js). Il lavoro più recente sta in primo piano, a
-   tutta larghezza; sotto, le produzioni originali (produzione_cdl) e le
-   collaborazioni (collaborazione_cdl), ciascuna dalla più recente. Un blocco
-   senza opere resta nascosto: le collaborazioni compaiono con la prima.
+   PRODUZIONI (produzioni.html) — in "Prossimamente" il lavoro più recente
+   fra produzioni e collaborazioni (anno, poi id più alto), poi i due
+   blocchi. Il blocco delle collaborazioni resta nascosto finché è
+   vuoto. Al clic su un corto il fotogramma vola al posto della copertina
+   nella sua scheda (passaggioScheda). Si appoggia a dati.js e comune.js.
    ========================================================================== */
 
-const ICONA_FRECCIA_OPERA =
-  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>';
-
-function indirizzoOpera(opera) {
-  return 'opera.html?film=' + encodeURIComponent(opera.codice);
-}
-
-/* Riquadro di un'opera: fotogramma a piena superficie e lastra con anno,
-   titolo e regia. Per le collaborazioni anche chi l'ha prodotta. */
-function riquadroOpera(opera) {
-  const riquadro = document.createElement('a');
-  riquadro.className = 'riquadro';
-  riquadro.href = indirizzoOpera(opera);
-
-  const produzione = opera.collaborazione_cdl && opera.produzione
-    ? `<br>Produzione: ${esc(opera.produzione)}`
-    : '';
-  riquadro.innerHTML = `
-    <img class="foto" alt="" loading="lazy">
-    <span class="freccia" aria-hidden="true">${ICONA_FRECCIA_OPERA}</span>
-    <div class="chip">
-      <p class="chip-etichetta">${esc(opera.anno)}</p>
-      <h3 class="chip-titolo">${esc(opera.titolo)}</h3>
-      <p class="chip-meta">Regia di ${esc(opera.regista)}${produzione}</p>
-    </div>
-  `;
-  mostraImmagine(riquadro.querySelector('.foto'), opera.fotogramma);
-  return riquadro;
-}
-
-/* Mette le opere nella griglia del blocco; senza opere resta nascosto */
-function riempiBlocco(id, opere) {
-  const blocco = document.getElementById(id);
-  const griglia = blocco.querySelector('.griglia-riquadri');
-  opere.forEach((opera) => griglia.appendChild(riquadroOpera(opera)));
-  blocco.hidden = opere.length === 0;
-}
-
-/* Il lavoro più recente in primo piano: fotogramma a sinistra, a destra
-   titolo, tagline e i dati essenziali */
-function riempiPrimoPiano(opera) {
-  if (!opera) return;
-  const box = document.getElementById('primo-piano');
-  box.href = indirizzoOpera(opera);
-
-  const tipo = opera.collaborazione_cdl ? 'Ultima collaborazione' : 'Ultima produzione';
-  box.querySelector('.primo-piano-etichetta').textContent = tipo + ' · ' + opera.anno;
-  box.querySelector('.primo-piano-titolo').textContent = opera.titolo;
-  scriviRiassunto(box.querySelector('.primo-piano-riassunto'), opera.tagline || opera.sinossi || '');
-
-  const dati = [
-    ['Regia', opera.regista],
-    ['Genere', generePrincipale(opera)],
-    ['Produzione', opera.collaborazione_cdl ? opera.produzione : null]
-  ].filter(([, valore]) => valore);
-  box.querySelector('.primo-piano-dati').innerHTML = dati
-    .map(([voce, valore]) => `<div><dt>${voce}</dt><dd>${esc(valore)}</dd></div>`)
-    .join('');
-
-  mostraImmagine(box.querySelector('.foto'), opera.fotogramma);
-  box.hidden = false;
-}
-
-async function initProduzioni() {
+async function paginaProduzioni() {
+  const avviso = (testo) => {
+    const el = document.getElementById('avviso-produzioni');
+    el.textContent = testo;
+    el.hidden = false;
+  };
+  let opere;
   try {
-    const opere = await caricaOpere();
-    const produzioni = produzioniCdl(opere);
-    const collaborazioni = collaborazioniCdl(opere);
-    const [primoPiano] = [...produzioni, ...collaborazioni].sort(dallaPiuRecente);
-    const tranne = (o) => o !== primoPiano;
-
-    riempiPrimoPiano(primoPiano);
-    riempiBlocco('blocco-produzioni', produzioni.filter(tranne));
-    riempiBlocco('blocco-collaborazioni', collaborazioni.filter(tranne));
-    if (!primoPiano) mostraAvviso('Nessuna produzione da mostrare');
-  } catch (error) {
-    console.error(error);
-    mostraAvviso('Errore caricamento database');
+    opere = await caricaOpere();
+  } catch (errore) {
+    console.error(errore);
+    avviso('Le produzioni non si riescono a caricare. Riprova fra poco.');
+    return;
   }
+  const produzioni = produzioniCdl(opere);
+  const collaborazioni = collaborazioniCdl(opere);
+  const [primo] = [...produzioni, ...collaborazioni].sort(dallaPiuRecente);
+  if (!primo) { avviso('Nessuna produzione da mostrare.'); return; }
+
+  const box = document.getElementById('primo-piano');
+  const href = indirizzoOpera(primo);
+  box.querySelector('.cornice').href = href;
+  box.querySelector('.cornice').append(nuovaImmagine(primo.fotogramma));
+  // Il titolo grafico, se c'è (produzioni.css lo ricolora in nero); se no il testo
+  const titolo = box.querySelector('.primo-piano__titolo');
+  const grafica = titoloGrafico(primo, { colora: false });
+  if (grafica) titolo.replaceChildren(grafica);
+  else titolo.textContent = primo.titolo;
+  // La frase va a capo dopo la prima virgola: "Non c'eri per l'inizio, / non ci sarai per la fine"
+  box.querySelector('.primo-piano__frase').innerHTML = esc(primo.tagline || '').replace(/,\s*/, ',<br>');
+  // I dati su righe distinte: regista / genere / anno, durata
+  box.querySelector('.primo-piano__dati').innerHTML = [
+    primo.regista,
+    generePrincipale(primo),
+    [primo.anno, durata(primo)].filter(Boolean).join(', '),
+  ].filter(Boolean).map((r) => `<span>${esc(r)}</span>`).join('');
+  const azione = box.querySelector('.primo-piano__azione');
+  azione.href = href;
+  azione.innerHTML = streamingDisponibile(primo) ? PLAY + 'Guarda' : 'Scheda' + FRECCIA_SU;
+  box.hidden = false;
+
+  const scheda = (o) => ({
+    titolo: o.titolo,
+    dati: [o.regista, o.anno, o.collaborazione_cdl && o.produzione ? 'con ' + o.produzione : ''].filter(Boolean).join(' · '),
+    immagine: o.fotogramma,
+    href: indirizzoOpera(o),
+  });
+  const tranne = (o) => o !== primo;
+  riempiSchede('blocco-produzioni', produzioni.filter(tranne).map(scheda));
+  riempiSchede('blocco-collaborazioni', collaborazioni.filter(tranne).map(scheda));
+
+  // Il passaggio verso la scheda: dal fotogramma grande (anche dal suo
+  // pulsante) e da ogni scheda
+  const voli = [[box.querySelector('.cornice'), box.querySelector('.cornice')], [azione, box.querySelector('.cornice')]];
+  document.querySelectorAll('#blocco-produzioni a.scheda-g, #blocco-collaborazioni a.scheda-g')
+    .forEach((a) => voli.push([a, a.querySelector('.cornice')]));
+  voli.forEach(([link, cornice]) => link.addEventListener('click', (e) => {
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0 || FERMO) return;
+    const img = cornice.querySelector('img');
+    if (!img) return;
+    e.preventDefault();
+    passaggioScheda(img, link.href);
+  }));
 }
 
-function mostraAvviso(testo) {
-  const avviso = document.getElementById('avviso-produzioni');
-  avviso.textContent = testo;
-  avviso.hidden = false;
+/* ---- Il passaggio verso la scheda del corto ----
+   Il fotogramma cliccato si stacca dalla pagina, si sposta e si ridimensiona
+   fino al posto e alla misura della copertina nella scheda del corto
+   (opera.html: tutta la larghezza del contenuto, in 16:9, sotto la barra,
+   con gli angoli dello schermo), mentre il lilla si fa nero come la
+   Cortoteca. Poi si cambia pagina: la copertina è già lì. */
+function passaggioScheda(img, href) {
+  const r = img.getBoundingClientRect();
+  const wrap = document.querySelector('main .wrap').getBoundingClientRect();
+  const arrivo = document.querySelector('.nav').offsetHeight + (innerWidth <= 639 ? 24 : 40);
+  const volo = { duration: DURATA_PASSAGGIO, easing: CURVA_PASSAGGIO, fill: 'forwards' };
+
+  const velo = document.createElement('div');
+  velo.className = 'passaggio';
+  velo.style.background = getComputedStyle(document.documentElement).getPropertyValue('--nero-sala').trim() || '#000';
+  document.body.append(velo);
+  velo.animate([{ opacity: 0 }, { opacity: 1 }], { duration: DURATA_PASSAGGIO * 0.7, easing: 'ease-out', fill: 'forwards' });
+
+  const copia = document.createElement('span');
+  copia.className = 'cornice passaggio-corto';
+  copia.setAttribute('aria-hidden', 'true');
+  const foto = img.cloneNode();
+  foto.removeAttribute('loading');
+  copia.append(foto);
+  document.body.append(copia);
+
+  let partito = false;
+  const vai = () => { if (!partito) { partito = true; location.href = href; } };
+  setTimeout(vai, DURATA_PASSAGGIO + 200);
+  // La scheda d'arrivo sa che la copertina è arrivata in volo (vedi opera.js)
+  try { sessionStorage.setItem('cdl-passaggio-scheda', new URL(href, location.href).search); } catch (errore) { /* si arriva lo stesso */ }
+  copia.animate([
+    { left: r.left + 'px', top: r.top + 'px', width: r.width + 'px', height: r.height + 'px', borderRadius: '0px' },
+    { left: wrap.left + 'px', top: arrivo + 'px', width: wrap.width + 'px', height: (wrap.width * 9 / 16) + 'px', borderRadius: '14px' },
+  ], volo).finished.then(vai);
 }
 
-document.addEventListener('DOMContentLoaded', initProduzioni);
+document.addEventListener('DOMContentLoaded', paginaProduzioni);

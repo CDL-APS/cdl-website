@@ -1,65 +1,44 @@
 /* ==========================================================================
-   PRODUZIONI (produzioni.html) — i lavori di CDL, divisi in blocchi: il più
-   recente in primo piano, le produzioni originali, le collaborazioni.
-   Primo piano, titoli dei blocchi e griglia sono in components.css.
+   PRODUZIONI (produzioni.html)
+   Lilla pieno con le scritte nere; anche la barra prende il colore. In
+   Prossimamente il lavoro più recente, poi le produzioni originali e le
+   collaborazioni (il blocco compare con la prima).
    ========================================================================== */
-
-/* Dati essenziali dell'opera in primo piano, in coppie voce / valore come la
-   troupe della scheda opera */
-.primo-piano-dati {
-  display: grid;
-  gap: 0.55rem;
-  margin-top: 0.4rem;
-  padding-top: 0.9rem;
-  border-top: 1px solid var(--riga);
+.pagina-produzioni {
+  --fondo: var(--lilla); --inchiostro: var(--nero); --barra: var(--lilla);
+  --tenue: rgba(29, 29, 27, 0.72); --filo: rgba(29, 29, 27, 0.24);
+  --accento-hover: var(--chiaro); --accento-hover-testo: var(--nero);
 }
+html:has(.pagina-produzioni) { background: var(--lilla); }
+.pagina-produzioni .nav__voce[aria-current]::before { background: var(--nero); }
 
-.primo-piano-dati div {
-  display: grid;
-  grid-template-columns: 6.5rem minmax(0, 1fr);
-  gap: 0.75rem;
-  align-items: baseline;
+/* Prossimamente: il fotogramma grande e, a fianco, quel che serve sapere */
+.primo-piano { align-items: stretch; }
+.primo-piano[hidden] { display: none; }
+/* larga quanto la sua colonna: col testo più alto del 16:10 (un titolo
+   grafico alto) le proporzioni la farebbero uscire sopra il testo */
+.primo-piano > .cornice { aspect-ratio: 16 / 10; width: 100%; min-width: 0; border-radius: 0; }
+.primo-piano__testo { display: flex; flex-direction: column; gap: 12px; padding-top: 14px; border-top: 2px solid var(--inchiostro); }
+.primo-piano__titolo { font-size: clamp(36px, 4.2vw, 64px); line-height: 0.92; }
+.primo-piano__frase { font-size: clamp(17px, 1.4vw, 20px); font-weight: 600; line-height: 1.4; }
+.primo-piano__dati { font-size: 15px; color: var(--tenue); }
+/* I dati del corto su righe distinte */
+.primo-piano__dati span { display: block; }
+.primo-piano__azione { align-self: flex-start; margin-top: auto; }
+
+/* Le still delle Produzioni hanno un contorno nero, che le stacca dal lilla
+   anche quando sono chiare; il titolo grafico, se c'è, è ricolorato in nero */
+.pagina-produzioni .primo-piano > .cornice,
+.pagina-produzioni .scheda-g .cornice { border: 2px solid var(--nero); }
+.primo-piano__titolo img { display: block; width: 100%; max-height: 220px; object-fit: contain; object-position: left bottom; filter: brightness(0); }
+/* Accanto al fotogramma il titolo grafico prende tutta la larghezza della
+   colonna (un titolo molto alto si ferma prima) */
+@media (min-width: 1024px) {
+  .primo-piano__titolo img { max-height: 360px; }
 }
+/* Il titolo nel carattere del corto (titolo_font) */
+.primo-piano__titolo .targa__font { display: block; font-size: 1.1em; line-height: 1; }
 
-.primo-piano-dati dt {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 9px;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.2em;
-  color: var(--testo-medio);
-}
-
-.primo-piano-dati dd { font-size: 0.9rem; line-height: 1.4; }
-
-.riga-altrove {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.6rem;
-  margin-top: clamp(2.5rem, 5vw, 3.5rem);
-  padding: 0.8rem 1.2rem;
-  border-radius: var(--r-s);
-  corner-shape: squircle;
-  background: var(--cdl-dark);
-  color: var(--cdl-white);
-  font-family: 'Montserrat', sans-serif;
-  font-size: 10px;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-  transition: background-color 0.3s var(--ease-out);
-}
-
-.riga-altrove:hover { background: var(--cdl-red); }
-
-/* Database non raggiungibile o nessuna opera */
-.avviso {
-  padding: 2rem 0.5rem;
-  border-bottom: 1px solid var(--riga);
-  font-family: 'Montserrat', sans-serif;
-  font-size: 10px;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.18em;
-  color: var(--testo-tenue);
+@media (max-width: 1023px) {
+  .primo-piano > .cornice, .primo-piano__testo { grid-column: 1 / -1; }
 }

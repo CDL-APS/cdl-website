@@ -1,0 +1,106 @@
+[
+  {
+    "immagine": "assets/img/eventi/short-talks-al-not-2026/serate/serata-29-08-07.jpg",
+    "descrizione": "Foto della serata del 29 agosto, 7 di 12",
+    "evento_id": 8,
+    "opera_id": null,
+    "pagina": null,
+    "posizione": 1
+  },
+  {
+    "immagine": "opere/interzona-fotogramma-1791650175075.jpg",
+    "descrizione": "Un fotogramma di Interzona",
+    "evento_id": null,
+    "opera_id": 9,
+    "pagina": null,
+    "posizione": 2
+  },
+  {
+    "immagine": "assets/img/eventi/short-talks-2/foto-4.jpg",
+    "descrizione": "Un biglietto di Short Talks davanti alle poltrone della sala",
+    "evento_id": 3,
+    "opera_id": null,
+    "pagina": null,
+    "posizione": 3
+  },
+  {
+    "immagine": "assets/img/eventi/long-story-short-2026/foto-4.jpg",
+    "descrizione": "Un operatore prepara la macchina da presa",
+    "evento_id": 1,
+    "opera_id": null,
+    "pagina": null,
+    "posizione": 4
+  },
+  {
+    "immagine": "assets/img/eventi/short-talks-3-x-laiff/serate/serata-14-12-08.jpg",
+    "descrizione": "Foto della serata del 14 dicembre, 8 di 12",
+    "evento_id": 7,
+    "opera_id": null,
+    "pagina": null,
+    "posizione": 5
+  },
+  {
+    "immagine": "assets/img/eventi/long-story-short-2026/foto-3.jpg",
+    "descrizione": "Una troupe al tramonto in riva al mare",
+    "evento_id": 1,
+    "opera_id": null,
+    "pagina": null,
+    "posizione": 6
+  },
+  {
+    "immagine": "assets/img/eventi/short-talks-al-not-2025/foto-3.jpg",
+    "descrizione": "Il pubblico in sala",
+    "evento_id": 6,
+    "opera_id": null,
+    "pagina": null,
+    "posizione": 7
+  },
+  {
+    "immagine": "opere/versomare.jpg",
+    "descrizione": "Un fotogramma di Verso Mare",
+    "evento_id": null,
+    "opera_id": 3,
+    "pagina": null,
+    "posizione": 8
+  },
+  {
+    "immagine": "assets/img/eventi/short-talks-off-1/serate/serata-22-05-05.jpg",
+    "descrizione": "Foto della serata del 22 maggio, 5 di 10",
+    "evento_id": 4,
+    "opera_id": null,
+    "pagina": null,
+    "posizione": 9
+  },
+  {
+    "immagine": "assets/img/eventi/long-story-short-2026/vincitori/scintille.jpg",
+    "descrizione": "Un ragazzo con gli occhiali da sole controluce sul fiume",
+    "evento_id": 1,
+    "opera_id": null,
+    "pagina": null,
+    "posizione": 10
+  },
+  {
+    "immagine": "assets/img/eventi/blue-hour/foto-1.jpg",
+    "descrizione": "Il pubblico sulla sabbia sotto le lanterne blu",
+    "evento_id": 5,
+    "opera_id": null,
+    "pagina": null,
+    "posizione": 11
+  },
+  {
+    "immagine": "assets/img/eventi/short-talks-al-not-2026/foto-6.jpg",
+    "descrizione": "Spettatori fra le poltrone del Supercinema",
+    "evento_id": 8,
+    "opera_id": null,
+    "pagina": null,
+    "posizione": 12
+  },
+  {
+    "immagine": "assets/img/eventi/short-talks-off-1/serate/serata-30-04-09.jpg",
+    "descrizione": "Foto della serata del 30 aprile, 9 di 11",
+    "evento_id": 4,
+    "opera_id": null,
+    "pagina": null,
+    "posizione": 13
+  }
+]

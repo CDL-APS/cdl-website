@@ -2,149 +2,124 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blue Hour - CDL</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Blue Hour – CDL APS</title>
     <meta name="description" content="Blue Hour: una serata in spiaggia al Bagno 150 di Rimini fra cinema, fotografia, moda e musica, con uno Short Talks OFF sul grande schermo. 24 agosto 2025.">
 
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link rel="icon" type="image/png" href="assets/img/brand/favicon.png">
 
-    <link rel="stylesheet" href="assets/css/base.css?v=2026-10-22e">
-    <link rel="stylesheet" href="assets/css/components.css?v=2026-10-22e">
-    <link rel="stylesheet" href="assets/css/pages/evento.css?v=2026-10-22e">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800;900&display=swap">
+    <link rel="stylesheet" href="assets/css/base.css?v=2026-11-18b">
+    <link rel="stylesheet" href="assets/css/components.css?v=2026-11-18b">
+    <link rel="stylesheet" href="assets/css/pages/evento.css?v=2026-11-18b">
 </head>
-<body class="evento evento--blue-hour">
+<body class="pagina-evento evento--blue-hour">
 
-    <!-- Pagina di un evento passato, sul modello di Long Story Short. Le foto
-         stanno in assets/img/eventi/blue-hour/; la copertina è la stessa
-         del database, con lo stesso nome. -->
-    <nav class="barra" aria-label="Navigazione principale">
-        <div class="barra-gruppo">
-            <span class="indicatore" aria-hidden="true"></span>
-
-            <a href="index.html" class="voce voce--logo" aria-label="Home">
-                <img src="assets/img/brand/logo-cdl.png" alt="CDL" onerror="this.replaceWith(document.createTextNode('CDL'))">
-            </a>
-            <a href="produzioni.html" class="voce">Produzioni</a>
-            <a href="eventi.html" class="voce is-active">Eventi</a>
+    <header class="nav">
+        <div class="wrap nav__riga">
+            <a class="skip-link" href="#top">Vai al contenuto</a>
+            <a class="nav__logo" href="index.html" aria-label="CDL, pagina iniziale"><span class="logo"></span></a>
+            <a class="nav__voce nav__voce--eventi" href="eventi.html" aria-current="page">Eventi</a>
+            <a class="nav__voce nav__voce--produzioni" href="produzioni.html">Produzioni</a>
+            <a class="nav__voce nav__voce--contatti" href="contatti.html#contatti">Contatti</a>
+            <a class="btn btn--pieno nav__socio" href="vantaggi-tesseramento.html">Diventa socio</a>
         </div>
+    </header>
 
-        <a href="cortoteca.html" class="voce voce--altrove">
-            <svg class="icona-play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.14v13.72L19 12 8 5.14Z"/></svg>
-            Cortoteca
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h6"/></svg>
-        </a>
-    </nav>
-
-    <main>
-        <section class="sezione sezione--prima">
-
-            <a href="eventi.html" class="indietro">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
-                Tutti gli eventi
-            </a>
-
-            <div class="copertina copertina--intera">
-                <img class="foto" src="assets/img/eventi/blue-hour-copertina-1791651799903.jpg" alt="Blue Hour: il titolo disegnato su fondo blu notte" width="1920" height="1080">
-            </div>
-
-            <div class="due-colonne">
-                <h1>Blue Hour <span>2025</span></h1>
-                <div class="corpo">
+    <main id="top">
+        <!-- Come Long Story Short: in cima il logo dell'evento (è qui che
+             arriva quello della scheda di Eventi) e il racconto, con quando e
+             dove scritti dentro: a fianco se il logo è raccolto, sotto se è
+             una riga lunga -->
+        <section class="hero hero--evento hero--marchio hero--affiancato">
+            <div class="wrap">
+                <h1 class="evento-g__marchio" id="titolo-evento"><span class="sr-only">Blue Hour 2025</span><span class="marchio-serie marchio-serie--evento marchio--blue-hour" data-arrivo aria-hidden="true"></span></h1>
+                <div class="presentazione entra">
                     <p><strong>Blue Hour</strong> è una serata sulla spiaggia del <strong>Bagno 150 di Rimini</strong>, domenica <strong>24 agosto 2025</strong>: dall'ora blu del tramonto fino a notte, fra cinema, fotografia, moda e musica, a ingresso gratuito.</p>
                 </div>
             </div>
+        </section>
 
-            <h2 class="titoletto">Programma</h2>
-            <div class="programma-griglia">
-                <div class="programma programma--gruppi">
-                    <div class="programma-gruppo">
-                        <h3 class="programma-gruppo-titolo">In spiaggia</h3>
-                        <p class="programma-gruppo-nota">Dalle 19:30, fino a fine serata</p>
-                        <ol class="programma-lista">
-                            <li>
-                                <div class="programma-voce">
-                                    <span class="programma-titolo">DJ set</span>
-                                    <span class="programma-dati">Bwude, JBex</span>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="programma-voce">
-                                    <span class="programma-titolo">Mostre fotografiche</span>
-                                    <span class="programma-dati">Mariachiara Lorusso, Martina Giovanardi</span>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="programma-voce">
-                                    <span class="programma-titolo">Clothing exhibition</span>
-                                    <span class="programma-dati">Provvisorio Clothing</span>
-                                </div>
-                            </li>
+        <section class="blocco-pagina blocco-pagina--diviso entra" aria-labelledby="blocco-programma">
+            <div class="wrap">
+                <h2 class="sr-only" id="blocco-programma">Programma</h2>
+                <div class="serata giostra serata--senza-testa">
+                    <div class="serata__lista">
+                        <ul class="programma-lista programma-lista--semplice">
+                        <li>
+                        <div class="programma-voce">
+                        <span class="programma-titolo">DJ set</span>
+                        <span class="programma-dati"><a class="tag-ig" href="https://www.instagram.com/bwude/" target="_blank" rel="noopener">@bwude<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h6"/></svg></a>, <a class="tag-ig" href="https://www.instagram.com/jb.revolution/" target="_blank" rel="noopener">@jb.revolution<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h6"/></svg></a></span>
+                        </div>
+                        </li>
+                        <li>
+                        <div class="programma-voce">
+                        <span class="programma-titolo">Mostre fotografiche</span>
+                        <span class="programma-dati"><a class="tag-ig" href="https://www.instagram.com/nellafos.chia/" target="_blank" rel="noopener">@nellafos.chia<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h6"/></svg></a>, <a class="tag-ig" href="https://www.instagram.com/mono.no.aware_ph/" target="_blank" rel="noopener">@mono.no.aware_ph<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h6"/></svg></a></span>
+                        </div>
+                        </li>
+                        <li>
+                        <div class="programma-voce">
+                        <span class="programma-titolo">Clothing exhibition</span>
+                        <span class="programma-dati"><a class="tag-ig" href="https://www.instagram.com/provvisorioclothing/" target="_blank" rel="noopener">@provvisorioclothing<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h6"/></svg></a></span>
+                        </div>
+                        </li>
+                        <li>
+                        <div class="programma-voce">
+                        <span class="programma-titolo"><span class="marchio-serie marchio-serie--evento marchio-voce marchio--short-talks-off-1" role="img" aria-label="Short Talks OFF"></span></span>
+                        <span class="programma-dati">Proiezione di tre cortometraggi e dialogo con gli autori.</span>
+                        </div>
+                        <ol class="programma-lista programma-lista--corti">
+                        <li><div class="programma-voce"><span class="programma-titolo">Estate &rsquo;05</span><span class="programma-dati">Francesco Pasquinelli &middot; CDL &middot; 2025 &middot; 10'</span></div></li>
+                        <li><div class="programma-voce"><span class="programma-titolo">La Partenza</span><span class="programma-dati">Alessio Petrillo &middot; CDL e Arkadia Studios &middot; 2025 &middot; 5'</span></div></li>
+                        <li><div class="programma-voce"><span class="programma-titolo">Movimento</span><span class="programma-dati">Luca Canarecci &middot; 2025 &middot; 9'</span></div></li>
                         </ol>
+                        </li>
+                        </ul>
                     </div>
-                    <div class="programma-gruppo">
-                        <h3 class="programma-gruppo-titolo">Short Talks OFF</h3>
-                        <p class="programma-gruppo-nota">Tre cortometraggi e il dialogo con gli autori. Partner casting: La Valigia dell'Attore.</p>
-                        <ol class="programma-lista">
-                            <li>
-                                <div class="programma-voce">
-                                    <span class="programma-titolo">Estate '05</span>
-                                    <span class="programma-dati">Francesco Pasquinelli · CDL</span>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="programma-voce">
-                                    <span class="programma-titolo">La Partenza</span>
-                                    <span class="programma-dati">Alessio Petrillo · CDL e Arkadia Studios</span>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="programma-voce">
-                                    <span class="programma-titolo">Movimento</span>
-                                    <span class="programma-dati">Luca Canarecci</span>
-                                </div>
-                            </li>
-                        </ol>
+                    <div class="giostra__foto">
+                        <div class="giostra__pista" tabindex="0" role="group" aria-label="Foto della serata del 24 agosto">
+                            <img src="assets/img/eventi/blue-hour/serate/serata-24-08-01.jpg" alt="Foto della serata del 24 agosto, 1 di 8" width="1080" height="1350">
+                            <img src="assets/img/eventi/blue-hour/serate/serata-24-08-02.jpg" alt="Foto della serata del 24 agosto, 2 di 8" width="1080" height="1350">
+                            <img src="assets/img/eventi/blue-hour/serate/serata-24-08-03.jpg" alt="Foto della serata del 24 agosto, 3 di 8" width="1080" height="1350">
+                            <img src="assets/img/eventi/blue-hour/serate/serata-24-08-04.jpg" alt="Foto della serata del 24 agosto, 4 di 8" width="1080" height="1350">
+                            <img src="assets/img/eventi/blue-hour/serate/serata-24-08-05.jpg" alt="Foto della serata del 24 agosto, 5 di 8" width="1080" height="1350" loading="lazy">
+                            <img src="assets/img/eventi/blue-hour/serate/serata-24-08-06.jpg" alt="Foto della serata del 24 agosto, 6 di 8" width="1080" height="1350" loading="lazy">
+                            <img src="assets/img/eventi/blue-hour/serate/serata-24-08-07.jpg" alt="Foto della serata del 24 agosto, 7 di 8" width="1080" height="1350" loading="lazy">
+                            <img src="assets/img/eventi/blue-hour/serate/serata-24-08-08.jpg" alt="Foto della serata del 24 agosto, 8 di 8" width="1080" height="1350" loading="lazy">
+                        </div>
+                    </div>
+                    <div class="giostra__comandi">
+                        <span class="giostra__avanzamento" aria-hidden="true"><span class="giostra__linea"></span></span>
+                        <button class="giostra__tasto" type="button" aria-label="Foto precedenti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button>
+                        <button class="giostra__tasto" type="button" aria-label="Foto successive"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></button>
+                        <a class="giostra__post" href="https://www.instagram.com/p/DOY4pdDCBPO/" target="_blank" rel="noopener">Vedi su Instagram <svg class="freccia" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h6"/></svg></a>
                     </div>
                 </div>
-
-                <figure class="locandina">
-                    <img src="assets/img/eventi/blue-hour/locandina.jpg" alt="Locandina di Blue Hour: domenica 24 agosto dalle 19:30 al Bagno 150 di Rimini, ingresso gratuito" width="880" height="1100" loading="lazy">
-                </figure>
-            </div>
-
-            <h2 class="titoletto">Galleria</h2>
-            <div class="galleria">
-                <img src="assets/img/eventi/blue-hour/foto-1.jpg" alt="Il pubblico sulla sabbia sotto le lanterne blu" width="960" height="1200" loading="lazy">
-                <img src="assets/img/eventi/blue-hour/foto-2.jpg" alt="La mostra fotografica allestita sulle cabine" width="960" height="1200" loading="lazy">
-                <img src="assets/img/eventi/blue-hour/foto-3.jpg" alt="L'esposizione di Provvisorio Clothing" width="960" height="1200" loading="lazy">
-                <img src="assets/img/eventi/blue-hour/foto-4.jpg" alt="Le fotografie esposte sulla spiaggia" width="960" height="1200" loading="lazy">
-                <img src="assets/img/eventi/blue-hour/foto-5.jpg" alt="Spettatori sui teli da mare davanti allo schermo, con gli autori sul palco" width="960" height="1200" loading="lazy">
-                <img src="assets/img/eventi/blue-hour/foto-6.jpg" alt="Il DJ set della serata" width="960" height="1200" loading="lazy">
             </div>
         </section>
     </main>
 
-    <footer class="piede">
-        <div class="piede-social">
-            <a href="https://instagram.com/cdl_aps" target="_blank" rel="noopener" aria-label="Instagram" class="social-link">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
-            </a>
-            <a href="https://www.youtube.com/@cdl_aps" target="_blank" rel="noopener" aria-label="YouTube" class="social-link">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 2-2 69.44 69.44 0 0 1 15 0 2 2 0 0 1 2 2 24.12 24.12 0 0 1 0 10 2 2 0 0 1-2 2 69.44 69.44 0 0 1-15 0 2 2 0 0 1-2-2z"/><polyline points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/></svg>
-            </a>
-            <a href="mailto:ciao@cdlaps.com" aria-label="Scrivici" class="social-link">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
-            </a>
+    <footer>
+        <div class="piede">
+            <div class="wrap piede__riga">
+                <a href="index.html" aria-label="CDL, pagina iniziale"><span class="logo"></span></a>
+                <ul class="piede__collegamenti">
+                    <li><a href="contatti.html#contatti">Contatti</a></li>
+                    <li><a href="https://instagram.com/cdl_aps" target="_blank" rel="noopener">Instagram <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h6"/></svg></a></li>
+                    <li><a href="https://www.youtube.com/@cdl_aps" target="_blank" rel="noopener">YouTube <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h6"/></svg></a></li>
+                </ul>
+                <p class="piede__dati">CDL APS, 2026<br>
+                Associazione di promozione sociale<br>
+                Sede legale: Viale Laurana 13, 47921 Rimini<br>
+                CF 91200080405</p>
+            </div>
         </div>
-        <div class="piede-riga">
-            <img src="assets/img/brand/logo-cdl.png" alt="" class="footer-logo--dark" onerror="this.style.display='none'">
-            <span>2026 CDL APS</span>
-        </div>
-        <p class="piede-dati">Associazione di promozione del cinema giovane e indipendente<br>
-        CDL APS &bull; Viale Laurana 13, Rimini, 47921 &bull; CF: 91200080405</p>
     </footer>
 
-    <script src="assets/js/barra.js?v=2026-10-22e"></script>
+    <script src="assets/js/comune.js?v=2026-11-18b"></script>
 </body>
 </html>

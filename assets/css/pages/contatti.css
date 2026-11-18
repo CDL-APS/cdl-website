@@ -1,0 +1,41 @@
+/* ==========================================================================
+   CONTATTI (contatti.html)
+   In cima il modulo (meta di "Contatti", #contatti), che arriva per email
+   tramite Netlify Forms; sotto, l'invito a sostenere CDL, lo stesso blocco
+   arancio della home (meta di "Diventa socio", #socio). Dopo l'invio
+   Netlify riapre la pagina su #grazie, che mostra la conferma al posto del
+   modulo.
+   ========================================================================== */
+
+/* Il modulo apre la pagina: il titolo a sinistra, largo quanto gli serve e
+   alto quanto la frase a fianco (dalle maiuscole della prima riga alla base
+   dell'ultima: corpo e scostamento li calcola contatti.js, che li mette uno
+   sotto l'altro se il titolo prenderebbe troppo posto), sotto il modulo */
+.pagina-contatti main > .contatti { min-height: 0; padding: calc(var(--nav) + 40px) 0 clamp(96px, 11vw, 168px); scroll-margin-top: var(--nav); }
+.contatti__testa { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: start; gap: 16px clamp(24px, 3vw, 48px); padding-bottom: clamp(28px, 3.4vw, 48px); border-bottom: 2px solid var(--arancio); }
+.contatti__testa h1 { font-size: clamp(48px, 7vw, 108px); line-height: 0.86; white-space: nowrap; }
+.contatti__testa--impilata { grid-template-columns: minmax(0, 1fr); }
+
+/* Sotto, l'arancio di Sostieni (components.css), alto quanto il contenuto.
+   Il margine in alto lascia spazio alla barra quando si arriva su #socio */
+.pagina-contatti .contatti-sostieni { min-height: 0; padding-top: calc(var(--nav) + 32px); }
+.contatti__frase { max-width: 40ch; font-size: clamp(19px, 1.7vw, 24px); font-weight: 600; line-height: 1.35; }
+
+/* Il modulo (motivo, nome, email, messaggio) usa gli stili comuni di
+   .modulo in components.css; qui solo la distanza dalla testa */
+.contatti .modulo { margin-top: clamp(32px, 4vw, 56px); }
+
+/* --------------------------------------------------------------------------
+   La conferma: c'è solo quando l'indirizzo finisce con #grazie (Netlify ci
+   torna dopo l'invio) e prende il posto del modulo
+   -------------------------------------------------------------------------- */
+.grazie { display: none; scroll-margin-top: calc(var(--nav) + 24px); }
+.grazie:target { display: grid; gap: 14px; justify-items: start; margin-top: clamp(32px, 4vw, 56px); }
+.contatti:has(.grazie:target) .modulo { display: none; }
+.grazie__titolo { font-size: clamp(28px, 3vw, 44px); }
+.grazie__testo { max-width: 46ch; font-size: clamp(18px, 1.6vw, 22px); font-weight: 600; line-height: 1.4; }
+.grazie .link { margin-top: 4px; }
+
+@media (max-width: 639px) {
+  .contatti__testa { grid-template-columns: 1fr; }
+}

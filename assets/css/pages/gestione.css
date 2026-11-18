@@ -1,314 +1,338 @@
 /* ==========================================================================
-   GESTIONE (gestione.html) — pagina riservata ai redattori: accesso, elenco
-   di opere ed eventi, moduli di modifica.
+   GESTIONE (gestione.html) — pagina riservata ai redattori: accesso, avvisi,
+   proposte dei soci, elenchi di opere, eventi e soci, moduli di modifica.
+   Barra, campi e righe comuni con area-socio.html stanno in riservato.css,
+   caricato prima di questo foglio.
    ========================================================================== */
 
-/* Niente barra galleggiante: al suo posto una testata semplice che resta in
-   cima. Lo spazio riservato alla barra in base.css qui non serve. */
-body.gestione { padding-top: 0; }
-
-.g-testata {
-  position: sticky;
-  top: 0;
-  z-index: 50;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  padding: 0.75rem clamp(1rem, 3vw, 1.5rem);
-  background: rgba(247, 247, 247, 0.85);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-bottom: 1px solid var(--riga);
+/* Numero di proposte in attesa (o di cose da sistemare), accanto alla voce:
+   un bollino piccolo, in alto come un esponente, che non allarga la voce */
+.g-conta {
+  display: inline-grid; place-items: center; align-self: flex-start;
+  min-width: 18px; height: 18px; margin-top: 8px; margin-left: -2px; padding: 0 5px;
+  border-radius: 999px; background: var(--rosso); color: #fff;
+  font-size: 11px; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums;
 }
 
-.g-marchio {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  font-family: 'Montserrat', sans-serif;
-  font-size: 10.5px;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.16em;
+/* Una scheda ferma, in sviluppo (Eventi): l'etichetta nella barra, tenue,
+   e l'avviso al posto dell'elenco */
+.g-sviluppo {
+  display: inline-flex; align-items: center; height: 20px; padding: 0 7px;
+  border: 1.5px solid currentColor; border-radius: 999px; opacity: 0.6;
+  font-size: 11px; font-weight: 700; line-height: 1; white-space: nowrap;
 }
-
-.g-marchio img { width: 42px; height: auto; filter: brightness(0); }
-
-.g-utente { display: flex; align-items: center; gap: 0.75rem; }
-
-.g-utente-email { font-size: 0.85rem; color: var(--testo-tenue); }
-
-.g-utente .btn,
-.g-intestazione .btn { padding: 0.6rem 1rem; }
-
-/* Messaggio di esito (salvato, errore) */
-.g-avviso {
-  margin-bottom: var(--spazio);
-  padding: 0.85rem 1.1rem;
-  border-radius: var(--r-s);
-  corner-shape: squircle;
-  background: rgba(185, 187, 248, 0.35);
-  font-weight: 600;
-}
-
-.g-avviso--errore { background: rgba(255, 0, 0, 0.12); color: #a00000; }
-
-.g-vuoto {
-  padding: 2rem 0;
-  font-family: 'Montserrat', sans-serif;
-  font-size: 10px;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.18em;
-  color: var(--testo-tenue);
-}
+.g-in-sviluppo { max-width: 60ch; line-height: 1.5; }
+.g-in-sviluppo strong { color: var(--nero); }
 
 /* --------------------------------------------------------------------------
-   Accesso
+   Testata delle schede, come quella delle pagine pubbliche: il nome a
+   caratteri cubitali, sotto la presentazione grande (cosa contiene) chiusa
+   da un filo e, a destra, il pulsante per aggiungere
    -------------------------------------------------------------------------- */
-.g-accesso {
-  max-width: 420px;
-  margin: clamp(1rem, 6vw, 4rem) auto;
-  gap: 1rem;
+.testa-pagina {
+  display: grid; gap: clamp(16px, 2.2vw, 28px);
+  margin-bottom: clamp(32px, 4.5vw, 56px); padding-bottom: clamp(24px, 3vw, 40px);
+  border-bottom: 1px solid var(--filo);
 }
+.testa-pagina h1 { margin-left: -0.04em; font-size: clamp(48px, 9vw, 128px); line-height: 0.82; }
+.testa-pagina-nota { max-width: 46ch; font-size: clamp(19px, 1.75vw, 26px); font-weight: 600; line-height: 1.3; letter-spacing: -0.01em; }
+.g-testa-riga { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px 32px; }
 
-.g-accesso h1 { font-size: clamp(1.6rem, 4vw, 2.2rem); }
-
-.g-accesso .btn { align-self: flex-start; }
+/* Collegamento di testo ("Vedi sul sito"): il filo si disegna al passaggio */
+.rimando {
+  display: inline-flex; align-items: center; gap: 8px; min-height: 44px;
+  font-weight: 700;
+  background:
+    linear-gradient(currentColor, currentColor) 0 calc(100% - 9px) / 0 2px no-repeat,
+    linear-gradient(var(--filo), var(--filo)) 0 calc(100% - 9px) / 100% 2px no-repeat;
+  transition: background-size 0.2s var(--ease);
+}
+.rimando:hover { background-size: 100% 2px, 100% 2px; }
 
 /* --------------------------------------------------------------------------
-   Elenco
+   Da sistemare: ciò che richiede una decisione del direttivo. Il pallino
+   rosso segnala che c'è qualcosa in sospeso.
    -------------------------------------------------------------------------- */
-.g-intestazione {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  margin-bottom: var(--spazio);
+.rec-dot { display: inline-block; width: 12px; height: 12px; flex: 0 0 auto; border-radius: 50%; background: var(--rosso); animation: pulsa 1.5s infinite; }
+.g-avvisi { margin-bottom: clamp(40px, 5vw, 64px); }
+.g-avvisi .titoletto { display: flex; align-items: center; gap: 12px; margin: 0 0 8px; }
+.g-avvisi ul { list-style: none; }
+.g-avvisi li {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 24px;
+  min-height: 68px; padding: 12px 0; border-bottom: 1px solid var(--filo);
+  font-size: 16px; line-height: 1.5;
 }
+.g-avvisi li span { flex: 1; min-width: min(100%, 18rem); }
 
-.g-intestazione h1 { font-size: clamp(1.6rem, 4vw, 2.6rem); }
-
-.g-schede {
-  display: flex;
-  gap: 4px;
-  padding: 4px;
-  border-radius: 999px;
-  border: 1px solid var(--riga);
+/* --------------------------------------------------------------------------
+   Dashboard: i numeri a caratteri grandi su schede bianche con gli angoli
+   del marchio (ognuna porta alla sua scheda, al passaggio si fa nera), e
+   le ultime attività come un registro
+   -------------------------------------------------------------------------- */
+.g-numeri {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr)); gap: var(--gap);
+  margin-bottom: clamp(8px, 2vw, 24px);
 }
-
-.g-scheda {
-  padding: 0.6rem 1.1rem;
-  border: 0;
-  border-radius: 999px;
-  background: none;
-  font-family: 'Montserrat', sans-serif;
-  font-size: 10px;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-  color: var(--testo-tenue);
-  cursor: pointer;
+.g-numero {
+  display: flex; flex-direction: column; align-items: flex-start; gap: 6px;
+  min-height: 168px; padding: 20px 22px 22px;
+  border: 0; border-radius: var(--r); background: #fff;
+  font: inherit; text-align: left; color: var(--nero); cursor: pointer;
+  transition: background-color 0.25s var(--ease), color 0.25s var(--ease);
 }
+.g-numero:hover { background: var(--nero); color: var(--chiaro); }
+.g-numero-valore { font-family: var(--f-titoli); font-size: clamp(48px, 5vw, 72px); font-weight: 900; line-height: 0.88; letter-spacing: -0.05em; }
+.g-numero-cosa { font-size: 15px; font-weight: 800; }
+.g-numero-dettaglio { margin-top: auto; font-size: 14px; color: var(--tenue); transition: color 0.25s var(--ease); }
+.g-numero:hover .g-numero-dettaglio { color: rgba(247, 247, 247, 0.72); }
 
-.g-scheda[aria-selected='true'] { background: var(--cdl-dark); color: var(--cdl-white); }
+.g-attivita { list-style: none; margin: 0; padding: 0; }
+.g-attivita li {
+  display: grid; grid-template-columns: 8.5rem 8.5rem minmax(0, 1fr); align-items: baseline; gap: 4px 16px;
+  padding: 13px 0; border-bottom: 1px solid var(--filo); font-size: 16px; line-height: 1.45;
+}
+.g-attivita li.g-vuoto { display: block; }
+.g-attivita time { font-size: 14px; color: var(--tenue); white-space: nowrap; }
+.g-attivita-tipo { font-size: 14px; font-weight: 800; }
 
-.g-elenco { list-style: none; border-top: 1px solid var(--riga); }
-
+/* --------------------------------------------------------------------------
+   Elenchi di opere, eventi, proposte e soci: righe separate da un filo che,
+   al passaggio, si stendono su una fascia bianca
+   -------------------------------------------------------------------------- */
 .g-riga {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: center;
-  gap: 0.3rem 1rem;
-  width: 100%;
-  padding: 1rem 0.5rem;
-  border: 0;
-  border-bottom: 1px solid var(--riga);
-  background: none;
-  font: inherit;
-  text-align: left;
-  color: inherit;
-  cursor: pointer;
-  transition: background-color 0.25s var(--ease-out);
+  display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 6px 20px;
+  width: 100%; min-height: 76px; padding: 16px 0;
+  border: 0; border-bottom: 1px solid var(--filo); background: none;
+  font: inherit; text-align: left; color: inherit; cursor: pointer;
+  transition: background-color 0.25s var(--ease), box-shadow 0.25s var(--ease);
 }
+/* La fascia deborda di poco ai lati con due ombre piene, così il testo resta
+   allineato al margine della pagina */
+button.g-riga:hover,
+a.g-riga:hover { background: #fff; box-shadow: -14px 0 0 #fff, 14px 0 0 #fff; }
 
-.g-riga:hover { background: rgba(185, 187, 248, 0.18); }
-
-.g-riga-titolo {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 1.05rem;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: -0.02em;
-}
-
-.g-riga-dati { grid-column: 1; font-size: 0.85rem; color: var(--testo-tenue); }
-
-.g-segni { grid-row: 1 / span 2; grid-column: 2; display: flex; gap: 0.4rem; }
-
+.g-segni { grid-row: 1 / span 2; grid-column: 2; display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 8px; }
+/* Bollini di stato: pillole. Pubblicata (e ciò che va guardato) piena di
+   nero, la bozza solo contorno, l'allarme rossa */
 .g-segno {
-  padding: 0.35rem 0.65rem;
-  border-radius: 999px;
-  font-family: 'Montserrat', sans-serif;
-  font-size: 8.5px;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-  background: rgba(29, 29, 27, 0.08);
+  display: inline-flex; align-items: center; min-height: 30px; padding: 0 12px;
+  border: 2px solid transparent; border-radius: 999px; background: rgba(29, 29, 27, 0.08);
+  font-size: 13px; font-weight: 700; white-space: nowrap;
 }
+.g-segno--pubblicata { background: var(--nero); color: var(--chiaro); }
+.g-segno--bozza { background: none; border-color: var(--filo); color: var(--tenue); }
+.g-segno--allarme { background: var(--rosso); color: #fff; }
+/* Riga che non si apre: soci, proposte già decise */
+.g-riga--ferma { cursor: default; }
+/* Soci: il bollino della quota e il tasto del collegamento in due colonne
+   di larghezza fissa, così stanno incolonnati da una riga all'altra */
+.g-segni--soci { display: grid; grid-template-columns: 8.5rem 13.5rem; align-items: center; gap: 10px; }
+.g-segni--soci .g-segno { justify-content: center; }
+.g-segni--soci .btn { justify-content: center; width: 100%; }
 
-.g-segno--pubblicata { background: var(--cdl-lavender); }
+/* "Espandi" sotto le ultime attività */
+.g-espandi-riga { display: flex; justify-content: center; margin-top: 20px; }
 
-.g-segno--bozza { background: none; border: 1px dashed var(--testo-tenue); color: var(--testo-tenue); }
+/* Scheda Soci: stato della sincronizzazione e collegamento del foglio */
+.g-pannello {
+  display: flex; flex-direction: column; gap: 8px;
+  padding-bottom: 16px; border-bottom: 1px solid var(--filo);
+  font-size: 16px; line-height: 1.55; color: var(--tenue);
+}
+/* "Collega il foglio" si apre e si chiude: la freccia lo dice */
+.g-nota-tenue { max-width: 68ch; font-size: 15px; line-height: 1.5; color: var(--tenue); }
+.g-bozze { margin-bottom: 8px; }
+.g-pannello summary { display: inline-flex; align-items: center; gap: 10px; align-self: flex-start; min-height: 44px; list-style: none; font-weight: 800; color: var(--nero); cursor: pointer; }
+.g-pannello summary::-webkit-details-marker { display: none; }
+.g-pannello summary::after {
+  content: ''; width: 8px; height: 8px; margin-top: -4px;
+  border-right: 2.5px solid currentColor; border-bottom: 2.5px solid currentColor;
+  transform: rotate(45deg); transition: transform 0.2s var(--ease), margin 0.2s var(--ease);
+}
+.g-pannello details[open] summary::after { margin-top: 4px; transform: rotate(-135deg); }
+.g-chiave { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px; margin-top: 12px; }
+.g-chiave .g-campo { flex: 1; min-width: min(100%, 22rem); }
+.g-chiave input { font-family: ui-monospace, 'SF Mono', Menlo, monospace; }
 
 /* --------------------------------------------------------------------------
-   Moduli
+   Modulo dell'opera: titolo grafico, colore, elimina
    -------------------------------------------------------------------------- */
-.g-modulo { display: flex; flex-direction: column; gap: var(--spazio); }
+/* Titolo grafico in PNG: su fondo a scacchi, per vederne la trasparenza */
+.g-anteprima-titolo {
+  max-width: min(100%, 480px); max-height: 160px; padding: 16px;
+  border: 2px solid var(--nero); border-radius: 14px;
+  background: repeating-conic-gradient(rgba(29, 29, 27, 0.06) 0 25%, transparent 0 50%) 0 0 / 16px 16px, #fff;
+  object-fit: contain;
+}
+.g-file-nome { font-weight: 600; }
+/* Il colore della pagina del corto: il selettore e il valore scritto */
+.g-colore { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.g-colore input[type='color'] { flex: 0 0 auto; width: 64px; padding: 4px; cursor: pointer; }
+.g-colore input[type='text'] { flex: 0 1 12rem; width: auto; font-family: ui-monospace, 'SF Mono', Menlo, monospace; }
 
-.g-gruppo { margin: 0; padding: 0; border: 0; min-width: 0; }
+.g-elimina { border-color: var(--rosso); color: var(--rosso); }
+.g-elimina:hover { border-color: var(--rosso); background: var(--rosso); color: #fff; }
 
-.g-gruppo .titoletto { width: 100%; margin-top: 0.5rem; padding: 0; }
-
-.g-griglia {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1rem 1.25rem;
+/* --------------------------------------------------------------------------
+   Modulo dell'evento (gestione-eventi.js): il logo nel suo colore, come
+   sulla pagina; i blocchi su superfici bianche con gli angoli del marchio,
+   ognuno con il suo nome e i tasti tondi per spostarlo e toglierlo; dentro,
+   gli elenchi divisi da un filo, le voci in riga come il cast, le foto in
+   griglia come nel rullino
+   -------------------------------------------------------------------------- */
+.g-logo-evento { display: flex; padding: 20px; border: 2px solid var(--nero); border-radius: 14px; background: var(--chiaro); max-width: min(100%, 480px); }
+.g-logo-evento__segno {
+  display: block; width: min(100%, 120px * var(--ar, 1)); max-height: 160px; aspect-ratio: var(--ar, 1);
+  background: var(--colore, var(--nero));
+  -webkit-mask: var(--marchio) center / contain no-repeat; mask: var(--marchio) center / contain no-repeat;
+}
+.g-nota-blocchi { max-width: 62ch; margin-bottom: 16px; font-size: 15px; line-height: 1.5; color: var(--tenue); }
+.g-blocchi { display: flex; flex-direction: column; gap: var(--gap); margin: 0 0 16px; padding: 0; list-style: none; }
+.g-blocchi > .g-vuoto { color: var(--tenue); }
+.g-blocco { display: flex; flex-direction: column; gap: 20px; padding: clamp(18px, 2.4vw, 28px); border-radius: var(--r); background: #fff; }
+.g-blocco > .btn { align-self: flex-start; }
+.g-blocco__testa { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; }
+.g-blocco__nome { font-size: clamp(18px, 1.7vw, 23px); line-height: 1.05; }
+h4.g-blocco__nome { font-size: 16px; }
+.g-comandi { display: flex; gap: 8px; }
+.g-comandi .g-icona:disabled { opacity: 0.25; cursor: default; }
+.g-comandi .g-icona:disabled:hover { background: none; color: var(--nero); }
+.g-elenco-voci, .g-blocco__foto { display: flex; flex-direction: column; gap: 16px; padding-top: 20px; border-top: 1px solid var(--filo); }
+.g-elenco-voci > .btn, .g-blocco__foto .g-immagine-azioni { align-self: flex-start; }
+.g-voci { display: flex; flex-direction: column; gap: 10px; margin: 0; padding: 0; list-style: none; }
+.g-riga-voce { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 0.9fr) auto; gap: 8px; align-items: center; }
+.g-riga-voce input, .g-riga-voce select {
+  width: 100%; min-height: 48px; padding: 10px 14px; border: 2px solid var(--nero); border-radius: 14px;
+  background: #fff; font: inherit; font-size: 15px; font-weight: 500; color: var(--nero);
+}
+.g-riga-voce select {
+  appearance: none; padding-right: 40px; cursor: pointer;
+  background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231d1d1b' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 12px center / 14px;
+}
+.g-riga-voce input:focus-visible, .g-riga-voce select:focus-visible { outline: 3px solid var(--nero); outline-offset: 2px; }
+.g-riga-voce__nota { grid-column: 1 / -1; font-size: 13px; color: var(--tenue); }
+.g-foto-evento { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 16px 12px; margin: 0; padding: 0; list-style: none; }
+.g-foto-evento__voce { display: flex; flex-direction: column; gap: 8px; }
+.g-foto-evento__cornice { display: block; aspect-ratio: 1; overflow: hidden; border-radius: 14px; background: rgba(29, 29, 27, 0.07); }
+.g-foto-evento__cornice img { width: 100%; height: 100%; object-fit: cover; }
+.g-foto-evento__voce input { min-height: 44px; padding: 8px 12px; border: 2px solid var(--nero); border-radius: 14px; background: #fff; font: inherit; font-size: 14px; font-weight: 500; }
+@media (max-width: 760px) {
+  .g-riga-voce { grid-template-columns: minmax(0, 1fr); }
+  .g-riga-voce .g-comandi { justify-content: flex-end; }
 }
 
-.g-campo { display: flex; flex-direction: column; gap: 0.4rem; }
+/* --------------------------------------------------------------------------
+   Rullino della home (gestione-rullino.js): in alto le foto scelte, in
+   ordine, ognuna con i tasti tondi per spostarla e toglierla; sotto le foto
+   disponibili, divise per provenienza (tre pillole), in griglia. Una foto
+   già nel rullino ha il bordo nero e il bollino.
+   -------------------------------------------------------------------------- */
+.g-rullino-barra { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 24px; margin-bottom: clamp(16px, 2vw, 24px); }
+.g-rullino-barra .titoletto { margin: 0; }
+.g-mescola { gap: 10px; }
+.g-mescola svg { width: 18px; height: 18px; }
+.g-rullino-equilibrio { margin: -8px 0 20px; font-size: clamp(17px, 1.4vw, 20px); font-weight: 600; }
+.g-rullino { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 150px), 1fr)); gap: 24px var(--gap); list-style: none; }
+@media (min-width: 760px) { .g-rullino { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); } }
+.g-rullino > .g-vuoto { grid-column: 1 / -1; }
+.g-scelta { display: flex; flex-direction: column; gap: 10px; }
+.g-scelta__foto { aspect-ratio: 4 / 3; overflow: hidden; border-radius: 14px; background: rgba(29, 29, 27, 0.07); }
+.g-scelta__foto img { width: 100%; height: 100%; object-fit: cover; }
+.g-scelta__dati { font-size: 14px; line-height: 1.4; color: var(--tenue); }
+.g-scelta__dati strong { margin-right: 4px; font-family: var(--f-titoli); font-size: 18px; font-weight: 900; color: var(--nero); }
+.g-scelta .g-campo input, .g-scelta .g-campo select { min-height: 44px; padding: 8px 12px; font-size: 14px; }
+.g-scelta .g-campo select { padding-right: 40px; background-position: right 12px center; }
+.g-scelta__comandi { display: flex; gap: 8px; margin-top: auto; }
+.g-scelta__comandi .g-icona:disabled { opacity: 0.25; cursor: default; }
+.g-scelta__comandi .g-icona:disabled:hover { background: none; color: var(--nero); }
 
-.g-campo--largo { grid-column: 1 / -1; }
+.g-provenienze { display: flex; flex-wrap: wrap; gap: 8px; }
+.g-provenienza[aria-pressed='true'] { background: var(--nero); color: var(--chiaro); }
+.g-rullino-nota { max-width: 62ch; margin: 16px 0 clamp(24px, 3vw, 36px); font-size: 16px; line-height: 1.5; color: var(--tenue); }
+.g-altra-foto { margin-bottom: clamp(32px, 4vw, 48px); padding: clamp(20px, 2.4vw, 32px); border-radius: var(--r); background: #fff; }
 
-.g-campo > span:first-child {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 9px;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.18em;
-  color: var(--testo-medio);
+.g-gruppo-foto + .g-gruppo-foto { margin-top: clamp(28px, 3.4vw, 44px); }
+.g-gruppo-foto__titolo { margin-bottom: 14px; font-size: clamp(18px, 1.7vw, 23px); line-height: 1.05; }
+.g-gruppo-foto__titolo small { font-family: var(--f-testo); font-size: 14px; font-weight: 600; text-transform: none; letter-spacing: 0; color: var(--tenue); }
+.g-foto-griglia { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+.g-foto { display: flex; flex-direction: column; gap: 6px; padding: 0; border: 0; background: none; font: inherit; text-align: left; color: inherit; cursor: pointer; }
+.g-foto__cornice {
+  position: relative; display: block; aspect-ratio: 4 / 3; overflow: hidden;
+  border-radius: 14px; background: rgba(29, 29, 27, 0.07);
+  outline: 3px solid transparent; outline-offset: -3px; transition: outline-color 0.15s var(--ease);
+}
+.g-foto__cornice img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s var(--ease), opacity 0.2s var(--ease); }
+.g-foto:hover .g-foto__cornice img { transform: scale(1.04); }
+.g-foto__segno {
+  position: absolute; left: 8px; top: 8px; display: none; align-items: center; min-height: 26px; padding: 0 10px;
+  border-radius: 999px; background: var(--nero); color: var(--chiaro); font-size: 12px; font-weight: 700;
+}
+.g-foto[aria-pressed='true'] .g-foto__cornice { outline-color: var(--nero); }
+.g-foto[aria-pressed='true'] .g-foto__segno { display: inline-flex; }
+.g-foto[aria-pressed='true'] .g-foto__cornice img { opacity: 0.55; }
+.g-foto:focus-visible { outline: none; }
+.g-foto:focus-visible .g-foto__cornice { outline-color: var(--nero); outline-offset: 2px; }
+.g-foto__didascalia { font-size: 13px; font-weight: 700; line-height: 1.3; }
+
+/* --------------------------------------------------------------------------
+   Revisione di una proposta: socio, quota, licenza, risposte. Su una
+   superficie bianca con gli angoli del marchio, i dati come nella pagina
+   del corto.
+   -------------------------------------------------------------------------- */
+.g-revisione { display: flex; flex-direction: column; gap: 18px; padding: clamp(20px, 2.6vw, 32px); border-radius: var(--r); background: #fff; }
+.g-revisione-dati { display: flex; flex-direction: column; }
+.g-revisione-dati > div {
+  display: grid; grid-template-columns: minmax(8rem, 15rem) minmax(0, 1fr); gap: 4px 20px;
+  padding: 11px 0; border-bottom: 1px solid var(--filo);
+}
+.g-revisione-dati dt { padding-top: 2px; font-size: 14px; font-weight: 800; color: var(--nero); }
+.g-revisione-dati dd { overflow-wrap: anywhere; line-height: 1.5; }
+.g-revisione-attenzioni { padding-left: 1.2rem; list-style: disc; font-weight: 600; line-height: 1.55; }
+.g-revisione-attenzioni li::marker { color: var(--rosso); }
+.g-revisione-attenzioni a { text-decoration: underline; text-underline-offset: 3px; }
+
+/* --------------------------------------------------------------------------
+   Sicurezza 2FA: attivazione del codice di verifica
+   -------------------------------------------------------------------------- */
+.g-sicurezza { max-width: 560px; }
+.g-sicurezza form { display: flex; flex-direction: column; gap: 16px; margin-top: 8px; }
+.g-qr { width: 200px; height: 200px; border-radius: 14px; background: #fff; }
+.g-sicurezza code { font-family: ui-monospace, 'SF Mono', Menlo, monospace; overflow-wrap: anywhere; }
+
+/* --------------------------------------------------------------------------
+   Adattamenti
+   -------------------------------------------------------------------------- */
+/* Sul telefono e sui tablet stretti le schede scendono su una seconda riga,
+   a tutta larghezza: con "Sicurezza 2FA" ed "Esci" stanno su una riga sola
+   solo da 940 px circa */
+@media (max-width: 960px) {
+  .gestione .g-barra .nav__riga { flex-wrap: wrap; }
+  .g-schede {
+    order: 3; flex: 1 0 100%;
+    margin: 0 calc(var(--gut) * -1); padding: 0 calc(var(--gut) - 8px);
+    overflow-x: auto; border-top: 1px solid var(--filo); scrollbar-width: none;
+    /* sfuma a destra, così si capisce che ci sono altre schede; il margine
+       in fondo lascia l'ultima fuori dalla sfumatura */
+    -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 40px), transparent);
+    mask-image: linear-gradient(90deg, #000 calc(100% - 40px), transparent);
+  }
+  .g-schede::after { content: ''; flex: 0 0 32px; }
+  .g-schede .g-scheda { min-height: 48px; }
 }
 
-.g-campo small,
-.g-spunta small { font-size: 0.78rem; line-height: 1.4; color: var(--testo-tenue); }
-
-.g-campo input,
-.g-campo select,
-.g-campo textarea,
-.g-interprete input {
-  width: 100%;
-  padding: 0.7rem 0.9rem;
-  border: 1px solid var(--riga);
-  border-radius: var(--r-s);
-  corner-shape: squircle;
-  background: rgba(29, 29, 27, 0.025);
-  font: inherit;
-  font-size: 0.95rem;
-  color: var(--cdl-dark);
-  transition: border-color 0.2s var(--ease-out), background-color 0.2s var(--ease-out);
+/* Con le sei schede (e l'etichetta "In sviluppo") l'email nella barra
+   c'entra solo dai 1200 px */
+@media (max-width: 1200px) {
+  .gestione .g-utente-email { display: none; }
 }
-
-.g-campo textarea { resize: vertical; line-height: 1.55; }
-
-.g-campo input:focus,
-.g-campo select:focus,
-.g-campo textarea:focus,
-.g-interprete input:focus {
-  outline: none;
-  border-color: var(--cdl-dark);
-  background: #fff;
-}
-
-.g-campo input[readonly] { color: var(--testo-tenue); background: none; border-style: dashed; }
-
-/* Campo da correggere dopo un tentativo di salvataggio */
-.g-modulo.is-verificato :invalid { border-color: var(--cdl-red); }
-
-.g-spunta {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.6rem;
-  grid-column: 1 / -1;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.g-spunta input { width: 18px; height: 18px; margin-top: 2px; accent-color: var(--cdl-dark); }
-
-/* Immagini */
-.g-anteprima {
-  width: 100%;
-  max-width: 420px;
-  aspect-ratio: 16 / 9;
-  object-fit: cover;
-  border-radius: var(--r-m);
-  corner-shape: squircle;
-  background: rgba(29, 29, 27, 0.06);
-}
-
-.g-immagine-azioni { display: flex; flex-wrap: wrap; gap: 0.5rem; }
-
-.g-immagine-azioni .btn { padding: 0.6rem 1rem; }
-
-/* Cast */
-.g-interpreti { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 0.75rem; }
-
-.g-interprete {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) repeat(3, 38px);
-  gap: 0.4rem;
-  align-items: center;
-}
-
-.g-icona {
-  height: 38px;
-  border: 1px solid var(--riga);
-  border-radius: var(--r-s);
-  background: none;
-  font-size: 0.95rem;
-  color: var(--testo-medio);
-  cursor: pointer;
-}
-
-.g-icona:hover { border-color: var(--cdl-dark); color: var(--cdl-dark); }
-
-/* Corti collegati a un evento */
-.g-collegate {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 0.6rem 1.25rem;
-}
-
-.g-collegate .g-spunta { grid-column: auto; font-weight: 500; }
-
-/* Fondo del modulo: pubblicazione e pulsanti */
-.g-piede-modulo {
-  position: sticky;
-  bottom: 0;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  margin-top: 0.5rem;
-  padding: 1rem 0;
-  border-top: 1px solid var(--riga);
-  background: var(--cdl-white);
-}
-
-.g-piede-modulo .azioni { margin-top: 0; }
-
-.g-piede-modulo .g-spunta { grid-column: auto; }
-
-.g-elimina { border-color: var(--cdl-red); color: var(--cdl-red); }
-
-.btn[disabled] { opacity: 0.5; pointer-events: none; }
 
 @media (max-width: 760px) {
-  .g-griglia { grid-template-columns: 1fr; }
-  .g-utente-email { display: none; }
-  .g-interprete { grid-template-columns: minmax(0, 1fr) repeat(3, 38px); }
-  .g-interprete [data-ruolo] { grid-column: 1; grid-row: 2; }
+  .g-revisione-dati > div { grid-template-columns: 1fr; }
+  /* i segni vanno sotto titolo e dati: a fianco li stringerebbero */
+  .g-riga { grid-template-columns: minmax(0, 1fr); }
+  .g-segni { grid-row: auto; grid-column: 1; justify-content: flex-start; }
+  /* Soci: bollino e tasto della loro misura, il tasto va a capo se non c'entra */
+  .g-segni--soci { display: flex; flex-wrap: wrap; }
+  .g-segni--soci .btn { width: auto; min-height: 44px; padding: 0 16px; font-size: 14px; }
+  .g-attivita li { grid-template-columns: 1fr; gap: 2px; }
 }

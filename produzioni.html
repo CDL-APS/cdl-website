@@ -2,107 +2,98 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CDL | Produzioni</title>
-    <meta name="description" content="Le produzioni cinematografiche di CDL APS.">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Produzioni – CDL APS</title>
+    <meta name="description" content="I cortometraggi prodotti da CDL APS e quelli a cui ha collaborato.">
 
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link rel="icon" type="image/png" href="assets/img/brand/favicon.png">
 
-    <link rel="stylesheet" href="assets/css/base.css?v=2026-10-22e">
-    <link rel="stylesheet" href="assets/css/components.css?v=2026-10-22e">
-    <link rel="stylesheet" href="assets/css/pages/produzioni.css?v=2026-10-22e">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800;900&display=swap">
+    <link rel="stylesheet" href="assets/css/base.css?v=2026-11-18b">
+    <link rel="stylesheet" href="assets/css/components.css?v=2026-11-18b">
+    <link rel="stylesheet" href="assets/css/pages/produzioni.css?v=2026-11-18b">
 </head>
-<body>
+<body class="pagina-colore pagina-produzioni">
 
-    <nav class="barra" aria-label="Navigazione principale">
-        <div class="barra-gruppo">
-            <span class="indicatore" aria-hidden="true"></span>
-
-            <a href="index.html" class="voce voce--logo" aria-label="Home">
-                <img src="assets/img/brand/logo-cdl.png" alt="CDL" onerror="this.replaceWith(document.createTextNode('CDL'))">
-            </a>
-            <a href="produzioni.html" class="voce is-active" aria-current="page">Produzioni</a>
-            <a href="eventi.html" class="voce">Eventi</a>
+    <header class="nav">
+        <div class="wrap nav__riga">
+            <a class="skip-link" href="#top">Vai al contenuto</a>
+            <a class="nav__logo" href="index.html" aria-label="CDL, pagina iniziale"><span class="logo"></span></a>
+            <a class="nav__voce nav__voce--eventi" href="eventi.html">Eventi</a>
+            <a class="nav__voce nav__voce--produzioni" href="produzioni.html" aria-current="page">Produzioni</a>
+            <a class="nav__voce nav__voce--contatti" href="contatti.html#contatti">Contatti</a>
+            <a class="btn btn--pieno nav__socio" href="vantaggi-tesseramento.html">Diventa socio</a>
         </div>
+    </header>
 
-        <a href="cortoteca.html" class="voce voce--altrove">
-            <svg class="icona-play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.14v13.72L19 12 8 5.14Z"/></svg>
-            Cortoteca
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h6"/></svg>
-        </a>
-    </nav>
-
-    <main>
-        <section class="sezione sezione--prima">
-            <!-- Niente titolo visibile: in testa c'è l'ultimo lavoro. Il
-                 titolo resta per i lettori di schermo. -->
-            <h1 class="sr-only">Produzioni</h1>
-
-            <!-- Tutto lo riempie assets/js/produzioni.js dal database; un
-                 blocco senza opere resta nascosto. In primo piano il lavoro
-                 più recente, produzione o collaborazione: a sinistra il
-                 fotogramma, a destra titolo, tagline e dati essenziali. -->
-            <a id="primo-piano" class="primo-piano" hidden>
-                <div class="primo-piano-copertina">
-                    <img class="foto" alt="">
-                </div>
-                <div class="primo-piano-testo">
-                    <span class="freccia" aria-hidden="true">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
-                    </span>
-                    <p class="etichetta primo-piano-etichetta"></p>
-                    <h2 class="primo-piano-titolo"></h2>
-                    <p class="primo-piano-riassunto"></p>
-                    <dl class="primo-piano-dati"></dl>
-                </div>
-            </a>
-
-            <!-- Le opere prodotte da CDL (produzione_cdl), dalla più recente -->
-            <div id="blocco-produzioni" class="blocco" hidden>
-                <h2 class="titoletto titoletto--blocco">Produzioni originali CDL</h2>
-                <div class="griglia-riquadri"></div>
+    <main id="top">
+        <section class="hero hero--pagina">
+            <div class="wrap">
+                <h1 class="parola"><span class="sr-only">Produzioni</span><span class="fit" aria-hidden="true"><span class="fit-testo">Produzioni</span></span></h1>
+                <div class="presentazione entra"><p>Organizziamo produzioni cinematografiche <strong>indipendenti</strong>, dalla scrittura alla post-produzione, per costruire attivamente una <strong>rete di talenti</strong> sul territorio. Vogliamo anche riportare l&rsquo;attenzione sul medium del cortometraggio, che ha il potere di <strong>raccontare una storia</strong> nello spazio di pochi minuti.</p></div>
             </div>
-
-            <!-- Le opere a cui CDL ha collaborato (collaborazione_cdl): il
-                 blocco compare con la prima -->
-            <div id="blocco-collaborazioni" class="blocco" hidden>
-                <h2 class="titoletto titoletto--blocco">Collaborazioni</h2>
-                <div class="griglia-riquadri"></div>
-            </div>
-
-            <!-- Database non raggiungibile o nessuna opera -->
-            <p id="avviso-produzioni" class="avviso" hidden></p>
-
-            <a href="cortoteca.html" class="riga-altrove">
-                <span>Scopri i corti dei soci in Cortoteca</span>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h6"/></svg>
-            </a>
         </section>
+
+        <!-- PROSSIMAMENTE: il lavoro più recente. Il fotogramma grande, chiuso
+             da un filo nero; a fianco il titolo (graficato in nero, se c'è),
+             la frase e i dati -->
+        <section class="blocco-pagina entra" aria-labelledby="titolo-evidenza">
+            <div class="wrap">
+                <h2 class="blocco-pagina__testa" id="titolo-evidenza">Prossimamente</h2>
+                <div class="primo-piano grid" id="primo-piano" hidden>
+                    <a class="cornice span-8" tabindex="-1" aria-hidden="true"></a>
+                    <div class="primo-piano__testo span-4">
+                        <h3 class="primo-piano__titolo"></h3>
+                        <p class="primo-piano__frase"></p>
+                        <p class="primo-piano__dati"></p>
+                        <a class="btn btn--pieno primo-piano__azione"></a>
+                    </div>
+                </div>
+                <p class="avviso" id="avviso-produzioni" hidden></p>
+            </div>
+        </section>
+
+        <!-- Le produzioni originali (produzione_cdl), dalla più recente: al
+             posto del titolo scritto il titolo grafico, se c'è -->
+        <section class="blocco-pagina entra" id="blocco-produzioni" aria-labelledby="titolo-produzioni" hidden>
+            <div class="wrap">
+                <h2 class="blocco-pagina__testa" id="titolo-produzioni">Produzioni originali</h2>
+                <ul class="schede"></ul>
+            </div>
+        </section>
+
+        <!-- Le collaborazioni (collaborazione_cdl): il blocco compare con la prima -->
+        <section class="blocco-pagina entra" id="blocco-collaborazioni" aria-labelledby="titolo-collaborazioni" hidden>
+            <div class="wrap">
+                <h2 class="blocco-pagina__testa" id="titolo-collaborazioni">Collaborazioni</h2>
+                <ul class="schede"></ul>
+            </div>
+        </section>
+
     </main>
 
-    <footer class="piede">
-        <div class="piede-social">
-            <a href="https://instagram.com/cdl_aps" target="_blank" rel="noopener" aria-label="Instagram" class="social-link">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
-            </a>
-            <a href="https://www.youtube.com/@cdl_aps" target="_blank" rel="noopener" aria-label="YouTube" class="social-link">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 2-2 69.44 69.44 0 0 1 15 0 2 2 0 0 1 2 2 24.12 24.12 0 0 1 0 10 2 2 0 0 1-2 2 69.44 69.44 0 0 1-15 0 2 2 0 0 1-2-2z"/><polyline points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/></svg>
-            </a>
-            <a href="mailto:ciao@cdlaps.com" aria-label="Scrivici" class="social-link">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
-            </a>
+    <footer>
+        <div class="piede">
+            <div class="wrap piede__riga">
+                <a href="index.html" aria-label="CDL, pagina iniziale"><span class="logo"></span></a>
+                <ul class="piede__collegamenti">
+                    <li><a href="contatti.html#contatti">Contatti</a></li>
+                    <li><a href="https://instagram.com/cdl_aps" target="_blank" rel="noopener">Instagram <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h6"/></svg></a></li>
+                    <li><a href="https://www.youtube.com/@cdl_aps" target="_blank" rel="noopener">YouTube <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h6"/></svg></a></li>
+                </ul>
+                <p class="piede__dati">CDL APS, 2026<br>
+                Associazione di promozione sociale<br>
+                Sede legale: Viale Laurana 13, 47921 Rimini<br>
+                CF 91200080405</p>
+            </div>
         </div>
-        <div class="piede-riga">
-            <img src="assets/img/brand/logo-cdl.png" alt="" class="footer-logo--dark" onerror="this.style.display='none'">
-            <span>2026 CDL APS</span>
-        </div>
-        <p class="piede-dati">Associazione di promozione del cinema giovane e indipendente<br>
-        CDL APS &bull; Viale Laurana 13, Rimini, 47921 &bull; CF: 91200080405</p>
     </footer>
 
-    <script src="assets/js/barra.js?v=2026-10-22e"></script>
-    <script src="assets/js/dati.js?v=2026-10-22e"></script>
-    <script src="assets/js/produzioni.js?v=2026-10-22e"></script>
+    <script src="assets/js/dati.js?v=2026-11-18b"></script>
+    <script src="assets/js/comune.js?v=2026-11-18b"></script>
+    <script src="assets/js/produzioni.js?v=2026-11-18b"></script>
 </body>
 </html>

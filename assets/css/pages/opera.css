@@ -1,234 +1,98 @@
 /* ==========================================================================
-   SCHEDA OPERA (opera.html) — dettaglio del singolo cortometraggio
+   LA PAGINA DEL CORTO (opera.html, e la sala della Cortoteca, che carica
+   anche questo foglio)
+   Fondo nero; il colore è quello del corto (--titolo, messo da corto.js:
+   la colonna colore, o il colore del titolo grafico, o --cortoteca). In alto lo
+   schermo: il fotogramma pulito, con le stesse proporzioni della galleria,
+   perché il passaggio dalla Cortoteca (e da Produzioni) sia solo un
+   ingrandimento.
    ========================================================================== */
+.pagina-corto {
+  --fondo: var(--nero-sala); --barra: var(--nero-sala); --inchiostro: var(--chiaro);
+  --titolo: var(--cortoteca); --tenue: rgba(247, 247, 247, 0.72);
+  /* i fili prendono il colore del corto */
+  --filo: color-mix(in srgb, var(--titolo) 60%, transparent);
+  --accento-hover: var(--chiaro); --accento-hover-testo: var(--nero);
+}
+html:has(.pagina-corto) { background: var(--nero-sala); }
+.pagina-corto .nav { color: var(--chiaro); }
+.pagina-corto main > section { min-height: 0; }
+.pagina-corto main { padding-bottom: clamp(96px, 11vw, 168px); }
+.hero--corto { padding-bottom: 0; }
 
 /* --------------------------------------------------------------------------
-   Schermata di caricamento, coperta finché i dati non sono pronti. Sta sotto
-   la barra (z-index 100), che resta usabile anche se l'opera non si trova.
+   Lo schermo: le stesse proporzioni della still in galleria
    -------------------------------------------------------------------------- */
-.caricamento {
-  position: fixed;
-  inset: 0;
-  z-index: 50;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem;
-  background: var(--cdl-white);
-  transition: opacity 0.5s ease;
+.schermo { --r-still: 14px; }
+.schermo iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+
+/* Lo schermo come lettore: la copertina (il fotogramma) sta sopra il
+   video e si dissolve quando parte. Al passaggio il puntatore lascia il
+   posto al disco "Guarda". */
+.schermo--lettore { cursor: pointer; }
+.schermo--lettore:focus-visible { outline: 3px solid var(--titolo); outline-offset: 4px; }
+.schermo .cornice img, .schermo__play { transition: opacity 0.5s var(--ease); }
+.schermo.is-in-onda .cornice img, .schermo.is-in-onda .schermo__play { opacity: 0; pointer-events: none; }
+.schermo .cornice img { z-index: 1; }
+.schermo__play { z-index: 2; background: var(--titolo); color: var(--sul-titolo, var(--nero)); }
+@media (hover: hover) and (pointer: fine) {
+  .schermo--lettore[data-cursore]:hover { cursor: none; }
 }
-
-.ruota {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  border: 2px solid var(--riga);
-  border-top-color: var(--cdl-dark);
-  animation: gira 0.9s linear infinite;
-}
-
-@keyframes gira { to { transform: rotate(360deg); } }
-
-/* Il contenuto compare solo a dati pronti, con l'ingresso condiviso */
-.opera-pagina { opacity: 0; }
-
-.opera-pagina.is-pronta { animation: fadeIn 0.8s ease-out forwards; }
+/* Un corto che arriverà in streaming: lo dice una pillola ferma, non un tasto */
+.schermo__attesa { z-index: 2; border: 2px solid var(--titolo); background: var(--nero-sala); color: var(--titolo); }
 
 /* --------------------------------------------------------------------------
-   Testata: tagline, titolo e anno, generi e Letterboxd
+   Il corto: sotto la copertina, a sinistra, il titolo (grafico se c'è), la
+   tagline e la logline; i dati a destra. Sotto le note di regia, per tutta
+   la larghezza, e i crediti, un nome per riga.
    -------------------------------------------------------------------------- */
-.testata {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  margin-bottom: clamp(1.5rem, 4vw, 2.5rem);
+.corto { align-items: start; }
+.corto[hidden] { display: none; }
+.corto__titolo { margin: 0 0 clamp(20px, 2.4vw, 36px); font-size: clamp(40px, 5.4vw, 80px); line-height: 0.92; color: var(--titolo); overflow-wrap: anywhere; }
+/* Il titolo grafico: tutti della stessa altezza, appoggiati a sinistra (la
+   larghezza segue il disegno, al massimo quella della colonna) */
+.corto__titolo--grafico { --alto: clamp(120px, 15vw, 230px); }
+.corto__titolo--grafico img { display: block; width: auto; max-width: 100%; height: var(--alto); object-fit: contain; }
+/* Ricolorato: l'immagine fa da maschera a un fondo pieno (come in
+   titoloGrafico). Se l'opera ha un colore, prende quello della pagina; se
+   no, un disegno che sul nero non si vedrebbe (is-scuro) diventa bianco */
+.corto__titolo :is(.is-tinto, .is-scuro) img {
+  background-color: var(--chiaro); object-position: -99999px 0;
+  -webkit-mask: var(--disegno) center / contain no-repeat; mask: var(--disegno) center / contain no-repeat;
 }
+.corto__titolo .is-tinto img { background-color: var(--titolo); }
+.corto__titolo .corto__titolo-font { display: block; font-size: 1.15em; line-height: 1; }
+.corto__frase { font-size: clamp(24px, 2.6vw, 38px); font-weight: 600; line-height: 1.22; letter-spacing: -0.01em; color: var(--titolo); }
+.corto__sinossi { margin-top: 20px; max-width: 60ch; font-size: 17px; line-height: 1.6; color: var(--tenue); }
+.corto .btn-riga { margin-top: 28px; }
+/* Letterboxd e IMDb: il marchio del servizio dentro il tasto */
+.btn--servizio .marchio-servizio { flex: 0 0 auto; width: auto; height: 16px; }
+.btn--servizio .marchio-servizio--imdb { height: 24px; margin: 0 -4px; }
+.corto .btn--pieno { border-color: var(--titolo); background: var(--titolo); color: var(--sul-titolo, var(--nero-sala)); }
+.corto .btn--pieno:hover { border-color: var(--chiaro); background: var(--chiaro); color: var(--nero-sala); }
+.corto__dati, .crediti { display: grid; gap: 14px; }
+.corto__dati { padding-top: 14px; border-top: 2px solid var(--titolo); }
+.corto__dati dt, .crediti dt { font-size: 14px; color: var(--titolo); }
+/* Il marchio CDL al posto della scritta, nella riga Produzione: alto quanto
+   le maiuscole del testo (0,7 em in Montserrat) e posato sulla linea di base */
+.logo--testo { display: inline-block; vertical-align: baseline; height: 0.7em; width: auto; color: currentColor; }
+.corto__dati dd, .crediti dd { margin: 2px 0 0; font-size: 17px; font-weight: 600; }
+.crediti { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px var(--gap); }
+.crediti > div { padding-top: 12px; border-top: 1px solid var(--filo); }
 
-.testata-riga {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 0.4rem 1.25rem;
-}
+/* Il cast: quattro colonne, l'attore in grande e il personaggio sotto, nel
+   colore del corto; un filo sopra ogni nome come nei crediti */
+.cast { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 22px var(--gap); }
+.cast li { display: grid; gap: 4px; align-content: start; padding-top: 12px; border-top: 1px solid var(--filo); }
+.cast__nome { font-size: clamp(17px, 1.45vw, 21px); font-weight: 700; line-height: 1.2; }
+.cast__ruolo { font-size: 14px; line-height: 1.35; color: var(--titolo); }
+/* Le note di regia per esteso, su tutta la larghezza del contenuto */
+.note-regia { display: grid; gap: 1em; font-size: clamp(17px, 1.35vw, 19px); line-height: 1.6; color: var(--tenue); }
 
-.testata h1 { font-size: clamp(2.3rem, 7vw, 5rem); }
+/* Pagina del corto: il colore del corto anche per le piccole intestazioni */
+.pagina-corto .blocco-pagina__testa { color: var(--titolo); }
 
-.anno {
-  font-family: 'Montserrat', sans-serif;
-  font-size: clamp(1.4rem, 3.4vw, 2.4rem);
-  font-weight: 900;
-  letter-spacing: -0.04em;
-  color: var(--testo-tenue);
-}
-
-.testata-extra {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.generi { display: flex; flex-wrap: wrap; gap: 0.4rem; }
-
-/* Etichetta di genere: pastiglia lavanda */
-.genere {
-  padding: 0.45rem 0.8rem;
-  border-radius: 999px;
-  background: rgba(185, 187, 248, 0.45);
-  font-family: 'Montserrat', sans-serif;
-  font-size: 9px;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.16em;
-}
-
-.letterboxd img {
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
-  corner-shape: squircle;
-  transition: transform 0.3s var(--ease-out);
-}
-
-.letterboxd:hover img { transform: scale(1.08); }
-
-/* --------------------------------------------------------------------------
-   Corpo: colonna principale larga, colonna laterale con troupe e cast
-   -------------------------------------------------------------------------- */
-.opera-griglia {
-  display: grid;
-  grid-template-columns: minmax(0, 3fr) minmax(0, 1fr);
-  gap: var(--spazio);
-  align-items: start;
-}
-
-.opera-principale,
-.opera-laterale {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spazio);
-}
-
-.sinossi {
-  max-width: 68ch;
-  margin-bottom: 0.5rem;
-  font-size: 1.12rem;
-  line-height: 1.6;
-}
-
-/* --------------------------------------------------------------------------
-   Video o fotogramma, nella stessa cornice dei riquadri
-   -------------------------------------------------------------------------- */
-.media {
-  position: relative;
-  overflow: hidden;
-  border-radius: var(--r-l);
-  corner-shape: squircle;
-  background: var(--cdl-dark);
-}
-
-/* Rapporto 16:9 mantenuto col trucco del padding percentuale, che si calcola
-   sulla larghezza del contenitore (9/16 = 56.25%) */
-.video-container {
-  position: relative;
-  padding-bottom: 56.25%;
-  height: 0;
-}
-
-.video-container iframe {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  border: 0;
-}
-
-.fotogramma {
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  object-fit: cover;
-}
-
-/* Lastra "streaming in arrivo" per le opere senza video pubblicato */
-.in-arrivo {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  display: flex;
-  align-items: flex-end;
-  justify-content: flex-start;
-}
-
-.in-arrivo .chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.6rem;
-  font-family: 'Montserrat', sans-serif;
-  font-size: 9.5px;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.18em;
-}
-
-/* --------------------------------------------------------------------------
-   Note di regia, troupe e cast
-   -------------------------------------------------------------------------- */
-.note { font-size: 0.95rem; line-height: 1.65; color: var(--testo-medio); }
-
-.dati { display: flex; flex-direction: column; gap: 0.9rem; margin-top: 0.3rem; }
-
-.dati dt {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 8.5px;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.2em;
-  color: var(--testo-tenue);
-}
-
-.dati dd {
-  margin-top: 0.2rem;
-  font-family: 'Montserrat', sans-serif;
-  font-size: 0.82rem;
-  font-weight: 700;
-  line-height: 1.3;
-  text-transform: uppercase;
-}
-
-.cast { list-style: none; display: flex; flex-direction: column; margin-top: 0.3rem; }
-
-.cast li {
-  display: flex;
-  flex-direction: column;
-  gap: 0.15rem;
-  padding: 0.6rem 0;
-  border-bottom: 1px solid var(--riga);
-}
-
-.cast li:first-child { padding-top: 0; }
-
-.cast li:last-child { border-bottom: 0; padding-bottom: 0; }
-
-.cast-nome {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 0.8rem;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.02em;
-}
-
-.cast-ruolo { font-size: 0.78rem; color: var(--testo-tenue); }
-
-@media (max-width: 1000px) {
-  .opera-griglia { grid-template-columns: 1fr; }
-
-  /* La colonna laterale finisce sotto, a tutta larghezza: la troupe si
-     distribuisce su più colonne invece di allungarsi in una lista */
-  .dati {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 0.9rem 1.5rem;
-  }
+@media (max-width: 1023px) {
+  .corto__testo, .corto__dati { grid-column: 1 / -1; }
+  .crediti, .cast { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }

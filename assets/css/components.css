@@ -1,719 +1,507 @@
 /* ==========================================================================
-   COMPONENTS — elementi grafici che ricorrono su più pagine.
-   Se una regola serve a una sola pagina, va in css/pages/, non qui.
-
-   L'identità è quella della nuova home: fondo chiaro, angoli squircle,
-   superfici in vetro. `corner-shape: squircle` trasforma un border-radius in
-   una superellisse; dove il browser non la conosce resta il border-radius
-   normale, cioè un angolo arrotondato: il risultato peggiora, non si rompe.
+   COMPONENTI — gli elementi che ricorrono su più pagine: sezioni, barra,
+   pulsanti, cornici delle immagini, invito a sostenere CDL, piede, occhi,
+   strisce che scorrono, testate e blocchi delle pagine, schede, passaggi.
+   Se una regola serve a una sola pagina va in pages/, non qui.
    ========================================================================== */
 
-/* Tutte le superfici curve del sito. La regola sta in un posto solo così la
-   forma resta la stessa dappertutto. */
-.barra,
-.indicatore,
-.voce--altrove,
-.riquadro,
-.chip,
-.freccia,
-.btn,
-.rimando,
-.scheda,
-.campo,
-.scelta,
-.indietro,
-.copertina {
-  corner-shape: squircle;
+/* --------------------------------------------------------------------------
+   Sezioni: ognuna occupa uno schermo (o due con --h: 2); cresce solo se il
+   contenuto non ci sta, così nulla viene mai tagliato
+   -------------------------------------------------------------------------- */
+main > section,
+.closing {
+  position: relative;
+  overflow: clip;
+  min-height: calc(var(--h, 1) * 100svh);
+  padding: var(--padt) 0 var(--padb);
+  background: var(--fondo);
+  color: var(--inchiostro);
+}
+
+.hero { padding-top: calc(var(--nav) + 40px); padding-bottom: 56px; }
+
+/* Sotto i 1024 px le sezioni prendono l'altezza del loro contenuto: su
+   tablet e telefono uno schermo intero per sezione lascerebbe grandi vuoti */
+@media (max-width: 1023px) {
+  main > section, .closing { min-height: 0; }
+}
+
+@media (max-width: 639px) {
+  .hero { padding-top: calc(var(--nav) + 24px); padding-bottom: 32px; }
+  .hero .btn-riga .btn { flex: 1 1 100%; }
+}
+
+/* Il marchio, ricolorato con una maschera: prende il colore del testo */
+.logo {
+  display: block; flex: 0 0 auto;
+  aspect-ratio: 1435 / 557;
+  background: currentColor;
+  -webkit-mask: url('../img/brand/logo-cdl.png') center / contain no-repeat;
+  mask: url('../img/brand/logo-cdl.png') center / contain no-repeat;
 }
 
 /* --------------------------------------------------------------------------
-   Barra di navigazione: capsula in vetro che galleggia sulla pagina.
-   Il contenuto le scorre sotto e lo sfocamento lo mostra sfumato.
-   L'indicatore lo muove assets/js/barra.js.
+   Occhi: i bulbi dell'icona CDL, segno della Cortoteca. La pupilla si sposta
+   con --px e --py, che comune.js aggiorna seguendo il puntatore; ogni tanto
+   un occhio sbatte la palpebra.
    -------------------------------------------------------------------------- */
-.barra {
-  position: fixed;
-  top: var(--barra-top);
-  left: var(--barra-top);
-  right: var(--barra-top);
-  z-index: 100;
-  max-width: 1180px;
-  margin: 0 auto;
-  height: var(--barra-h);
-  display: flex;
-  align-items: stretch;
-  justify-content: space-between;
-  gap: 0.4rem;
-  padding: 6px;
-  border-radius: 999px;
-  background: rgba(247, 247, 247, 0.6);
-  backdrop-filter: blur(22px) saturate(180%);
-  -webkit-backdrop-filter: blur(22px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.65);
-  box-shadow:
-    0 10px 30px rgba(29, 29, 27, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.85);
-}
-
-.barra-gruppo {
-  position: relative;
-  display: flex;
-  align-items: stretch;
-}
-
-/* Indicatore: una bolla di vetro neutra, senza gradienti colorati. Compare
-   solo su Produzioni ed Eventi: sulla home la voce è il logo, e lì la bolla
-   si spegne (ci pensa il JS a togliere .indicatore--visibile). */
-.indicatore {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  width: 0;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.72);
-  border: 1px solid rgba(255, 255, 255, 0.9);
-  box-shadow:
-    0 2px 10px rgba(29, 29, 27, 0.12),
-    inset 0 1px 0 rgba(255, 255, 255, 0.95);
-  opacity: 0;
-  pointer-events: none;
-}
-
-.indicatore--visibile { opacity: 1; }
-
-/* La transizione si accende dopo il primo posizionamento: all'apertura
-   l'indicatore è già sotto la voce giusta, non ci arriva scorrendo. */
-.indicatore--pronto {
-  transition: transform 0.45s var(--ease-out), width 0.45s var(--ease-out),
-    opacity 0.25s var(--ease-out);
-}
-
-.voce {
-  position: relative;
-  z-index: 1;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0 1.1rem;
-  font-family: 'Montserrat', sans-serif;
-  font-size: 10.5px;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-  white-space: nowrap;
-  color: var(--testo-tenue);
-  transition: color 0.25s var(--ease-out);
-}
-
-.voce:hover,
-.voce.is-active { color: var(--cdl-dark); }
-
-/* Misure esplicite (il file è 300x116): così la voce ha la sua larghezza già
-   al primo disegno e l'indicatore non la misura sbagliata mentre l'immagine
-   è ancora in arrivo. */
-.voce--logo img {
-  width: 34px;
-  height: 13px;
-  filter: brightness(0);
-  opacity: 0.65;
-  transition: opacity 0.25s var(--ease-out);
-}
-
-.voce--logo:hover img,
-.voce--logo.is-active img { opacity: 1; }
-
-/* Cortoteca: piena e staccata, perché è il format di piattaforma e non una
-   pagina come le altre */
-.voce--altrove {
-  align-self: center;
-  gap: 0.5rem;
-  padding: 0.65rem 1.1rem;
-  border-radius: 999px;
-  background: var(--cdl-dark);
-  color: var(--cdl-white);
-  transition: background-color 0.3s var(--ease-out), color 0.3s var(--ease-out),
-    transform 0.3s var(--ease-out);
-}
-
-.voce--altrove:hover {
-  background: var(--cdl-red);
-  color: var(--cdl-white);
-  transform: translateY(-1px);
-}
-
-/* Dentro la Cortoteca (griglia e schede opera) il pulsante diventa lavanda:
-   segna dove ci si trova come fa la bolla per le altre voci */
-.voce--altrove.is-active {
-  background: var(--cdl-lavender);
-  color: var(--cdl-dark);
-}
-
-.voce--altrove svg { width: 12px; height: 12px; }
-
-/* Il triangolo del play a sinistra dice che dietro c'è una piattaforma di
-   streaming; la freccia a destra che si esce da questa pagina. */
-.voce--altrove .icona-play { width: 11px; height: 11px; }
-
-/* --------------------------------------------------------------------------
-   Impianto delle sezioni
-   -------------------------------------------------------------------------- */
-.sezione {
-  max-width: 1180px;
-  margin: 0 auto;
-  padding: clamp(2.5rem, 6vw, 5rem) 1.5rem;
-  scroll-margin-top: calc(var(--barra-h) + var(--barra-top) * 2);
-}
-
-/* Prima sezione di una pagina interna: il titolo parte poco sotto la barra,
-   senza il respiro pieno di sezione */
-.sezione--prima { padding-top: clamp(2rem, 4.5vw, 3.5rem); }
-
-.due-colonne {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr);
-  gap: clamp(1.5rem, 5vw, 4rem);
-  align-items: start;
-}
-
-.due-colonne h1,
-.due-colonne h2 { font-size: clamp(1.85rem, 4.6vw, 3.25rem); }
-
-.corpo {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  max-width: 62ch;
-  font-size: 1.02rem;
-  line-height: 1.65;
-  color: var(--testo-tenue);
-}
-
-.corpo p:first-child { color: var(--cdl-dark); font-size: 1.12rem; }
-
-.corpo strong { color: var(--cdl-dark); font-weight: 700; }
-
-/* Corpo del testo sulle superfici scure */
-.corpo--chiaro { color: rgba(247, 247, 247, 0.92); }
-
-.corpo--chiaro p:first-child { color: var(--cdl-white); }
-
-.corpo--chiaro strong { color: var(--cdl-white); }
-
-/* Etichetta tecnica: maiuscoletto spaziato sopra titoli e dati */
-.etichetta {
-  display: flex;
-  align-items: center;
-  gap: 0.45rem;
-  font-family: 'Montserrat', sans-serif;
-  font-size: 9px;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.2em;
-  color: var(--testo-medio);
-}
-
-/* Titoletto di gruppo, con un filetto che corre fino al margine */
-.titoletto {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin: clamp(2.5rem, 5vw, 3.5rem) 0 var(--spazio);
-  font-family: 'Montserrat', sans-serif;
-  font-size: 10.5px;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.2em;
-  color: var(--testo-medio);
-}
-
-.titoletto::after {
-  content: '';
-  flex: 1;
-  height: 1px;
-  background: var(--riga);
-}
-
-/* Ritorno alla pagina madre (scheda opera → Cortoteca, cornice → LSS) */
-.indietro {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: clamp(1.25rem, 3vw, 2rem);
-  padding: 0.55rem 0.9rem 0.55rem 0.7rem;
-  border-radius: 999px;
-  border: 1px solid var(--riga);
-  font-family: 'Montserrat', sans-serif;
-  font-size: 9.5px;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.16em;
-  color: var(--testo-medio);
-  transition: color 0.25s var(--ease-out), border-color 0.25s var(--ease-out),
-    background-color 0.25s var(--ease-out);
-}
-
-.indietro svg { width: 13px; height: 13px; transition: transform 0.3s var(--ease-out); }
-
-.indietro:hover {
-  color: var(--cdl-dark);
-  border-color: var(--cdl-dark);
-  background: rgba(185, 187, 248, 0.22);
-}
-
-.indietro:hover svg { transform: translateX(-2px); }
-
-/* --------------------------------------------------------------------------
-   Copertina di un evento: la grafica dell'edizione a tutta larghezza, in
-   testa alla pagina (Long Story Short e le pagine dei singoli eventi)
-   -------------------------------------------------------------------------- */
-.copertina {
-  position: relative;
-  display: flex;
-  align-items: flex-end;
-  min-height: clamp(260px, 40vw, 480px);
-  margin-bottom: clamp(2rem, 5vw, 3.5rem);
-  padding: clamp(1.25rem, 3.5vw, 2.75rem);
-  overflow: hidden;
-  border-radius: var(--r-l);
+.occhio {
+  display: grid; place-items: center;
+  aspect-ratio: 1;
+  border: max(2px, 0.045em) solid var(--nero);
+  border-radius: 50%;
   background: #fff;
+  box-shadow: inset -0.06em -0.08em 0 rgba(29, 29, 27, 0.14);
+  transition: scale 0.16s ease-out;
 }
-
-.copertina .foto {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  max-width: none;
-  object-fit: cover;
+.pupilla {
+  width: 46%; height: 46%; border-radius: 50%;
+  background:
+    radial-gradient(circle at 34% 32%, #fff 0 13%, transparent 14%),
+    radial-gradient(circle, var(--nero) 0 50%, #8f8f95 51% 66%, var(--nero) 67%);
+  transform: translate(var(--px, 0px), var(--py, 0px));
+  transition: transform 0.14s linear;
 }
+.occhio.is-chiuso { scale: 1 0.08; transition: scale 0.09s ease-in; }
 
-/* Accanto al titolo, in grigio, ciò che distingue l'edizione: l'anno o il
-   numero */
-.due-colonne h1 span { color: var(--testo-tenue); }
-
-/* Galleria di un evento: colonne ad altezza libera, così foto orizzontali e
-   verticali stanno insieme senza ritagli */
-.galleria {
-  columns: 3 240px;
-  column-gap: var(--spazio);
-}
-
-.galleria img {
-  width: 100%;
-  height: auto;
-  margin-bottom: var(--spazio);
-  break-inside: avoid;
-  border-radius: var(--r-m);
-  corner-shape: squircle;
-  background: rgba(29, 29, 27, 0.06);
-}
-
-.galleria-crediti {
-  font-size: 0.8rem;
-  line-height: 1.5;
-  color: var(--testo-tenue);
+/* Gli occhi dentro le O di una scritta a tutta larghezza (home, 404): il
+   centro è a 0,62 della riga, dove sta il centro delle maiuscole */
+.o { position: relative; }
+.o .occhio {
+  position: absolute; left: 50%; top: 0.62em; width: 0.27em;
+  translate: -50% -50%;
+  border-width: 0.016em;
+  box-shadow: inset -0.012em -0.016em 0 rgba(29, 29, 27, 0.14);
 }
 
 /* --------------------------------------------------------------------------
-   Pulsanti
+   Barra: chiara, il marchio a sinistra con Eventi, Produzioni e Contatti
+   (ognuna col pallino del colore della sua sezione); a destra l'invito ai
+   soci, pillola arancio. La voce della pagina corrente ha aria-current.
+   Con la Cortoteca in pausa (dal 17 novembre 2026) la sua pillola, nera
+   con la scritta arancio, non c'è nelle pagine: le regole .nav__cortoteca
+   restano per la ripresa.
+   -------------------------------------------------------------------------- */
+.nav { position: fixed; inset: 0 0 auto 0; z-index: 10; height: var(--nav); background: var(--barra); color: var(--nero); }
+.nav__riga { height: 100%; display: flex; align-items: center; gap: clamp(4px, 1.4vw, 20px); }
+.nav__logo { display: inline-flex; align-items: center; min-height: 44px; margin-right: clamp(6px, 1.6vw, 24px); padding: 8px 0; }
+.nav__logo .logo { width: 68px; }
+
+.skip-link {
+  position: absolute; left: var(--gut); top: 12px; z-index: 2;
+  padding: 10px 16px; border-radius: 999px; background: var(--nero); color: var(--chiaro); font-weight: 700;
+  transform: translateY(-200%);
+}
+.skip-link:focus-visible { transform: none; }
+
+.nav__voce {
+  position: relative; display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 8px;
+  font-size: 15px; font-weight: 700; white-space: nowrap;
+}
+.nav__voce::before { content: ''; width: 10px; height: 10px; border-radius: 50%; background: var(--punto, currentColor); }
+.nav__voce::after {
+  content: ''; position: absolute; left: 25px; right: 8px; bottom: 9px; height: 2px; background: currentColor;
+  transform: scaleX(0); transform-origin: left; transition: transform 0.15s var(--ease);
+}
+.nav__voce:hover::after, .nav__voce[aria-current]::after { transform: scaleX(1); }
+.nav__voce--eventi { --punto: var(--blu); }
+.nav__voce--produzioni { --punto: var(--lilla); }
+.nav__voce--contatti { --punto: var(--arancio); }
+
+.nav__cortoteca {
+  position: relative; display: inline-flex; align-items: center; gap: 7px; min-height: 44px; margin-left: auto; padding: 0 17px 0 14px;
+  border: 2px solid var(--nero); border-radius: 999px; background: var(--nero); color: var(--cortoteca);
+  font-size: 15px; font-weight: 700; white-space: nowrap;
+  transition: background-color 0.15s var(--ease), color 0.15s var(--ease), transform 0.15s var(--ease);
+}
+.nav__cortoteca svg { width: 11px; height: 11px; }
+.nav__cortoteca:hover { transform: translateY(-1px); }
+.nav__cortoteca:hover { background: var(--cortoteca); color: var(--nero); }
+/* Accesa (pagina di un corto): bordo arancio sul nero, per non confondersi
+   con Diventa socio, che è un pieno arancio */
+.nav__cortoteca[aria-current] { border-color: var(--cortoteca); }
+.nav__cortoteca:active { transform: translateY(1px) scale(0.985); }
+
+/* Diventa socio: arancio col bordino nero, in fondo a destra (dopo la
+   pillola della Cortoteca, quando c'è, il margine non conta) */
+.nav .nav__socio { position: relative; min-height: 44px; margin-left: auto; padding: 0 20px; font-size: 15px; border-color: var(--nero); background: var(--arancio); color: var(--nero); }
+.nav .nav__socio:hover { border-color: var(--nero); background: var(--giallo); color: var(--nero); }
+
+@media (max-width: 759px) {
+  .nav .nav__socio { display: none; } /* più forte di .btn, che viene dopo */
+}
+
+@media (max-width: 639px) {
+  .nav__logo .logo { width: 54px; }
+  /* Senza pallini e più stretta, perché tutto resti dentro i margini */
+  .nav__riga { gap: 2px; }
+  .nav__voce { padding: 0 5px; font-size: 14px; }
+  .nav__voce::before { display: none; }
+  .nav__voce::after { left: 5px; right: 5px; }
+  .nav__cortoteca { min-height: 40px; margin-left: auto; padding: 0 12px 0 10px; font-size: 14px; }
+  .nav .nav__socio { min-height: 40px; padding: 0 16px; font-size: 14px; }
+  /* Le pillole restano alte 40 px, ma si toccano su 44 */
+  .nav__cortoteca::after, .nav .nav__socio::after { content: ''; position: absolute; inset: -4px -2px; }
+}
+
+/* Sotto i 360 px restano Eventi e Produzioni; Contatti è nel piede.
+   (Con la Cortoteca la soglia era 520 px: alla ripresa va rimessa.) */
+@media (max-width: 359px) {
+  .nav__voce--contatti { display: none; }
+}
+
+/* Schermi molto stretti (320 px): la barra stringe ancora */
+@media (max-width: 359px) {
+  .nav__logo .logo { width: 44px; }
+  .nav__voce { padding: 0 3px; font-size: 13px; }
+  .nav__cortoteca { padding: 0 10px; font-size: 13px; }
+  .nav__cortoteca svg { display: none; }
+}
+
+/* --------------------------------------------------------------------------
+   Pulsanti e collegamenti. Al passaggio il pulsante sale di un pixel, alla
+   pressione scende; il filo dei collegamenti si disegna da sinistra.
    -------------------------------------------------------------------------- */
 .btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.8rem 1.3rem;
-  border-radius: var(--r-s);
-  border: 2px solid var(--cdl-dark);
+  display: inline-flex; align-items: center; justify-content: center; gap: 9px;
+  min-height: 48px; padding: 0 24px;
+  border: 2px solid var(--inchiostro); border-radius: 999px;
   background: none;
-  color: var(--cdl-dark);
-  font-family: 'Montserrat', sans-serif;
-  font-size: 10.5px;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
+  font-size: 16px; font-weight: 700; color: var(--inchiostro); white-space: nowrap;
   cursor: pointer;
-  transition: background-color 0.3s var(--ease-out), color 0.3s var(--ease-out),
-    border-color 0.3s var(--ease-out), transform 0.3s var(--ease-out);
+  transition: background-color 0.15s var(--ease), color 0.15s var(--ease), border-color 0.15s var(--ease), transform 0.15s var(--ease);
+}
+.btn svg { width: 13px; height: 13px; }
+.btn--pieno { background: var(--inchiostro); color: var(--fondo); }
+.btn:hover { transform: translateY(-1px); background: var(--inchiostro); color: var(--fondo); }
+.btn--pieno:hover { background: var(--accento-hover, var(--rosso)); border-color: var(--accento-hover, var(--rosso)); color: var(--accento-hover-testo, #fff); }
+.btn:active { transform: translateY(1px) scale(0.985); transition-duration: 0.09s; }
+/* "Diventa socio": arancio col bordo nero, giallo al passaggio (anche nella barra) */
+.btn--socio, .btn--socio:hover { border-color: var(--nero); color: var(--nero); }
+.btn--socio { background: var(--arancio); }
+.btn--socio:hover { background: var(--giallo); }
+/* Un tasto nero che al passaggio si schiarisce */
+.btn--scuro { border-color: var(--nero); background: var(--nero); color: var(--chiaro); }
+.btn--scuro:hover { border-color: #4a4a47; background: #4a4a47; color: var(--chiaro); }
+.btn-riga { display: flex; flex-wrap: wrap; gap: 12px; }
+/* Sul computer l'invito ai soci è già nella barra: certi pulsanti compaiono solo su telefono */
+.btn.solo-telefono { display: none; }
+@media (max-width: 759px) {
+  .btn.solo-telefono { display: inline-flex; }
 }
 
-.btn:hover {
-  background: var(--cdl-red);
-  border-color: var(--cdl-red);
-  color: var(--cdl-white);
-  transform: translateY(-2px);
+.link {
+  display: inline-flex; align-items: center; gap: 8px; min-height: 44px;
+  font-weight: 700;
+  background:
+    linear-gradient(currentColor, currentColor) 0 calc(100% - 9px) / 0 2px no-repeat,
+    linear-gradient(var(--filo), var(--filo)) 0 calc(100% - 9px) / 100% 2px no-repeat;
+  transition: background-size 0.2s var(--ease);
 }
-
-.btn--pieno { background: var(--cdl-dark); color: var(--cdl-white); }
-
-/* Variante per le superfici scure */
-.btn--chiaro { border-color: var(--cdl-white); color: var(--cdl-white); }
-
-.btn--chiaro.btn--pieno { background: var(--cdl-white); color: var(--cdl-dark); }
-
-.azioni { display: flex; flex-wrap: wrap; gap: 0.7rem; margin-top: 1.6rem; }
-
-/* Rimando secondario: presente ma non urlato */
-.rimando {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-top: 1.5rem;
-  font-family: 'Montserrat', sans-serif;
-  font-size: 10px;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-  text-decoration: underline;
-  text-underline-offset: 5px;
-  transition: color 0.25s var(--ease-out);
-}
-
-.rimando:hover { color: var(--cdl-red); }
+.link:hover { background-size: 100% 2px, 100% 2px; }
+/* Frecce: → verso un elenco o un'altra pagina, ↗ per aprire un contenuto,
+   l'icona del link esterno per ciò che esce dal sito */
+.freccia { width: 1.05em; height: 1.05em; flex: 0 0 auto; transition: transform 0.3s var(--ease); }
+.link:hover .freccia { transform: translateX(4px); }
+.link:hover .freccia--su { transform: translateY(-4px); }
 
 /* --------------------------------------------------------------------------
-   Riquadro: fotografia a piena superficie, quasi pulita; le scritte stanno su
-   una lastra di vetro chiaro in basso, non su un mascherone.
+   Cornice: il contenitore di ogni immagine. Fondo nero, angoli del marchio.
+   Dentro un collegamento la foto si avvicina appena, la cornice resta ferma.
    -------------------------------------------------------------------------- */
-.riquadro {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  min-height: 360px;
-  padding: 0;
-  overflow: hidden;
-  border-radius: var(--r-l);
-  background: rgba(29, 29, 27, 0.06);
-  transition: box-shadow 0.4s var(--ease-out);
+.cornice { position: relative; display: block; overflow: hidden; aspect-ratio: 16 / 9; border-radius: var(--r); background: var(--nero); }
+.cornice img { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; object-fit: cover; transition: transform 0.6s var(--ease); }
+a:hover > .cornice img, a.cornice:hover img { transform: scale(1.03); }
+
+/* Il tasto disegnato sopra un'immagine ("Guarda") */
+.disco {
+  position: absolute; left: 16px; bottom: 16px; z-index: 1;
+  display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 0 16px 0 13px;
+  border-radius: 999px; background: var(--cortoteca); color: var(--nero); font-size: 15px; font-weight: 700;
 }
+.disco svg { width: 11px; height: 11px; }
 
-/* Niente translate sul contenitore al passaggio del mouse: spostare un
-   elemento che ritaglia i figli con corner-shape lo manda su un livello
-   composito a parte, e per la durata dell'animazione gli angoli tornano
-   quadrati. Si anima l'ombra e la fotografia dentro, che non ritagliano
-   nulla. */
-a.riquadro:hover {
-  box-shadow: 0 16px 40px rgba(29, 29, 27, 0.16);
-}
-
-.riquadro .foto {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  width: 100%;
-  height: 100%;
-  max-width: none;
-  object-fit: cover;
-  transform: scale(1.02);
-  transition: transform 0.7s var(--ease-out);
-}
-
-a.riquadro:hover .foto { transform: scale(1.07); }
-
-/* Freccia: pastiglia di vetro nell'angolo, al posto della riga "vai a…" */
-.freccia {
-  position: absolute;
-  top: 14px;
-  right: 14px;
-  z-index: 3;
-  display: grid;
-  place-items: center;
-  width: 38px;
-  height: 38px;
-  border-radius: 999px;
-  background: rgba(247, 247, 247, 0.72);
-  backdrop-filter: blur(14px) saturate(150%);
-  -webkit-backdrop-filter: blur(14px) saturate(150%);
-  border: 1px solid rgba(255, 255, 255, 0.7);
-  color: var(--cdl-dark);
-  transition: transform 0.35s var(--ease-out), background-color 0.35s var(--ease-out);
-}
-
-.freccia svg { width: 16px; height: 16px; }
-
-a.riquadro:hover .freccia,
-a.scheda:hover .freccia {
-  transform: translate(2px, -2px);
-  background: var(--cdl-white);
-}
-
-/* Lastra di vetro con le scritte. Il fondo chiaro al 78% più lo sfocamento
-   tengono il testo scuro leggibile su qualunque fotogramma, chiaro o scuro. */
-.chip {
-  position: relative;
-  z-index: 2;
-  margin: 12px;
-  padding: 0.95rem 1.05rem;
-  border-radius: var(--r-m);
-  background: rgba(247, 247, 247, 0.78);
-  backdrop-filter: blur(18px) saturate(140%);
-  -webkit-backdrop-filter: blur(18px) saturate(140%);
-  border: 1px solid rgba(255, 255, 255, 0.6);
-  color: var(--cdl-dark);
-}
-
-.chip-etichetta {
-  display: flex;
-  align-items: center;
-  gap: 0.45rem;
-  margin-bottom: 0.45rem;
-  font-family: 'Montserrat', sans-serif;
-  font-size: 9px;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.2em;
-  color: var(--testo-medio);
-}
-
-.chip-titolo {
-  font-family: 'Montserrat', sans-serif;
-  font-size: clamp(1.05rem, 2vw, 1.3rem);
-  font-weight: 900;
-  text-transform: uppercase;
-  line-height: 1;
-  letter-spacing: -0.03em;
-}
-
-.chip-meta {
-  margin-top: 0.4rem;
-  font-size: 0.78rem;
-  line-height: 1.4;
-  color: var(--testo-chip);
-}
+.avviso { padding: 24px 0; font-weight: 700; }
 
 /* --------------------------------------------------------------------------
-   Primo piano: il lavoro più recente in testa alla pagina (Eventi,
-   Produzioni), a tutta larghezza. L'immagine sui due terzi di sinistra; sul
-   terzo di destra una scheda, come le altre del sito: freccia in alto, testo
-   in basso.
+   Sostieni: l'invito ad associarsi, in arancio. In home e Contatti chiude
+   la pagina e contiene il piede; nella pagina Sostieni
+   (vantaggi-tesseramento.html) apre la pagina, senza tasti, con una frase
+   in più (pages/vantaggi.css). Il nome; sotto, a sinistra, la quota
+   ridotta, la frase larga, i tasti e il rimando ai vantaggi; a destra la
+   tessera, centrata sulla colonna di sinistra.
    -------------------------------------------------------------------------- */
-.primo-piano {
-  display: grid;
-  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
-  gap: var(--spazio);
-}
+.closing { display: flex; flex-direction: column; padding-bottom: 0; scroll-margin-top: 0; }
+.closing > .wrap { flex: 1 1 auto; padding-bottom: var(--padb); }
 
-.primo-piano-copertina,
-.primo-piano-testo {
-  border-radius: var(--r-l);
-  corner-shape: squircle;
-}
-
-.primo-piano-copertina {
-  position: relative;
-  aspect-ratio: 16 / 9;
-  overflow: hidden;
-  background: rgba(29, 29, 27, 0.06);
-}
-
-.primo-piano-copertina .foto {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  max-width: none;
-  object-fit: cover;
-  transform: scale(1.02);
-  transition: transform 0.7s var(--ease-out);
-}
-
-.primo-piano-testo {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  gap: 0.6rem;
-  padding: clamp(1.25rem, 2.5vw, 2rem);
-  border: 1px solid var(--riga);
-  background: rgba(29, 29, 27, 0.025);
-  transition: background-color 0.3s var(--ease-out), border-color 0.3s var(--ease-out);
-}
-
-.primo-piano-titolo { font-size: clamp(1.6rem, 3.2vw, 2.4rem); }
-
-.primo-piano-riassunto {
-  font-size: 0.95rem;
-  line-height: 1.55;
-  color: var(--testo-tenue);
-}
-
-/* Il riassunto va a capo solo fra un pezzo e l'altro (scriviRiassunto in
-   dati.js lo divide alle virgole); un pezzo più largo della scheda si
-   spezza comunque. */
-.riassunto-pezzo {
-  display: inline-block;
-  max-width: 100%;
-}
-
-a.primo-piano:hover .foto { transform: scale(1.06); }
-
-a.primo-piano:hover .primo-piano-testo {
-  background: rgba(185, 187, 248, 0.28);
-  border-color: transparent;
-}
-
-a.primo-piano:hover .freccia {
-  transform: translate(2px, -2px);
-  background: var(--cdl-white);
-}
-
-/* Blocchi sotto il primo piano. Il titolo è più grande e pieno del
-   titoletto, per reggere il confronto con i lettering (Short Talks). */
-.titoletto--blocco {
-  font-size: clamp(13px, 1.4vw, 17px);
-  color: var(--cdl-dark);
-}
-
-/* auto-fill e non auto-fit: un blocco con due soli riquadri li tiene della
-   stessa misura degli altri, invece di allargarli a tutta riga */
-.griglia-riquadri {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: var(--spazio);
+.sostieni h1, .sostieni h2 { font-size: inherit; }
+.sostieni h1 .logo, .sostieni h2 .logo { height: 0.72em; margin-left: 0.2em; }
+.sostieni__stato { display: flex; align-items: flex-start; gap: 0.5em; font-size: clamp(18px, 1.7vw, 24px); font-weight: 700; line-height: 1.3; }
+/* il pallino sulla prima riga, anche quando la frase va a capo */
+.sostieni__stato .rec { width: 0.5em; height: 0.5em; margin-top: 0.4em; }
+.sostieni__corpo { margin-top: clamp(14px, 1.6vw, 24px); align-items: center; }
+.sostieni__frase { margin-top: clamp(16px, 1.8vw, 26px); font-size: clamp(22px, 2.3vw, 34px); font-weight: 600; line-height: 1.25; letter-spacing: -0.01em; }
+.rec { width: 10px; height: 10px; flex: 0 0 auto; border-radius: 50%; background: var(--rec, var(--rosso)); animation: pulsa 1.5s infinite; }
+@keyframes pulsa { 50% { opacity: 0.35; transform: scale(1.25); } }
+.sostieni .btn-riga { margin-top: clamp(22px, 2.4vw, 32px); }
+.sostieni .link { margin-top: 12px; }
+/* La fotografia mostra già le due tessere inclinate: il riquadro resta dritto, nella sua colonna */
+.sostieni__tessera { display: block; width: 100%; max-width: 360px; margin-left: auto; transition: transform 0.18s var(--ease); }
+.sostieni__tessera:hover { transform: translateY(-2px); }
+@media (max-width: 1023px) {
+  .sostieni__tessera { max-width: 220px; }
 }
 
 /* --------------------------------------------------------------------------
-   Scheda: superficie piatta per testo e dati, senza fotografia. È il
-   fratello del riquadro quando non c'è un'immagine da mostrare.
-   -------------------------------------------------------------------------- */
-.scheda {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
-  padding: clamp(1.1rem, 2vw, 1.5rem);
-  border-radius: var(--r-m);
-  border: 1px solid var(--riga);
-  background: rgba(29, 29, 27, 0.025);
-}
-
-a.scheda {
-  transition: background-color 0.3s var(--ease-out), border-color 0.3s var(--ease-out),
-    box-shadow 0.4s var(--ease-out);
-}
-
-a.scheda:hover {
-  background: rgba(185, 187, 248, 0.28);
-  border-color: transparent;
-  box-shadow: 0 16px 40px rgba(29, 29, 27, 0.1);
-}
-
-.scheda .freccia { top: 12px; right: 12px; width: 34px; height: 34px; }
-
-/* Icona di testa, al tratto come quelle della barra */
-.scheda-icona { margin-bottom: 0.4rem; }
-
-.scheda-icona svg { width: 34px; height: 34px; stroke-width: 1.6; }
-
-.scheda-titolo {
-  font-family: 'Montserrat', sans-serif;
-  font-size: clamp(1rem, 1.8vw, 1.2rem);
-  font-weight: 900;
-  text-transform: uppercase;
-  line-height: 1.05;
-  letter-spacing: -0.03em;
-}
-
-.scheda-testo { font-size: 0.9rem; line-height: 1.55; color: var(--testo-tenue); }
-
-/* --------------------------------------------------------------------------
-   Pallino rosso lampeggiante
-   -------------------------------------------------------------------------- */
-.rec-dot {
-  width: 6px;
-  height: 6px;
-  background-color: var(--cdl-red);
-  border-radius: 50%;
-  display: inline-block;
-  flex: 0 0 auto;
-  animation: pulse 1.5s infinite;
-}
-
-@keyframes pulse {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.4; transform: scale(1.2); }
-}
-
-/* --------------------------------------------------------------------------
-   Piede
+   Piede: nero, angoli alti arrotondati. Al centro il marchio, sotto
+   Contatti, Instagram e YouTube (questi due con l'icona del link esterno:
+   portano fuori) e i dati dell'associazione su quattro righe, senza fili.
+   Sul telefono la barra non ha Contatti: ci si arriva da qui
    -------------------------------------------------------------------------- */
 .piede {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1rem;
-  padding: 2.5rem 1.5rem 3rem;
-  border-top: 1px solid var(--riga);
+  border-radius: clamp(28px, 4.5vw, 60px) clamp(28px, 4.5vw, 60px) 0 0;
+  background: var(--nero); color: var(--chiaro);
+  padding: clamp(36px, 4.5vw, 56px) 0 clamp(28px, 3.5vw, 44px);
+  --inchiostro: var(--chiaro);
 }
+.piede__riga { display: flex; flex-direction: column; align-items: center; gap: clamp(16px, 2vw, 22px); text-align: center; }
+.piede__riga > a { display: grid; place-items: center; min-width: 44px; min-height: 44px; }
+.piede .logo { width: 72px; color: var(--lilla); }
+.piede__collegamenti { display: flex; flex-wrap: wrap; justify-content: center; gap: 0 28px; }
+.piede__collegamenti a { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; font-size: 15px; font-weight: 700; text-decoration: underline; text-decoration-color: transparent; text-decoration-thickness: 2px; text-underline-offset: 4px; transition: text-decoration-color 0.15s var(--ease); }
+.piede__collegamenti a:hover, .piede__collegamenti a:focus-visible { text-decoration-color: currentColor; }
+.piede__collegamenti svg { width: 13px; height: 13px; flex: none; }
+.piede__dati { font-size: 13px; line-height: 1.7; color: rgba(247, 247, 247, 0.78); }
 
-.piede-social { display: flex; gap: 1.5rem; }
 
-.piede-social svg { width: 20px; height: 20px; }
-
-.piede-riga {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-family: 'Montserrat', sans-serif;
-  font-size: 9px;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.2em;
-  color: var(--testo-tenue);
+/* --------------------------------------------------------------------------
+   Il disco che accompagna il puntatore sulle immagini che fanno qualcosa al
+   clic (data-cursore): dice che cosa. Solo con un puntatore vero.
+   -------------------------------------------------------------------------- */
+.cursore {
+  position: fixed; left: 0; top: 0; z-index: 30; pointer-events: none;
+  display: grid; place-items: center; width: 88px; height: 88px; margin: -44px 0 0 -44px;
+  border: 2px solid var(--cortoteca); border-radius: 50%; background: var(--nero); color: var(--cortoteca);
+  font-size: 14px; font-weight: 700;
+  translate: var(--cx, -200px) var(--cy, -200px); scale: 0;
+  transition: scale 0.2s var(--ease);
 }
+.cursore.is-visibile { scale: 1; }
 
-.piede-riga img { height: 8px; width: auto; }
-
-.piede-dati { text-align: center; font-size: 8px; line-height: 1.7; opacity: 0.4; }
-
-/* Icone social */
-.social-link {
-  display: inline-flex;
-  padding: 6px;
-  transition: transform 0.3s var(--ease-out), color 0.3s var(--ease-out);
+/* --------------------------------------------------------------------------
+   Scelte a pillole (vista e ordine della Cortoteca, motivo del modulo di
+   Contatti): radio veri, nascosti, con l'etichetta come pillola
+   -------------------------------------------------------------------------- */
+.scelte { display: flex; padding: 3px; gap: 3px; border: 2px solid var(--inchiostro); border-radius: 999px; }
+.scelte input { position: absolute; opacity: 0; pointer-events: none; }
+.scelta {
+  position: relative; display: inline-flex; align-items: center; gap: 7px; min-height: 38px; padding: 0 15px; border-radius: 999px;
+  font-size: 15px; font-weight: 700; cursor: pointer;
+  transition: background-color 0.15s var(--ease), color 0.15s var(--ease);
 }
+/* La pillola è alta 38 px, ma si tocca su 44: l'area sconfina nel bordo del gruppo */
+.scelte .scelta::after { content: ''; position: absolute; inset: -3px 0; }
+.scelta svg { width: 15px; height: 15px; }
+.scelte input:checked + .scelta { background: var(--inchiostro); color: var(--fondo); }
+.scelte input:focus-visible + .scelta { outline: 3px solid var(--inchiostro); outline-offset: 3px; }
 
-.social-link svg { width: 20px; height: 20px; }
-
-.social-link:hover {
-  color: var(--cdl-red);
-  transform: scale(1.25);
+/* --------------------------------------------------------------------------
+   I moduli delle pagine pubbliche (Contatti, domanda di ammissione in
+   Vantaggi): gruppi con un titolo, scelte a pillole, campi col bordo nero e
+   gli angoli di 14 px, caselle da spuntare, il tasto in fondo
+   -------------------------------------------------------------------------- */
+.modulo { display: grid; gap: 26px; }
+.modulo__gruppo { margin: 0; padding: 0; border: 0; }
+.modulo__gruppo legend { margin-bottom: 14px; padding: 0; font-family: var(--f-titoli); font-weight: 900; text-transform: uppercase; letter-spacing: var(--titoli-spazio); font-size: clamp(22px, 2vw, 28px); line-height: 1; }
+.modulo__motivi { display: flex; flex-wrap: wrap; gap: 8px; }
+.modulo__motivi input { position: absolute; opacity: 0; pointer-events: none; }
+.modulo__motivi .scelta { min-height: 44px; border: 2px solid var(--nero); }
+.modulo__motivi input:checked + .scelta { border-color: var(--nero); background: var(--arancio); color: var(--nero); }
+.modulo__motivi input:focus-visible + .scelta { outline: 3px solid var(--nero); outline-offset: 3px; }
+.modulo__motivi .scelta:hover { background: rgba(29, 29, 27, 0.08); }
+.modulo__coppia { display: grid; grid-template-columns: 1fr 1fr; gap: 22px var(--gap); }
+.modulo__campo { display: grid; gap: 8px; }
+.modulo__campo span { font-size: 14px; font-weight: 700; }
+.modulo__campo input, .modulo__campo textarea, .modulo__campo select {
+  width: 100%; min-height: 52px; padding: 12px 16px;
+  border: 2px solid var(--nero); border-radius: 14px; background: #fff;
+  font: inherit; font-size: 16px; color: var(--nero);
 }
+.modulo__campo textarea { resize: vertical; min-height: 160px; }
+.modulo__campo select {
+  appearance: none; padding-right: 44px; cursor: pointer;
+  background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231d1d1b' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") right 14px center / 18px no-repeat;
+}
+.modulo__campo input:focus-visible, .modulo__campo textarea:focus-visible, .modulo__campo select:focus-visible { outline: 3px solid var(--arancio); outline-offset: 2px; }
+.modulo__campo small { font-size: 13px; line-height: 1.4; }
+.modulo__consenso { display: flex; align-items: flex-start; gap: 12px; font-size: 15px; line-height: 1.45; }
+.modulo__consenso input { width: 22px; height: 22px; margin: 0; flex: 0 0 auto; accent-color: var(--arancio); }
+.modulo__consenso a { font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
+/* Casella "dopo lettura" (caselleDopoLettura in comune.js): finché il
+   documento non è stato aperto la casella non si spunta, e sotto c'è il
+   perché */
+.modulo__consenso input[aria-disabled="true"] { opacity: 0.4; cursor: not-allowed; }
+.modulo__nota-lettura { display: block; margin-top: 4px; font-size: 13px; font-weight: 600; }
+.modulo__nota-lettura.is-evidente { color: var(--nero); text-decoration: underline; text-decoration-color: var(--arancio); text-decoration-thickness: 3px; }
+.modulo__piede { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 20px 32px; }
+.modulo__piede .modulo__consenso { flex: 1 1 320px; }
+.modulo .btn--pieno:hover { border-color: var(--nero); background: var(--nero); color: var(--chiaro); }
+.modulo .btn--pieno:active, .modulo .btn--pieno.is-inviato { border-color: var(--arancio); background: var(--arancio); color: var(--nero); }
 
-/* Il logo originale è a colori: il filtro lo porta a nero pieno */
-.footer-logo--dark {
-  filter: brightness(0);
-  opacity: 1;
+/* Più campi in griglia (domanda di ammissione): due colonne; nell'indirizzo
+   la via su tutta la riga, poi comune, provincia e CAP */
+.modulo__griglia { display: grid; grid-template-columns: 1fr 1fr; gap: 22px var(--gap); }
+.modulo__griglia--indirizzo { grid-template-columns: 2fr 1fr 1fr; }
+.modulo__campo--largo { grid-column: 1 / -1; }
+
+@media (max-width: 639px) {
+  .modulo__coppia, .modulo__griglia { grid-template-columns: 1fr; }
+  .modulo__griglia--indirizzo { grid-template-columns: 1fr 1fr; }
+  .modulo__griglia--indirizzo .modulo__campo:nth-child(2) { grid-column: 1 / -1; }
 }
 
 /* --------------------------------------------------------------------------
-   Adattamenti
+   Still: il fotogramma di un corto con il suo titolo sovrapposto (la targa).
+   In galleria nella Cortoteca, e grande in cima alla pagina del corto.
    -------------------------------------------------------------------------- */
-@media (max-width: 1000px) {
-  .due-colonne { grid-template-columns: 1fr; }
+.still { position: relative; display: block; overflow: hidden; border-radius: var(--r-still, 14px); }
+.still .cornice { border-radius: 0; }
+.targa {
+  position: absolute; left: 10px; right: 10px; bottom: 10px;
+  display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 2px 12px;
+  padding: 12px 14px; border-radius: 10px; background: var(--cortoteca); color: var(--nero);
+  opacity: 0; translate: 0 12px;
+  transition: opacity 0.2s var(--ease), translate 0.25s var(--ease);
+}
+.targa__titolo { font-family: var(--f-titoli); font-weight: 900; text-transform: uppercase; font-size: clamp(17px, 1.5vw, 21px); line-height: 1; letter-spacing: var(--titoli-spazio); overflow-wrap: anywhere; }
+/* Il titolo grafico: un'immagine (PNG o SVG) o il titolo scritto nel
+   carattere del corto (titolo_font) */
+.targa__grafica { display: block; min-height: 0; max-width: 100%; max-height: 62%; object-fit: contain; }
+/* Il titolo grafico ritagliato sul disegno (ritagliaTitolo in comune.js):
+   il riquadro ha le proporzioni del disegno, alto --alto (o meno, se
+   sarebbe più largo della colonna); l'immagine intera vi si sposta dentro */
+.titolo-ritagliato { display: block; max-width: 100%; }
+.titolo-ritagliato.is-ritagliato { position: relative; overflow: hidden; aspect-ratio: var(--rapporto); width: min(100%, var(--alto, 64px) * var(--rapporto)); }
+.titolo-ritagliato.is-ritagliato img {
+  position: absolute; max-width: none; max-height: none; width: auto;
+  height: calc(100% / var(--h)); top: calc(-100% * var(--t) / var(--h)); left: calc(-100% * var(--l) / var(--w));
+}
+.targa__font { font-weight: 400; text-transform: none; letter-spacing: 0; line-height: 1.05; }
+/* Il titolo sopra la still (galleria e schermo del corto): un alone scuro
+   lo stacca da qualsiasi fotogramma. Sta sul contenitore, così vale anche
+   per il titolo grafico colorato, che è ritagliato da una maschera */
+.galleria .targa, .schermo .targa { filter: drop-shadow(0 0 1px rgba(0, 0, 0, 0.5)) drop-shadow(0 1px 12px rgba(0, 0, 0, 0.55)); }
+
+/* --------------------------------------------------------------------------
+   Strisce che scorrono da sole (il nastro di notizie, i rullini di foto):
+   il contenuto è doppio (comune.js) e si fermano al passaggio, col fuoco o
+   col loro pulsante
+   -------------------------------------------------------------------------- */
+.scorre__finestra { margin-top: clamp(24px, 2.8vw, 40px); overflow: hidden; }
+.scorre__pista { display: flex; align-items: center; width: max-content; animation: scorre var(--durata, 48s) linear infinite; }
+.scorre:hover .scorre__pista, .scorre:focus-within .scorre__pista, .scorre.is-ferma .scorre__pista { animation-play-state: paused; }
+@keyframes scorre { to { transform: translateX(-50%); } }
+
+/* Il rullino delle fotografie (Eventi, pagine degli eventi) */
+.rullino { margin-top: clamp(18px, 2.2vw, 30px); overflow: hidden; }
+.rullino .scorre__pista { --durata: 70s; height: clamp(240px, 36svh, 380px); align-items: stretch; }
+.rullino .cornice { flex: 0 0 auto; height: 100%; aspect-ratio: 4 / 5; margin-right: 12px; border-radius: 0; }
+
+/* --------------------------------------------------------------------------
+   Pagine con una testata: il nome a tutta larghezza (.parola, .fit), sotto
+   la presentazione e poi i blocchi. Eventi e Produzioni sono a colore pieno
+   (vedi pagina-eventi e pagina-produzioni nei loro fogli), e anche la barra
+   prende il colore, così il passaggio dalla home non ha stacchi.
+   -------------------------------------------------------------------------- */
+.parola { margin-left: -0.012em; }
+.pagina-colore .nav { color: var(--inchiostro); }
+.pagina-colore main > section { min-height: 0; }
+.pagina-colore main { padding-bottom: clamp(96px, 11vw, 168px); }
+.hero--pagina { padding-bottom: 0; }
+
+/* Il resto entra dopo il nome, salendo appena */
+.entra { animation: entra 0.8s var(--ease) 0.12s both; }
+@keyframes entra {
+  from { opacity: 0; translate: 0 28px; }
 }
 
-/* Sul telefono la scheda del primo piano va sotto l'immagine */
-@media (max-width: 760px) {
-  .primo-piano { grid-template-columns: 1fr; }
-  .primo-piano-testo { min-height: 9rem; }
+.blocco-pagina { padding: clamp(36px, 4.5vw, 64px) 0 0; }
+
+/* Sotto il nome, la presentazione della pagina: a misura di lettura, grande */
+.presentazione {
+  margin-top: clamp(20px, 2.4vw, 36px); padding-bottom: clamp(28px, 3.4vw, 48px); border-bottom: 1px solid var(--filo);
+  font-size: clamp(21px, 2.1vw, 31px); font-weight: 600; line-height: 1.3; letter-spacing: -0.01em;
+}
+.presentazione p + p { margin-top: 0.7em; }
+
+/* Un filo separa un blocco dal precedente */
+.blocco-pagina--diviso { margin-top: clamp(48px, 6vw, 88px); padding-top: 0; }
+.blocco-pagina--diviso > .wrap { padding-top: clamp(36px, 4.5vw, 64px); border-top: 1px solid var(--filo); }
+.blocco-pagina__testa { display: flex; align-items: center; min-height: 48px; margin-bottom: clamp(18px, 2vw, 28px); font-size: clamp(26px, 2.6vw, 38px); }
+
+/* I marchi delle serie e degli eventi: le scritte dei PNG, ricolorate col
+   colore della pagina. Il logo di un evento prende --marchio e --ar
+   (larghezza / altezza) da una classe marchio--<pagina> (evento.css) */
+.marchio-serie {
+  display: block; background: currentColor;
+  -webkit-mask: var(--marchio) center / contain no-repeat; mask: var(--marchio) center / contain no-repeat;
+}
+.marchio-serie--lss { --marchio: url('../img/brand/long-story-short.png'); aspect-ratio: 1777 / 1263; width: min(100%, 260px); }
+.marchio-serie--evento { aspect-ratio: var(--ar); }
+
+/* --------------------------------------------------------------------------
+   Schede (Eventi, Produzioni): la foto a spigolo vivo, sotto un filo, il
+   titolo e i dati.
+   -------------------------------------------------------------------------- */
+.schede { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(28px, 3vw, 44px) var(--gap); }
+.scheda-g { display: block; }
+.scheda-g .cornice { aspect-ratio: 16 / 10; border-radius: 0; }
+/* Scheda di un evento col suo logo: niente fondo, il PNG coi suoi colori
+   appoggiato al filo, a sinistra, con un'area simile per tutti (la larghezza
+   cresce con la radice delle proporzioni, vedi la pagina dell'evento) */
+.scheda-g .cornice--logo {
+  display: flex; align-items: flex-end; overflow: visible;
+  background: none; container-type: size;
+}
+.scheda-g .cornice--logo .logo-evento {
+  position: static; flex: 0 0 auto; height: auto; aspect-ratio: var(--ar); object-fit: contain;
+  width: min(100cqw, 100cqh * var(--ar));
+  width: min(100cqw, 100cqh * var(--ar), 80cqh * sqrt(var(--ar)));
+  transition: transform 0.6s var(--ease); transform-origin: left bottom;
+}
+a.scheda-g:hover .cornice--logo .logo-evento { transform: scale(1.025); }
+.scheda-g__testo { display: grid; gap: 4px; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--filo); }
+.scheda-g__titolo { font-family: var(--f-titoli); font-weight: 900; text-transform: uppercase; font-size: clamp(19px, 1.7vw, 24px); line-height: 1; letter-spacing: var(--titoli-spazio); }
+.scheda-g__dati { font-size: 14px; line-height: 1.4; color: var(--tenue); }
+@media (max-width: 1023px) {
+  .schede { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 639px) {
+  .schede { grid-template-columns: minmax(0, 1fr); }
 }
 
-@media (max-width: 620px) {
-  :root { --barra-h: 50px; --r-l: 24px; }
-  .barra { padding: 5px; gap: 0.2rem; }
-  .voce { padding: 0 0.55rem; font-size: 9.5px; letter-spacing: 0.06em; }
-  .voce--altrove { padding: 0.55rem 0.7rem; }
-  .sezione { padding-left: 1rem; padding-right: 1rem; }
+/* --------------------------------------------------------------------------
+   Passaggi fra le pagine (comune.js): dalla home a una sezione il colore
+   riempie lo schermo e il nome sale dove la pagina d'arrivo lo aspetta;
+   dalla Cortoteca al corto, e da Eventi a un evento, l'immagine cliccata
+   cresce fino al suo posto nella pagina d'arrivo
+   -------------------------------------------------------------------------- */
+.passaggio { position: fixed; inset: 0; z-index: 50; pointer-events: none; }
+.passaggio__parola { position: fixed; z-index: 51; margin: 0; pointer-events: none; }
+.passaggio__parola .o .occhio { display: none; }
+.passaggio-corto { position: fixed; z-index: 51; margin: 0; pointer-events: none; transform-origin: 0 0; }
+/* Il logo di una scheda in volo: l'immagine coi suoi colori e, sopra, la
+   sagoma nel colore dell'evento che compare piano */
+.passaggio-corto > .logo-evento { display: block; width: 100%; height: 100%; }
+.passaggio-tinta {
+  position: absolute; inset: 0; opacity: 0;
+  -webkit-mask: var(--marchio) center / contain no-repeat; mask: var(--marchio) center / contain no-repeat;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .indicatore--pronto { transition: none; }
-  .rec-dot { animation: none; }
-}
-
-/* Barra di scorrimento su fondo chiaro */
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.05); }
-::-webkit-scrollbar-thumb { background: var(--cdl-dark); }
+/* Arrivo da un passaggio: il nome è già al suo posto; barra e filo
+   compaiono piano invece che di colpo */
+.da-passaggio .nav__riga { animation: affiora 0.5s ease-out 0.05s both; }
+.da-passaggio .presentazione { animation: filo 0.6s ease-out both; }
+@keyframes affiora { from { opacity: 0; } }
+@keyframes filo { from { border-bottom-color: transparent; } }

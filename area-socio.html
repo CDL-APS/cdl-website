@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Area socio – CDL APS</title>
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="referrer" content="no-referrer">
+
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="icon" type="image/png" href="assets/img/brand/favicon.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800;900&display=swap">
+    <!-- Questa pagina e gestione.html condividono barra e moduli: stanno in
+         riservato.css, caricato prima del foglio della pagina. -->
+    <link rel="stylesheet" href="assets/css/base.css?v=2026-11-18b">
+    <link rel="stylesheet" href="assets/css/components.css?v=2026-11-18b">
+    <link rel="stylesheet" href="assets/css/pages/riservato.css?v=2026-11-18b">
+    <link rel="stylesheet" href="assets/css/pages/area-socio.css?v=2026-11-18b">
+</head>
+<body class="gestione area-socio">
+
+    <!-- Area socio: da qui i soci propongono i propri corti alla Cortoteca.
+         Si entra con email e password; la password si sceglie con il
+         collegamento personale ricevuto dal direttivo
+         (area-socio.html#invito=…), che vale una volta sola e per 7 giorni.
+         Che cosa un socio può leggere e scrivere lo decidono le regole del
+         database, non questa pagina. -->
+
+    <!-- La barra del sito, ridotta: il marchio, la Cortoteca e l'uscita -->
+    <header class="nav g-barra">
+        <div class="wrap nav__riga">
+            <a class="nav__logo" href="index.html" aria-label="Torna al sito"><span class="logo"></span></a>
+            <a class="nav__cortoteca" href="cortoteca.html"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.14v13.72L19 12 8 5.14Z"/></svg>Cortoteca</a>
+            <div id="utente" class="g-utente" hidden>
+                <span id="utente-nome" class="g-utente-email"></span>
+                <button type="button" id="esci" class="btn btn--pieno g-esci">Esci</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="wrap g-pagina">
+
+        <p id="avviso" class="g-avviso" role="status" aria-live="polite" hidden></p>
+
+        <section data-vista="caricamento">
+            <p class="g-vuoto">Caricamento…</p>
+        </section>
+
+        <!-- ============================================================
+             ACCESSO: email e password
+             ============================================================ -->
+        <section data-vista="accesso" hidden>
+            <form id="modulo-accesso" class="scheda g-accesso">
+                <h1>Area socio</h1>
+                <p class="scheda-testo">Entra con la tua email e la password che hai scelto al primo accesso.</p>
+                <label class="g-campo">
+                    <span>Email</span>
+                    <input type="email" name="email" required autocomplete="username">
+                </label>
+                <label class="g-campo">
+                    <span>Password</span>
+                    <input type="password" name="password" required autocomplete="current-password">
+                </label>
+                <button type="submit" class="btn btn--pieno">Entra</button>
+            </form>
+            <div class="scheda g-accesso">
+                <h2 class="titoletto">Primo accesso o password dimenticata?</h2>
+                <p class="scheda-testo">Serve il tuo collegamento personale: lo manda il direttivo, vale una volta sola e ti fa scegliere la password.</p>
+                <div class="azioni">
+                    <a class="btn btn--pieno" href="https://wa.me/393493290864?text=Ciao,%20vorrei%20il%20mio%20collegamento%20per%20l'area%20socio" target="_blank" rel="noopener">Chiedilo su WhatsApp</a>
+                    <a class="btn" href="mailto:ciao@cdlaps.com?subject=Collegamento%20per%20l'area%20socio">Scrivici</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================
+             SCELTA DELLA PASSWORD, appena entrati con il collegamento
+             ============================================================ -->
+        <section data-vista="password" hidden>
+            <form id="modulo-password" class="scheda g-accesso">
+                <h1>Scegli la password</h1>
+                <p class="scheda-testo">Con la tua email e questa password entrerai nell'area socio da qualsiasi dispositivo. Il collegamento che hai aperto non vale più.</p>
+                <!-- L'email, per i gestori di password del browser -->
+                <label class="g-campo">
+                    <span>Email</span>
+                    <input type="email" id="password-email" name="email" autocomplete="username" readonly>
+                </label>
+                <label class="g-campo">
+                    <span>Password</span>
+                    <input type="password" name="password" required minlength="6" autocomplete="new-password">
+                    <small>Almeno 6 caratteri.</small>
+                </label>
+                <label class="g-campo">
+                    <span>Ripeti la password</span>
+                    <input type="password" name="ripeti" required minlength="6" autocomplete="new-password">
+                </label>
+                <button type="submit" class="btn btn--pieno">Salva ed entra</button>
+            </form>
+        </section>
+
+        <!-- ============================================================
+             SENZA ACCESSO: l'indirizzo non è nel libro soci
+             ============================================================ -->
+        <section data-vista="senza-accesso" hidden>
+            <div class="scheda g-accesso">
+                <h1 id="senza-accesso-titolo">Area riservata ai soci</h1>
+                <p class="scheda-testo" id="senza-accesso-testo">La Cortoteca è riservata ai soci di CDL APS.</p>
+                <div class="azioni">
+                    <a class="btn btn--pieno" href="https://wa.me/393493290864?text=Ciao,%20vorrei%20il%20mio%20collegamento%20per%20l'area%20socio" target="_blank" rel="noopener">Chiedilo su WhatsApp</a>
+                    <a class="btn" href="mailto:ciao@cdlaps.com?subject=Collegamento%20per%20l'area%20socio">Scrivici</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================
+             CASA: proposte e corti del socio
+             ============================================================ -->
+        <section data-vista="casa" hidden>
+            <div class="g-intestazione">
+                <h1 id="saluto">Ciao</h1>
+                <button type="button" id="nuova-proposta" class="btn btn--pieno">Proponi un corto</button>
+            </div>
+            <p id="stato-quota" class="p-nota"></p>
+
+            <div id="blocco-opere" hidden>
+                <h2 class="titoletto">I tuoi corti in Cortoteca</h2>
+                <ul id="elenco-opere" class="g-elenco"></ul>
+            </div>
+
+            <h2 class="titoletto">Le tue proposte</h2>
+            <ul id="elenco-proposte" class="g-elenco"></ul>
+        </section>
+
+        <!-- ============================================================
+             MODULO DELLA PROPOSTA
+             ============================================================ -->
+        <section data-vista="modulo" hidden>
+            <form id="modulo-proposta" class="g-modulo" novalidate>
+                <div class="g-intestazione">
+                    <h1 id="titolo-modulo">Nuova proposta</h1>
+                    <span id="salvataggio" class="p-salvataggio" role="status" aria-live="polite"></span>
+                </div>
+
+                <ol class="p-passi" id="passi">
+                    <li><button type="button" data-passo="1">Il corto</button></li>
+                    <li><button type="button" data-passo="2">Troupe e cast</button></li>
+                    <li><button type="button" data-passo="3">Materiali</button></li>
+                    <li><button type="button" data-passo="4">Diritti</button></li>
+                </ol>
+
+                <p id="nota-revisione" class="p-richiamo" hidden></p>
+
+                <!-- Passo 1 -->
+                <fieldset class="g-gruppo" data-pannello="1">
+                    <legend class="titoletto">Il corto</legend>
+                    <div class="g-griglia">
+                        <label class="g-campo g-campo--largo">
+                            <span>Titolo *</span>
+                            <input type="text" name="titolo" required maxlength="200">
+                        </label>
+                        <label class="g-campo">
+                            <span>Anno *</span>
+                            <input type="number" name="anno" required min="1900" max="2100" inputmode="numeric">
+                        </label>
+                        <label class="g-campo">
+                            <span>Durata *</span>
+                            <input type="number" name="durata" required min="1" max="600" step="1" inputmode="numeric">
+                            <small>In minuti, titoli di coda compresi.</small>
+                        </label>
+                        <label class="g-campo">
+                            <span>Regia *</span>
+                            <input type="text" name="regista" required maxlength="300">
+                        </label>
+                        <label class="g-campo">
+                            <span>Generi</span>
+                            <input type="text" name="generi" placeholder="thriller, mistero" maxlength="200">
+                            <small>Separati da virgola.</small>
+                        </label>
+                        <label class="g-campo g-campo--largo">
+                            <span>Casa di produzione</span>
+                            <input type="text" name="produzione" maxlength="300">
+                            <small>Se c'è. Lascia vuoto per un corto autoprodotto.</small>
+                        </label>
+                        <label class="g-campo g-campo--largo">
+                            <span>Tagline</span>
+                            <input type="text" name="tagline" maxlength="300">
+                            <small>Una frase sola, facoltativa.</small>
+                        </label>
+                        <label class="g-campo g-campo--largo">
+                            <span>Sinossi *</span>
+                            <textarea name="sinossi" rows="4" required maxlength="3000"></textarea>
+                        </label>
+                        <label class="g-campo g-campo--largo">
+                            <span>Note di regia</span>
+                            <textarea name="note_regia" rows="5" maxlength="6000"></textarea>
+                        </label>
+                    </div>
+                </fieldset>
+
+                <!-- Passo 2 -->
+                <div data-pannello="2" hidden>
+                    <fieldset class="g-gruppo">
+                        <legend class="titoletto">Troupe</legend>
+                        <div class="g-griglia">
+                            <label class="g-campo"><span>Fotografia</span><input type="text" name="fotografia" maxlength="500"></label>
+                            <label class="g-campo"><span>Sceneggiatura</span><input type="text" name="sceneggiatura" maxlength="500"></label>
+                            <label class="g-campo"><span>Montaggio</span><input type="text" name="montaggio" maxlength="500"></label>
+                            <label class="g-campo"><span>Produttore</span><input type="text" name="produttore" maxlength="500"></label>
+                            <label class="g-campo"><span>Colonna sonora</span><input type="text" name="colonna_sonora" maxlength="500"></label>
+                            <label class="g-campo"><span>Scenografia</span><input type="text" name="scenografia" maxlength="500"></label>
+                            <label class="g-campo"><span>Suono</span><input type="text" name="suono" maxlength="500"></label>
+                            <label class="g-campo"><span>Costumi</span><input type="text" name="costumi" maxlength="500"></label>
+                        </div>
+                        <p class="p-sotto">Più nomi nello stesso ruolo: separali con una virgola.</p>
+                    </fieldset>
+                    <fieldset class="g-gruppo">
+                        <legend class="titoletto">Altri ruoli</legend>
+                        <p class="p-sotto">Trucco, aiuto regia, effetti visivi, color… Aggiungi tutti i ruoli che vuoi vedere nei crediti, nell'ordine in cui devono comparire.</p>
+                        <ol id="altri-ruoli" class="g-interpreti"></ol>
+                        <button type="button" id="aggiungi-ruolo" class="btn">Aggiungi un ruolo</button>
+                    </fieldset>
+                    <fieldset class="g-gruppo">
+                        <legend class="titoletto">Cast</legend>
+                        <ol id="interpreti" class="g-interpreti"></ol>
+                        <button type="button" id="aggiungi-interprete" class="btn">Aggiungi interprete</button>
+                    </fieldset>
+                </div>
+
+                <!-- Passo 3 -->
+                <fieldset class="g-gruppo" data-pannello="3" hidden>
+                    <legend class="titoletto">Materiali</legend>
+                    <div class="g-griglia">
+                        <!-- Da questa scelta dipende la burocrazia del passo 4:
+                             con lo streaming la licenza completa, senza
+                             un'autorizzazione breve per la sola scheda -->
+                        <div class="p-domanda g-campo--largo" role="radiogroup" aria-labelledby="d-modalita">
+                            <p id="d-modalita">Il corto si potrà guardare in Cortoteca? *</p>
+                            <label class="g-spunta"><input type="radio" name="modalita" value="streaming"><span>Sì, in streaming <small>Il video si guarda direttamente nella sua scheda. Serve la licenza completa.</small></span></label>
+                            <label class="g-spunta"><input type="radio" name="modalita" value="scheda"><span>No, per ora solo la scheda <small>Titolo, fotogramma, testi e crediti, senza video. Basta un'autorizzazione breve; lo streaming si può aggiungere più avanti.</small></span></label>
+                        </div>
+
+                        <div id="blocco-video" class="g-campo--largo p-blocco" hidden>
+                            <label class="g-campo">
+                                <span>Collegamento al video</span>
+                                <input type="url" name="video_url" placeholder="https://youtu.be/…" maxlength="500">
+                                <small id="esito-video">Il corto resta sul tuo canale YouTube o Vimeo, anche come video non in elenco: qui incolli il collegamento.</small>
+                            </label>
+                            <label class="g-campo">
+                                <span>Non l'hai online?</span>
+                                <input type="url" name="file_url" placeholder="https://drive.google.com/… oppure https://we.tl/…" maxlength="500">
+                                <small>Incolla un collegamento da cui scaricare il file: lo carichiamo noi sul canale di CDL, come video non in elenco. Serve uno dei due.</small>
+                            </label>
+                        </div>
+
+                        <div class="g-campo g-campo--largo">
+                            <span>Fotogramma *</span>
+                            <img id="anteprima-fotogramma" class="g-anteprima" alt="" hidden>
+                            <div class="g-immagine-azioni">
+                                <label class="btn">Scegli immagine<input type="file" id="file-fotogramma" accept="image/*" hidden></label>
+                            </div>
+                            <small>Un'immagine orizzontale tratta dal corto, la più grande che hai. È quella che compare in Cortoteca.</small>
+                        </div>
+
+                        <div class="g-campo g-campo--largo">
+                            <span>Titolo grafico</span>
+                            <img id="anteprima-titolo" class="p-anteprima-titolo" alt="" hidden>
+                            <p id="nome-font" class="p-file" hidden></p>
+                            <div class="g-immagine-azioni">
+                                <label class="btn">Scegli il file<input type="file" id="file-titolo" accept=".png,.ttf,.otf,.woff,.woff2,image/png" hidden></label>
+                                <button type="button" class="btn" id="togli-titolo" hidden>Togli</button>
+                            </div>
+                            <small>Facoltativo. Serve a mostrare il titolo in Cortoteca con la grafica del corto, come nei titoli di testa. Va bene il titolo in PNG, meglio con fondo trasparente e largo almeno 1200 px, oppure il file del carattere tipografico (TTF, OTF, WOFF): in quel caso lo scriviamo noi con quel carattere. Senza, il titolo appare nel carattere standard del sito.</small>
+                        </div>
+
+                        <label class="g-campo g-campo--largo">
+                            <span>Letterboxd</span>
+                            <input type="url" name="letterboxd_url" placeholder="https://letterboxd.com/film/…" maxlength="500">
+                        </label>
+                        <label class="g-campo g-campo--largo">
+                            <span>IMDb</span>
+                            <input type="url" name="imdb_url" placeholder="https://www.imdb.com/title/…" maxlength="500" pattern="https://(www\.|m\.)?imdb\.com/.+">
+                        </label>
+                    </div>
+                </fieldset>
+
+                <!-- Passo 4: la burocrazia dipende dalla scelta del passo 3.
+                     Le domande con data-per="streaming" o data-per="scheda"
+                     compaiono solo per quel tipo; le altre per entrambi. -->
+                <div data-pannello="4" hidden>
+                    <div id="diritti-scegli" class="p-richiamo" hidden>
+                        <p>Prima di firmare, scegli nel passo 3 se il corto si potrà guardare in Cortoteca o se proponi la sola scheda: le domande e il testo da accettare cambiano.</p>
+                        <button type="button" class="btn" data-vai-passo="3">Vai ai materiali</button>
+                    </div>
+
+                    <div id="licenza-gia-accettata" class="p-richiamo" hidden></div>
+
+                    <div id="blocco-diritti">
+                        <p id="diritti-intro" class="p-intro"></p>
+
+                        <fieldset class="g-gruppo">
+                            <legend class="titoletto">Questionario sui diritti</legend>
+                            <div class="p-domande">
+                                <div class="p-domanda" role="group" aria-labelledby="d-veste">
+                                    <p id="d-veste">In che veste dai l'autorizzazione? *</p>
+                                    <label class="g-spunta"><input type="radio" name="q_veste" value="produttore"><span>Ho prodotto io l'opera, da solo</span></label>
+                                    <label class="g-spunta"><input type="radio" name="q_veste" value="coproduttore"><span>L'ho prodotta con altri, che sono d'accordo per iscritto</span></label>
+                                    <label class="g-spunta"><input type="radio" name="q_veste" value="autorizzato"><span>Non l'ho prodotta io: ho l'autorizzazione scritta di chi l'ha prodotta</span></label>
+                                </div>
+
+                                <div class="p-domanda" role="group" aria-labelledby="d-musica" data-per="streaming">
+                                    <p id="d-musica">Che musica c'è nel corto? * <small>Anche più risposte.</small></p>
+                                    <label class="g-spunta"><input type="checkbox" name="q_musica" value="nessuna"><span>Nessuna</span></label>
+                                    <label class="g-spunta"><input type="checkbox" name="q_musica" value="originale_non_iscritti"><span>Originale, di autori non iscritti a società di gestione</span></label>
+                                    <label class="g-spunta"><input type="checkbox" name="q_musica" value="originale_iscritti"><span>Originale, di autori iscritti a SIAE, Soundreef o simili</span></label>
+                                    <label class="g-spunta"><input type="checkbox" name="q_musica" value="preesistente"><span>Brani già pubblicati, con una licenza che copre la diffusione online</span></label>
+                                    <label class="g-spunta"><input type="checkbox" name="q_musica" value="libreria"><span>Libreria musicale con licenza</span></label>
+                                    <label class="g-campo" id="campo-musica-note">
+                                        <span>Titoli e autori *</span>
+                                        <textarea name="q_musica_note" rows="4" maxlength="1500" placeholder="Notturno — musica di Anna Bianchi, composta per il corto, non iscritta a società di gestione&#10;Brano 3 — da Artlist, licenza n. 12345"></textarea>
+                                        <small>Un brano per riga. Per ciascuno scrivi il titolo, chi l'ha composto (e chi lo esegue, se è diverso) e da dove viene il permesso di usarlo: composto per il corto, licenza di una libreria (con il nome e, se c'è, il numero della licenza), accordo con l'etichetta o l'editore. Se gli autori sono iscritti a SIAE o Soundreef dillo qui. Ci serve per controllare che YouTube o Vimeo non blocchino il video e per citare la musica nei crediti.</small>
+                                    </label>
+                                </div>
+
+                                <div class="p-domanda" role="group" aria-labelledby="d-interpreti" data-per="streaming">
+                                    <p id="d-interpreti">Interpreti e persone riprese *</p>
+                                    <label class="g-spunta"><input type="checkbox" name="q_interpreti"><span>Tutti gli interpreti e le persone riconoscibili hanno acconsentito per iscritto alla diffusione online del corto</span></label>
+                                </div>
+
+                                <div class="p-domanda" role="group" aria-labelledby="d-minori" data-per="streaming">
+                                    <p id="d-minori">Ci sono minori? *</p>
+                                    <label class="g-spunta"><input type="radio" name="q_minori" value="no"><span>No</span></label>
+                                    <label class="g-spunta"><input type="radio" name="q_minori" value="si_con_consenso"><span>Sì, con il consenso scritto dei genitori</span></label>
+                                </div>
+
+                                <div class="p-domanda" role="group" aria-labelledby="d-persone" data-per="scheda">
+                                    <p id="d-persone">Nel fotogramma compaiono persone riconoscibili? *</p>
+                                    <label class="g-spunta"><input type="radio" name="q_persone" value="nessuna"><span>No</span></label>
+                                    <label class="g-spunta"><input type="radio" name="q_persone" value="consenso"><span>Sì, e hanno acconsentito alla pubblicazione</span></label>
+                                    <label class="g-spunta"><input type="radio" name="q_persone" value="minori_consenso"><span>Sì, anche minori, con il consenso dei genitori</span></label>
+                                </div>
+
+                                <div class="p-domanda" role="group" aria-labelledby="d-derivata" data-per="streaming">
+                                    <p id="d-derivata">Il corto è tratto o ispirato da un'opera altrui? *</p>
+                                    <label class="g-spunta"><input type="radio" name="q_derivata" value="no"><span>No</span></label>
+                                    <label class="g-spunta"><input type="radio" name="q_derivata" value="si"><span>Sì</span></label>
+                                    <label class="g-campo">
+                                        <span>Quale opera, e con quale autorizzazione</span>
+                                        <input type="text" name="q_derivata_dettagli" maxlength="500">
+                                    </label>
+                                </div>
+
+                                <div class="p-domanda" role="group" aria-labelledby="d-vincoli">
+                                    <p id="d-vincoli">Ci sono accordi in corso su quest'opera? * <small>Distributori, festival che chiedono l'anteprima.</small></p>
+                                    <label class="g-spunta"><input type="radio" name="q_vincoli" value="no"><span>No</span></label>
+                                    <label class="g-spunta"><input type="radio" name="q_vincoli" value="si"><span>Sì</span></label>
+                                    <label class="g-campo">
+                                        <span>Quali</span>
+                                        <input type="text" name="q_vincoli_dettagli" maxlength="500">
+                                    </label>
+                                </div>
+
+                                <div class="p-domanda" role="group" aria-labelledby="d-font" id="domanda-font" hidden>
+                                    <p id="d-font">Il carattere tipografico del titolo *</p>
+                                    <label class="g-spunta"><input type="checkbox" name="q_font"><span>La licenza del carattere che ho caricato ne consente l'uso su un sito web <small>I caratteri gratuiti per uso personale spesso non lo consentono: nel dubbio togli il file e carica il titolo in PNG.</small></span></label>
+                                </div>
+
+                                <div class="p-domanda" data-per="streaming">
+                                    <label class="g-campo">
+                                        <span>Contenuti da segnalare a chi guarda</span>
+                                        <input type="text" name="q_sensibili" placeholder="Per esempio: scene di violenza" maxlength="300">
+                                    </label>
+                                </div>
+                            </div>
+                        </fieldset>
+
+                        <fieldset class="g-gruppo">
+                            <legend class="titoletto" id="titolo-testo">Licenza</legend>
+                            <div id="testo-licenza" class="p-licenza" tabindex="0" aria-label="Testo da accettare"></div>
+                            <details class="p-informativa">
+                                <summary>Come trattiamo i tuoi dati</summary>
+                                <p><strong>Chi li tratta.</strong> CDL APS, Viale Laurana 13, 47921 Rimini, ciao@cdlaps.com.</p>
+                                <p><strong>Quali dati.</strong> Nome, email, numero di tessera e stato della quota, presi dal libro soci. La scheda del corto, con i nomi di troupe e cast che indichi. Le risposte al questionario. Data, ora, indirizzo IP e tipo di browser al momento dell'accettazione.</p>
+                                <p><strong>Perché.</strong> Per valutare la proposta, pubblicare il corto con i suoi crediti e conservare la prova della licenza. La base è il rapporto associativo e l'accordo di licenza; i crediti sono pubblicati anche per rispettare il diritto degli autori a essere nominati.</p>
+                                <p><strong>Per quanto.</strong> La scheda resta online finché il corto è in Cortoteca. La registrazione della licenza è conservata per dieci anni dalla revoca. I dati del libro soci copiati qui si aggiornano dal foglio dell'associazione e riguardano l'anno in corso e il precedente.</p>
+                                <p><strong>Chi altro li vede.</strong> Gli amministratori della Cortoteca nominati dal Consiglio direttivo. I fornitori tecnici: Supabase (banca dati, in Irlanda), Netlify (sito), Google (libro soci), YouTube o Vimeo (il video, che resta sul loro servizio).</p>
+                                <p><strong>I tuoi diritti.</strong> Puoi chiedere di vedere, correggere o cancellare i tuoi dati e opporti al trattamento scrivendo a ciao@cdlaps.com; puoi rivolgerti al Garante per la protezione dei dati personali. Chi è citato nei crediti può chiedere in ogni momento di essere tolto.</p>
+                            </details>
+                            <div class="g-griglia p-accettazione">
+                                <label class="g-campo g-campo--largo">
+                                    <span>Nome e cognome *</span>
+                                    <input type="text" name="a_nome" autocomplete="name" maxlength="200">
+                                    <small>Scrivili per esteso: valgono come firma.</small>
+                                </label>
+                                <label class="g-spunta"><input type="checkbox" name="a_licenza"><span>Ho letto <span data-nome-testo>la licenza</span>, versione <span data-versione></span>, e la accetto. *</span></label>
+                                <label class="g-spunta"><input type="checkbox" name="a_dichiarazioni"><span>Confermo le dichiarazioni dell'articolo 8 e le risposte al questionario. *</span></label>
+                                <label class="g-spunta"><input type="checkbox" name="a_informativa"><span>Ho letto come vengono trattati i miei dati. *</span></label>
+                                <label class="g-spunta"><input type="checkbox" name="a_promozionale"><span>Autorizzo l'uso promozionale descritto all'articolo 3. <small>(facoltativo)</small></span></label>
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+
+                <div class="g-piede-modulo">
+                    <button type="button" class="btn" id="torna-casa">Chiudi</button>
+                    <div class="azioni">
+                        <button type="button" class="btn" id="indietro">Indietro</button>
+                        <button type="button" class="btn btn--pieno" id="avanti">Avanti</button>
+                        <button type="submit" class="btn btn--pieno" id="invia" hidden>Invia la proposta</button>
+                    </div>
+                </div>
+            </form>
+        </section>
+
+        <!-- ============================================================
+             RICEVUTA
+             ============================================================ -->
+        <section data-vista="ricevuta" hidden>
+            <div class="scheda p-ricevuta">
+                <h1 id="ricevuta-titolo">Proposta inviata</h1>
+                <p class="scheda-testo" id="ricevuta-testo"></p>
+                <dl id="ricevuta-dati" class="p-dati"></dl>
+                <div class="azioni">
+                    <button type="button" class="btn btn--pieno" id="scarica-ricevuta">Scarica la ricevuta</button>
+                    <button type="button" class="btn" id="ricevuta-chiudi">Torna alle tue proposte</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <template id="modello-interprete">
+        <li class="g-interprete">
+            <input type="text" data-nome placeholder="Nome" aria-label="Nome dell'interprete" maxlength="200">
+            <input type="text" data-ruolo placeholder="Ruolo" aria-label="Ruolo" maxlength="200">
+            <button type="button" class="g-icona" data-su aria-label="Sposta su">↑</button>
+            <button type="button" class="g-icona" data-giu aria-label="Sposta giù">↓</button>
+            <button type="button" class="g-icona" data-togli aria-label="Togli">✕</button>
+        </li>
+    </template>
+
+    <!-- Riga di un ruolo della troupe senza campo proprio -->
+    <template id="modello-ruolo">
+        <li class="g-interprete">
+            <input type="text" data-ruolo placeholder="Ruolo" aria-label="Ruolo" maxlength="100">
+            <input type="text" data-nome placeholder="Nome" aria-label="Nome" maxlength="300">
+            <button type="button" class="g-icona" data-su aria-label="Sposta su">↑</button>
+            <button type="button" class="g-icona" data-giu aria-label="Sposta giù">↓</button>
+            <button type="button" class="g-icona" data-togli aria-label="Togli">✕</button>
+        </li>
+    </template>
+
+    <script src="assets/js/vendor/supabase-2.117.3.min.js"></script>
+    <script src="assets/js/dati.js?v=2026-11-18b"></script>
+    <script src="assets/js/riservato.js?v=2026-11-18b"></script>
+    <script src="assets/js/area-socio.js?v=2026-11-18b"></script>
+</body>
+</html>

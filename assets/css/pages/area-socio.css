@@ -1,0 +1,231 @@
+/* ==========================================================================
+   AREA SOCIO (area-socio.html) — pagina dei soci per proporre un corto. Barra,
+   testata e campi dei moduli arrivano da riservato.css, caricato prima di
+   questo foglio.
+   ========================================================================== */
+
+.area-socio .g-pagina { width: min(100% - 2 * var(--gut), 920px); }
+
+.area-socio .titoletto { margin-top: 2rem; }
+/* nella scheda dell'accesso il titolo apre il riquadro: niente spazio sopra */
+.area-socio .g-accesso .titoletto { margin-top: 0; }
+
+/* Riga sotto il saluto: tessera e quota */
+.p-nota { margin-bottom: 0.5rem; color: var(--testo-medio); }
+
+.p-nota a { font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+
+.p-nota--allarme {
+  padding: 0.2rem 0 0.2rem 1rem;
+  border-left: 3px solid var(--cdl-red);
+  color: var(--cdl-dark);
+}
+
+/* --------------------------------------------------------------------------
+   Elenchi: proposte e corti del socio
+   -------------------------------------------------------------------------- */
+.p-voce {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 1.5rem;
+  padding: 1rem 0.5rem;
+  border-bottom: 1px solid var(--riga);
+}
+
+.p-voce-testo { display: flex; flex-direction: column; gap: 0.3rem; min-width: min(100%, 16rem); flex: 1; }
+
+.p-voce-azioni { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+
+.p-voce-azioni .btn { min-height: 44px; padding: 0.6rem 1rem; }
+
+/* Messaggio del direttivo, o promemoria dentro il modulo */
+.p-richiamo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.9rem 1.1rem;
+  background: var(--cdl-lavender);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+/* Riga di spiegazione sotto un gruppo di campi */
+.p-sotto { margin: 0 0 1rem; font-size: 0.9rem; line-height: 1.5; color: var(--testo-tenue); }
+
+.g-griglia + .p-sotto { margin: 0.9rem 0 0; }
+
+/* Campi del video: compaiono solo scegliendo lo streaming */
+.p-blocco { display: flex; flex-direction: column; gap: 1.1rem; }
+
+.p-blocco[hidden] { display: none; }
+
+/* Titolo grafico: il PNG su fondo a scacchi, così si vede la trasparenza */
+.p-anteprima-titolo {
+  max-width: 100%;
+  max-height: 160px;
+  padding: 1rem;
+  border: 1px solid var(--riga);
+  background:
+    repeating-conic-gradient(rgba(29, 29, 27, 0.06) 0 25%, transparent 0 50%) 0 0 / 16px 16px,
+    #fff;
+  object-fit: contain;
+}
+
+.p-file { font-weight: 600; }
+
+/* --------------------------------------------------------------------------
+   Modulo: passi e salvataggio
+   -------------------------------------------------------------------------- */
+.p-salvataggio { font-size: 0.85rem; color: var(--testo-tenue); }
+
+.p-passi {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 4px;
+  list-style: none;
+  counter-reset: passo;
+}
+
+.p-passi li { counter-increment: passo; }
+
+.p-passi button {
+  width: 100%;
+  min-height: 44px;
+  padding: 0.7rem 0.5rem;
+  border: 0;
+  border-top: 3px solid var(--riga);
+  background: none;
+  font-family: var(--f-titoli);
+  font-size: var(--etichetta);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  text-align: left;
+  color: var(--testo-tenue);
+  cursor: pointer;
+}
+
+.p-passi button::before { content: counter(passo) ' · '; }
+
+.p-passi button[aria-current='step'] { border-top-color: var(--cdl-dark); color: var(--cdl-dark); }
+
+.p-passi button:hover { color: var(--cdl-dark); }
+
+/* I passi fatti di più gruppi li distanziano come fa il modulo */
+.area-socio div[data-pannello]:not([hidden]),
+#blocco-diritti:not([hidden]) { display: flex; flex-direction: column; gap: calc(var(--spazio) * 2); }
+
+/* --------------------------------------------------------------------------
+   Diritti: domande, testo della licenza, accettazione
+   -------------------------------------------------------------------------- */
+/* Ogni domanda apre con un filetto e un titolo più grande delle risposte,
+   così le sezioni del questionario si distinguono a colpo d'occhio */
+.p-domande { display: flex; flex-direction: column; }
+
+.p-domanda {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1.4rem 0 1.5rem;
+  border-top: 1px solid var(--riga);
+}
+
+.p-domande > .p-domanda:first-child { border-top: 0; padding-top: 0.25rem; }
+
+.p-domanda[hidden] { display: none; }
+
+.p-domanda > p {
+  margin-bottom: 0.3rem;
+  font-family: var(--f-titoli);
+  font-size: clamp(1.05rem, 1.8vw, 1.25rem);
+  font-weight: 800;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+
+.p-domanda > p small {
+  display: block;
+  margin-top: 0.3rem;
+  font-family: var(--f-testo);
+  font-size: 0.88rem;
+  font-weight: 400;
+  letter-spacing: 0;
+  color: var(--testo-tenue);
+}
+
+.p-domanda .g-spunta small { display: block; margin-top: 0.2rem; font-weight: 400; }
+
+/* Nel passo 3 la scelta fra streaming e scheda non ha filetto sopra */
+.g-griglia > .p-domanda { padding-top: 0; border-top: 0; }
+
+.p-intro { max-width: 62ch; font-size: 1.05rem; line-height: 1.55; color: var(--testo-medio); }
+
+.p-domanda .g-spunta { font-weight: 500; }
+
+.p-domanda .g-campo { margin-top: 0.2rem; }
+
+.p-licenza {
+  max-height: 22rem;
+  overflow-y: auto;
+  padding: 1.25rem;
+  border: 1px solid var(--riga-forte);
+  background: #fff;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.p-licenza:focus-visible { outline: 2px solid var(--cdl-dark); outline-offset: 2px; }
+
+.p-licenza h3 {
+  font-family: var(--f-titoli);
+  font-size: 1rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+}
+
+.p-licenza h4 { margin-top: 1.1rem; font-size: 0.95rem; font-weight: 700; }
+
+.p-licenza p { margin-top: 0.4rem; }
+
+.p-informativa { margin-top: 1rem; font-size: 0.9rem; line-height: 1.55; color: var(--testo-medio); }
+
+.p-informativa summary { min-height: 44px; padding: 0.7rem 0; font-weight: 600; color: var(--cdl-dark); cursor: pointer; }
+
+.p-informativa p { margin-bottom: 0.6rem; max-width: 65ch; }
+
+.p-accettazione { margin-top: 1.25rem; }
+
+.p-ok { color: #1c6b2a; }
+
+.p-errore { color: #a00000; }
+
+/* --------------------------------------------------------------------------
+   Ricevuta
+   -------------------------------------------------------------------------- */
+.p-ricevuta { max-width: 720px; margin: clamp(1rem, 4vw, 3rem) auto; gap: 1rem; }
+
+.p-ricevuta h1 { font-size: clamp(1.6rem, 4vw, 2.2rem); }
+
+.p-dati { display: flex; flex-direction: column; border-top: 1px solid var(--riga); }
+
+.p-dati > div {
+  display: grid;
+  grid-template-columns: minmax(8rem, 14rem) minmax(0, 1fr);
+  gap: 0.25rem 1rem;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--riga);
+}
+
+.p-dati dt { font-size: 0.85rem; color: var(--testo-tenue); }
+
+.p-dati dd { overflow-wrap: anywhere; }
+
+@media (max-width: 760px) {
+  .p-passi { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .p-dati > div { grid-template-columns: 1fr; }
+  .p-voce-azioni { width: 100%; }
+}

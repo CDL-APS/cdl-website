@@ -1,0 +1,14 @@
+/* ==========================================================================
+   PAGINA NON TROVATA (404.html)
+   Il nome a tutta larghezza; nelle O di NON TROVATA gli occhi della
+   Cortoteca, aperti, che seguono il puntatore (la forma è in components.css).
+   ========================================================================== */
+.pagina-smarrita main > section { min-height: 0; }
+.pagina-smarrita main { padding-bottom: clamp(96px, 11vw, 168px); }
+.hero--smarrita .fit-testo { display: inline-block; }
+.hero--smarrita .fit + .fit { margin-top: 0.04em; }
+.hero--smarrita .o .occhio { animation: apri 0.5s var(--ease) 0.4s both; }
+@keyframes apri { from { transform: scale(0); } }
+.smarrita__azioni { margin-top: clamp(28px, 3.4vw, 48px); }
+/* Un solo tasto, Torna alla home: al passaggio diventa arancio */
+.smarrita__azioni .btn--pieno:hover { background: var(--arancio); border-color: var(--arancio); color: var(--nero); }

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<!-- Il PDF riepilogativo della domanda (Codice.gs, completaDomanda). Solo
+     scriptlet con l'uguale, che fanno l'escape: i dati arrivano da un modulo
+     pubblico. Mai scrivere i segni degli scriptlet nei commenti: Apps Script
+     li esegue anche lì. -->
+<style>
+  @page { size: A4; margin: 20mm 18mm; }
+  body { font-family: Arial, Helvetica, sans-serif; font-size: 10.5pt; line-height: 1.45; color: #1d1d1b; }
+  h1 { margin: 0 0 2mm; font-size: 15pt; text-transform: uppercase; }
+  .sotto { margin: 0 0 6mm; font-weight: bold; }
+  table { width: 100%; border-collapse: collapse; margin: 3mm 0 5mm; }
+  th { width: 38%; padding: 1.6mm 3mm 1.6mm 0; text-align: left; vertical-align: top; }
+  td { padding: 1.6mm 0; vertical-align: top; }
+  tr { border-bottom: 0.5pt solid #bbbbbb; }
+  h2 { margin: 5mm 0 2mm; font-size: 11pt; }
+  p { margin: 0 0 2.5mm; }
+  .piede { margin-top: 8mm; padding-top: 3mm; border-top: 0.75pt solid #1d1d1b; font-size: 8.5pt; }
+</style>
+</head>
+<body>
+  <h1>Domanda di ammissione a socio</h1>
+  <p class="sotto">CDL - APS · viale Francesco Laurana 13, 47921 Rimini (RN) · Domanda <?= domanda.codice ?> inviata dal sito cdlaps.com il <?= domanda.quando ?></p>
+
+  <p>Al Presidente dell&rsquo;Associazione CDL - APS.</p>
+  <table>
+    <tr><th>Il/la sottoscritto/a</th><td><?= d.nome ?> <?= d.cognome ?></td></tr>
+    <tr><th>Nato/a a</th><td><?= d.luogo_nascita ?>, il <?= d.data_nascita ?></td></tr>
+    <tr><th>Residente a</th><td><?= d.comune ?> (<?= d.provincia ?>), <?= d.via ?>, CAP <?= d.cap ?></td></tr>
+    <tr><th>Email</th><td><?= d.email ?></td></tr>
+    <tr><th>Cellulare</th><td><?= d.cellulare || '—' ?></td></tr>
+  </table>
+
+  <p>chiede di essere ammesso/a quale <strong>socio ordinario</strong> dell&rsquo;Associazione di Promozione Sociale CDL - APS e si impegna a rispettare le disposizioni statutarie vigenti e le delibere degli organi sociali validamente costituiti. A tale scopo dichiara di assumersi ogni responsabilità derivante dalle dichiarazioni rese nella presente domanda, e di conoscere e accettare lo Statuto sociale e i regolamenti interni.</p>
+
+  <h2>Quota associativa</h2>
+  <table>
+    <tr><th>Importo</th><td><?= domanda.importo ?> euro, per l&rsquo;esercizio sociale <?= domanda.anno ?></td></tr>
+    <tr><th>Modalità scelta</th><td><?= modalita ?></td></tr>
+    <tr><th>Chi paga, se diverso</th><td><?= d.chi_paga || '—' ?></td></tr>
+    <tr><th>Causale</th><td><?= domanda.causale ?></td></tr>
+  </table>
+  <p>Se la domanda non è accolta, la quota versata viene restituita.</p>
+
+  <h2>Dichiarazioni confermate nel modulo online</h2>
+  <table>
+    <tr><th>Ammissione e impegni</th><td>Confermata</td></tr>
+    <tr><th>Maggiore età</th><td>Dichiarata</td></tr>
+    <tr><th>Statuto letto e accettato</th><td>Versione <?= d.statuto ?></td></tr>
+    <tr><th>Informativa privacy letta</th><td>Versione <?= d.informativa ?></td></tr>
+  </table>
+
+  <p class="piede">Domanda inviata dal modulo online di cdlaps.com il <?= domanda.quando ?> (ora italiana), con conferma espressa di ciascuna dichiarazione; copia inviata all&rsquo;indirizzo email indicato. Documento generato automaticamente, senza firma autografa. CDL - APS · C.F. 91200080405 · ciao@cdlaps.com · PEC cdl.aps@pec.poste.it</p>
+</body>
+</html>

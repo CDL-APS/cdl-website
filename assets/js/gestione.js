@@ -1,68 +1,54 @@
 /* ==========================================================================
    GESTIONE — pagina riservata ai redattori.
 
-   Accesso con email e password (account creati dalla dashboard di Supabase),
-   poi elenco e modifica di opere ed eventi. Tutte le scritture passano dal
-   client ufficiale di Supabase con la sessione di chi ha fatto l'accesso: le
-   regole del database (RLS) lasciano scrivere solo i redattori, qualunque
-   cosa faccia questa pagina.
+   Accesso con email e password (account creati dalla dashboard di Supabase)
+   e, per chi l'ha attivato, il codice di un'app di autenticazione. Poi:
+   - Dashboard: ciò che richiede una decisione (quota non rinnovata, opere
+     senza licenza, foglio non aggiornato), qualche numero, le ultime attività;
+   - Proposte: i corti mandati dai soci, da rivedere e pubblicare;
+   - Opere ed Eventi: elenco e modifica;
+   - Rullino: le foto che scorrono in home (in gestione-rullino.js, caricato
+     dopo questo file);
+   - Soci: stato della sincronizzazione con il foglio e collegamenti personali.
 
-   Usa da dati.js: SUPABASE_URL, SUPABASE_CHIAVE, BUCKET_IMMAGINI, urlImmagine,
-   urlImmagineLocale, esc.
+   Tutte le scritture passano dal client di Supabase con la sessione di chi ha
+   fatto l'accesso: le regole del database (RLS) lasciano scrivere solo i
+   redattori, qualunque cosa faccia questa pagina.
+
+   Usa da dati.js: BUCKET_IMMAGINI, urlImmagine, urlImmagineLocale, esc,
+   indirizzoSicuro.
+   Usa da riservato.js: creaClient, $, mostraVista, avviso, nascondiAvviso,
+   messaggioErrore, formattaData, formattaDataOra, codiceDaTitolo,
+   ridimensiona, aggiungiInterprete, leggiInterpreti, aggiungiRuolo,
+   leggiRuoli, riconosciFileTitolo, mimeDaPercorso, descriviRisposte,
+   attenzioniRisposte, testoRicevuta, scaricaTesto, TIPI_LICENZA.
    ========================================================================== */
 
-const client = supabase.createClient(SUPABASE_URL, SUPABASE_CHIAVE);
+const client = creaClient();
 
-const LATO_MASSIMO_IMMAGINE = 2000; // px, lato lungo
-const QUALITA_JPEG = 0.85;
+const SPAZIO_PROPOSTE = 'proposte';
 
 const stato = {
-  scheda: 'opere',  // elenco mostrato: opere o eventi
+  scheda: null,      // scheda mostrata: dashboard, proposte, opere, eventi, rullino o soci
   modificato: false, // modifiche non salvate nel modulo aperto
-  immagini: {}       // file scelti e non ancora caricati, per nome del campo
+  immagini: {},      // file scelti e non ancora caricati, per nome del campo
+  titolo: null,      // titolo grafico scelto e non ancora caricato: { file, tipo }
+  avvisi: null,      // risposta di avvisi()
+  proposte: [],      // righe di proposte_da_rivedere()
+  proposta: null,    // proposta aperta in revisione
+  soci: null,        // righe di elenco_soci(), lette una volta per sessione
+  titolare: '',      // email del socio a cui era attribuita l'opera aperta
+  fattoreInAttesa: null
 };
 
-const $ = (id) => document.getElementById(id);
-
-/* --------------------------------------------------------------------------
-   Viste e messaggi
-   -------------------------------------------------------------------------- */
-function mostraVista(nome) {
-  document.querySelectorAll('[data-vista]').forEach((v) => {
-    v.hidden = v.dataset.vista !== nome;
-  });
-  window.scrollTo(0, 0);
-}
-
-let timerAvviso;
-function avviso(testo, errore = false) {
-  const el = $('avviso');
-  el.textContent = testo;
-  el.classList.toggle('g-avviso--errore', errore);
-  el.hidden = false;
-  clearTimeout(timerAvviso);
-  if (!errore) timerAvviso = setTimeout(() => { el.hidden = true; }, 4000);
-}
-
-function nascondiAvviso() {
-  $('avviso').hidden = true;
-}
-
-/* Errori del database tradotti in qualcosa di comprensibile */
-function messaggioErrore(errore) {
-  if (!errore) return 'Errore sconosciuto';
-  if (errore.code === '23505') return 'Esiste già un elemento con questo codice: scegline un altro.';
-  if (errore.code === '23514') return 'Un campo non è valido: controlla codice, anno e date.';
-  if (errore.code === '42501') return 'Non hai i permessi per questa modifica.';
-  if (errore.message && /fetch|network/i.test(errore.message)) return 'Connessione non riuscita: riprova.';
-  return errore.message || String(errore);
-}
+const segnaModificato = () => { stato.modificato = true; };
 
 /* --------------------------------------------------------------------------
    Accesso
    -------------------------------------------------------------------------- */
 async function aggiornaSessione(sessione) {
   $('utente').hidden = !sessione;
+  $('schede').hidden = true;
   if (!sessione) {
     mostraVista('accesso');
     return;
@@ -70,11 +56,26 @@ async function aggiornaSessione(sessione) {
   $('utente-email').textContent = sessione.user.email;
   mostraVista('caricamento');
 
-  const { data: redattore, error } = await client.rpc('sono_redattore');
-  if (error || !redattore) {
-    mostraVista('negato');
+  // Chi ha attivato il codice di verifica deve inserirlo: con la sola
+  // password il database non lo considera redattore
+  const { data: livello } = await client.auth.mfa.getAuthenticatorAssuranceLevel();
+  if (livello && livello.nextLevel === 'aal2' && livello.currentLevel !== 'aal2') {
+    $('modulo-codice').reset();
+    mostraVista('codice');
+    $('modulo-codice').codice.focus();
     return;
   }
+
+  const { data: redattore, error } = await client.rpc('sono_redattore');
+  if (error || !redattore) {
+    // Il codice di verifica è obbligatorio: un redattore entrato con la sola
+    // password lo attiva subito, poi entra
+    const { data: senzaCodice } = await client.rpc('redattore_senza_codice');
+    if (senzaCodice) mostraSicurezza(true);
+    else mostraVista('negato');
+    return;
+  }
+  $('schede').hidden = false;
   mostraElenco();
 }
 
@@ -99,22 +100,305 @@ $('modulo-accesso').addEventListener('submit', async (e) => {
   aggiornaSessione(data.session);
 });
 
+$('modulo-codice').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const modulo = e.currentTarget;
+  nascondiAvviso();
+
+  const { data: fattori } = await client.auth.mfa.listFactors();
+  const fattore = fattori?.totp?.[0];
+  if (!fattore) {
+    avviso('Nessun codice attivo per questo account.', true);
+    return;
+  }
+  const { error } = await client.auth.mfa.challengeAndVerify({
+    factorId: fattore.id,
+    code: modulo.codice.value.trim()
+  });
+  if (error) {
+    avviso('Codice non valido: riprova con quello che l\'app mostra adesso.', true);
+    modulo.codice.select();
+    return;
+  }
+  const { data } = await client.auth.getSession();
+  aggiornaSessione(data.session);
+});
+
 $('esci').addEventListener('click', async () => {
   if (stato.modificato && !confirm('Ci sono modifiche non salvate. Uscire lo stesso?')) return;
   stato.modificato = false;
-  await client.auth.signOut();
+  await client.auth.signOut({ scope: 'local' });
   aggiornaSessione(null);
 });
 
 /* --------------------------------------------------------------------------
-   Elenco
+   Sicurezza: codice di verifica (TOTP)
    -------------------------------------------------------------------------- */
+/* Il codice è obbligatorio per i redattori (privato.e_redattore vuole una
+   sessione aal2): non si disattiva da qui. Al primo accesso (obbligo) la
+   vista si apre da sola e "Torna alla gestione" non c'è: la gestione si apre
+   appena il codice è attivo. Chi cambia o perde il telefono va sbloccato in
+   Supabase (Authentication → utente → fattori), poi lo riattiva. */
+async function mostraSicurezza(obbligo = false) {
+  nascondiAvviso();
+  mostraVista('sicurezza');
+  $('sicurezza-attiva').hidden = true;
+  $('sicurezza-avvia').hidden = true;
+  $('sicurezza-chiudi').hidden = obbligo;
+  $('sicurezza-stato').textContent = 'Controllo…';
+
+  const { data, error } = await client.auth.mfa.listFactors();
+  if (error) {
+    $('sicurezza-stato').textContent = messaggioErrore(error);
+    return;
+  }
+  const attivo = (data.totp || []).find((f) => f.status === 'verified');
+  if (attivo) {
+    $('sicurezza-stato').textContent =
+      'Il codice di verifica è attivo: per entrare servono la password e il codice dell\'app. Se cambi o perdi il telefono, chiedi a chi amministra il progetto Supabase di toglierlo: al prossimo accesso lo riattivi.';
+  } else {
+    $('sicurezza-stato').textContent =
+      'Per entrare nella gestione serve il codice di verifica: attivalo adesso. Da qui in poi per entrare serviranno la password e il numero che un\'app sul tuo telefono genera ogni trenta secondi.';
+    $('sicurezza-avvia').hidden = false;
+  }
+}
+
+$('apri-sicurezza').addEventListener('click', () => {
+  if (stato.modificato && !confirm('Ci sono modifiche non salvate. Uscire lo stesso?')) return;
+  stato.modificato = false;
+  mostraSicurezza();
+});
+
+$('sicurezza-chiudi').addEventListener('click', async () => {
+  const { data } = await client.auth.getSession();
+  aggiornaSessione(data.session);
+});
+
+$('sicurezza-avvia').addEventListener('click', async () => {
+  nascondiAvviso();
+  // Tentativi lasciati a metà: si tolgono, altrimenti Supabase rifiuta il nuovo
+  const { data: fattori } = await client.auth.mfa.listFactors();
+  for (const f of (fattori?.all || []).filter((x) => x.status === 'unverified')) {
+    await client.auth.mfa.unenroll({ factorId: f.id });
+  }
+
+  const { data, error } = await client.auth.mfa.enroll({
+    factorType: 'totp',
+    friendlyName: 'Gestione CDL ' + new Date().toISOString().slice(0, 16)
+  });
+  if (error) {
+    avviso(messaggioErrore(error), true);
+    return;
+  }
+  stato.fattoreInAttesa = data.id;
+  $('sicurezza-qr').src = data.totp.qr_code;
+  $('sicurezza-chiave').textContent = data.totp.secret;
+  $('modulo-attiva').reset();
+  $('sicurezza-avvia').hidden = true;
+  $('sicurezza-attiva').hidden = false;
+});
+
+$('modulo-attiva').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  nascondiAvviso();
+  const { error } = await client.auth.mfa.challengeAndVerify({
+    factorId: stato.fattoreInAttesa,
+    code: e.currentTarget.codice.value.trim()
+  });
+  if (error) {
+    avviso('Codice non valido: riprova con quello che l\'app mostra adesso.', true);
+    return;
+  }
+  stato.fattoreInAttesa = null;
+  // la sessione è passata ad aal2: si entra
+  const { data } = await client.auth.getSession();
+  await aggiornaSessione(data.session);
+  avviso('Codice di verifica attivato.');
+});
+
+/* --------------------------------------------------------------------------
+   Da sistemare: solo ciò che chiede un'azione. Le informazioni stanno
+   altrove: i ritiri e le revoche fra le ultime attività, i soci senza email
+   come nota nella scheda Soci (non tutti vogliono proporre un corto).
+   -------------------------------------------------------------------------- */
+async function caricaAvvisi() {
+  const { data, error } = await client.rpc('avvisi');
+  if (error) {
+    console.error(error);
+    return null;
+  }
+  stato.avvisi = data;
+
+  const attesa = data.proposte_in_attesa.length;
+  $('conta-proposte').textContent = attesa;
+  $('conta-proposte').hidden = !attesa;
+
+  const voci = [];
+  const voce = (testo, azione, etichetta, id) => {
+    voci.push(`<li><span>${esc(testo)}</span>${
+      azione ? `<button type="button" class="btn" data-avviso="${azione}" data-id="${id ?? ''}">${esc(etichetta)}</button>` : ''
+    }</li>`);
+  };
+
+  const sync = data.sincronizzazione || {};
+  if (!sync.quando) {
+    voce('Il foglio dei soci non è ancora collegato: senza, il sito non sa chi è in regola con la quota.', 'soci', 'Vai a Soci');
+  } else if (sync.vecchia) {
+    voce(`Il foglio dei soci non si aggiorna dal ${formattaDataOra(sync.quando)}.`, 'soci', 'Vai a Soci');
+  }
+  data.non_in_regola.forEach((o) => {
+    voce(`«${o.titolo}» è online, ma ${o.socio} non ha rinnovato la quota.`, 'nascondi', 'Nascondi', o.opera_id);
+  });
+  data.da_ripubblicare.forEach((o) => {
+    voce(`«${o.titolo}» era nascosta per la quota: ${o.socio} ha rinnovato.`, 'ripubblica', 'Ripubblica', o.opera_id);
+  });
+  data.senza_licenza.forEach((o) => {
+    let testo;
+    if (o.solo_scheda) {
+      testo = `«${o.titolo}» ha il video, ma ${o.socio || 'il socio'} ha autorizzato solo la scheda: togli il video, o chiedigli di confermare la licenza per lo streaming dalla sua pagina.`;
+    } else if (o.socio) {
+      testo = `«${o.titolo}» è online senza ${o.serve === 'scheda' ? 'autorizzazione' : 'licenza'}: manda a ${o.socio} il suo collegamento perché la confermi.`;
+    } else {
+      testo = `«${o.titolo}» è online senza licenza: indica a quale socio appartiene.`;
+    }
+    voce(testo, 'apri', 'Apri', o.opera_id);
+  });
+
+  $('elenco-avvisi').innerHTML = voci.length
+    ? voci.join('')
+    : '<li class="g-vuoto">Niente da sistemare.</li>';
+  $('avvisi-segno').hidden = !voci.length;
+  $('conta-avvisi').textContent = voci.length;
+  $('conta-avvisi').hidden = !voci.length;
+  return data;
+}
+
+$('elenco-avvisi').addEventListener('click', async (e) => {
+  const b = e.target.closest('[data-avviso]');
+  if (!b) return;
+  const id = Number(b.dataset.id);
+  const azione = b.dataset.avviso;
+
+  if (azione === 'soci') {
+    vaiAScheda('soci');
+  } else if (azione === 'apri') {
+    apriOpera(id);
+  } else if (azione === 'nascondi') {
+    if (!confirm('Nascondere quest\'opera dalla Cortoteca? Il regolamento chiede di avvisare prima il socio. Scheda e licenza restano conservate: tornerà visibile al rinnovo.')) return;
+    const { error } = await client.rpc('nascondi_per_quota', { p_opera_id: id });
+    if (error) avviso(messaggioErrore(error), true);
+    else avviso('Opera nascosta.');
+    mostraElenco();
+  } else if (azione === 'ripubblica') {
+    const { error } = await client.rpc('ripubblica_opera', { p_opera_id: id });
+    if (error) avviso(messaggioErrore(error), true);
+    else avviso('Opera di nuovo in Cortoteca.');
+    mostraElenco();
+  }
+});
+
+/* --------------------------------------------------------------------------
+   Elenchi
+   -------------------------------------------------------------------------- */
+/* --------------------------------------------------------------------------
+   Navigazione col tasto Indietro del browser. Ogni scheda è un passo della
+   cronologia (#opere, #rullino…), e così anche un modulo aperto (opera,
+   evento, revisione): Indietro torna alla scheda di prima, o dal modulo
+   all'elenco, chiedendo conferma se ci sono modifiche non salvate.
+   Uscire da un modulo coi suoi tasti (Salva, Annulla…) toglie il suo passo
+   dalla cronologia: mostraElenco() torna indietro invece di aggiungerne uno.
+   -------------------------------------------------------------------------- */
+const MODIFICHE_PERSE = 'Ci sono modifiche non salvate. Uscire lo stesso?';
+
+function vaiAScheda(scheda) {
+  stato.scheda = scheda;
+  // da un modulo aperto il suo passo diventa quello della nuova scheda
+  if (history.state?.modulo) history.replaceState({ scheda }, '', '#' + scheda);
+  else history.pushState({ scheda }, '', '#' + scheda);
+  mostraElenco();
+}
+
+/* All'apertura di un modulo: un passo in più, per poterne uscire con Indietro */
+function apriModulo() {
+  if (!history.state?.modulo) history.pushState({ scheda: stato.scheda, modulo: true }, '', `#${stato.scheda}/modifica`);
+}
+
+window.addEventListener('popstate', (e) => {
+  if ($('schede').hidden) return; // senza accesso non c'è niente da navigare
+  const inModulo = ['opera', 'evento'].some((v) => !document.querySelector(`[data-vista="${v}"]`).hidden);
+  if (inModulo && stato.modificato && !confirm(MODIFICHE_PERSE)) {
+    history.pushState({ scheda: stato.scheda, modulo: true }, '', `#${stato.scheda}/modifica`);
+    return;
+  }
+  stato.modificato = false;
+  nascondiAvviso();
+  const scheda = SCHEDE[e.state?.scheda] ? e.state.scheda : SCHEDA_INIZIALE;
+  // Avanti verso un modulo già chiuso: si resta sull'elenco
+  if (e.state?.modulo) history.replaceState({ scheda }, '', '#' + scheda);
+  stato.scheda = scheda;
+  mostraElenco();
+});
+
+/* Le schede stanno nella barra e restano cliccabili anche da un modulo
+   aperto: in quel caso si chiede prima di perdere le modifiche */
 document.querySelectorAll('.g-scheda').forEach((b) => {
   b.addEventListener('click', () => {
-    stato.scheda = b.dataset.scheda;
-    mostraElenco();
+    if (stato.modificato && !confirm(MODIFICHE_PERSE)) return;
+    stato.modificato = false;
+    nascondiAvviso();
+    vaiAScheda(b.dataset.scheda);
   });
 });
+
+/* Schede ferme "in sviluppo": si vedono nella barra con l'etichetta, ma al
+   posto dell'elenco c'è un avviso e i moduli non si aprono. Eventi è ferma
+   per il deploy del redesign (13 novembre 2026): il modulo a blocchi e le
+   pagine composte dal database non sono ancora stati provati. Piano per
+   riprenderla in storico/2026-11-13-piano-eventi-gestione.md. Per
+   riaccenderla: togliere 'eventi' da qui e l'etichetta in gestione.html.
+   Dashboard, Proposte e Soci sono ferme con la Cortoteca (CORTOTECA_ATTIVA
+   in dati.js, 17 novembre 2026): per riaccenderle basta l'interruttore,
+   più le etichette in gestione.html. */
+const SCHEDE_CORTOTECA = ['dashboard', 'proposte', 'soci'];
+const SCHEDE_IN_SVILUPPO = new Set(['eventi', ...(CORTOTECA_ATTIVA ? [] : SCHEDE_CORTOTECA)]);
+// La scheda di partenza: la Dashboard, oppure Opere se la Dashboard è ferma
+const SCHEDA_INIZIALE = SCHEDE_IN_SVILUPPO.has('dashboard') ? 'opere' : 'dashboard';
+
+// Il testo che sostituisce l'elenco di una scheda ferma
+const TESTI_IN_SVILUPPO = {
+  eventi: 'La gestione degli eventi tornerà con un prossimo aggiornamento del sito. Gli eventi già pubblicati restano online come sono; per aggiungerne uno o correggerlo, per ora, chiedi a chi cura il sito.',
+  dashboard: 'La Dashboard tornerà con la Cortoteca, oggi in pausa. Opere e Rullino funzionano come sempre.',
+  proposte: 'Le proposte dei soci torneranno con la Cortoteca, oggi in pausa. Quelle già arrivate restano salvate.',
+  soci: 'I collegamenti personali dei soci torneranno con la Cortoteca, oggi in pausa. Il libro soci resta sul foglio Google.'
+};
+
+const SCHEDE = {
+  dashboard: ['Dashboard', 'Ciò che aspetta una decisione, lo stato della Cortoteca e le ultime cose successe.'],
+  proposte: ['Proposte', 'I corti che i soci mandano dalla loro pagina. Si rileggono, si approvano e vanno in Cortoteca.'],
+  opere: ['Opere', 'Tutte le opere del sito, pubblicate e non. Le produzioni CDL e i corti dei soci.'],
+  eventi: ['Eventi', 'Gli eventi del sito, pubblicati e non.'],
+  rullino: ['Rullino', 'Le foto che scorrono in home. Sceglile da ogni provenienza: al clic ognuna porta al suo evento, al suo corto o alla pagina indicata.'],
+  soci: ['Soci', 'Il libro soci arriva dal foglio Google. Da qui si manda a ciascuno il collegamento personale per la Cortoteca.']
+};
+
+function segnaScheda() {
+  document.querySelectorAll('.g-scheda').forEach((b) => {
+    const attiva = b.dataset.scheda === stato.scheda;
+    b.classList.toggle('is-active', attiva);
+    if (attiva) b.setAttribute('aria-current', 'page');
+    else b.removeAttribute('aria-current');
+    // sul telefono la barra delle schede scorre: quella attiva va in mezzo
+    const barra = b.parentElement;
+    if (attiva && barra.scrollWidth > barra.clientWidth) {
+      const r = b.getBoundingClientRect();
+      const rb = barra.getBoundingClientRect();
+      barra.scrollBy({ left: r.left + r.width / 2 - (rb.left + rb.width / 2), behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+    }
+  });
+  const [titolo, nota] = SCHEDE[stato.scheda];
+  $('titolo-scheda').textContent = titolo;
+  $('nota-scheda').textContent = nota;
+}
 
 $('nuovo').addEventListener('click', () => {
   if (stato.scheda === 'opere') apriOpera(null);
@@ -122,16 +406,57 @@ $('nuovo').addEventListener('click', () => {
 });
 
 async function mostraElenco() {
+  // Uscendo da un modulo si torna al passo dell'elenco: ci pensa popstate
+  if (history.state?.modulo) {
+    history.back();
+    return;
+  }
   mostraVista('elenco');
-  document.querySelectorAll('.g-scheda').forEach((b) => {
-    b.setAttribute('aria-selected', String(b.dataset.scheda === stato.scheda));
-  });
-  $('nuovo').textContent = stato.scheda === 'opere' ? 'Nuova opera' : 'Nuovo evento';
-
   const elenco = $('elenco');
   elenco.innerHTML = '<li class="g-vuoto">Caricamento…</li>';
 
-  const richiesta = stato.scheda === 'opere'
+  // Alla prima apertura si parte dalla scheda dell'indirizzo (#opere…),
+  // o dalla Dashboard (da Opere, se la Dashboard è ferma)
+  if (!stato.scheda) {
+    const daIndirizzo = location.hash.slice(1).split('/')[0];
+    stato.scheda = SCHEDE[daIndirizzo] ? daIndirizzo : SCHEDA_INIZIALE;
+    history.replaceState({ scheda: stato.scheda }, '', '#' + stato.scheda);
+  }
+  segnaScheda();
+  $('nuovo').hidden = !['opere', 'eventi'].includes(stato.scheda) || SCHEDE_IN_SVILUPPO.has(stato.scheda);
+  $('nuovo').textContent = stato.scheda === 'eventi' ? 'Nuovo evento' : 'Nuova opera';
+  // Una scheda ferma mostra solo l'avviso, nell'elenco: niente pannelli
+  const ferma = SCHEDE_IN_SVILUPPO.has(stato.scheda);
+  $('pannello-soci').hidden = ferma || stato.scheda !== 'soci';
+  $('bozze-in-corso').hidden = true; // la riempie elencoProposte
+  $('cruscotto').hidden = ferma || stato.scheda !== 'dashboard';
+  $('rullino-gestione').hidden = ferma || stato.scheda !== 'rullino';
+  $('elenco').hidden = !ferma && ['dashboard', 'rullino'].includes(stato.scheda);
+
+  // Gli avvisi (contatore nella barra, segni negli elenchi) riguardano la
+  // Cortoteca: con la Cortoteca in pausa non si chiedono
+  if (CORTOTECA_ATTIVA) await caricaAvvisi();
+
+  if (ferma) return mostraInSviluppo();
+  if (stato.scheda === 'dashboard') return mostraCruscotto();
+  if (stato.scheda === 'rullino') return mostraRullino();
+  if (stato.scheda === 'proposte') return elencoProposte();
+  if (stato.scheda === 'soci') return elencoSoci();
+  return elencoOpereEventi();
+}
+
+function mostraInSviluppo() {
+  $('elenco').innerHTML = `
+    <li class="g-vuoto g-in-sviluppo">
+      <strong>In sviluppo.</strong> ${esc(TESTI_IN_SVILUPPO[stato.scheda] || '')}
+    </li>`;
+}
+
+async function elencoOpereEventi() {
+  const elenco = $('elenco');
+  const scheda = stato.scheda;
+
+  const richiesta = scheda === 'opere'
     ? client.from('opere')
         .select('id, titolo, anno, regista, produzione_cdl, collaborazione_cdl, pubblicata')
         .order('anno', { ascending: false })
@@ -141,6 +466,7 @@ async function mostraElenco() {
         .order('data_inizio', { ascending: false });
 
   const { data, error } = await richiesta;
+  if (stato.scheda !== scheda) return;
   if (error) {
     elenco.innerHTML = `<li class="g-vuoto">${esc(messaggioErrore(error))}</li>`;
     return;
@@ -150,14 +476,17 @@ async function mostraElenco() {
     return;
   }
 
+  const senzaLicenza = new Set((stato.avvisi?.senza_licenza || []).map((o) => o.opera_id));
+
   elenco.innerHTML = data.map((r) => {
-    const pubblicato = stato.scheda === 'opere' ? r.pubblicata : r.pubblicato;
-    const dati = stato.scheda === 'opere'
+    const pubblicato = scheda === 'opere' ? r.pubblicata : r.pubblicato;
+    const dati = scheda === 'opere'
       ? `${esc(r.anno)} · ${esc(r.regista)}`
       : [formattaData(r.data_inizio), r.luogo].filter(Boolean).map(esc).join(' · ');
     const segni = [
       r.produzione_cdl ? '<span class="g-segno">CDL</span>' : '',
       r.collaborazione_cdl ? '<span class="g-segno">Collab.</span>' : '',
+      scheda === 'opere' && senzaLicenza.has(r.id) ? '<span class="g-segno g-segno--allarme">Senza licenza</span>' : '',
       pubblicato
         ? '<span class="g-segno g-segno--pubblicata">Pubblicata</span>'
         : '<span class="g-segno g-segno--bozza">Bozza</span>'
@@ -175,29 +504,295 @@ async function mostraElenco() {
   elenco.querySelectorAll('.g-riga').forEach((riga) => {
     riga.addEventListener('click', () => {
       const id = Number(riga.dataset.id);
-      if (stato.scheda === 'opere') apriOpera(id);
+      if (scheda === 'opere') apriOpera(id);
       else apriEvento(id);
     });
   });
 }
 
-function formattaData(iso) {
-  if (!iso) return '';
-  return new Date(iso + 'T12:00:00').toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' });
+/* --------------------------------------------------------------------------
+   Dashboard: numeri e ultime attività (funzione cruscotto() del database)
+   -------------------------------------------------------------------------- */
+const NOMI_ATTIVITA = {
+  proposta: 'Proposta',
+  decisione: 'Revisione',
+  licenza: 'Licenza',
+  revoca: 'Revoca',
+  collegamento: 'Collegamento',
+  opera: 'Opera',
+  evento: 'Evento',
+  quota: 'Quota',
+  foglio: 'Foglio soci'
+};
+
+function quandoBreve(iso) {
+  const data = new Date(iso);
+  const oggi = new Date();
+  const ieri = new Date(oggi);
+  ieri.setDate(oggi.getDate() - 1);
+  const ora = data.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' });
+  if (data.toDateString() === oggi.toDateString()) return 'oggi, ' + ora;
+  if (data.toDateString() === ieri.toDateString()) return 'ieri, ' + ora;
+  return data.toLocaleDateString('it-IT', { day: 'numeric', month: 'short', year: data.getFullYear() === oggi.getFullYear() ? undefined : 'numeric' });
 }
+
+async function mostraCruscotto() {
+  $('numeri').innerHTML = '';
+  $('attivita').innerHTML = '<li class="g-vuoto">Caricamento…</li>';
+  $('espandi-attivita').hidden = true;
+  const { data, error } = await client.rpc('cruscotto', { p_quante: 40 });
+  if (stato.scheda !== 'dashboard') return;
+  if (error) {
+    $('attivita').innerHTML = `<li class="g-vuoto">${esc(messaggioErrore(error))}</li>`;
+    return;
+  }
+
+  const n = data.numeri;
+  const numeri = [
+    [n.proposte_in_attesa, 'proposte da rivedere', n.bozze_soci ? `${n.bozze_soci} in preparazione dai soci` : 'nessuna in preparazione', 'proposte'],
+    [n.opere_online, 'opere online', `${n.con_video} in streaming · ${n.corti_soci} dei soci`, 'opere'],
+    [n.soci_in_regola, `soci in regola su ${n.soci}`, `quota ${new Date().getFullYear()}`, 'soci'],
+    [n.collegamenti, 'collegamenti consegnati', `${n.collegamenti_usati} già usati`, 'soci'],
+    [n.eventi_online, 'eventi online', '', 'eventi']
+  ];
+  $('numeri').innerHTML = numeri.map(([valore, cosa, dettaglio, scheda]) => `
+    <button type="button" class="g-numero" data-vai="${scheda}">
+      <span class="g-numero-valore">${esc(valore)}</span>
+      <span class="g-numero-cosa">${esc(cosa)}</span>
+      ${dettaglio ? `<span class="g-numero-dettaglio">${esc(dettaglio)}</span>` : ''}
+    </button>`).join('');
+
+  $('attivita').innerHTML = data.attivita.length
+    ? data.attivita.map((a) => `
+      <li>
+        <time datetime="${esc(a.quando)}">${esc(quandoBreve(a.quando))}</time>
+        <span class="g-attivita-tipo">${esc(NOMI_ATTIVITA[a.tipo] || a.tipo)}</span>
+        <span>${esc(a.testo)}</span>
+      </li>`).join('')
+    : '<li class="g-vuoto">Ancora niente.</li>';
+  troncaAttivita(false);
+}
+
+/* Le ultime attività: le prime 10, le altre con "Espandi" */
+const ATTIVITA_VISIBILI = 10;
+
+function troncaAttivita(aperte) {
+  const voci = [...$('attivita').children];
+  voci.forEach((voce, i) => { voce.hidden = !aperte && i >= ATTIVITA_VISIBILI; });
+  const tasto = $('espandi-attivita');
+  tasto.hidden = voci.length <= ATTIVITA_VISIBILI;
+  tasto.setAttribute('aria-expanded', String(aperte));
+  tasto.textContent = aperte ? 'Riduci' : `Espandi (altre ${voci.length - ATTIVITA_VISIBILI})`;
+}
+
+$('espandi-attivita').addEventListener('click', (e) => {
+  troncaAttivita(e.currentTarget.getAttribute('aria-expanded') !== 'true');
+});
+
+$('numeri').addEventListener('click', (e) => {
+  const b = e.target.closest('[data-vai]');
+  if (!b) return;
+  vaiAScheda(b.dataset.vai);
+});
+
+/* --------------------------------------------------------------------------
+   Proposte dei soci
+   -------------------------------------------------------------------------- */
+const STATI_PROPOSTA = {
+  inviata: ['Da rivedere', 'g-segno--pubblicata'],
+  da_rivedere: ['Modifiche chieste', 'g-segno--bozza'],
+  approvata: ['Pubblicata', ''],
+  rifiutata: ['Rifiutata', ''],
+  ritirata: ['Ritirata dal socio', '']
+};
+
+async function elencoProposte() {
+  const elenco = $('elenco');
+  const { data, error } = await client.rpc('proposte_da_rivedere');
+  if (stato.scheda !== 'proposte') return;
+  if (error) {
+    elenco.innerHTML = `<li class="g-vuoto">${esc(messaggioErrore(error))}</li>`;
+    return;
+  }
+  stato.proposte = data;
+  mostraBozzeInCorso();
+  if (!data.length) {
+    elenco.innerHTML = '<li class="g-vuoto">Nessuna proposta. I soci propongono dall\'area socio: il collegamento per scegliere la password lo crei nella scheda Soci.</li>';
+    return;
+  }
+
+  elenco.innerHTML = data.map((p) => {
+    const [etichetta, classe] = STATI_PROPOSTA[p.stato] || [p.stato, ''];
+    const apribile = p.stato === 'inviata' || (p.stato === 'approvata' && p.opera_id);
+    const dati = [
+      p.socio_nome || p.socio_email,
+      p.inviata_il ? 'inviata il ' + formattaData(p.inviata_il) : ''
+    ].filter(Boolean).map(esc).join(' · ');
+    const segni =
+      (p.stato === 'inviata' && !p.socio_in_regola ? '<span class="g-segno g-segno--allarme">Quota non in regola</span>' : '') +
+      `<span class="g-segno ${classe}">${esc(etichetta)}</span>`;
+    const contenuto = `
+        <span class="g-riga-titolo">${esc(p.dati.titolo || 'Senza titolo')}</span>
+        <span class="g-riga-dati">${dati}${p.nota_revisione ? ' · «' + esc(p.nota_revisione) + '»' : ''}</span>
+        <span class="g-segni">${segni}</span>`;
+    return apribile
+      ? `<li><button type="button" class="g-riga" data-id="${p.id}">${contenuto}</button></li>`
+      : `<li><div class="g-riga g-riga--ferma">${contenuto}</div></li>`;
+  }).join('');
+
+  elenco.querySelectorAll('button.g-riga').forEach((riga) => {
+    riga.addEventListener('click', () => {
+      const proposta = stato.proposte.find((p) => p.id === Number(riga.dataset.id));
+      if (proposta.stato === 'inviata') apriRevisione(proposta);
+      else apriOpera(proposta.opera_id);
+    });
+  });
+}
+
+/* Chi ha una bozza aperta in area-socio.html: solo il nome, perché la bozza
+   resta del socio finché non la invia (il database non fa leggere ai
+   redattori né le bozze né i loro file) */
+async function mostraBozzeInCorso() {
+  const riga = $('bozze-in-corso');
+  const { data, error } = await client.rpc('soci_con_bozze');
+  if (stato.scheda !== 'proposte' || error || !data?.length) return;
+  const nomi = data.map((r) => r.nome);
+  riga.textContent = (nomi.length === 1 ? 'Ha una bozza in preparazione: ' : 'Hanno una bozza in preparazione: ')
+    + nomi.join(', ') + '. Il contenuto si vede quando la inviano.';
+  riga.hidden = false;
+}
+
+/* --------------------------------------------------------------------------
+   Soci
+   -------------------------------------------------------------------------- */
+async function caricaSoci(daCapo = false) {
+  if (stato.soci && !daCapo) return stato.soci;
+  const { data, error } = await client.rpc('elenco_soci');
+  if (error) throw error;
+  stato.soci = data;
+  return data;
+}
+
+/* Il collegamento personale vale una volta sola e per 7 giorni (come in
+   public.verifica_invito, 20261113210000_collegamento_monouso.sql): serve a
+   scegliere la password, al primo accesso o quando il socio l'ha
+   dimenticata. Qui il suo stato, accanto ai dati del socio. */
+const GIORNI_COLLEGAMENTO = 7;
+
+function scadenzaCollegamento(creato) {
+  return new Date(new Date(creato).getTime() + GIORNI_COLLEGAMENTO * 864e5);
+}
+
+function statoCollegamento(s) {
+  if (s.ultimo_accesso) return 'collegamento usato il ' + formattaData(s.ultimo_accesso);
+  if (!s.invito_creato_il) return '';
+  const scade = scadenzaCollegamento(s.invito_creato_il);
+  return scade > new Date()
+    ? 'collegamento da usare entro il ' + formattaData(scade)
+    : 'collegamento scaduto';
+}
+
+async function elencoSoci() {
+  const elenco = $('elenco');
+  const sync = stato.avvisi?.sincronizzazione || {};
+  $('stato-sync').textContent = sync.quando
+    ? `${sync.righe} soci del ${sync.anno}, aggiornati dal foglio il ${formattaDataOra(sync.quando)}.`
+    : 'Il foglio dei soci non è ancora collegato.';
+  $('collega-foglio').open = !sync.quando;
+  // Una nota, non una cosa da sistemare: senza email il socio non riceve il
+  // collegamento, ma serve solo a chi vuole proporre un corto
+  const senzaEmail = sync.senza_email || [];
+  $('soci-senza-email').hidden = !senzaEmail.length;
+  $('soci-senza-email').textContent = senzaEmail.length
+    ? `Senza email nel foglio: ${senzaEmail.join(', ')}. Non possono ricevere il collegamento personale; serve solo a chi vuole proporre un corto alla Cortoteca.`
+    : '';
+
+  let soci;
+  try {
+    soci = await caricaSoci(true);
+  } catch (errore) {
+    elenco.innerHTML = `<li class="g-vuoto">${esc(messaggioErrore(errore))}</li>`;
+    return;
+  }
+  if (stato.scheda !== 'soci') return;
+  if (!soci.length) {
+    elenco.innerHTML = '<li class="g-vuoto">Nessun socio: collega il foglio e sincronizza.</li>';
+    return;
+  }
+
+  elenco.innerHTML = soci.map((s, i) => {
+    const quota = s.pagato
+      ? 'quota ' + s.anno + (s.data_pagamento ? ' pagata il ' + formattaData(s.data_pagamento) : ' pagata')
+      : 'quota ' + s.anno + ' non pagata';
+    const accesso = statoCollegamento(s);
+    const dati = ['n. ' + s.numero, s.email || 'senza email', quota, accesso].filter(Boolean).map(esc).join(' · ');
+    return `
+      <li>
+        <div class="g-riga g-riga--ferma">
+          <span class="g-riga-titolo">${esc(s.nome)}</span>
+          <span class="g-riga-dati">${dati}</span>
+          <span class="g-segni g-segni--soci">
+            <span class="g-segno ${s.in_regola ? 'g-segno--pubblicata' : 'g-segno--allarme'}">${s.in_regola ? 'In regola' : 'Non in regola'}</span>
+            <button type="button" class="btn" data-invito="${i}" ${s.email ? '' : 'disabled'}>${s.invito_creato_il ? 'Nuovo collegamento' : 'Copia il collegamento'}</button>
+          </span>
+        </div>
+      </li>`;
+  }).join('');
+}
+
+/* Crea il collegamento personale di un socio e lo copia, già dentro un
+   messaggio pronto da incollare. Il collegamento si vede una volta sola. */
+$('elenco').addEventListener('click', async (e) => {
+  const b = e.target.closest('[data-invito]');
+  if (!b) return;
+  const socio = stato.soci[Number(b.dataset.invito)];
+  const ancoraValido = socio.invito_creato_il && !socio.ultimo_accesso
+    && scadenzaCollegamento(socio.invito_creato_il) > new Date();
+  if (ancoraValido &&
+      !confirm(`${socio.nome} ha già un collegamento da usare, creato il ${formattaData(socio.invito_creato_il)}. Crearne uno nuovo annulla il precedente. Continuare?`)) {
+    return;
+  }
+  if (socio.ultimo_accesso &&
+      !confirm(`${socio.nome} ha già aperto il suo collegamento. Un collegamento nuovo serve se non ha finito di scegliere la password o se l'ha dimenticata: gliene farà scegliere un'altra. Continuare?`)) {
+    return;
+  }
+
+  const { data: segreto, error } = await client.rpc('crea_invito', { p_email: socio.email });
+  if (error) {
+    avviso(messaggioErrore(error), true);
+    return;
+  }
+  const indirizzo = `${location.origin}/area-socio.html#invito=${segreto}`;
+  const messaggio =
+    `Ciao ${socio.nome.split(' ')[0]}! Questo è il tuo collegamento personale per l'area socio di CDL, da cui proponi i tuoi corti alla Cortoteca:\n` +
+    `${indirizzo}\n` +
+    `Aprilo entro ${GIORNI_COLLEGAMENTO} giorni: vale una volta sola e ti fa scegliere una password. ` +
+    `Poi entri da ${location.origin}/area-socio.html con la tua email e la password. ` +
+    'Non girarlo ad altri: è solo tuo.';
+  try {
+    await navigator.clipboard.writeText(messaggio);
+    avviso(`Messaggio copiato: incollalo in una chat con ${socio.nome}.`);
+  } catch {
+    prompt('Copia il collegamento e mandalo al socio:', indirizzo);
+  }
+  elencoSoci();
+});
+
+$('modulo-chiave').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const modulo = e.currentTarget;
+  const { error } = await client.rpc('imposta_chiave_sync', { p_impronta: modulo.impronta.value.trim() });
+  if (error) {
+    avviso(messaggioErrore(error), true);
+    return;
+  }
+  modulo.reset();
+  avviso('Foglio collegato. Ora nel foglio scegli Cortoteca → Sincronizza soci ora.');
+});
 
 /* --------------------------------------------------------------------------
    Campi dei moduli
    -------------------------------------------------------------------------- */
-
-/* Codice per l'indirizzo, dal titolo: "Quarto Livello" → "quarto-livello" */
-function codiceDaTitolo(titolo) {
-  return titolo
-    .normalize('NFD').replace(/[̀-ͯ]/g, '')
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '');
-}
 
 /* Riempie un modulo dai dati di una riga */
 function compilaModulo(modulo, riga) {
@@ -219,6 +814,8 @@ function leggiModulo(modulo) {
     if (el.type === 'checkbox') dati[el.name] = el.checked;
     else if (el.name === 'generi') {
       dati.generi = el.value.split(',').map((g) => g.trim().toLowerCase()).filter(Boolean);
+    } else if (el.name === 'colore') {
+      dati.colore = el.value.trim() === '' ? null : el.value.trim().toLowerCase();
     } else if (el.type === 'number') dati[el.name] = el.value === '' ? null : Number(el.value);
     else dati[el.name] = el.value.trim() === '' ? null : el.value.trim();
   });
@@ -241,8 +838,11 @@ function preparaCodice(modulo, nuovo) {
 /* --------------------------------------------------------------------------
    Immagini: anteprima, ridimensionamento, caricamento
    -------------------------------------------------------------------------- */
-function preparaImmagini(modulo) {
-  stato.immagini = {};
+
+/* `iniziali` sono immagini già pronte da caricare al salvataggio: serve alla
+   revisione, dove il fotogramma arriva dallo spazio privato delle proposte */
+function preparaImmagini(modulo, iniziali = {}) {
+  stato.immagini = iniziali;
   modulo.querySelectorAll('.g-immagine').forEach((box) => {
     const campo = box.dataset.campo;
     const nascosto = box.querySelector(`input[name="${campo}"]`);
@@ -284,28 +884,6 @@ function preparaImmagini(modulo) {
   });
 }
 
-/* Ridimensiona a LATO_MASSIMO_IMMAGINE e converte in JPEG: le foto da
-   telefono superano facilmente il limite di 5 MB del bucket */
-async function ridimensiona(file) {
-  let bitmap;
-  try {
-    bitmap = await createImageBitmap(file);
-  } catch {
-    throw new Error(`Non riesco a leggere "${file.name}": usa un'immagine JPEG o PNG.`);
-  }
-  const scala = Math.min(1, LATO_MASSIMO_IMMAGINE / Math.max(bitmap.width, bitmap.height));
-  const tela = document.createElement('canvas');
-  tela.width = Math.round(bitmap.width * scala);
-  tela.height = Math.round(bitmap.height * scala);
-  const ctx = tela.getContext('2d');
-  ctx.fillStyle = '#fff'; // le parti trasparenti dei PNG diventano bianche
-  ctx.fillRect(0, 0, tela.width, tela.height);
-  ctx.drawImage(bitmap, 0, 0, tela.width, tela.height);
-  return new Promise((ok, ko) => {
-    tela.toBlob((b) => (b ? ok(b) : ko(new Error('Conversione immagine non riuscita'))), 'image/jpeg', QUALITA_JPEG);
-  });
-}
-
 /* Carica le immagini scelte e scrive il loro percorso nei dati. Il nome
    contiene un orario, così un'immagine sostituita non viene servita dalla
    cache del browser con il contenuto vecchio. */
@@ -328,45 +906,162 @@ async function caricaImmagini(modulo, dati) {
   }
 }
 
+/* Titolo grafico dell'opera: un PNG o un carattere tipografico, nei campi
+   nascosti titolo_png e titolo_font. Si carica com'è, senza conversioni.
+   `iniziale` è il file della proposta in revisione, da copiare al
+   salvataggio. */
+function preparaTitolo(modulo, iniziale = null) {
+  stato.titolo = iniziale;
+  const png = modulo.titolo_png;
+  const font = modulo.titolo_font;
+  const anteprima = $('titolo-anteprima');
+  const nome = $('titolo-font-nome');
+
+  const aggiorna = () => {
+    const scelto = stato.titolo;
+    anteprima.hidden = true;
+    nome.hidden = true;
+    if (scelto?.tipo === 'png') {
+      anteprima.src = URL.createObjectURL(scelto.file);
+      anteprima.hidden = false;
+    } else if (scelto?.tipo === 'font') {
+      nome.textContent = 'Carattere: ' + (scelto.nome || 'file del font') + ' (da caricare al salvataggio)';
+      nome.hidden = false;
+    } else if (png.value) {
+      anteprima.src = urlImmagine(png.value);
+      anteprima.hidden = false;
+    } else if (font.value) {
+      nome.textContent = 'Carattere: ' + font.value.split('/').pop();
+      nome.hidden = false;
+    }
+    $('titolo-togli').hidden = !(scelto || png.value || font.value);
+  };
+
+  $('titolo-file').value = '';
+  $('titolo-file').onchange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    try {
+      const tipo = riconosciFileTitolo(file);
+      stato.titolo = { file, tipo: tipo.tipo, estensione: tipo.estensione, mime: tipo.mime, nome: file.name };
+      stato.modificato = true;
+      aggiorna();
+    } catch (errore) {
+      avviso(errore.message, true);
+    }
+  };
+  $('titolo-togli').onclick = () => {
+    stato.titolo = null;
+    png.value = '';
+    font.value = '';
+    stato.modificato = true;
+    aggiorna();
+  };
+  aggiorna();
+}
+
+async function caricaTitolo(modulo, dati) {
+  const scelto = stato.titolo;
+  if (!scelto) return;
+  const percorso = `titoli/${dati.codice}-${scelto.tipo}-${Date.now()}.${scelto.estensione}`;
+  const { error } = await client.storage.from(BUCKET_IMMAGINI).upload(percorso, scelto.file, {
+    contentType: scelto.mime,
+    cacheControl: '31536000',
+    upsert: false
+  });
+  if (error) throw error;
+  dati.titolo_png = scelto.tipo === 'png' ? percorso : null;
+  dati.titolo_font = scelto.tipo === 'font' ? percorso : null;
+  modulo.titolo_png.value = dati.titolo_png || '';
+  modulo.titolo_font.value = dati.titolo_font || '';
+  stato.titolo = null;
+}
+
 /* --------------------------------------------------------------------------
    Opera
    -------------------------------------------------------------------------- */
-function aggiungiInterprete(interprete = {}) {
-  const riga = $('modello-interprete').content.firstElementChild.cloneNode(true);
-  riga.querySelector('[data-nome]').value = interprete.nome || '';
-  riga.querySelector('[data-ruolo]').value = interprete.ruolo || '';
-  riga.querySelector('[data-su]').onclick = () => {
-    if (riga.previousElementSibling) riga.parentNode.insertBefore(riga, riga.previousElementSibling);
-    stato.modificato = true;
-  };
-  riga.querySelector('[data-giu]').onclick = () => {
-    if (riga.nextElementSibling) riga.parentNode.insertBefore(riga.nextElementSibling, riga);
-    stato.modificato = true;
-  };
-  riga.querySelector('[data-togli]').onclick = () => {
-    riga.remove();
-    stato.modificato = true;
-  };
-  $('interpreti').appendChild(riga);
-  return riga;
-}
-
 $('aggiungi-interprete').addEventListener('click', () => {
-  aggiungiInterprete().querySelector('[data-nome]').focus();
+  aggiungiInterprete({}, segnaModificato).querySelector('[data-nome]').focus();
   stato.modificato = true;
 });
 
-function leggiInterpreti() {
-  return [...$('interpreti').children]
-    .map((riga) => ({
-      nome: riga.querySelector('[data-nome]').value.trim(),
-      ruolo: riga.querySelector('[data-ruolo]').value.trim() || null
-    }))
-    .filter((i) => i.nome);
+$('aggiungi-ruolo').addEventListener('click', () => {
+  aggiungiRuolo({}, segnaModificato).querySelector('[data-ruolo]').focus();
+  stato.modificato = true;
+});
+
+/* Colore della pagina del corto: si salva il campo di testo (vuoto vuol
+   dire automatico); il selettore lo compila e lo segue */
+function allineaColore() {
+  const testo = $('modulo-opera').colore.value.trim();
+  $('colore-scelta').value = /^#[0-9a-f]{6}$/i.test(testo) ? testo.toLowerCase() : '#b9bbf8';
+}
+$('colore-scelta').addEventListener('input', (e) => { $('modulo-opera').colore.value = e.target.value; });
+$('modulo-opera').colore.addEventListener('input', allineaColore);
+$('colore-togli').addEventListener('click', () => {
+  $('modulo-opera').colore.value = '';
+  allineaColore();
+  segnaModificato();
+});
+
+/* Riporta il modulo dell'opera al suo aspetto normale (fuori revisione) */
+function moduloOperaNormale(modulo) {
+  stato.proposta = null;
+  modulo.dataset.proposta = '';
+  modulo.video_url.disabled = false;
+  modulo.solo_scheda.disabled = false;
+  $('revisione').hidden = true;
+  $('gruppo-socio').hidden = !CORTOTECA_ATTIVA;
+  $('salva-opera').textContent = 'Salva';
+  $('chiedi-modifiche').hidden = true;
+  $('rifiuta-proposta').hidden = true;
+}
+
+/* Menu dei soci a cui attribuire un'opera, con la nota sulla licenza */
+async function preparaTitolare(operaId) {
+  const menu = $('socio-titolare');
+  const nota = $('socio-titolare-nota');
+  const notaBase = 'Per le opere dei soci: serve a chiedere la licenza e a controllare la quota. Lascia vuoto per le produzioni CDL.';
+  stato.titolare = '';
+  menu.innerHTML = '<option value="">Nessuno</option>';
+  nota.textContent = notaBase;
+  // Con la Cortoteca in pausa il gruppo è nascosto e il titolare non si
+  // tocca: menu vuoto e stato vuoto, quindi il salvataggio non chiama
+  // assegna_socio e il titolare già nel database resta com'è
+  if (!CORTOTECA_ATTIVA) return;
+
+  let soci = [];
+  let titolari = [];
+  try {
+    soci = await caricaSoci();
+    const risposta = await client.rpc('opere_titolari');
+    if (risposta.error) throw risposta.error;
+    titolari = risposta.data;
+  } catch (errore) {
+    nota.textContent = messaggioErrore(errore);
+    return;
+  }
+
+  const titolare = operaId ? titolari.find((t) => t.opera_id === operaId) : null;
+  const voci = soci.filter((s) => s.email).map((s) => [s.email, `${s.nome} — n. ${s.numero} del ${s.anno}`]);
+  if (titolare && !voci.some(([email]) => email === titolare.email)) {
+    voci.push([titolare.email, `${titolare.nome || titolare.email} — non più nel foglio`]);
+  }
+  menu.innerHTML = '<option value="">Nessuno</option>' +
+    voci.map(([email, testo]) => `<option value="${esc(email)}">${esc(testo)}</option>`).join('');
+
+  if (titolare) {
+    stato.titolare = titolare.email;
+    menu.value = titolare.email;
+    nota.textContent = titolare.licenza_attiva
+      ? 'Licenza registrata.'
+      : 'Manca la licenza: manda al socio il suo collegamento (scheda Soci). La confermerà dalla sua pagina, senza rifare la scheda.';
+  }
 }
 
 async function apriOpera(id) {
   nascondiAvviso();
+  apriModulo();
   const modulo = $('modulo-opera');
   let opera = { anno: new Date().getFullYear(), pubblicata: false, generi: [] };
   let interpreti = [];
@@ -390,12 +1085,17 @@ async function apriOpera(id) {
   modulo.reset();
   modulo.classList.remove('is-verificato');
   modulo.dataset.id = id || '';
+  moduloOperaNormale(modulo);
   compilaModulo(modulo, opera);
+  allineaColore();
   preparaCodice(modulo, !id);
   preparaImmagini(modulo);
+  preparaTitolo(modulo);
 
   $('interpreti').innerHTML = '';
-  interpreti.forEach((i) => aggiungiInterprete(i));
+  interpreti.forEach((i) => aggiungiInterprete(i, segnaModificato));
+  $('altri-ruoli').innerHTML = '';
+  (opera.altri_ruoli || []).forEach((r) => aggiungiRuolo(r, segnaModificato));
 
   $('titolo-modulo-opera').textContent = id ? opera.titolo : 'Nuova opera';
   modulo.querySelector('[data-elimina]').hidden = !id;
@@ -403,6 +1103,7 @@ async function apriOpera(id) {
   vedi.hidden = !(id && opera.pubblicata);
   vedi.href = 'opera.html?film=' + encodeURIComponent(opera.codice || '');
 
+  await preparaTitolare(id);
   stato.modificato = false;
   mostraVista('opera');
 }
@@ -417,6 +1118,183 @@ async function apriOpera(id) {
   });
 });
 
+/* --------------------------------------------------------------------------
+   Revisione di una proposta: lo stesso modulo dell'opera, già compilato con
+   ciò che ha scritto il socio, più il riquadro con socio, quota e licenza
+   -------------------------------------------------------------------------- */
+function indirizzoPosta(email, oggetto, testo) {
+  return `mailto:${encodeURIComponent(email)}?subject=${encodeURIComponent(oggetto)}&body=${encodeURIComponent(testo)}`;
+}
+
+async function apriRevisione(proposta) {
+  nascondiAvviso();
+  apriModulo();
+  mostraVista('caricamento');
+  const modulo = $('modulo-opera');
+  const dati = proposta.dati || {};
+  const licenza = proposta.licenza;
+
+  // Fotogramma: dallo spazio privato delle proposte. Al salvataggio viene
+  // caricato in quello pubblico come qualsiasi immagine scelta a mano.
+  const iniziali = {};
+  if (dati.fotogramma) {
+    const { data: blob } = await client.storage.from(SPAZIO_PROPOSTE).download(dati.fotogramma);
+    if (blob) iniziali.fotogramma = blob;
+  }
+  // Titolo grafico: anche lui dallo spazio privato, copiato così com'è
+  let titolo = null;
+  const percorsoTitolo = dati.titolo_png || dati.titolo_font;
+  if (percorsoTitolo) {
+    const { data: blob } = await client.storage.from(SPAZIO_PROPOSTE).download(percorsoTitolo);
+    if (blob) {
+      const estensione = percorsoTitolo.split('.').pop().toLowerCase();
+      titolo = {
+        file: blob,
+        tipo: dati.titolo_png ? 'png' : 'font',
+        estensione,
+        mime: mimeDaPercorso(percorsoTitolo),
+        nome: dati.titolo_font_nome || percorsoTitolo.split('/').pop()
+      };
+    }
+  }
+  const soloScheda = (licenza?.tipo || dati.modalita) === 'scheda';
+
+  modulo.reset();
+  modulo.classList.remove('is-verificato');
+  modulo.dataset.id = '';
+  moduloOperaNormale(modulo);
+  stato.proposta = proposta;
+  modulo.dataset.proposta = proposta.id;
+
+  compilaModulo(modulo, {
+    ...dati,
+    codice: codiceDaTitolo(dati.titolo || ''),
+    fotogramma: '',
+    titolo_png: '',
+    titolo_font: '',
+    video_url: soloScheda ? '' : dati.video_url,
+    produzione_cdl: false,
+    collaborazione_cdl: false,
+    solo_scheda: soloScheda,
+    pubblicata: true
+  });
+  allineaColore();
+  preparaCodice(modulo, true);
+  preparaImmagini(modulo, iniziali);
+  preparaTitolo(modulo, titolo);
+  // Con la sola scheda autorizzata il video non si può aggiungere; la
+  // casella la decide la licenza (approva_proposta), qui si vede soltanto
+  modulo.video_url.disabled = soloScheda;
+  modulo.solo_scheda.disabled = true;
+
+  $('interpreti').innerHTML = '';
+  (dati.interpreti || []).forEach((i) => aggiungiInterprete(i, segnaModificato));
+  $('altri-ruoli').innerHTML = '';
+  (dati.altri_ruoli || []).forEach((r) => aggiungiRuolo(r, segnaModificato));
+
+  // Riquadro di revisione
+  const righe = [
+    ['Socio', `${proposta.socio_nome || 'non trovato nel foglio'}${proposta.socio_numero ? `, tessera n. ${proposta.socio_numero} del ${proposta.socio_anno}` : ''} — ${proposta.socio_email}`],
+    ['Quota', proposta.socio_in_regola
+      ? 'in regola' + (proposta.socio_pagato_il ? `, pagata il ${formattaData(proposta.socio_pagato_il)}` : '')
+      : 'NON in regola'],
+    ['Pubblicazione', soloScheda ? 'solo la scheda, senza video' : 'scheda e streaming'],
+    [licenza?.tipo === 'scheda' ? 'Autorizzazione' : 'Licenza', licenza && !licenza.revocata_il
+      ? `accettata il ${formattaDataOra(licenza.accettata_il)} da ${licenza.nome_dichiarato}, versione ${licenza.versione_testo}, registrazione n. ${licenza.id}`
+      : 'mancante'],
+    ['Uso promozionale', licenza?.uso_promozionale ? 'autorizzato' : 'non autorizzato'],
+    ...descriviRisposte(licenza?.risposte)
+  ];
+  $('revisione-dati').innerHTML = righe
+    .map(([nome, valore]) => `<div><dt>${esc(nome)}</dt><dd>${esc(valore)}</dd></div>`)
+    .join('');
+
+  const attenzioni = attenzioniRisposte(licenza?.risposte);
+  if (!proposta.socio_in_regola) attenzioni.unshift('Il socio non è in regola con la quota: finché il foglio non dice il contrario, la proposta non si può pubblicare.');
+  if (dati.fotogramma && !iniziali.fotogramma) attenzioni.push('Non sono riuscito a leggere il fotogramma: caricane uno a mano.');
+  if (percorsoTitolo && !titolo) attenzioni.push('Non sono riuscito a leggere il titolo grafico: chiedilo al socio.');
+  if (dati.titolo_font) attenzioni.push('Il titolo arriva come carattere tipografico: il socio dichiara che la sua licenza ne consente l\'uso sul web.');
+  if (soloScheda) attenzioni.push('Il socio ha autorizzato solo la scheda: niente video. Per lo streaming dovrà accettare la licenza completa.');
+  const elencoAttenzioni = $('revisione-attenzioni');
+  elencoAttenzioni.innerHTML = attenzioni.map((a) => `<li>${esc(a)}</li>`).join('');
+  const file = indirizzoSicuro(dati.file_url);
+  if (!soloScheda && !dati.video_url && file) {
+    const li = document.createElement('li');
+    li.append('Il socio non ha il video online. Scarica il file, caricalo sul canale di CDL come non in elenco e incolla qui sotto il collegamento: ');
+    const a = document.createElement('a');
+    a.href = file;
+    a.target = '_blank';
+    a.rel = 'noopener noreferrer';
+    a.textContent = 'apri il file';
+    li.append(a);
+    elencoAttenzioni.append(li);
+  }
+  elencoAttenzioni.hidden = !elencoAttenzioni.children.length;
+
+  $('revisione-scrivi').href = indirizzoPosta(
+    proposta.socio_email,
+    `Cortoteca: «${dati.titolo || 'la tua proposta'}»`,
+    `Ciao ${(proposta.socio_nome || '').split(' ')[0]},\n\n`
+  );
+  $('revisione-ricevuta').hidden = !licenza;
+  $('revisione').hidden = false;
+
+  $('titolo-modulo-opera').textContent = 'Proposta: ' + (dati.titolo || 'senza titolo');
+  $('vedi-opera').hidden = true;
+  $('gruppo-socio').hidden = true;
+  modulo.querySelector('[data-elimina]').hidden = true;
+  $('salva-opera').textContent = 'Approva e pubblica';
+  $('chiedi-modifiche').hidden = false;
+  $('rifiuta-proposta').hidden = false;
+
+  stato.modificato = false;
+  mostraVista('opera');
+}
+
+$('revisione-ricevuta').addEventListener('click', async () => {
+  const licenza = stato.proposta?.licenza;
+  if (!licenza) return;
+  const { data } = await client.from('testi_licenza').select('testo').eq('versione', licenza.versione_testo).single();
+  scaricaTesto(`ricevuta-cortoteca-${licenza.id}.txt`, testoRicevuta(licenza, data?.testo));
+});
+
+/* Chiede o rifiuta: il messaggio compare nella pagina del socio. Niente
+   email automatiche: dopo, la pagina propone di scrivergli. */
+async function decidi(funzione, domanda, esito) {
+  const proposta = stato.proposta;
+  if (!proposta) return;
+  const nota = prompt(domanda);
+  if (nota === null) return;
+  if (!nota.trim()) {
+    avviso('Scrivi un messaggio per il socio.', true);
+    return;
+  }
+  const { error } = await client.rpc(funzione, { p_id: proposta.id, p_nota: nota.trim() });
+  if (error) {
+    avviso(messaggioErrore(error), true);
+    window.scrollTo(0, 0);
+    return;
+  }
+  stato.modificato = false;
+  const titolo = proposta.dati.titolo || 'la tua proposta';
+  if (confirm(`${esito} Il socio lo vede nella sua pagina, ma nessuno lo avvisa: vuoi scrivergli ora?`)) {
+    location.href = indirizzoPosta(
+      proposta.socio_email,
+      `Cortoteca: «${titolo}»`,
+      `Ciao ${(proposta.socio_nome || '').split(' ')[0]},\n\nabbiamo guardato «${titolo}».\n\n${nota.trim()}\n\nTrovi tutto nell'area socio: ${location.origin}/area-socio.html (entri con la tua email e la password).\n`
+    );
+  }
+  mostraElenco();
+}
+
+$('chiedi-modifiche').addEventListener('click', () => {
+  decidi('chiedi_modifiche', 'Che cosa deve correggere il socio? Il messaggio compare nella sua pagina.', 'Richiesta registrata.');
+});
+
+$('rifiuta-proposta').addEventListener('click', () => {
+  decidi('rifiuta_proposta', 'Perché la proposta non viene accolta? Il messaggio compare nella pagina del socio.', 'Proposta rifiutata.');
+});
+
 $('modulo-opera').addEventListener('submit', async (e) => {
   e.preventDefault();
   const modulo = e.currentTarget;
@@ -426,14 +1304,42 @@ $('modulo-opera').addEventListener('submit', async (e) => {
     return;
   }
 
-  const pulsante = modulo.querySelector('[type=submit]');
+  const pulsante = $('salva-opera');
+  const etichetta = pulsante.textContent;
   pulsante.disabled = true;
   pulsante.textContent = 'Salvataggio…';
   const id = modulo.dataset.id ? Number(modulo.dataset.id) : null;
+  const proposta = stato.proposta;
 
   try {
     const dati = leggiModulo(modulo);
+    dati.altri_ruoli = leggiRuoli();
+    if (modulo.video_url.disabled) dati.video_url = null;
     await caricaImmagini(modulo, dati);
+    await caricaTitolo(modulo, dati);
+
+    // Revisione: l'opera, il cast e i collegamenti con licenza e socio
+    // nascono insieme, in una sola transazione del database
+    if (proposta) {
+      const { data: codice, error } = await client.rpc('approva_proposta', {
+        p_id: proposta.id,
+        p_opera: dati,
+        p_interpreti: leggiInterpreti()
+      });
+      if (error) throw error;
+
+      stato.modificato = false;
+      avviso(`"${dati.titolo}" ${dati.pubblicata ? 'pubblicata' : 'approvata come bozza'}.`);
+      if (confirm('Fatto. Nessuno avvisa il socio in automatico: vuoi scrivergli ora?')) {
+        location.href = indirizzoPosta(
+          proposta.socio_email,
+          `«${dati.titolo}» è in Cortoteca`,
+          `Ciao ${(proposta.socio_nome || '').split(' ')[0]},\n\n«${dati.titolo}» è in Cortoteca:\n${location.origin}/opera.html?film=${encodeURIComponent(codice)}\n\nLa ricevuta della licenza resta nell'area socio: ${location.origin}/area-socio.html (entri con la tua email e la password). Da lì puoi anche ritirare il corto quando vuoi.\n`
+        );
+      }
+      mostraElenco();
+      return;
+    }
 
     let operaId = id;
     if (id) {
@@ -454,6 +1360,12 @@ $('modulo-opera').addEventListener('submit', async (e) => {
       if (error) throw error;
     }
 
+    const titolare = $('socio-titolare').value;
+    if (CORTOTECA_ATTIVA && titolare !== stato.titolare) {
+      const { error } = await client.rpc('assegna_socio', { p_opera_id: operaId, p_email: titolare || null });
+      if (error) throw error;
+    }
+
     stato.modificato = false;
     avviso(`"${dati.titolo}" salvata${dati.pubblicata ? ' e pubblicata' : ' come bozza'}.`);
     mostraElenco();
@@ -463,7 +1375,7 @@ $('modulo-opera').addEventListener('submit', async (e) => {
     window.scrollTo(0, 0);
   } finally {
     pulsante.disabled = false;
-    pulsante.textContent = 'Salva';
+    pulsante.textContent = etichetta;
   }
 });
 
@@ -471,14 +1383,17 @@ $('modulo-opera').addEventListener('submit', async (e) => {
    Evento
    -------------------------------------------------------------------------- */
 async function apriEvento(id) {
+  if (SCHEDE_IN_SVILUPPO.has('eventi')) return; // scheda ferma: il modulo non si apre
   nascondiAvviso();
+  apriModulo();
   const modulo = $('modulo-evento');
   mostraVista('caricamento');
 
-  let evento = { pubblicato: false };
-  let collegate = [];
+  let evento = { pubblicato: false, blocchi: [] };
 
-  const opere = await client.from('opere').select('id, titolo, anno').order('anno', { ascending: false });
+  // i corti che le voci dei programmi possono collegare alla Cortoteca
+  const opere = await client.from('opere').select('id, titolo, anno, pubblicata')
+    .order('anno', { ascending: false }).order('titolo');
   if (opere.error) {
     avviso(messaggioErrore(opere.error), true);
     mostraElenco();
@@ -488,7 +1403,7 @@ async function apriEvento(id) {
   if (id) {
     const { data, error } = await client
       .from('eventi')
-      .select('*, eventi_opere(opera_id)')
+      .select('*')
       .eq('id', id)
       .single();
     if (error) {
@@ -497,7 +1412,6 @@ async function apriEvento(id) {
       return;
     }
     evento = data;
-    collegate = data.eventi_opere.map((c) => c.opera_id);
   }
 
   modulo.reset();
@@ -506,14 +1420,7 @@ async function apriEvento(id) {
   compilaModulo(modulo, evento);
   preparaCodice(modulo, !id);
   preparaImmagini(modulo);
-
-  $('opere-collegate').innerHTML = opere.data.length
-    ? opere.data.map((o) => `
-        <label class="g-spunta">
-          <input type="checkbox" data-opera="${o.id}" ${collegate.includes(o.id) ? 'checked' : ''}>
-          <span>${esc(o.titolo)} <small>(${esc(o.anno)})</small></span>
-        </label>`).join('')
-    : '<p class="g-vuoto">Nessuna opera in archivio.</p>';
+  preparaPaginaEvento(evento, opere.data); // gestione-eventi.js
 
   $('titolo-modulo-evento').textContent = id ? evento.titolo : 'Nuovo evento';
   modulo.querySelector('[data-elimina]').hidden = !id;
@@ -538,25 +1445,16 @@ $('modulo-evento').addEventListener('submit', async (e) => {
 
   try {
     const dati = leggiModulo(modulo);
-    await caricaImmagini(modulo, dati);
+    await caricaImmagini(modulo, dati); // lo sfondo
+    await caricaFileEvento(dati); // logo, foto e blocchi (gestione-eventi.js)
 
-    let eventoId = id;
     if (id) {
       const { error } = await client.from('eventi').update(dati).eq('id', id);
       if (error) throw error;
     } else {
       const { data, error } = await client.from('eventi').insert(dati).select('id').single();
       if (error) throw error;
-      eventoId = data.id;
-    }
-
-    const collegate = [...$('opere-collegate').querySelectorAll('[data-opera]:checked')]
-      .map((c) => ({ evento_id: eventoId, opera_id: Number(c.dataset.opera) }));
-    const tolti = await client.from('eventi_opere').delete().eq('evento_id', eventoId);
-    if (tolti.error) throw tolti.error;
-    if (collegate.length) {
-      const { error } = await client.from('eventi_opere').insert(collegate);
-      if (error) throw error;
+      modulo.dataset.id = data.id;
     }
 
     stato.modificato = false;
@@ -577,7 +1475,7 @@ $('modulo-evento').addEventListener('submit', async (e) => {
    -------------------------------------------------------------------------- */
 document.querySelectorAll('[data-annulla]').forEach((b) => {
   b.addEventListener('click', () => {
-    if (stato.modificato && !confirm('Ci sono modifiche non salvate. Uscire lo stesso?')) return;
+    if (stato.modificato && !confirm(MODIFICHE_PERSE)) return;
     stato.modificato = false;
     nascondiAvviso();
     mostraElenco();
@@ -607,7 +1505,7 @@ document.querySelectorAll('[data-elimina]').forEach((b) => {
 
 // Qualsiasi modifica ai campi segna il modulo come da salvare
 document.querySelectorAll('.g-modulo').forEach((m) => {
-  m.addEventListener('input', () => { stato.modificato = true; });
+  m.addEventListener('input', segnaModificato);
 });
 
 window.addEventListener('beforeunload', (e) => {

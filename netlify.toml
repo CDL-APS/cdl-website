@@ -17,6 +17,56 @@
 # La query string (?film=quartolivello) viene mantenuta in automatico.
 # ---------------------------------------------------------------------------
 
+# CORTOTECA IN PAUSA (dal 17 novembre 2026, storico/2026-11-17-cortoteca-in-pausa.md).
+# La galleria rimanda a Produzioni, l'area socio (e il suo vecchio nome
+# proponi.html) alla home: 302, perché il rimando è temporaneo. Vanno prima
+# della regola /cortoteca/* delle immagini. /cortoteca/info_film2 (più sotto)
+# resta attivo: porta alla pagina del corto, che è ancora pubblica.
+# Alla ripresa: togliere questo blocco e rimettere i 301 da /proponi.html e
+# /proponi a /area-socio.html (i collegamenti mandati ai soci, il browser
+# conserva il #invito=… anche dopo il rimando).
+[[redirects]]
+  from = "/cortoteca.html"
+  to = "/produzioni.html"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/cortoteca"
+  to = "/produzioni.html"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/cortoteca/"
+  to = "/produzioni.html"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/area-socio.html"
+  to = "/"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/area-socio"
+  to = "/"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/proponi.html"
+  to = "/"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/proponi"
+  to = "/"
+  status = 302
+  force = true
+
 [[redirects]]
   from = "/cortoteca/info_film2"
   to = "/opera.html"
@@ -95,6 +145,30 @@
   status = 404
   force = true
 
+[[redirects]]
+  from = "/storico/*"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/google/*"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/documenti/*"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/revisione-design-2026-11-11.md"
+  to = "/404.html"
+  status = 404
+  force = true
+
 # ---------------------------------------------------------------------------
 # HEADER
 # ---------------------------------------------------------------------------
@@ -103,7 +177,7 @@
 # a lungo nel browser di chi visita. Se un'immagine cambia contenuto ma non
 # nome, va rinominata, altrimenti i visitatori abituali vedranno la vecchia.
 # Per CSS e JS le pagine aggiungono una versione all'indirizzo
-# (base.css?v=2026-10-09-2): quando li modifichi, aggiorna la data in tutte le
+# (base.css?v=2026-11-12): quando li modifichi, aggiorna la data in tutte le
 # pagine, così il browser scarica la versione nuova.
 [[headers]]
   for = "/assets/*"
@@ -112,14 +186,59 @@
 
 # Il database dei film cambia spesso: cache breve, così un corto aggiunto
 # oggi si vede subito.
+# Lo statuto si apre solo dal modulo della domanda di ammissione: niente
+# motori di ricerca (decisione del 17 novembre 2026). L'header, non
+# robots.txt, perché Google deve poter leggere il file per vedere il divieto.
+[[headers]]
+  for = "/assets/doc/statuto-*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+
 [[headers]]
   for = "/data/*"
   [headers.values]
     Cache-Control = "public, max-age=300"
 
-# Protezioni di base su tutte le pagine
+# Protezioni di base su tutte le pagine. Sta prima delle regole delle pagine
+# con accesso: quando più regole danno lo stesso header vince l'ultima, e
+# l'area socio deve tenere il suo Referrer-Policy.
 [[headers]]
   for = "/*"
   [headers.values]
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
+
+# Le due pagine con accesso (redattori e soci) eseguono solo script del sito
+# e parlano solo con il progetto Supabase: se un testo arrivato dal database
+# riuscisse mai a diventare codice, il browser non lo eseguirebbe e non
+# potrebbe portare via la sessione. Vietano anche di essere mostrate dentro
+# un'altra pagina. Chi aggiunge a queste pagine uno script, un font o
+# un'immagine da un altro indirizzo deve aggiungerlo anche qui.
+# Netlify serve le pagine anche senza ".html" (/gestione, /area-socio): ogni
+# regola compare due volte, una per indirizzo, e le due copie vanno tenute
+# uguali.
+[[headers]]
+  for = "/gestione.html"
+  [headers.values]
+    Content-Security-Policy = "default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob: https://rsspmqhhrykbmrkmwqcg.supabase.co; connect-src 'self' https://rsspmqhhrykbmrkmwqcg.supabase.co; object-src 'none'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'"
+    Cache-Control = "no-store"
+
+[[headers]]
+  for = "/gestione"
+  [headers.values]
+    Content-Security-Policy = "default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob: https://rsspmqhhrykbmrkmwqcg.supabase.co; connect-src 'self' https://rsspmqhhrykbmrkmwqcg.supabase.co; object-src 'none'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'"
+    Cache-Control = "no-store"
+
+[[headers]]
+  for = "/area-socio.html"
+  [headers.values]
+    Content-Security-Policy = "default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob: https://rsspmqhhrykbmrkmwqcg.supabase.co; connect-src 'self' https://rsspmqhhrykbmrkmwqcg.supabase.co; object-src 'none'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'"
+    Cache-Control = "no-store"
+    Referrer-Policy = "no-referrer"
+
+[[headers]]
+  for = "/area-socio"
+  [headers.values]
+    Content-Security-Policy = "default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob: https://rsspmqhhrykbmrkmwqcg.supabase.co; connect-src 'self' https://rsspmqhhrykbmrkmwqcg.supabase.co; object-src 'none'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'"
+    Cache-Control = "no-store"
+    Referrer-Policy = "no-referrer"

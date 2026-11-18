@@ -10,3 +10,10 @@ trim_trailing_whitespace = true
 
 [*.md]
 trim_trailing_whitespace = false
+
+# I testi delle licenze devono restare identici byte per byte a quelli nel
+# database (colonna sha256): l'editor non deve aggiungere né togliere niente.
+# La versione 1 non ha l'a capo finale, scheda-1 sì.
+[supabase/licenze/*.txt]
+insert_final_newline = unset
+trim_trailing_whitespace = false

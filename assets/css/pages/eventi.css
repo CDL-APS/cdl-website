@@ -1,36 +1,78 @@
 /* ==========================================================================
-   EVENTI (eventi.html) — gli eventi organizzati da CDL, divisi in blocchi:
-   Long Story Short in primo piano, le edizioni di Short Talks, gli altri
+   EVENTI (eventi.html)
+   Blu pieno con le scritte azzurre, come la sezione della home quando ci si
+   passa sopra; anche la barra prende il colore. In evidenza l'ultimo Long
+   Story Short col suo lettering e le fotografie che scorrono, poi Short
+   Talks e gli altri eventi in schede col logo dell'evento.
+   Un evento si apre qui sopra, nella sala: la pagina carica anche
+   pages/evento.css, prima di questo foglio.
    ========================================================================== */
+.pagina-eventi {
+  --fondo: var(--blu); --inchiostro: var(--azzurro); --barra: var(--blu);
+  --tenue: rgba(247, 247, 247, 0.8); --filo: rgba(132, 241, 247, 0.32);
+  --accento-hover: var(--chiaro); --accento-hover-testo: var(--blu);
+}
+html:has(.pagina-eventi) { background: var(--blu); }
+.pagina-eventi .nav__voce[aria-current]::before { background: var(--azzurro); }
 
-/* --------------------------------------------------------------------------
-   Long Story Short in primo piano (la struttura è in components.css): nella
-   scheda di destra il marchio a tre righe prende il posto del titolo.
-   -------------------------------------------------------------------------- */
-.primo-piano-marchio img {
-  width: clamp(130px, 15vw, 200px);
-  height: auto;
+/* In evidenza: il lettering a sinistra, la breve descrizione a destra, e
+   sotto le fotografie che scorrono */
+.evidenza { align-items: end; }
+.evidenza .marchio-serie--lss { width: 100%; max-width: 600px; }
+.evidenza__testo { display: flex; flex-direction: column; align-items: flex-start; gap: 20px; }
+.evidenza__descrizione { font-size: clamp(19px, 1.75vw, 26px); font-weight: 600; line-height: 1.3; letter-spacing: -0.01em; }
+.evidenza__descrizione strong { font-weight: 800; }
+.evidenza__freccia { display: grid; place-items: center; width: 48px; height: 48px; border: 2px solid currentColor; border-radius: 50%; transition: transform 0.3s var(--ease); }
+.evidenza__freccia .freccia { width: 20px; height: 20px; }
+.evidenza:hover .evidenza__freccia { transform: translate(3px, -3px); }
+
+/* Short Talks: il racconto del format a tutta larghezza, scritto come la
+   presentazione in cima; "Contattaci" porta al modulo di Contatti col
+   motivo già scelto. Sotto le edizioni: le prime tre e il tasto per le altre */
+.serie-descrizione { display: grid; gap: 0.8em; margin-bottom: clamp(4px, 1vw, 12px); font-size: clamp(19px, 1.75vw, 26px); font-weight: 600; line-height: 1.3; letter-spacing: -0.01em; }
+.serie-descrizione strong { font-weight: 800; }
+.schede > [hidden] { display: none; }
+.tutte-edizioni__riga { display: flex; justify-content: center; margin-top: clamp(36px, 4.5vw, 64px); }
+.tutte-edizioni { gap: 12px; min-height: 60px; padding: 0 32px; font-size: 18px; }
+.tutte-edizioni svg { width: 18px; height: 18px; transition: transform 0.3s var(--ease); }
+.tutte-edizioni[aria-expanded="true"] svg { transform: rotate(180deg); }
+.rimando-testo { font-weight: 800; text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 4px; transition: color 0.2s var(--ease); }
+.rimando-testo:hover { color: var(--chiaro); }
+
+@media (max-width: 1023px) {
+  .evidenza .marchio-serie--lss, .evidenza__testo { grid-column: 1 / -1; }
+  .evidenza .marchio-serie--lss { max-width: 320px; }
 }
 
 /* --------------------------------------------------------------------------
-   Short Talks si presenta col suo lettering invece che col titoletto del
-   blocco. Il filetto corre fino al margine come nei titoletti.
+   L'evento aperto dentro la pagina Eventi: la pagina dell'evento si apre
+   sopra, su carta, e l'indirizzo diventa il suo. Il lettering di Long Story
+   Short (o il logo della scheda) sale al suo posto e prende il colore
+   dell'evento; la barra passa alla carta.
    -------------------------------------------------------------------------- */
-.blocco-marchio {
-  display: flex;
-  align-items: center;
-  gap: 1.25rem;
-  margin: clamp(2.5rem, 5vw, 3.5rem) 0 calc(var(--spazio) * 1.5);
+.sala-evento {
+  position: fixed; inset: 0; z-index: 9; overflow-y: auto; overscroll-behavior: contain;
+  padding-bottom: clamp(96px, 11vw, 168px);
+  --fondo: var(--chiaro); --inchiostro: var(--nero); --tenue: rgba(29, 29, 27, 0.74);
+  background: var(--fondo); color: var(--inchiostro);
 }
-
-.blocco-marchio::after {
-  content: '';
-  flex: 1;
-  height: 1px;
-  background: var(--riga);
+.sala-evento > section { position: relative; overflow: clip; }
+/* Pronta ma invisibile mentre il passaggio la raggiunge; le entrate aspettano */
+.sala-evento.in-attesa { visibility: hidden; }
+.sala-evento.in-attesa .entra { animation: none; }
+.sala-evento__chiudi {
+  position: fixed; z-index: 3; top: calc(var(--nav) + 40px); right: max(12px, calc(max(var(--gut), (100vw - 1280px) / 2) - 56px));
+  display: grid; place-items: center; width: 44px; height: 44px; border: 0; border-radius: 50%;
+  background: var(--evento); color: var(--chiaro); cursor: pointer;
+  transition: transform 0.15s var(--ease), background-color 0.15s var(--ease);
 }
-
-.blocco-marchio img {
-  width: auto;
-  height: clamp(54px, 7vw, 84px);
+.sala-evento__chiudi svg { width: 18px; height: 18px; }
+.sala-evento__chiudi:hover { transform: rotate(90deg); }
+.sala-evento__chiudi:focus-visible { outline: 3px solid var(--nero); outline-offset: 3px; }
+html.evento-aperto { overflow: hidden; }
+html.evento-aperto .pagina-eventi { --barra: var(--chiaro); }
+html.evento-aperto .pagina-eventi .nav { color: var(--nero); }
+/* Su telefono, come nella sala del corto: la crocetta in basso a destra */
+@media (max-width: 639px) {
+  .sala-evento__chiudi { top: auto; bottom: calc(16px + env(safe-area-inset-bottom)); right: 16px; box-shadow: 0 0 0 3px var(--fondo); }
 }

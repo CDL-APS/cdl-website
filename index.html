@@ -2,186 +2,136 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CDL</title>
-    <meta name="description" content="CDL APS, associazione riminese di promozione del cinema giovane e indipendente.">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>CDL APS – Cinema giovane e indipendente a Rimini</title>
+    <meta name="description" content="Associazione riminese che produce cortometraggi e organizza serate di cinema indipendente.">
 
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link rel="icon" type="image/png" href="assets/img/brand/favicon.png">
 
-    <link rel="stylesheet" href="assets/css/base.css?v=2026-10-22e">
-    <link rel="stylesheet" href="assets/css/components.css?v=2026-10-22e">
-    <link rel="stylesheet" href="assets/css/pages/home.css?v=2026-10-22e">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800;900&display=swap">
+    <link rel="stylesheet" href="assets/css/base.css?v=2026-11-18b">
+    <link rel="stylesheet" href="assets/css/components.css?v=2026-11-18b">
+    <link rel="stylesheet" href="assets/css/pages/home.css?v=2026-11-18b">
 </head>
 <body>
 
-    <!-- ==================================================================
-         SLIDER DI NAVIGAZIONE
-         Fisso in alto, senza altre scritte accanto. Il logo è la Home; le
-         altre tre voci aprono pagine. L'indicatore lavanda segna la pagina
-         in cui ci si trova e scorre sulla voce sfiorata dal mouse.
-         ================================================================== -->
-    <nav class="barra" aria-label="Navigazione principale">
-        <div class="barra-gruppo">
-            <span class="indicatore" aria-hidden="true"></span>
-
-            <a href="#home" class="voce voce--logo is-active" aria-label="Home" aria-current="page">
-                <img src="assets/img/brand/logo-cdl.png" alt="CDL" onerror="this.replaceWith(document.createTextNode('CDL'))">
-            </a>
-            <a href="produzioni.html" class="voce">Produzioni</a>
-            <a href="eventi.html" class="voce">Eventi</a>
+    <header class="nav">
+        <div class="wrap nav__riga">
+            <a class="skip-link" href="#top">Vai al contenuto</a>
+            <a class="nav__logo" href="index.html" aria-label="CDL, pagina iniziale"><span class="logo"></span></a>
+            <a class="nav__voce nav__voce--eventi" href="eventi.html">Eventi</a>
+            <a class="nav__voce nav__voce--produzioni" href="produzioni.html">Produzioni</a>
+            <a class="nav__voce nav__voce--contatti" href="contatti.html#contatti">Contatti</a>
+            <a class="btn btn--pieno nav__socio" href="vantaggi-tesseramento.html">Diventa socio</a>
         </div>
+    </header>
 
-        <a href="cortoteca.html" class="voce voce--altrove">
-            <svg class="icona-play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.14v13.72L19 12 8 5.14Z"/></svg>
-            Cortoteca
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h6"/></svg>
-        </a>
-    </nav>
-
-    <main>
-
-        <!-- ==============================================================
-             APERTURA — la frase di presentazione sul wallpaper, con l'icona
-             a destra. È l'unico blocco statico della pagina: non porta da
-             nessuna parte, e si vede perché non ha cornice né freccia e non
-             reagisce al passaggio del mouse.
-             ============================================================== -->
-        <section class="sezione" id="home">
-            <h1 class="sr-only">CDL APS</h1>
-
-            <!-- Icona e frase sono fratelli: su schermo stretto la griglia
-                 mette l'icona sopra e la frase sotto, a tutta larghezza. -->
-            <div class="apertura">
-                <img class="foto" src="assets/img/sfondi/wallpaper-cdl.jpg" alt="">
-                <img class="icona" src="assets/img/brand/icona-cdl.png" alt="" onerror="this.style.display='none'">
-                <p class="apertura-frase"><strong>CDL</strong> &egrave; un'associazione di promozione sociale che si occupa di sostenere, diffondere ed esplorare il cinema giovane e indipendente, attraverso la realizzazione di progetti cinematografici e l'organizzazione di eventi.</p>
-            </div>
-
-            <!-- ==========================================================
-                 ATTIVITÀ RECENTI — l'ultimo evento e l'ultima produzione
-                 CDL, uno sotto l'altro a tutta larghezza, come il primo
-                 piano di Eventi e Produzioni. Sotto la scheda di destra
-                 il rimando all'elenco completo.
-                 Li riempie assets/js/home.js dal database: non vanno
-                 aggiornati a mano. Se i dati non si leggono il riquadro resta
-                 nascosto, e rimane il rimando.
-                 ========================================================== -->
-            <div class="recenti">
-                <h2 class="titoletto titoletto--blocco">Attivit&agrave; recenti</h2>
-                <div class="ultimo">
-                    <a class="primo-piano" id="ultimo-evento" href="eventi.html" hidden>
-                        <div class="primo-piano-copertina">
-                            <img class="foto" alt="" loading="lazy">
-                        </div>
-                        <div class="primo-piano-testo">
-                            <span class="freccia" aria-hidden="true">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
-                            </span>
-                            <h3 class="primo-piano-titolo"></h3>
-                            <p class="primo-piano-riassunto"></p>
-                        </div>
-                    </a>
-                    <a class="ultimo-tutti" href="eventi.html">
-                        Tutti gli eventi
-                        <span class="ultimo-tutti-icona" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
-                    </a>
-                </div>
-                <div class="ultimo">
-                    <a class="primo-piano" id="ultima-produzione" href="produzioni.html" hidden>
-                        <div class="primo-piano-copertina">
-                            <img class="foto" alt="" loading="lazy">
-                        </div>
-                        <div class="primo-piano-testo">
-                            <span class="freccia" aria-hidden="true">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
-                            </span>
-                            <h3 class="primo-piano-titolo"></h3>
-                            <p class="primo-piano-riassunto"></p>
-                        </div>
-                    </a>
-                    <a class="ultimo-tutti" href="produzioni.html">
-                        Tutte le produzioni
-                        <span class="ultimo-tutti-icona" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
-                    </a>
+    <main id="top">
+        <!-- APERTURA: la sala vista dall'alto, al buio, con la torcia che segue
+             il puntatore; al piede il nastro delle ultime notizie -->
+        <section class="hero hero--sala">
+            <img class="hero__foto" src="assets/img/sfondi/wallpaper-cdl.jpg" alt="" width="2400" height="1601" fetchpriority="high">
+            <div class="hero__buio" aria-hidden="true"></div>
+            <div class="wrap">
+                <h1 class="marchio">
+                    <img src="assets/img/brand/icona-cdl.png" alt="" width="1080" height="1080" fetchpriority="high"><span class="sr-only">CDL APS</span>
+                </h1>
+                <p class="lead">CDL &egrave; un'associazione di promozione sociale che si occupa di sostenere, diffondere ed esplorare il cinema giovane e indipendente, attraverso la realizzazione di progetti cinematografici e l'organizzazione di eventi.</p>
+                <!-- Solo su telefono: sul computer l'invito ai soci è già nella barra -->
+                <div class="btn-riga">
+                    <a class="btn solo-telefono" href="vantaggi-tesseramento.html">Diventa socio</a>
                 </div>
             </div>
-
-            <hr class="separatore">
-
-            <!-- ==========================================================
-                 SOSTEGNO — Sostieni CDL e il tesseramento sulla stessa
-                 riga. Passando sui pulsanti di Sostieni si accende di rosso
-                 anche il riquadro del tesseramento (vedi home.css).
-                 ========================================================== -->
-            <div class="sostegno">
-                <!-- Nessun pannello sotto il testo: il fotogramma scelto è
-                     scuro abbastanza da reggere il bianco da solo (vedi il
-                     commento nel foglio di stile). -->
-                <div class="sostieni" id="socio">
-                    <img class="foto" src="assets/img/film/quartolivello.jpg" alt="" loading="lazy">
-                    <div class="sostieni-interno">
-                        <h2 class="titolo-marchio">
-                            Sostieni
-                            <img src="assets/img/brand/logo-cdl.png" alt="CDL" onerror="this.replaceWith(document.createTextNode('CDL'))">
-                        </h2>
-                        <div class="corpo corpo--chiaro">
-                            <p>Associarti a CDL significa contribuire attivamente al nostro progetto di diffusione della cultura cinematografica indipendente.</p>
-                            <div class="azioni">
-                                <a href="https://wa.me/393493290864?text=Ciao,%20vorrei%20diventare%20socio%20di%20CDL%20APS" target="_blank" rel="noopener" class="btn btn--chiaro btn--pieno">Diventa socio
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg>
-                                </a>
-                                <a href="mailto:ciao@cdlaps.com?subject=Richiesta%20Diventare%20Socio" class="btn btn--chiaro">Scrivici
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
-                                </a>
-                            </div>
-                            <a href="vantaggi-tesseramento.html" class="rimando">Tutti i vantaggi per i soci
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h6"/></svg>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Tinta unita lavanda, con la tessera dentro al riquadro.
-                     Sta già accanto a Sostieni: porta ai vantaggi per i soci. -->
-                <a href="vantaggi-tesseramento.html" class="riquadro riquadro--tessera">
-                    <img class="tessera" src="assets/img/partner/tessera-cdl.png" alt="" onerror="this.style.display='none'">
-                    <span class="tessera-testo">
-                        <span class="chip-etichetta"><span class="rec-dot"></span> Tesseramento 2026</span>
-                        <span class="chip-titolo">Il tesseramento &egrave; aperto</span>
-                        <span class="chip-meta">I vantaggi per i soci
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-                        </span>
-                    </span>
-                </a>
+            <!-- data-quota: la voce del nastro sulla quota ridotta (vuota, la voce non c'è) -->
+            <div class="nastro scorre" id="nastro" role="group" aria-label="Ultime notizie" data-quota="Quota associativa ridotta a 5 € fino al 31 dicembre">
+                <div class="scorre__pista"></div>
+                <button class="scorre__pausa" type="button" aria-pressed="false">
+                    <span class="sr-only">Ferma lo scorrimento delle notizie</span><svg class="icona-ferma" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="5" width="4.5" height="14" rx="1"/><rect x="13.5" y="5" width="4.5" height="14" rx="1"/></svg><svg class="icona-riprendi" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.14v13.72L19 12 8 5.14Z"/></svg>
+                </button>
             </div>
         </section>
 
+        <!-- L'INDICE: le sezioni del sito, solo i nomi a tutta larghezza.
+             Al passaggio su un nome tutta la sezione prende il suo colore e
+             sotto compare l'elenco breve dei più recenti (lo mette home.js).
+             La Cortoteca (terza voce, senza elenco, con gli occhi nelle O e
+             ai bordi della sezione) è in pausa dal 17 novembre 2026: per
+             rimetterla vedi storico/2026-11-17-cortoteca-in-pausa.md. -->
+        <section id="indice" aria-label="Le sezioni del sito">
+            <div class="wrap">
+                <ul class="sezioni" data-uguali>
+                    <li class="sezione sezione--eventi">
+                        <h2 class="sezione__nome"><a href="eventi.html"><span class="sr-only">Eventi</span><span class="fit" data-preciso aria-hidden="true"><span class="fit-testo">Eventi</span></span></a></h2>
+                        <div class="sezione__elenco">
+                            <ul class="sezione__recenti" id="elenco-eventi" aria-label="Eventi: i più recenti"></ul>
+                            <a class="link sezione__tutti" href="eventi.html">Vedi tutti gli eventi <svg class="freccia" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h15"/><path d="m13 6 6 6-6 6"/></svg></a>
+                        </div>
+                    </li>
+                    <li class="sezione sezione--produzioni">
+                        <h2 class="sezione__nome"><a href="produzioni.html"><span class="sr-only">Produzioni</span><span class="fit" data-preciso aria-hidden="true"><span class="fit-testo">Produzioni</span></span></a></h2>
+                        <div class="sezione__elenco">
+                            <ul class="sezione__recenti" id="elenco-produzioni" aria-label="Produzioni: i più recenti"></ul>
+                            <a class="link sezione__tutti" href="produzioni.html">Vedi tutte le produzioni <svg class="freccia" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h15"/><path d="m13 6 6 6-6 6"/></svg></a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- IL RULLINO: solo le foto, senza titolo, scelte in gestione
+             (scheda Rullino). Scorre piano e si ferma al passaggio o col
+             fuoco; ogni foto porta al suo evento, corto o pagina -->
+        <section id="sale" class="scorre" aria-label="Foto dalle sale e dai set">
+            <div class="scorre__finestra">
+                <div class="scorre__pista">
+                    <!-- le foto le mette home.js, dal rullino scelto in gestione -->
+                </div>
+            </div>
+        </section>
     </main>
 
-    <!-- ================================================================== -->
-    <footer class="piede">
-        <div class="piede-social">
-            <a href="https://instagram.com/cdl_aps" target="_blank" rel="noopener" aria-label="Instagram" class="social-link">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
-            </a>
-            <a href="https://www.youtube.com/@cdl_aps" target="_blank" rel="noopener" aria-label="YouTube" class="social-link">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 2-2 69.44 69.44 0 0 1 15 0 2 2 0 0 1 2 2 24.12 24.12 0 0 1 0 10 2 2 0 0 1-2 2 69.44 69.44 0 0 1-15 0 2 2 0 0 1-2-2z"/><polyline points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/></svg>
-            </a>
-            <a href="mailto:ciao@cdlaps.com" aria-label="Scrivici" class="social-link">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
-            </a>
+    <footer class="closing fondo-arancio" id="socio">
+        <div class="wrap sostieni">
+            <h2>
+                <span class="sr-only">Sostieni CDL</span>
+                <span class="fit" aria-hidden="true"><span class="fit-testo">Sostieni<span class="logo"></span></span></span>
+            </h2>
+            <div class="grid sostieni__corpo">
+                <div class="span-8">
+                    <p class="sostieni__stato"><span class="rec"></span>La quota associativa &egrave; stata ridotta per gli ultimi mesi del 2026.</p>
+                    <p class="sostieni__frase">Associarti a CDL significa contribuire attivamente al nostro progetto di diffusione della cultura cinematografica indipendente.</p>
+                    <div class="btn-riga">
+                        <a class="btn btn--socio" href="vantaggi-tesseramento.html#associati">Diventa socio</a>
+                        <a class="btn btn--scuro" href="contatti.html#contatti">Contattaci</a>
+                    </div>
+                    <a class="link" href="vantaggi-tesseramento.html#vantaggi">Tutti i vantaggi per i soci <svg class="freccia" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h15"/><path d="m13 6 6 6-6 6"/></svg></a>
+                </div>
+                <a class="span-4 start-9 sostieni__tessera" href="vantaggi-tesseramento.html#vantaggi" aria-label="I vantaggi per i soci">
+                    <img src="assets/img/partner/tessera-cdl.png" alt="" width="1080" height="1080" loading="lazy">
+                </a>
+            </div>
         </div>
-        <div class="piede-riga">
-            <img src="assets/img/brand/logo-cdl.png" alt="" class="footer-logo--dark" onerror="this.style.display='none'">
-            <span>2026 CDL APS</span>
+        <div class="piede">
+            <div class="wrap piede__riga">
+                <a href="index.html" aria-label="CDL, pagina iniziale"><span class="logo"></span></a>
+                <ul class="piede__collegamenti">
+                    <li><a href="contatti.html#contatti">Contatti</a></li>
+                    <li><a href="https://instagram.com/cdl_aps" target="_blank" rel="noopener">Instagram <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h6"/></svg></a></li>
+                    <li><a href="https://www.youtube.com/@cdl_aps" target="_blank" rel="noopener">YouTube <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h6"/></svg></a></li>
+                </ul>
+                <p class="piede__dati">CDL APS, 2026<br>
+                Associazione di promozione sociale<br>
+                Sede legale: Viale Laurana 13, 47921 Rimini<br>
+                CF 91200080405</p>
+            </div>
         </div>
-        <p class="piede-dati">Associazione di promozione del cinema giovane e indipendente<br>
-        CDL APS &bull; Viale Laurana 13, Rimini, 47921 &bull; CF: 91200080405</p>
     </footer>
 
-    <script src="assets/js/barra.js?v=2026-10-22e"></script>
-    <script src="assets/js/dati.js?v=2026-10-22e"></script>
-    <script src="assets/js/home.js?v=2026-10-22e"></script>
+    <script src="assets/js/dati.js?v=2026-11-18b"></script>
+    <script src="assets/js/comune.js?v=2026-11-18b"></script>
+    <script src="assets/js/home.js?v=2026-11-18b"></script>
 </body>
 </html>

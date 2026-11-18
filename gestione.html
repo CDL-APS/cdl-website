@@ -3,35 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CDL | Gestione</title>
+    <title>Gestione – CDL APS</title>
     <meta name="robots" content="noindex, nofollow">
 
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link rel="icon" type="image/png" href="assets/img/brand/favicon.png">
 
-    <link rel="stylesheet" href="assets/css/base.css?v=2026-10-22e">
-    <link rel="stylesheet" href="assets/css/components.css?v=2026-10-22e">
-    <link rel="stylesheet" href="assets/css/pages/gestione.css?v=2026-10-22e">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800;900&display=swap">
+    <link rel="stylesheet" href="assets/css/base.css?v=2026-11-18b">
+    <link rel="stylesheet" href="assets/css/components.css?v=2026-11-18b">
+    <link rel="stylesheet" href="assets/css/pages/riservato.css?v=2026-11-18b">
+    <link rel="stylesheet" href="assets/css/pages/gestione.css?v=2026-11-18b">
 </head>
 <body class="gestione">
 
-    <!-- Pagina riservata ai redattori: accesso con email e password, poi
-         modifica di opere ed eventi sul database. Le regole del database
-         impediscono comunque di scrivere a chi non è redattore: questa pagina
-         è solo l'interfaccia. -->
+    <!-- Pagina riservata ai redattori: accesso con email, password e, per
+         chi l'ha attivato, il codice di un'app di autenticazione. Da qui si
+         rivedono le proposte dei soci, si modificano opere ed eventi, si
+         consegnano i collegamenti ai soci. Le regole del database impediscono
+         comunque di scrivere a chi non è redattore: questa pagina è solo
+         l'interfaccia. -->
 
-    <header class="g-testata">
-        <a href="index.html" class="g-marchio" aria-label="Torna al sito">
-            <img src="assets/img/brand/logo-cdl.png" alt="CDL">
-            <span>Gestione</span>
-        </a>
-        <div id="utente" class="g-utente" hidden>
-            <span id="utente-email" class="g-utente-email"></span>
-            <button type="button" id="esci" class="btn">Esci</button>
+    <!-- La barra del sito: al posto delle pagine, le schede da gestire.
+         Compaiono solo a un redattore entrato. -->
+    <header class="nav g-barra">
+        <div class="wrap nav__riga">
+            <a class="nav__logo" href="index.html" aria-label="Torna al sito"><span class="logo"></span></a>
+            <nav id="schede" class="g-schede" aria-label="Contenuti da gestire" hidden>
+                <button type="button" class="g-scheda" data-scheda="dashboard">Dashboard<span id="conta-avvisi" class="g-conta" hidden></span><span class="g-sviluppo">In sviluppo</span></button>
+                <button type="button" class="g-scheda" data-scheda="proposte">Proposte<span id="conta-proposte" class="g-conta" hidden></span><span class="g-sviluppo">In sviluppo</span></button>
+                <button type="button" class="g-scheda" data-scheda="opere">Opere</button>
+                <button type="button" class="g-scheda" data-scheda="eventi">Eventi<span class="g-sviluppo">In sviluppo</span></button>
+                <button type="button" class="g-scheda" data-scheda="rullino">Rullino</button>
+                <button type="button" class="g-scheda" data-scheda="soci">Soci<span class="g-sviluppo">In sviluppo</span></button>
+            </nav>
+            <div id="utente" class="g-utente" hidden>
+                <span id="utente-email" class="g-utente-email"></span>
+                <button type="button" id="apri-sicurezza" class="g-voce">Sicurezza 2FA</button>
+                <button type="button" id="esci" class="btn btn--pieno g-esci">Esci</button>
+            </div>
         </div>
     </header>
 
-    <main class="sezione sezione--prima">
+    <main class="wrap g-pagina">
 
         <p id="avviso" class="g-avviso" role="status" aria-live="polite" hidden></p>
 
@@ -54,6 +70,45 @@
             </form>
         </section>
 
+        <!-- Secondo passo dell'accesso, per chi ha attivato il codice -->
+        <section data-vista="codice" hidden>
+            <form id="modulo-codice" class="scheda g-accesso">
+                <h1>Codice di verifica</h1>
+                <p class="scheda-testo">Apri l'app di autenticazione e scrivi il codice a sei cifre di CDL.</p>
+                <label class="g-campo">
+                    <span>Codice</span>
+                    <input type="text" name="codice" required inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6}" maxlength="6">
+                </label>
+                <button type="submit" class="btn btn--pieno">Entra</button>
+            </form>
+        </section>
+
+        <!-- Secondo fattore: attivazione e stato -->
+        <section data-vista="sicurezza" hidden>
+            <div class="scheda g-accesso g-sicurezza">
+                <h1>Sicurezza 2FA</h1>
+                <p class="scheda-testo" id="sicurezza-stato"></p>
+
+                <div id="sicurezza-attiva" hidden>
+                    <p class="scheda-testo">Inquadra il codice con un'app di autenticazione (Google Authenticator, Aegis, 1Password…), poi scrivi qui il numero a sei cifre che l'app mostra.</p>
+                    <img id="sicurezza-qr" class="g-qr" alt="Codice QR da inquadrare con l'app di autenticazione" width="200" height="200">
+                    <p class="scheda-testo">Se non puoi inquadrarlo, scrivi nell'app questa chiave: <code id="sicurezza-chiave"></code></p>
+                    <form id="modulo-attiva">
+                        <label class="g-campo">
+                            <span>Codice dell'app</span>
+                            <input type="text" name="codice" required inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6}" maxlength="6">
+                        </label>
+                        <button type="submit" class="btn btn--pieno">Conferma</button>
+                    </form>
+                </div>
+
+                <div class="azioni">
+                    <button type="button" class="btn btn--pieno" id="sicurezza-avvia" hidden>Attiva il codice</button>
+                    <button type="button" class="btn" id="sicurezza-chiudi">Torna alla gestione</button>
+                </div>
+            </div>
+        </section>
+
         <!-- Account valido ma non abilitato -->
         <section data-vista="negato" hidden>
             <div class="scheda g-accesso">
@@ -70,13 +125,98 @@
              ELENCO DI OPERE O EVENTI
              ============================================================ -->
         <section data-vista="elenco" hidden>
-            <div class="g-intestazione">
-                <div class="g-schede" role="tablist" aria-label="Contenuti">
-                    <button type="button" role="tab" class="g-scheda" data-scheda="opere">Opere</button>
-                    <button type="button" role="tab" class="g-scheda" data-scheda="eventi">Eventi</button>
+            <!-- Testata come quella di Produzioni o Eventi: il nome della
+                 scheda, una riga che dice cosa contiene -->
+            <header class="testa-pagina">
+                <h1 id="titolo-scheda">Gestione</h1>
+                <div class="g-testa-riga">
+                    <p id="nota-scheda" class="testa-pagina-nota"></p>
+                    <button type="button" id="nuovo" class="btn btn--pieno">Nuova opera</button>
                 </div>
-                <button type="button" id="nuovo" class="btn btn--pieno">Nuova opera</button>
+            </header>
+
+            <!-- Dashboard: ciò che richiede una decisione (quota non
+                 rinnovata, opere senza licenza, foglio dei soci non
+                 aggiornato), qualche numero e le ultime cose successe -->
+            <div id="cruscotto" hidden>
+                <div id="avvisi" class="g-avvisi">
+                    <h2 class="titoletto"><span class="rec-dot" aria-hidden="true" id="avvisi-segno"></span>Da sistemare</h2>
+                    <ul id="elenco-avvisi"></ul>
+                </div>
+                <div id="numeri" class="g-numeri"></div>
+                <h2 class="titoletto">Ultime attività</h2>
+                <ol id="attivita" class="g-attivita"></ol>
+                <div class="g-espandi-riga"><button type="button" id="espandi-attivita" class="btn g-espandi" aria-controls="attivita" aria-expanded="false" hidden>Espandi</button></div>
             </div>
+
+            <!-- Scheda Soci: stato della sincronizzazione con il foglio -->
+            <div id="pannello-soci" class="g-pannello" hidden>
+                <p id="stato-sync"></p>
+                <p id="soci-senza-email" class="g-nota-tenue" hidden></p>
+                <details id="collega-foglio">
+                    <summary>Collega il foglio</summary>
+                    <p class="scheda-testo">Nel foglio dei soci scegli Cortoteca → Collega al sito, copia l'impronta che compare e incollala qui.</p>
+                    <form id="modulo-chiave" class="g-chiave">
+                        <label class="g-campo">
+                            <span>Impronta</span>
+                            <input type="text" name="impronta" required pattern="[0-9a-fA-F]{64}" maxlength="64" autocomplete="off" spellcheck="false">
+                        </label>
+                        <button type="submit" class="btn btn--pieno">Salva</button>
+                    </form>
+                </details>
+            </div>
+
+            <!-- Scheda Rullino: le foto che scorrono in home (tabella rullino).
+                 In alto quelle scelte, nell'ordine del rullino; sotto le foto
+                 disponibili, divise per provenienza (gestione-rullino.js) -->
+            <div id="rullino-gestione" class="g-rullino-gestione" hidden>
+                <div class="g-rullino-barra">
+                    <h2 class="titoletto g-rullino-testa">Nel rullino</h2>
+                    <button type="button" id="mescola-rullino" class="btn g-mescola"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 3h5v5"/><path d="M4 20 21 3"/><path d="M21 16v5h-5"/><path d="m15 15 6 6"/><path d="M4 4l5 5"/></svg>Mescola</button>
+                </div>
+                <p id="rullino-equilibrio" class="g-rullino-equilibrio"></p>
+                <ol id="rullino-scelte" class="g-rullino"></ol>
+
+                <h2 class="titoletto">Scegli le foto</h2>
+                <div class="g-provenienze" role="group" aria-label="Provenienza delle foto">
+                    <button type="button" class="btn g-provenienza" data-provenienza="eventi" aria-pressed="true">Eventi</button>
+                    <button type="button" class="btn g-provenienza" data-provenienza="cortoteca" aria-pressed="false">Fotogrammi delle opere</button>
+                    <button type="button" class="btn g-provenienza" data-provenienza="altre" aria-pressed="false">Altre foto</button>
+                </div>
+                <p id="rullino-nota" class="g-rullino-nota"></p>
+
+                <!-- Altre foto: si caricano qui, con il testo per chi non vede
+                     l'immagine e la pagina a cui portano -->
+                <form id="modulo-altra-foto" class="g-altra-foto" hidden>
+                    <div class="g-griglia">
+                        <div class="g-campo g-campo--largo">
+                            <span>Foto</span>
+                            <div class="g-immagine-azioni">
+                                <label class="btn">Scegli la foto<input type="file" name="file" accept="image/*" hidden></label>
+                                <span id="altra-foto-nome" class="g-file-nome"></span>
+                            </div>
+                            <small>JPEG o PNG. Viene ridimensionata e convertita in automatico.</small>
+                        </div>
+                        <label class="g-campo">
+                            <span>Descrizione</span>
+                            <input type="text" name="descrizione" required placeholder="Il pubblico in sala prima della proiezione">
+                            <small>Per chi non vede l'immagine: cosa mostra.</small>
+                        </label>
+                        <label class="g-campo">
+                            <span>Porta a</span>
+                            <select name="collegamento" class="g-collegamento"></select>
+                            <small>La pagina che si apre al clic sulla foto.</small>
+                        </label>
+                    </div>
+                    <div class="azioni"><button type="submit" class="btn btn--pieno">Carica e aggiungi al rullino</button></div>
+                </form>
+
+                <div id="rullino-fonte" class="g-fonte"></div>
+            </div>
+
+            <!-- Proposte: chi ha una bozza aperta, solo il nome (soci_con_bozze) -->
+            <p id="bozze-in-corso" class="g-nota-tenue g-bozze" hidden></p>
+
             <ul id="elenco" class="g-elenco"></ul>
         </section>
 
@@ -88,6 +228,17 @@
                 <div class="g-intestazione">
                     <h1 id="titolo-modulo-opera">Nuova opera</h1>
                     <a id="vedi-opera" class="rimando" target="_blank" rel="noopener" hidden>Vedi sul sito</a>
+                </div>
+
+                <!-- Revisione di una proposta: chi la manda, quota, licenza,
+                     risposte al questionario. Compare solo aprendo una proposta. -->
+                <div id="revisione" class="g-revisione" hidden>
+                    <dl id="revisione-dati" class="g-revisione-dati"></dl>
+                    <ul id="revisione-attenzioni" class="g-revisione-attenzioni"></ul>
+                    <div class="g-immagine-azioni">
+                        <a id="revisione-scrivi" class="btn">Scrivi al socio</a>
+                        <button type="button" id="revisione-ricevuta" class="btn">Scarica la ricevuta</button>
+                    </div>
                 </div>
 
                 <fieldset class="g-gruppo">
@@ -105,6 +256,11 @@
                         <label class="g-campo">
                             <span>Anno *</span>
                             <input type="number" name="anno" required min="1900" max="2100">
+                        </label>
+                        <label class="g-campo">
+                            <span>Durata</span>
+                            <input type="number" name="durata" min="1" max="600" step="1" inputmode="numeric">
+                            <small>In minuti. Compare nella pagina del corto, sotto il titolo.</small>
                         </label>
                         <label class="g-campo">
                             <span>Regia *</span>
@@ -161,14 +317,49 @@
                             <input type="hidden" name="fotogramma">
                             <small>JPEG o PNG. Viene ridimensionata e convertita in automatico.</small>
                         </div>
+                        <!-- Titolo grafico: PNG o carattere tipografico, caricati
+                             così come sono (niente conversione: il PNG
+                             perderebbe la trasparenza) -->
+                        <div class="g-campo g-campo--largo g-titolo-grafico">
+                            <span>Titolo grafico</span>
+                            <img id="titolo-anteprima" class="g-anteprima-titolo" alt="" hidden>
+                            <p id="titolo-font-nome" class="g-file-nome" hidden></p>
+                            <div class="g-immagine-azioni">
+                                <label class="btn">Scegli il file<input type="file" id="titolo-file" accept=".png,.ttf,.otf,.woff,.woff2,image/png" hidden></label>
+                                <button type="button" class="btn" id="titolo-togli" hidden>Togli</button>
+                            </div>
+                            <input type="hidden" name="titolo_png">
+                            <input type="hidden" name="titolo_font">
+                            <small>Facoltativo: il titolo in PNG (meglio con fondo trasparente) oppure il carattere tipografico (TTF, OTF, WOFF). Senza, il sito usa il suo carattere.</small>
+                        </div>
+                        <!-- Il colore della pagina del corto: scritte, fili e crocetta
+                             della sala. Il campo di testo è quello che si salva; il
+                             selettore lo compila. -->
+                        <div class="g-campo g-campo--largo">
+                            <span id="etichetta-colore">Colore della pagina</span>
+                            <div class="g-colore">
+                                <input type="color" id="colore-scelta" aria-labelledby="etichetta-colore" value="#b9bbf8">
+                                <input type="text" name="colore" placeholder="#b9bbf8" pattern="#[0-9a-fA-F]{6}" maxlength="7" autocomplete="off" spellcheck="false" aria-labelledby="etichetta-colore">
+                                <button type="button" class="btn" id="colore-togli">Automatico</button>
+                            </div>
+                            <small>Facoltativo: di solito il colore del titolo grafico. Vuoto, il sito usa il colore del titolo (se è uno dei titoli già nel sito) o l'arancio del sito. Un colore molto scuro diventa bianco, perché sul nero non si leggerebbe; su Guarda la scritta diventa bianca se il nero non si leggerebbe.</small>
+                        </div>
                         <label class="g-campo">
                             <span>Video (YouTube o Vimeo)</span>
                             <input type="url" name="video_url" placeholder="https://">
-                            <small>Se vuoto, la scheda mostra "streaming in arrivo".</small>
+                            <small>Se vuoto, la pagina del corto dice "Streaming in arrivo", a meno che l'opera sia segnata come sola scheda.</small>
                         </label>
                         <label class="g-campo">
                             <span>Letterboxd</span>
                             <input type="url" name="letterboxd_url" placeholder="https://letterboxd.com/film/…">
+                        </label>
+                        <label class="g-campo">
+                            <span>IMDb</span>
+                            <input type="url" name="imdb_url" placeholder="https://www.imdb.com/title/…" pattern="https://(www\.|m\.)?imdb\.com/.+">
+                        </label>
+                        <label class="g-spunta">
+                            <input type="checkbox" name="solo_scheda">
+                            <span>Solo la scheda <small>(niente streaming, né ora né "in arrivo": la scrive la licenza del socio, si può cambiare per le opere senza licenza come le produzioni CDL)</small></span>
                         </label>
                     </div>
                 </fieldset>
@@ -176,15 +367,22 @@
                 <fieldset class="g-gruppo">
                     <legend class="titoletto">Troupe</legend>
                     <div class="g-griglia">
-                        <label class="g-campo"><span>Sceneggiatura</span><input type="text" name="sceneggiatura"></label>
-                        <label class="g-campo"><span>Produttore</span><input type="text" name="produttore"></label>
                         <label class="g-campo"><span>Fotografia (DOP)</span><input type="text" name="fotografia"></label>
+                        <label class="g-campo"><span>Sceneggiatura</span><input type="text" name="sceneggiatura"></label>
                         <label class="g-campo"><span>Montaggio</span><input type="text" name="montaggio"></label>
+                        <label class="g-campo"><span>Produttore</span><input type="text" name="produttore"></label>
                         <label class="g-campo"><span>Colonna sonora</span><input type="text" name="colonna_sonora"></label>
                         <label class="g-campo"><span>Scenografia</span><input type="text" name="scenografia"></label>
-                        <label class="g-campo"><span>Trucco</span><input type="text" name="trucco"></label>
+                        <label class="g-campo"><span>Suono</span><input type="text" name="suono"></label>
                         <label class="g-campo"><span>Costumi</span><input type="text" name="costumi"></label>
+                        <label class="g-campo"><span>Trucco</span><input type="text" name="trucco"></label>
                     </div>
+                </fieldset>
+
+                <fieldset class="g-gruppo">
+                    <legend class="titoletto">Altri ruoli</legend>
+                    <ol id="altri-ruoli" class="g-interpreti"></ol>
+                    <button type="button" id="aggiungi-ruolo" class="btn">Aggiungi un ruolo</button>
                 </fieldset>
 
                 <fieldset class="g-gruppo">
@@ -193,13 +391,27 @@
                     <button type="button" id="aggiungi-interprete" class="btn">Aggiungi interprete</button>
                 </fieldset>
 
+                <fieldset class="g-gruppo" id="gruppo-socio">
+                    <legend class="titoletto">Cortoteca</legend>
+                    <div class="g-griglia">
+                        <label class="g-campo g-campo--largo">
+                            <span>Socio a cui appartiene</span>
+                            <!-- Senza "name": non è una colonna di opere, si salva a parte -->
+                            <select id="socio-titolare"></select>
+                            <small id="socio-titolare-nota">Per le opere dei soci: serve a chiedere la licenza e a controllare la quota. Lascia vuoto per le produzioni CDL.</small>
+                        </label>
+                    </div>
+                </fieldset>
+
                 <div class="g-piede-modulo">
                     <label class="g-spunta">
                         <input type="checkbox" name="pubblicata">
                         <span>Pubblicata <small>(visibile sul sito)</small></span>
                     </label>
                     <div class="azioni">
-                        <button type="submit" class="btn btn--pieno">Salva</button>
+                        <button type="submit" class="btn btn--pieno" id="salva-opera">Salva</button>
+                        <button type="button" class="btn" id="chiedi-modifiche" hidden>Chiedi modifiche</button>
+                        <button type="button" class="btn g-elimina" id="rifiuta-proposta" hidden>Rifiuta</button>
                         <button type="button" class="btn" data-annulla>Annulla</button>
                         <button type="button" class="btn g-elimina" data-elimina hidden>Elimina</button>
                     </div>
@@ -259,9 +471,9 @@
                             <textarea name="descrizione" rows="4"></textarea>
                         </label>
                         <label class="g-campo g-campo--largo">
-                            <span>Pagina dedicata</span>
-                            <input type="text" name="pagina" placeholder="longstoryshort.html">
-                            <small>Se l'evento ha una pagina sul sito (o un indirizzo esterno), il riquadro porta lì.</small>
+                            <span>Pagina scritta a mano</span>
+                            <input type="text" name="pagina" placeholder="blue-hour.html" pattern="[a-z0-9-]+\.html">
+                            <small>Il nome del file della pagina dell'evento (per esempio blue-hour.html). Si compila quando la pagina è già online: da lì la scheda di Eventi porta alla pagina.</small>
                         </label>
                     </div>
                 </fieldset>
@@ -277,6 +489,7 @@
                                 <button type="button" class="btn g-togli" hidden>Togli</button>
                             </div>
                             <input type="hidden" name="miniatura">
+                            <small>La foto della scheda, se l'evento non ha un logo.</small>
                         </div>
                         <div class="g-campo g-immagine" data-campo="copertina" data-cartella="eventi">
                             <span>Copertina</span>
@@ -290,9 +503,64 @@
                     </div>
                 </fieldset>
 
-                <fieldset class="g-gruppo">
-                    <legend class="titoletto">Corti nati dall'evento</legend>
-                    <div id="opere-collegate" class="g-collegate"></div>
+                <!-- Pagine evento composte dal database: in pausa (MODELLO_EVENTI
+                     in dati.js). I due gruppi restano nel modulo, nascosti, così
+                     un salvataggio conserva quello che c'è già nel database. -->
+                <!-- La testata della pagina dell'evento: logo, colore, racconto -->
+                <fieldset class="g-gruppo" hidden>
+                    <legend class="titoletto">Pagina dell'evento</legend>
+                    <div class="g-griglia">
+                        <div class="g-campo g-campo--largo">
+                            <span>Logo</span>
+                            <div id="evento-logo-anteprima" class="g-logo-evento" hidden><span class="g-logo-evento__segno"></span></div>
+                            <div class="g-immagine-azioni">
+                                <label class="btn">Scegli il PNG<input type="file" id="evento-logo-file" accept=".png,image/png" hidden></label>
+                                <button type="button" class="btn" id="evento-logo-togli" hidden>Togli</button>
+                            </div>
+                            <input type="hidden" name="logo">
+                            <small>Il titolo dell'evento: un PNG con il fondo trasparente, caricato com'è. Sul sito prende il colore dell'evento (qui sopra lo vedi già così). Se è quasi quadrato il racconto gli sta a fianco, se è una riga lunga va sotto. Senza logo la pagina apre col titolo scritto.</small>
+                        </div>
+                        <div class="g-campo g-campo--largo">
+                            <span id="etichetta-colore-evento">Colore</span>
+                            <div class="g-colore">
+                                <input type="color" id="evento-colore-scelta" aria-labelledby="etichetta-colore-evento" value="#1d1d1b">
+                                <input type="text" name="colore" placeholder="#1d1d1b" pattern="#[0-9a-fA-F]{6}" maxlength="7" autocomplete="off" spellcheck="false" aria-labelledby="etichetta-colore-evento">
+                                <button type="button" class="btn" id="evento-colore-togli">Nero</button>
+                            </div>
+                            <small>Il colore della grafica dell'evento: logo, grassetti, numeri e fili. Vuoto, nero.</small>
+                        </div>
+                        <label class="g-campo g-campo--largo">
+                            <span>Presentazione</span>
+                            <textarea name="presentazione" rows="6"></textarea>
+                            <small>Il racconto accanto al logo, con quando e dove. Una riga vuota fra i paragrafi; **grassetto**, _corsivo_, [testo](indirizzo) per un collegamento, @nome per un profilo Instagram, "- " a inizio riga per un elenco.</small>
+                        </label>
+                        <label class="g-campo g-campo--largo">
+                            <span>Post Instagram</span>
+                            <input type="url" name="instagram" placeholder="https://www.instagram.com/p/…" pattern="https://(www\.)?instagram\.com/.+">
+                            <small>Il post dell'evento: "Vedi su Instagram" accanto alle foto, se una serata non ha il suo.</small>
+                        </label>
+                        <div class="g-campo g-campo--largo g-immagine" data-campo="sfondo" data-cartella="eventi">
+                            <span>Sfondo della testata</span>
+                            <img class="g-anteprima" alt="" hidden>
+                            <div class="g-immagine-azioni">
+                                <label class="btn">Scegli immagine<input type="file" accept="image/*" hidden></label>
+                                <button type="button" class="btn g-togli" hidden>Togli</button>
+                            </div>
+                            <input type="hidden" name="sfondo">
+                            <small>Facoltativo: un'immagine dietro logo e presentazione, come l'artwork di Long Story Short.</small>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <!-- I blocchi sotto la testata: li disegna gestione-eventi.js -->
+                <fieldset class="g-gruppo" hidden>
+                    <legend class="titoletto">Blocchi</legend>
+                    <p class="g-nota-blocchi">Sotto la testata, nell'ordine. Un programma è l'elenco di una serata (corti, ospiti, musica), con le foto accanto se ce ne sono; più programmi di fila diventano serate separate da un filo. Un testo è un racconto, con o senza titolo.</p>
+                    <ol id="blocchi-evento" class="g-blocchi"></ol>
+                    <div class="g-immagine-azioni">
+                        <button type="button" class="btn" data-nuovo-blocco="programma">Aggiungi un programma</button>
+                        <button type="button" class="btn" data-nuovo-blocco="testo">Aggiungi un testo</button>
+                    </div>
                 </fieldset>
 
                 <div class="g-piede-modulo">
@@ -302,6 +570,7 @@
                     </label>
                     <div class="azioni">
                         <button type="submit" class="btn btn--pieno">Salva</button>
+                        <button type="button" class="btn" id="anteprima-evento" hidden>Anteprima</button>
                         <button type="button" class="btn" data-annulla>Annulla</button>
                         <button type="button" class="btn g-elimina" data-elimina hidden>Elimina</button>
                     </div>
@@ -321,8 +590,24 @@
         </li>
     </template>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.3/dist/umd/supabase.min.js"></script>
-    <script src="assets/js/dati.js?v=2026-10-22e"></script>
-    <script src="assets/js/gestione.js?v=2026-10-22e"></script>
+    <!-- Riga di un ruolo della troupe senza campo proprio -->
+    <template id="modello-ruolo">
+        <li class="g-interprete">
+            <input type="text" data-ruolo placeholder="Ruolo" aria-label="Ruolo">
+            <input type="text" data-nome placeholder="Nome" aria-label="Nome">
+            <button type="button" class="g-icona" data-su aria-label="Sposta su">↑</button>
+            <button type="button" class="g-icona" data-giu aria-label="Sposta giù">↓</button>
+            <button type="button" class="g-icona" data-togli aria-label="Togli">✕</button>
+        </li>
+    </template>
+
+    <!-- Copia locale di supabase-js 2.117.3: niente codice da server esterni
+         in una pagina con accesso (vedi la CSP in netlify.toml) -->
+    <script src="assets/js/vendor/supabase-2.117.3.min.js"></script>
+    <script src="assets/js/dati.js?v=2026-11-18b"></script>
+    <script src="assets/js/riservato.js?v=2026-11-18b"></script>
+    <script src="assets/js/gestione.js?v=2026-11-18b"></script>
+    <script src="assets/js/gestione-rullino.js?v=2026-11-18b"></script>
+    <script src="assets/js/gestione-eventi.js?v=2026-11-18b"></script>
 </body>
 </html>
