@@ -225,11 +225,12 @@ a:hover > .cornice img, a.cornice:hover img { transform: scale(1.03); }
 .avviso { padding: 24px 0; font-weight: 700; }
 
 /* --------------------------------------------------------------------------
-   Sostieni: l'invito ad associarsi, in arancio, uguale in home, Contatti e
-   Vantaggi, dove chiude la pagina e contiene il piede. Il nome; sotto, a
-   sinistra, la quota ridotta, la frase larga, i tasti e il rimando ai
-   vantaggi (in Vantaggi riporta in cima); a destra la tessera, centrata
-   sulla colonna di sinistra.
+   Sostieni: l'invito ad associarsi, in arancio. In home e Contatti chiude
+   la pagina e contiene il piede; nella pagina Sostieni
+   (vantaggi-tesseramento.html) apre la pagina, senza tasti, con una frase
+   in più (pages/vantaggi.css). Il nome; sotto, a sinistra, la quota
+   ridotta, la frase larga, i tasti e il rimando ai vantaggi; a destra la
+   tessera, centrata sulla colonna di sinistra.
    -------------------------------------------------------------------------- */
 .closing { display: flex; flex-direction: column; padding-bottom: 0; scroll-margin-top: 0; }
 .closing > .wrap { flex: 1 1 auto; padding-bottom: var(--padb); }

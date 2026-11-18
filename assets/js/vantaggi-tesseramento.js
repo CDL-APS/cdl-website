@@ -1,5 +1,6 @@
 /* ==========================================================================
-   VANTAGGI PER I SOCI — la domanda di ammissione (#associati).
+   SOSTIENI (vantaggi-tesseramento.html) — le due sezioni a comparsa (#vantaggi,
+   #associati) e la domanda di ammissione.
 
    Il modulo #domanda va alla web app di Google Apps Script indicata in
    data-indirizzo (codice in google/iscrizioni/). La web app scrive la
@@ -64,12 +65,23 @@ function scriviQuota(modulo) {
   }
 }
 
-/* La sezione a comparsa si apre da sola arrivando su #associati (anche dal
-   tasto "Diventa socio" di Sostieni, sulla stessa pagina: il clic la apre
-   prima che il browser scorra fin lì) */
-function apriDomanda() {
-  const apri = document.getElementById('domanda-apri');
+/* Le due sezioni a comparsa si aprono da sole arrivando su #vantaggi o
+   #associati, anche con un link sulla stessa pagina (il clic la apre prima
+   che il browser scorra fin lì) */
+const COMPARSE = { '#vantaggi': 'vantaggi-apri', '#associati': 'domanda-apri' };
+function apriComparsa(indirizzo) {
+  const apri = document.getElementById(COMPARSE[indirizzo] || '');
   if (apri) apri.open = true;
+}
+function apriDomanda() { apriComparsa('#associati'); }
+function preparaComparse() {
+  apriComparsa(location.hash);
+  window.addEventListener('hashchange', () => apriComparsa(location.hash));
+  Object.keys(COMPARSE).forEach((indirizzo) => {
+    document.querySelectorAll(`a[href="${indirizzo}"]`).forEach((a) => {
+      a.addEventListener('click', () => apriComparsa(indirizzo));
+    });
+  });
 }
 
 /* Controlli oltre a quelli del browser: età, provincia, CAP. Il messaggio
@@ -186,6 +198,7 @@ function mostraConferma(esito, modulo, conferma) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  preparaComparse();
   const modulo = document.getElementById('domanda');
   if (!modulo) return;
   const conferma = document.getElementById('domanda-conferma');
@@ -196,11 +209,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   caselleDopoLettura(modulo);
   scriviQuota(modulo);
-  if (location.hash === '#associati') apriDomanda();
-  window.addEventListener('hashchange', () => { if (location.hash === '#associati') apriDomanda(); });
-  document.querySelectorAll('a[href="#associati"]').forEach((a) => {
-    a.addEventListener('click', apriDomanda);
-  });
 
   // Ricaricando la pagina dopo l'invio si rivede la conferma
   const esitoSalvato = leggiSessione(ESITO_DOMANDA);

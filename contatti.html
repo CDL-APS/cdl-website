@@ -82,12 +82,13 @@
                         <textarea name="messaggio" rows="6" required></textarea>
                     </label>
                     <div class="modulo__piede">
-                        <!-- La casella si spunta solo dopo aver aperto l'informativa
-                             (caselleDopoLettura in comune.js). Il valore porta la
+                        <!-- La casella è obbligatoria, ma si può spuntare senza aprire
+                             l'informativa (scelta dell'utente, 19 novembre 2026: nella
+                             domanda di ammissione invece sì). Il valore porta la
                              versione del documento: cambiandolo, va cambiato il nome
                              del PDF e il valore qui -->
                         <label class="modulo__consenso">
-                            <input type="checkbox" name="informativa" value="Letta (informativa-contatti-v1)" required data-dopo-lettura="link-informativa" data-nota-lettura="Apri l'informativa per poter spuntare la casella.">
+                            <input type="checkbox" name="informativa" value="Letta (informativa-contatti-v1)" required>
                             <span>Ho letto l&rsquo;<a id="link-informativa" href="/assets/doc/informativa-contatti-v1.pdf" target="_blank" rel="noopener">informativa sulla privacy</a>.</span>
                         </label>
                         <button class="btn btn--pieno" type="submit">Invia il messaggio <svg class="freccia" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h15"/><path d="m13 6 6 6-6 6"/></svg></button>
@@ -123,9 +124,9 @@
                         <a class="btn btn--socio" href="vantaggi-tesseramento.html#associati">Diventa socio</a>
                         <a class="btn btn--scuro" href="contatti.html#contatti">Contattaci</a>
                     </div>
-                    <a class="link" href="vantaggi-tesseramento.html">Tutti i vantaggi per i soci <svg class="freccia" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h15"/><path d="m13 6 6 6-6 6"/></svg></a>
+                    <a class="link" href="vantaggi-tesseramento.html#vantaggi">Tutti i vantaggi per i soci <svg class="freccia" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h15"/><path d="m13 6 6 6-6 6"/></svg></a>
                 </div>
-                <a class="span-4 start-9 sostieni__tessera" href="vantaggi-tesseramento.html" aria-label="I vantaggi per i soci">
+                <a class="span-4 start-9 sostieni__tessera" href="vantaggi-tesseramento.html#vantaggi" aria-label="I vantaggi per i soci">
                     <img src="assets/img/partner/tessera-cdl.png" alt="" width="1080" height="1080">
                 </a>
             </div>

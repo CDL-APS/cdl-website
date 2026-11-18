@@ -1,24 +1,40 @@
 /* ==========================================================================
-   VANTAGGI PER I SOCI (vantaggi-tesseramento.html)
-   La meta di "Diventa socio" nella barra. Carta, filo arancio: i vantaggi
-   in tre blocchi col titolo arancio, ognuno una riga di voci col filo
-   sopra, come le schede. In fondo l'invito arancio della home.
-   Un passo (--passo) fra il filo arancio e il primo titolo; fra un blocco
-   e l'altro niente filo, un passo e mezzo.
+   SOSTIENI (vantaggi-tesseramento.html)
+   La meta di "Diventa socio" nella barra. In cima l'invito arancio di
+   Sostieni (lo stesso che chiude home e Contatti, components.css), con la
+   tessera; sotto, due sezioni a comparsa uguali, ognuna col suo filo nero
+   sopra: i vantaggi (#vantaggi) e la domanda di ammissione (#associati).
+   I vantaggi stanno in tre gruppi, ognuno una riga di voci col filo sopra,
+   come le schede. Il piede è quello semplice: Sostieni è già in cima.
    ========================================================================== */
 .pagina-vantaggi { --filo: rgba(29, 29, 27, 0.2); --passo: clamp(40px, 4.5vw, 64px); }
 .pagina-vantaggi main > section { min-height: 0; }
 .pagina-vantaggi main { padding-bottom: calc(var(--passo) * 1.5); }
-.pagina-vantaggi .hero--pagina .fit + .fit { margin-top: 0.04em; }
-.pagina-vantaggi .presentazione { border-bottom: 2px solid var(--arancio); }
-.pagina-vantaggi .blocco-pagina { padding-top: var(--passo); }
-.pagina-vantaggi .blocco-pagina--diviso { margin-top: calc(var(--passo) * 1.5); padding-top: 0; }
-.pagina-vantaggi .blocco-pagina--diviso > .wrap { padding-top: 0; border-top: 0; }
-.pagina-vantaggi .blocco-pagina__testa { min-height: 0; color: var(--arancio); }
-/* Il rimando ai vantaggi in fondo (Sostieni) qui riporta in cima, scorrendo */
+.hero--sostieni { background: var(--fondo); color: var(--inchiostro); padding-bottom: var(--padb, clamp(48px, 6vw, 88px)); }
+.hero--sostieni .sostieni__frase + .sostieni__frase { margin-top: 0.6em; }
+
+/* Le due sezioni a comparsa: il titolo è il tasto che apre, il cerchio col
+   + diventa una × */
+.comparsa-blocco { padding-top: var(--passo); scroll-margin-top: var(--nav); }
+.comparsa-blocco + .comparsa-blocco { padding-top: calc(var(--passo) * 0.75); }
+.comparsa { padding-top: clamp(14px, 1.6vw, 20px); border-top: 2px solid var(--nero); }
+.comparsa__testa { display: flex; align-items: center; justify-content: space-between; gap: 20px; list-style: none; cursor: pointer; }
+.comparsa__testa::-webkit-details-marker { display: none; }
+.comparsa__testa .blocco-pagina__testa { margin-bottom: 0; color: var(--nero); transition: color 0.2s var(--ease); }
+.comparsa__testa:hover .blocco-pagina__testa, .comparsa[open] .blocco-pagina__testa { color: var(--arancio); }
+.comparsa__testa:focus-visible { outline: 3px solid var(--nero); outline-offset: 6px; border-radius: 4px; }
+.comparsa__segno { display: grid; place-items: center; flex: 0 0 auto; width: 48px; height: 48px; border: 2px solid var(--nero); border-radius: 50%; transition: transform 0.3s var(--ease), background-color 0.2s var(--ease); }
+.comparsa__segno svg { width: 22px; height: 22px; }
+.comparsa__testa:hover .comparsa__segno { background: var(--arancio); }
+.comparsa[open] .comparsa__segno { transform: rotate(45deg); }
+.comparsa[open] > .comparsa__testa { margin-bottom: clamp(18px, 2vw, 28px); }
+/* Il rimando ai vantaggi da home e Contatti scorre fin qui */
 @media (prefers-reduced-motion: no-preference) {
   html:has(.pagina-vantaggi) { scroll-behavior: smooth; }
 }
+
+.vantaggi__gruppo + .vantaggi__gruppo { margin-top: calc(var(--passo) * 0.9); }
+.vantaggi__titolo { margin-bottom: 18px; font-size: clamp(18px, 1.5vw, 21px); font-weight: 800; line-height: 1.3; }
 .vantaggi-g { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(28px, 3vw, 44px) var(--gap); padding: 0; list-style: none; }
 .vantaggio-g { display: grid; align-content: start; gap: 10px; height: 100%; padding-top: 16px; border-top: 2px solid var(--nero); }
 /* I marchi dei partner, tutti in nero: stanno insieme e non litigano coi colori */
@@ -38,17 +54,6 @@ a.vantaggio-g:hover .vantaggio-g__freccia { transform: translate(3px, -3px); bac
    components.css) su una colonna larga quanto si legge bene; al suo posto,
    dopo l'invio, la conferma con il codice e i dati per pagare
    -------------------------------------------------------------------------- */
-.domanda { scroll-margin-top: var(--nav); }
-/* Il titolo è il tasto che apre la sezione: il cerchio col + diventa una × */
-.domanda__testa { display: flex; align-items: center; justify-content: space-between; gap: 20px; list-style: none; cursor: pointer; }
-.domanda__testa::-webkit-details-marker { display: none; }
-.domanda__testa .blocco-pagina__testa { margin-bottom: 0; }
-.domanda__testa:focus-visible { outline: 3px solid var(--nero); outline-offset: 6px; border-radius: 4px; }
-.domanda__segno { display: grid; place-items: center; flex: 0 0 auto; width: 48px; height: 48px; border: 2px solid var(--nero); border-radius: 50%; transition: transform 0.3s var(--ease), background-color 0.2s var(--ease); }
-.domanda__segno svg { width: 22px; height: 22px; }
-.domanda__testa:hover .domanda__segno { background: var(--arancio); }
-.domanda__apri[open] .domanda__segno { transform: rotate(45deg); }
-.domanda__apri[open] > .domanda__testa { margin-bottom: clamp(18px, 2vw, 28px); }
 .domanda__intro { display: grid; gap: 10px; max-width: 62ch; font-size: clamp(17px, 1.4vw, 19px); font-weight: 600; line-height: 1.5; }
 .domanda__intro a, .domanda__avviso a { text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 2px; }
 .domanda__modulo, .domanda__conferma { max-width: 880px; margin-top: clamp(32px, 4vw, 48px); }

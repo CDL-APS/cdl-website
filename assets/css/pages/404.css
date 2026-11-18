@@ -10,3 +10,5 @@
 .hero--smarrita .o .occhio { animation: apri 0.5s var(--ease) 0.4s both; }
 @keyframes apri { from { transform: scale(0); } }
 .smarrita__azioni { margin-top: clamp(28px, 3.4vw, 48px); }
+/* Un solo tasto, Torna alla home: al passaggio diventa arancio */
+.smarrita__azioni .btn--pieno:hover { background: var(--arancio); border-color: var(--arancio); color: var(--nero); }

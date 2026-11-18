@@ -22,15 +22,15 @@ dettagli stanno nei due documenti dello storico.
 
 Prima di unire, in quest'ordine:
 
-- [ ] **Cortoteca in pausa**: nascosta dal sito pubblico, area socio
+- [x] **Cortoteca in pausa**: nascosta dal sito pubblico, area socio
   irraggiungibile, in gestione Dashboard, Proposte e Soci "In sviluppo".
   Cosa si spegne e dove, cosa resta acceso e come riprendere:
   `storico/2026-11-17-cortoteca-in-pausa.md`.
-- [ ] **Privacy nel modulo di Contatti**: "Ho letto l'informativa", con la
-  casella che si spunta solo dopo aver aperto il PDF
-  (`assets/doc/informativa-contatti-v1.pdf`, `caselleDopoLettura()` in
-  `comune.js`).
-- [ ] **Domanda di ammissione a socio online** in
+- [x] **Privacy nel modulo di Contatti**: "Ho letto l'informativa",
+  casella obbligatoria con il link al PDF
+  (`assets/doc/informativa-contatti-v1.pdf`); dal 19 novembre 2026 si può
+  spuntare senza aprirlo.
+- [x] **Domanda di ammissione a socio online** in
   `vantaggi-tesseramento.html#associati`, con la web app Google Apps Script
   (`google/iscrizioni/`) che scrive nel libro soci e manda le mail:
   `storico/2026-11-17-piano-iscrizione-online.md`. Decisioni del
@@ -41,7 +41,7 @@ Prima di unire, in quest'ordine:
   sulla copia del foglio**: tutte le prove della sezione 4 a posto, tranne
   il pagamento PayPal vero, che l'utente fa dopo il deploy con un amico che
   si tessera. Le review della web app sono state rifatte dopo il tasto
-  nella mail (versione `2026-11-18h`, da reincollare). Nel libro soci tolti i
+  nella mail (versione `2026-11-18h`: il 19 novembre la web app era ancora alla `g`, va reincollata e ridistribuita). Nel libro soci tolti i
   numeri di tessera scritti in anticipo (035-150): i numeri li dà solo lo
   script, anche alle domande cartacee, e chi rinnova tiene il suo. Punto
   di ripartenza: `storico/2026-11-18-handoff-domanda-ammissione.md`.
@@ -55,7 +55,7 @@ Prima di unire, in quest'ordine:
   2026): non si rifanno per ritocchi grafici, di impaginazione o di testi;
   si rifanno per lavoro sostanziale (nuove funzioni, dati, permessi,
   Supabase, header di sicurezza).
-- [ ] **Prove sul deploy di prova** `https://redesign--cdl-aps.netlify.app`
+- [x] **Prove sul deploy di prova** (fatte il 18-19 novembre, tutte a posto; il pagamento PayPal vero passa a dopo il deploy) `https://redesign--cdl-aps.netlify.app`
   (caricato a mano con la CLI di Netlify, senza `--prod`), seguendo
   `storico/2026-11-14-prove-sito-online.md` (aggiornata il 17 novembre),
   fino a un pagamento vero da 5 €. Il deploy di prova va ricaricato dopo le
@@ -431,7 +431,15 @@ Cortoteca più sotto descrivono il sistema com'è, spento.
   collaborazioni (`collaborazione_cdl`, nascosto finché è vuoto). Le due
   colonne di `opere` si escludono (vincolo nel database). Le schede
   (`.scheda-g`) stanno in `components.css`, condivise con Eventi.
-- Eventi, Produzioni, Cortoteca, Vantaggi e 404 aprono con il nome della
+- **Sostieni** (`vantaggi-tesseramento.html`, il nome del file è rimasto
+  quello di prima; dal 19 novembre 2026 al posto di "Vantaggi per i soci"):
+  in cima l'invito arancio di Sostieni, lo stesso che chiude home e
+  Contatti, con la frase sui vantaggi riservati ai soci; sotto, due sezioni
+  a comparsa uguali, "Tutti i vantaggi per i soci" (`#vantaggi`) e la
+  domanda di ammissione (`#associati`), che si aprono da sole su quegli
+  indirizzi. Fra i vantaggi c'è la Cortoteca, con "coming soon" finché è
+  in pausa. Il piede è quello semplice.
+- Eventi, Produzioni, Cortoteca e 404 aprono con il nome della
   pagina a tutta larghezza (`.parola` con `.fit`, misurato da `adatta()`) e
   una presentazione (`.presentazione`) chiusa da un filo.
 - La home ha quattro parti: l'apertura sulla sala vista dall'alto, al buio,
@@ -473,12 +481,13 @@ Cortoteca più sotto descrivono il sistema com'è, spento.
   automatici: le prove si fanno a mano. La casella in fondo è "Ho letto
   l'informativa" (campo `informativa`, il valore porta la versione del
   PDF; dal 17 novembre 2026 al posto di `consenso`, anche nei due moduli
-  nascosti) e si spunta solo dopo aver aperto il PDF.
+  nascosti): è obbligatoria, ma dal 19 novembre 2026 (scelta dell'utente)
+  si può spuntare senza aprire il PDF.
 - **Caselle "dopo lettura"** (`caselleDopoLettura()` in `comune.js`): una
   casella con `data-dopo-lettura="<id del link>"` non si spunta finché il
   link non è stato aperto (clic o clic centrale); non è `disabled`, perché
-  il browser non controllerebbe il `required`. La usano Contatti e la
-  domanda di ammissione.
+  il browser non controllerebbe il `required`. La usa la domanda di
+  ammissione (statuto e informativa); Contatti non più.
 - **Documenti in PDF** (informative, statuto, modulo cartaceo) in
   `assets/doc/`, sorgenti HTML in `documenti/` (come rifarli:
   `documenti/README.md`). Una versione nuova prende un nome nuovo, per la

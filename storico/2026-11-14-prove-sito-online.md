@@ -30,41 +30,41 @@ computer (Chrome o Firefox).
 
 ## 1. Pagine pubbliche
 
-Su telefono e computer. Sul computer provate dall'utente il 18 novembre
-2026, tutto a posto: restano da vedere sul telefono.
+Su telefono e computer. Provate dall'utente il 18-19 novembre 2026 su computer e telefono: tutto a
+posto.
 
-- [ ] **Home**: si vede la sala al buio e la torcia segue il dito o il
+- [x] **Home**: si vede la sala al buio e la torcia segue il dito o il
   puntatore; il nastro delle notizie scorre (senza voci sulla Cortoteca).
-- [ ] **Home, indice**: Eventi e Produzioni hanno lo stesso corpo,
+- [x] **Home, indice**: Eventi e Produzioni hanno lo stesso corpo,
   centrati. Al passaggio (sul computer) prendono il colore della sezione e
   mostrano i tre più recenti; al clic il colore si allarga prima di cambiare
   pagina.
-- [ ] **Home**: il rullino di fotografie scorre e ogni foto porta al suo
+- [x] **Home**: il rullino di fotografie scorre e ogni foto porta al suo
   evento o al suo corto; Sostieni in arancio, piede in fondo.
-- [ ] **Eventi**: Long Story Short in evidenza, Short Talks, Altri eventi.
+- [x] **Eventi**: Long Story Short in evidenza, Short Talks, Altri eventi.
   Clic su una scheda: l'evento si apre sopra la pagina; Esc, crocetta
   (sul telefono in basso a destra) e il tasto indietro la chiudono.
-- [ ] **Pagine evento** aperte da sole (Long Story Short, Short Talks #1 e
+- [x] **Pagine evento** aperte da sole (Long Story Short, Short Talks #1 e
   le altre, Blue Hour): foto, gallerie, tag Instagram toccabili; accanto ai
   corti del programma "Scheda del corto", che apre la pagina del corto.
-- [ ] **Produzioni**: lavoro più recente in evidenza con il titolo
+- [x] **Produzioni**: lavoro più recente in evidenza con il titolo
   grafico, poi produzioni originali e collaborazioni; clic su un corto: il
   fotogramma vola al posto della copertina.
-- [ ] **Pagina di un corto** aperta da sola (es. `/opera.html?film=interzona`):
+- [x] **Pagina di un corto** aperta da sola (es. `/opera.html?film=interzona`):
   titolo grafico nel colore del corto, crediti (interpreti a tutta riga sul
   telefono), Guarda dove c'è il video, i tasti **Letterboxd** e **IMDb**
   dove ci sono, nessuna pillola "Streaming in arrivo".
-- [ ] **Vantaggi del tesseramento** e **Contatti**: testi, Sostieni, piede;
+- [x] **Vantaggi del tesseramento** e **Contatti**: testi, Sostieni, piede;
   "Diventa socio" di Sostieni porta alla domanda di ammissione e la apre.
   In Contatti non c'è più il motivo "Diventare socio".
-- [ ] **Cornice narrativa** (`/cornicenarrativa.html`): il generatore di
+- [x] **Cornice narrativa** (`/cornicenarrativa.html`): il generatore di
   Long Story Short funziona.
-- [ ] **404**: un indirizzo inventato (es. `/non-esiste`) mostra la pagina
+- [x] **404**: un indirizzo inventato (es. `/non-esiste`) mostra la pagina
   404 del sito, anche più in profondità (`/a/b/c`).
-- [ ] Barra: nessuna voce Cortoteca; "Diventa socio" resta a destra; la
+- [x] Barra: nessuna voce Cortoteca; "Diventa socio" resta a destra; la
   voce della pagina corrente è accesa; sul telefono Contatti si raggiunge
   dal piede.
-- [ ] Nessuna pagina scorre di lato sul telefono.
+- [x] Nessuna pagina scorre di lato sul telefono.
 
 ## 2. Indirizzi vecchi e redirect
 
@@ -79,20 +79,20 @@ Controllati con `curl` sul deploy di prova il 18 novembre 2026: tutti a posto.
 
 ## 3. Modulo di Contatti (mail vere)
 
-- [ ] **Informativa**: la casella "Ho letto l'informativa" non si spunta
-  finché non apri il link; aperto il PDF (in un'altra scheda), si spunta.
-  Senza spuntarla il messaggio non parte.
+- [x] **Informativa**: la casella "Ho letto l'informativa" si spunta anche
+  senza aprire il link (dal 19 novembre 2026); il link apre il PDF in
+  un'altra scheda. Senza spuntarla il messaggio non parte.
 
 Un invio per ogni motivo, scritto a mano (gli invii automatici Netlify li
 scarta come spam). Per ognuno: dopo l'invio compare "Messaggio inviato" e
 arriva la mail all'indirizzo giusto, con oggetto "[Sito CDL] … – <nome>" e
 la versione dell'informativa letta.
 
-- [ ] Informazioni → ciao@
-- [ ] Short Talks nel tuo cinema → eventi@
-- [ ] Collaborare a una produzione → produzione@
-- [ ] Altro → ciao@
-- [ ] **Risposta alla mail**: premi "Rispondi" su una delle mail arrivate.
+- [x] Informazioni → ciao@
+- [x] Short Talks nel tuo cinema → eventi@
+- [x] Collaborare a una produzione → produzione@
+- [x] Altro → ciao@
+- [x] **Risposta alla mail**: premi "Rispondi" su una delle mail arrivate.
   Il destinatario proposto deve essere l'indirizzo di chi ha scritto, non
   `formresponses@netlify.com` né la casella dell'associazione. Se non lo
   è, per rispondere bisogna copiare l'indirizzo dal testo della mail:
@@ -153,18 +153,21 @@ indirizzo come email del candidato.
 
 ## 5. Gestione (redattori)
 
-- [ ] Accesso con email, password e codice dell'app di autenticazione.
-- [ ] La gestione si apre su Opere. Dashboard, Proposte, Soci ed Eventi
+Provata dall'utente il 19 novembre 2026: a posto (si è aperta sulla
+Dashboard, probabilmente per un indirizzo con `#dashboard`; lasciato stare).
+
+- [x] Accesso con email, password e codice dell'app di autenticazione.
+- [x] La gestione si apre su Opere. Dashboard, Proposte, Soci ed Eventi
   mostrano solo "In sviluppo", anche aperte dall'indirizzo (`#dashboard`,
   `#proposte`, `#soci`), senza pannelli vuoti.
-- [ ] Opere: apri un'opera, cambia un campo innocuo, salva, controlla sul
+- [x] Opere: apri un'opera, cambia un campo innocuo, salva, controlla sul
   sito, rimetti com'era. Il campo **IMDb** accetta solo indirizzi imdb.com.
   Il gruppo "Cortoteca" (titolare) non compare.
-- [ ] Rullino: l'ordine e le foto si vedono; un cambio si vede in home; la
+- [x] Rullino: l'ordine e le foto si vedono; un cambio si vede in home; la
   provenienza dei fotogrammi si chiama "Fotogrammi delle opere".
-- [ ] Sul telefono: barra delle schede su due righe con la scheda attiva in
+- [x] Sul telefono: barra delle schede su due righe con la scheda attiva in
   vista, moduli leggibili, tasti grandi abbastanza.
-- [ ] Esci, e la pagina torna all'accesso.
+- [x] Esci, e la pagina torna all'accesso.
 
 ## 6. Header (opzionale, dal Terminale)
 

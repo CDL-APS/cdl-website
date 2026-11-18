@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Vantaggi per i soci – CDL APS</title>
-    <meta name="description" content="Cosa riserva CDL APS ai suoi soci: supporto ai progetti, sconti dai partner ed eventi dedicati.">
+    <title>Sostieni – CDL APS</title>
+    <meta name="description" content="Sostieni CDL APS: diventa socio, scopri i vantaggi riservati ai soci e compila la domanda di ammissione.">
 
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link rel="icon" type="image/png" href="assets/img/brand/favicon.png">
@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800;900&display=swap">
     <link rel="stylesheet" href="assets/css/base.css?v=2026-11-18b">
     <link rel="stylesheet" href="assets/css/components.css?v=2026-11-18b">
-    <link rel="stylesheet" href="assets/css/pages/vantaggi.css?v=2026-11-18b">
+    <link rel="stylesheet" href="assets/css/pages/vantaggi.css?v=2026-11-19">
 </head>
 <body class="pagina-vantaggi">
 
@@ -30,58 +30,85 @@
     </header>
 
     <main id="top">
-        <section class="hero hero--pagina">
-            <div class="wrap">
-                <h1 class="parola"><span class="sr-only">Vantaggi per i soci</span><span class="fit" aria-hidden="true"><span class="fit-testo">Vantaggi</span></span><span class="fit" aria-hidden="true"><span class="fit-testo">per i soci</span></span></h1>
-                <div class="presentazione entra"><p>CDL &egrave; una neonata associazione no-profit indipendente. Associarsi significa soprattutto contribuire attivamente alla realizzazione dei nostri progetti.</p><p>Inoltre, offriamo ai nostri soci alcuni servizi e vantaggi in continua evoluzione.</p></div>
+        <!-- In cima l'invito di Sostieni, lo stesso che chiude home e Contatti
+             (components.css), con una frase in più sui vantaggi. Sotto, due
+             sezioni a comparsa equivalenti: i vantaggi (#vantaggi) e la domanda
+             di ammissione (#associati), che si aprono da sole su quegli indirizzi -->
+        <section class="hero hero--sostieni fondo-arancio">
+            <div class="wrap sostieni">
+                <h1>
+                    <span class="sr-only">Sostieni CDL</span>
+                    <span class="fit" aria-hidden="true"><span class="fit-testo">Sostieni<span class="logo"></span></span></span>
+                </h1>
+                <div class="grid sostieni__corpo">
+                    <div class="span-8">
+                        <p class="sostieni__stato"><span class="rec"></span>La quota associativa &egrave; stata ridotta per gli ultimi mesi del 2026.</p>
+                        <p class="sostieni__frase">Associarti a CDL significa contribuire attivamente al nostro progetto di diffusione della cultura cinematografica indipendente.</p>
+                        <p class="sostieni__frase">Riserviamo ai nostri soci alcuni servizi e vantaggi in continuo aggiornamento.</p>
+                    </div>
+                    <div class="span-4 start-9 sostieni__tessera">
+                        <img src="assets/img/partner/tessera-cdl.png" alt="" width="1080" height="1080">
+                    </div>
+                </div>
             </div>
         </section>
 
-        <section class="blocco-pagina entra" aria-labelledby="titolo-supporto">
+        <section class="blocco-pagina comparsa-blocco" id="vantaggi" aria-labelledby="titolo-vantaggi">
             <div class="wrap">
-                <h2 class="blocco-pagina__testa" id="titolo-supporto">Cinema indipendente e supporto</h2>
-                <ul class="vantaggi-g">
-                    <li><div class="vantaggio-g">
-                        <span class="vantaggio-g__titolo">Sviluppo di nuovi progetti</span>
-                        <span class="vantaggio-g__testo">Collabora alle produzioni originali, o ricevi supporto logistico e creativo per la tua prossima idea. La prima consulenza di produzione &egrave; gratuita.</span>
-                    </div></li>
-                </ul>
-            </div>
-        </section>
+                <details class="comparsa" id="vantaggi-apri">
+                    <summary class="comparsa__testa">
+                        <h2 class="blocco-pagina__testa" id="titolo-vantaggi">Tutti i vantaggi per i soci</h2>
+                        <span class="comparsa__segno" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14"/><path d="M5 12h14"/></svg></span>
+                    </summary>
 
-        <section class="blocco-pagina blocco-pagina--diviso entra" aria-labelledby="titolo-partner">
-            <div class="wrap">
-                <h2 class="blocco-pagina__testa" id="titolo-partner">Sconti presso i nostri partner</h2>
-                <ul class="vantaggi-g">
-                    <li><a class="vantaggio-g" href="https://www.centrosupercinema.com/" target="_blank" rel="noopener">
-                        <img class="vantaggio-g__logo" src="assets/img/partner/supercinema.png" alt="" loading="lazy"><span class="vantaggio-g__titolo">C&rsquo;entro Supercinema<span class="vantaggio-g__freccia"><svg class="freccia" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h6"/></svg></span></span>
-                        <span class="vantaggio-g__testo">Prezzo ridotto nelle sale di Santarcangelo di Romagna per tutta la stagione.</span>
-                    </a></li>
-                    <li><a class="vantaggio-g" href="https://arkadiastudios.it/rental-noleggio/" target="_blank" rel="noopener">
-                        <img class="vantaggio-g__logo" src="assets/img/partner/arkadia.png" alt="" loading="lazy"><span class="vantaggio-g__titolo">Arkadia Studios<span class="vantaggio-g__freccia"><svg class="freccia" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h6"/></svg></span></span>
-                        <span class="vantaggio-g__testo">Il 15% di sconto sul noleggio dell&rsquo;attrezzatura da Arkadia Rental.</span>
-                    </a></li>
-                    <li><a class="vantaggio-g" href="https://www.alcatraz.shop/" target="_blank" rel="noopener">
-                        <img class="vantaggio-g__logo" src="assets/img/partner/alcatraz.png" alt="" loading="lazy"><span class="vantaggio-g__titolo">Alcatraz<span class="vantaggio-g__freccia"><svg class="freccia" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h6"/></svg></span></span>
-                        <span class="vantaggio-g__testo">Il 5% di sconto sull&rsquo;editoria nella storica fumetteria riminese.</span>
-                    </a></li>
-                </ul>
-            </div>
-        </section>
+                    <div class="vantaggi__gruppo">
+                        <h3 class="vantaggi__titolo">Cinema indipendente e supporto</h3>
+                        <ul class="vantaggi-g">
+                            <li><div class="vantaggio-g">
+                                <span class="vantaggio-g__titolo">Sviluppo di nuovi progetti</span>
+                                <span class="vantaggio-g__testo">Collabora alle produzioni originali, o ricevi supporto logistico e creativo per la tua prossima idea. La prima consulenza di produzione &egrave; gratuita.</span>
+                            </div></li>
+                            <!-- La Cortoteca è in pausa (storico/2026-11-17-cortoteca-in-pausa.md):
+                                 alla ripresa la voce torna un link a cortoteca.html -->
+                            <li><div class="vantaggio-g">
+                                <span class="vantaggio-g__titolo">Cortoteca</span>
+                                <span class="vantaggio-g__testo">L&rsquo;archivio delle opere realizzate dai soci, da guardare in streaming sul sito (coming soon&hellip;).</span>
+                            </div></li>
+                        </ul>
+                    </div>
 
-        <section class="blocco-pagina blocco-pagina--diviso entra" aria-labelledby="titolo-comunita">
-            <div class="wrap">
-                <h2 class="blocco-pagina__testa" id="titolo-comunita">Eventi e comunit&agrave;</h2>
-                <ul class="vantaggi-g">
-                    <li><div class="vantaggio-g">
-                        <span class="vantaggio-g__titolo">Eventi dedicati</span>
-                        <span class="vantaggio-g__testo">Anteprime, eventi privati e workshop (coming soon&hellip;) riservati ai nostri soci.</span>
-                    </div></li>
-                    <li><div class="vantaggio-g">
-                        <span class="vantaggio-g__titolo">Il tuo nome sul grande schermo</span>
-                        <span class="vantaggio-g__testo">I nomi dei soci scorrono nei titoli proiettati prima e dopo ogni nostro evento pubblico.</span>
-                    </div></li>
-                </ul>
+                    <div class="vantaggi__gruppo">
+                        <h3 class="vantaggi__titolo">Sconti presso i nostri partner</h3>
+                        <ul class="vantaggi-g">
+                            <li><a class="vantaggio-g" href="https://www.centrosupercinema.com/" target="_blank" rel="noopener">
+                                <img class="vantaggio-g__logo" src="assets/img/partner/supercinema.png" alt="" loading="lazy"><span class="vantaggio-g__titolo">C&rsquo;entro Supercinema<span class="vantaggio-g__freccia"><svg class="freccia" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h6"/></svg></span></span>
+                                <span class="vantaggio-g__testo">Prezzo ridotto nelle sale di Santarcangelo di Romagna per tutta la stagione.</span>
+                            </a></li>
+                            <li><a class="vantaggio-g" href="https://arkadiastudios.it/rental-noleggio/" target="_blank" rel="noopener">
+                                <img class="vantaggio-g__logo" src="assets/img/partner/arkadia.png" alt="" loading="lazy"><span class="vantaggio-g__titolo">Arkadia Studios<span class="vantaggio-g__freccia"><svg class="freccia" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h6"/></svg></span></span>
+                                <span class="vantaggio-g__testo">Il 15% di sconto sul noleggio dell&rsquo;attrezzatura da Arkadia Rental.</span>
+                            </a></li>
+                            <li><a class="vantaggio-g" href="https://www.alcatraz.shop/" target="_blank" rel="noopener">
+                                <img class="vantaggio-g__logo" src="assets/img/partner/alcatraz.png" alt="" loading="lazy"><span class="vantaggio-g__titolo">Alcatraz<span class="vantaggio-g__freccia"><svg class="freccia" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h6"/></svg></span></span>
+                                <span class="vantaggio-g__testo">Il 5% di sconto sull&rsquo;editoria nella storica fumetteria riminese.</span>
+                            </a></li>
+                        </ul>
+                    </div>
+
+                    <div class="vantaggi__gruppo">
+                        <h3 class="vantaggi__titolo">Eventi e comunit&agrave;</h3>
+                        <ul class="vantaggi-g">
+                            <li><div class="vantaggio-g">
+                                <span class="vantaggio-g__titolo">Eventi dedicati</span>
+                                <span class="vantaggio-g__testo">Anteprime, eventi privati e workshop (coming soon&hellip;) riservati ai nostri soci.</span>
+                            </div></li>
+                            <li><div class="vantaggio-g">
+                                <span class="vantaggio-g__titolo">Il tuo nome sul grande schermo</span>
+                                <span class="vantaggio-g__testo">I nomi dei soci scorrono nei titoli proiettati prima e dopo ogni nostro evento pubblico.</span>
+                            </div></li>
+                        </ul>
+                    </div>
+                </details>
             </div>
         </section>
 
@@ -92,21 +119,21 @@
              attivo). data-quote: le quote per anno, solo per il testo in cima; quelle
              che contano sono nelle impostazioni dello script. IBAN e PayPal arrivano
              solo con la risposta, mai nella pagina: nessuno paga senza domanda. -->
-        <section class="blocco-pagina blocco-pagina--diviso domanda" id="associati" aria-labelledby="titolo-domanda">
+        <section class="blocco-pagina comparsa-blocco domanda" id="associati" aria-labelledby="titolo-domanda">
             <div class="wrap">
                 <!-- Sezione a comparsa: si apre da sola arrivando su #associati
                      (Sostieni, "Diventa socio") e con una conferma già data -->
-                <details class="domanda__apri" id="domanda-apri">
-                    <summary class="domanda__testa">
+                <details class="comparsa" id="domanda-apri">
+                    <summary class="comparsa__testa">
                         <h2 class="blocco-pagina__testa" id="titolo-domanda">Domanda di ammissione a socio</h2>
-                        <span class="domanda__segno" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14"/><path d="M5 12h14"/></svg></span>
+                        <span class="comparsa__segno" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14"/><path d="M5 12h14"/></svg></span>
                     </summary>
 
                     <div class="domanda__intro">
                         <!-- data-quota-testo: l'anno del testo scritto qui; in un altro
                              anno vantaggi-tesseramento.js lo riscrive da data-quote -->
                         <p>Compila la domanda di ammissione: ci vogliono due minuti. La quota associativa <span data-quota-testo="2026">per gli ultimi mesi del 2026 &egrave; di 5 &euro;</span>, e la puoi pagare con PayPal, con un bonifico istantaneo o in contanti.</p>
-                        <p class="domanda__nota">Se qualcosa va storto o la domanda dovesse essere respinta, la quota ti sar&agrave; rimborsata. Sei minorenne? Usa il <a href="/assets/doc/domanda-ammissione-socio-2026.pdf" target="_blank" rel="noopener">modulo cartaceo</a>, da firmare insieme a un genitore.</p>
+                        <p class="domanda__nota">Se qualcosa va storto o la domanda dovesse essere respinta, la quota ti sar&agrave; rimborsata.<br>Sei minorenne? Usa il <a href="/assets/doc/domanda-ammissione-socio-2026.pdf" target="_blank" rel="noopener">modulo cartaceo</a>, da firmare insieme a un genitore.</p>
                     </div>
 
                     <noscript><p class="domanda__avviso">Per inviare la domanda dal sito serve JavaScript. Puoi usare il <a href="/assets/doc/domanda-ammissione-socio-2026.pdf">modulo cartaceo</a> o scriverci a <a href="mailto:ciao@cdlaps.com">ciao@cdlaps.com</a>.</p></noscript>
@@ -115,7 +142,7 @@
                         <p class="sr-only"><label>Non compilare questo campo: <input name="trappola" tabindex="-1" autocomplete="off"></label></p>
 
                         <fieldset class="modulo__gruppo">
-                            <legend>Chi sei</legend>
+                            <legend class="sr-only">Chi sei</legend>
                             <div class="modulo__griglia">
                                 <label class="modulo__campo">
                                     <span>Nome</span>
@@ -153,11 +180,8 @@
                                     <input type="text" name="cap" autocomplete="postal-code" inputmode="numeric" maxlength="5" pattern="[0-9]{5}" required>
                                 </label>
                             </div>
-                        </fieldset>
-
-                        <fieldset class="modulo__gruppo">
-                            <legend>Contatti</legend>
-                            <div class="modulo__coppia">
+                            <p class="domanda__sotto" id="titolo-contatti">Contatti</p>
+                            <div class="modulo__coppia" role="group" aria-labelledby="titolo-contatti">
                                 <label class="modulo__campo">
                                     <span>Email</span>
                                     <input type="email" name="email" autocomplete="email" maxlength="120" required>
@@ -224,27 +248,7 @@
         </section>
     </main>
 
-    <footer class="closing fondo-arancio" id="socio">
-        <div class="wrap sostieni">
-            <h2>
-                <span class="sr-only">Sostieni CDL</span>
-                <span class="fit" aria-hidden="true"><span class="fit-testo">Sostieni<span class="logo"></span></span></span>
-            </h2>
-            <div class="grid sostieni__corpo">
-                <div class="span-8">
-                    <p class="sostieni__stato"><span class="rec"></span>La quota associativa &egrave; stata ridotta per gli ultimi mesi del 2026.</p>
-                    <p class="sostieni__frase">Associarti a CDL significa contribuire attivamente al nostro progetto di diffusione della cultura cinematografica indipendente.</p>
-                    <div class="btn-riga">
-                        <a class="btn btn--socio" href="#associati">Diventa socio</a>
-                        <a class="btn btn--scuro" href="contatti.html#contatti">Contattaci</a>
-                    </div>
-                    <a class="link" href="#top">Tutti i vantaggi per i soci <svg class="freccia freccia--su" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20V5"/><path d="m6 11 6-6 6 6"/></svg></a>
-                </div>
-                <a class="span-4 start-9 sostieni__tessera" href="#top" aria-label="I vantaggi per i soci">
-                    <img src="assets/img/partner/tessera-cdl.png" alt="" width="1080" height="1080" loading="lazy">
-                </a>
-            </div>
-        </div>
+    <footer>
         <div class="piede">
             <div class="wrap piede__riga">
                 <a href="index.html" aria-label="CDL, pagina iniziale"><span class="logo"></span></a>
@@ -262,6 +266,6 @@
     </footer>
 
     <script src="assets/js/comune.js?v=2026-11-18b"></script>
-    <script src="assets/js/vantaggi-tesseramento.js?v=2026-11-18d"></script>
+    <script src="assets/js/vantaggi-tesseramento.js?v=2026-11-19"></script>
 </body>
 </html>

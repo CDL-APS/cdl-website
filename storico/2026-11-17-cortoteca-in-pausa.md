@@ -36,7 +36,7 @@ voce "Cortoteca, proposte dei soci".
 | `assets/js/dati.js` | `const CORTOTECA_ATTIVA = false`, accanto a `MODELLO_EVENTI`: l'interruttore letto da `home.js`, `corto.js`, `gestione.js` e `gestione-rullino.js`. |
 | `assets/js/home.js` | Con l'interruttore spento: niente voce "In Cortoteca N opere" nel nastro; una foto del rullino legata a un'opera non pubblicata non porta da nessuna parte (prima andava a `cortoteca.html`); la didascalia dei corti non CDL dice "Cortometraggio" invece di "Cortoteca". |
 | `assets/js/corto.js` | Con l'interruttore spento, la pagina del corto senza video non mostra la pillola "Streaming in arrivo": oggi è una promessa che non vale. |
-| `vantaggi-tesseramento.html` | Tolta la voce "Cortoteca" fra i vantaggi e la parola nella descrizione. |
+| `vantaggi-tesseramento.html` | Dal 19 novembre 2026 la voce "Cortoteca" è di nuovo fra i vantaggi, senza link e con "(coming soon…)": alla ripresa torna un link a `cortoteca.html`. |
 | `contatti.html` | Tolto il motivo "Un corto per la Cortoteca". |
 | `404.html` | Tolto il tasto "Vai alla Cortoteca". |
 | `opera.html` | Descrizione: "Un cortometraggio di CDL APS." |
