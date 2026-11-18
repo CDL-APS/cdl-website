@@ -79,7 +79,7 @@ const FUSO = 'Europe/Rome';
 // Da cambiare a ogni modifica: la mostrano la pagina della conferma e
 // l'indirizzo della web app aperto senza parametri, per sapere quale
 // versione serve ciascun deployment
-const VERSIONE = '2026-11-18h';
+const VERSIONE = '2026-11-19a';
 const GENERICO = 'La domanda non è stata registrata. Riprova tra poco, o scrivici a ciao@cdlaps.com.';
 
 class Rifiuto extends Error {}
@@ -633,13 +633,13 @@ function istruzioniPagamento(domanda, imp) {
   if (d.pagamento === 'paypal') {
     return [
       'Puoi pagare con PayPal da qui: ' + imp.paypal + '/' + domanda.importo + 'EUR',
-      'Su PayPal scegli "Amici e familiari" e nel messaggio scrivi questa causale:',
+      'IMPORTANTE: su PayPal scegli "Amici e familiari", non "Beni e servizi". Nel messaggio scrivi questa causale:',
       domanda.causale
     ].join('\n');
   }
   if (d.pagamento === 'bonifico') {
     return [
-      'Puoi fare un bonifico, anche istantaneo:',
+      'Puoi fare un bonifico istantaneo:',
       'IBAN: ' + imp.iban,
       'Intestato a: ' + imp.beneficiario,
       'Importo: ' + domanda.importo + ' euro',

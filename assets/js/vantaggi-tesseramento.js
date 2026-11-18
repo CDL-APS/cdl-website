@@ -148,19 +148,35 @@ function mostraConferma(esito, modulo, conferma) {
     '. Se non trovi la mail, guarda nello spam o scrivici a ciao@cdlaps.com.'));
 
   const dati = elemento('dl', undefined, 'domanda__dati');
-  const voce = (termine, valore) => {
-    dati.append(elemento('dt', termine), elemento('dd', valore));
+  const voce = (termine, valore, classe) => {
+    dati.append(elemento('dt', termine), elemento('dd', valore, classe));
   };
   if (esito.pagamento === 'bonifico') {
     voce('IBAN', esito.iban);
     voce('Intestato a', esito.beneficiario);
   }
-  voce('Quota', `${euro(esito.importo)} per il ${esito.anno}`);
-  voce('Causale', esito.causale);
+  voce('Quota', euro(esito.importo));
+  voce('Causale', esito.causale, 'domanda__causale');
+  // In evidenza, col bordo arancio: la causale giusta (e per PayPal "Amici e
+  // familiari": con "Beni e servizi" PayPal trattiene una commissione)
+  const importante = (...voci) => {
+    const box = elemento('div', undefined, 'domanda__importante');
+    const elenco = elemento('ul');
+    voci.forEach((pezzi) => {
+      const li = elemento('li');
+      li.append(...pezzi);
+      elenco.append(li);
+    });
+    box.append(riga(forte('⚠️ Importante!')), elenco);
+    return box;
+  };
 
   if (esito.pagamento === 'paypal') {
-    conferma.append(riga('Ora manca solo la quota. Su PayPal scegli ', forte('“Amici e familiari”'),
-      ' e nel messaggio scrivi la causale qui sotto, così capiamo che il pagamento è tuo.'));
+    conferma.append(riga('Ora manca solo la quota, da pagare con PayPal.'));
+    conferma.append(importante(
+      ['Su PayPal scegli ', forte('“Amici e familiari”'), ', non “Beni e servizi”.'],
+      ['Nel messaggio scrivi ', forte('esattamente la causale qui sotto'), ', così riconosciamo il tuo pagamento.']
+    ));
     conferma.append(dati);
     if (/^https:\/\/(www\.)?paypal\.me\/[\w.-]+(\/[\w.]+)?$/i.test(esito.paypal || '')) {
       const vai = elemento('a', 'Vai a PayPal ', 'btn btn--pieno domanda__paypal');
@@ -170,7 +186,10 @@ function mostraConferma(esito, modulo, conferma) {
       conferma.append(vai);
     }
   } else if (esito.pagamento === 'bonifico') {
-    conferma.append(riga('Ora manca solo la quota: puoi fare un bonifico, anche istantaneo, con questi dati.'));
+    conferma.append(riga('Ora manca solo la quota: puoi fare un ', forte('bonifico istantaneo'), ' con questi dati.'));
+    conferma.append(importante(
+      ['Nella causale del bonifico scrivi ', forte('esattamente quella qui sotto'), ', così riconosciamo il tuo pagamento.']
+    ));
     conferma.append(dati);
   } else {
     conferma.append(riga('Per pagare in contanti scrivici a ', forte('ciao@cdlaps.com'),
@@ -178,8 +197,7 @@ function mostraConferma(esito, modulo, conferma) {
     conferma.append(dati);
   }
 
-  conferma.append(riga('Il codice ', forte(esito.codice), ' nella causale ci serve solo a riconoscere il pagamento. '
-    + 'Appena arriva la quota ti scriviamo con il tuo numero di tessera; se la domanda non venisse accolta, ti restituiamo la quota.'));
+  conferma.append(riga('Se qualcosa dovesse andare storto, provvederemo a rimborsarti la quota.'));
   const altra = elemento('button', 'Compila un’altra domanda', 'link domanda__altra');
   altra.type = 'button';
   altra.addEventListener('click', () => {
