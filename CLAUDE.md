@@ -61,12 +61,14 @@ Prima di unire, in quest'ordine:
   fino a un pagamento vero da 5 €. Il deploy di prova va ricaricato dopo le
   tre voci sopra (`git archive` in una cartella pulita, poi
   `npx netlify-cli@17 deploy --dir . --site <id> --alias redesign`).
-- [ ] Pull request `redesign` → `main`, unita da GitHub con l'account
-  `cdl-aps` e un merge commit (vedi "Pubblicazione" più sotto).
+- [x] Pull request `redesign` → `main` (#10), unita il 19 novembre 2026 e
+  pubblicata su `cdlaps.com` (vedi "Pubblicazione" più sotto).
 
 Subito dopo il deploy:
 
-- [ ] Applicare `supabase/migrations/20261113200000_colonne_pubbliche.sql`
+- [x] Applicare `supabase/migrations/20261113200000_colonne_pubbliche.sql`
+  (applicata il 19 novembre 2026: le letture del sito rispondono, `select=*`
+  e `modificato_da` sono rifiutati ad anon)
   (non prima: il sito vecchio legge con `select=*` e ripiegherebbe sulle
   copie di riserva). Poi aprire home, Eventi, Produzioni e una pagina di un
   corto: in console non deve comparire "uso la copia di riserva".
@@ -81,7 +83,7 @@ Subito dopo il deploy:
   (oggi puntano alla copia di prova e al deploy di prova); poi `verifica`
   dall'editor. Prima prova vera: la domanda di un amico con PayPal da 5 €
   (scelta dell'utente), seguita fino alla tessera.
-- [ ] `curl -I` su `/gestione.html` e `/gestione`: devono avere la
+- [x] (fatto il 19 novembre 2026) `curl -I` su `/gestione.html` e `/gestione`: devono avere la
   Content-Security-Policy e `Cache-Control: no-store`.
   `/cortoteca.html` e `/cortoteca` devono rispondere 302 verso
   `/produzioni.html`; `/area-socio.html`, `/area-socio`, `/proponi.html` e
@@ -516,14 +518,16 @@ Cortoteca più sotto descrivono il sistema com'è, spento.
   installazione e lavoro del tesoriere: `google/iscrizioni/README.md`.
 - `404.html` usa solo percorsi assoluti: Netlify la serve a qualsiasi
   profondità.
-- **Pubblicazione**: Netlify costruisce solo i commit il cui autore è membro
-  del team (l'account GitHub `cdl-aps`). Le pull request vanno unite da
-  GitHub con quell'account, con un merge commit; un'unione fatta da un
-  account personale blocca la pubblicazione di `main`. Le deploy preview
-  falliscono per lo stesso motivo: non è un errore del codice. Conta l'autore
-  dell'ultimo commit di `main`: dopo un push diretto da un account personale
-  è bloccato anche un deploy caricato a mano (connettore o CLI). Si sblocca
-  unendo con `cdl-aps` una pull request qualsiasi.
+- **Pubblicazione**: dal 19 novembre 2026 il repository è
+  `CDL-APS/cdl-website`, di un'organizzazione GitHub, ed è **pubblico**
+  (Netlify gratuito non costruisce i repository privati delle
+  organizzazioni). Netlify è ricollegato a quel repository e pubblica `main`
+  a ogni push o merge. Con il repository pubblico non vale più il blocco
+  "Unrecognized Git contributor" che fino a ottobre costringeva a unire con
+  l'account `cdl-aps`. Essendo pubblico, **niente segreti né dati personali
+  nel repository** (nemmeno nei commit: restano nella storia); gli
+  indirizzi interni (`CLAUDE.md`, `storico/`, `google/`…) sono leggibili su
+  GitHub, anche se il sito risponde 404.
 - Netlify pubblica tutta la radice: `netlify.toml` risponde 404 a
   `README.md`, `CLAUDE.md`, `supabase/`, `.github/`, `storico/`, `google/`,
   `documenti/` e `revisione-design-2026-11-11.md`. Nuovi file
