@@ -168,6 +168,8 @@ indirizzo come email del candidato.
 
 ## 6. Header (opzionale, dal Terminale)
 
+Controllati il 18 novembre 2026 sul deploy di prova: tutti a posto.
+
 ```bash
 U=https://redesign--cdl-aps.netlify.app
 for p in /gestione.html /gestione; do echo "== $p"; curl -sI "$U$p" | grep -i "content-security\|cache-control"; done
