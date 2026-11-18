@@ -77,7 +77,7 @@ Subito dopo il deploy:
   "[Sito CDL] …" (rilevamento dei moduli e notifiche sono già attivi dal 13
   novembre). Controllare anche che rispondendo alla mail la risposta vada a
   chi ha scritto; se no, annotarlo qui sotto "Contatti".
-- [ ] Domanda di ammissione: nelle proprietà dello script `FOGLIO_ID` →
+- [x] (fatto il 19 novembre 2026, web app alla versione `2026-11-19a`, `verifica` a posto; resta la domanda dell'amico) Domanda di ammissione: nelle proprietà dello script `FOGLIO_ID` →
   foglio vero, `CARTELLA_DOMANDE_ID` → la cartella vera "Domande di
   ammissione", `STATUTO_URL` → `https://cdlaps.com/assets/doc/statuto-cdl-aps-v1.pdf`
   (oggi puntano alla copia di prova e al deploy di prova); poi `verifica`
