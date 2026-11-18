@@ -3,7 +3,9 @@
 <head>
 <meta charset="utf-8">
 <!-- Il PDF riepilogativo della domanda (Codice.gs, completaDomanda). Solo
-     <?= ?>, che fa l'escape: i dati arrivano da un modulo pubblico -->
+     scriptlet con l'uguale, che fanno l'escape: i dati arrivano da un modulo
+     pubblico. Mai scrivere i segni degli scriptlet nei commenti: Apps Script
+     li esegue anche lì. -->
 <style>
   @page { size: A4; margin: 20mm 18mm; }
   body { font-family: Arial, Helvetica, sans-serif; font-size: 10.5pt; line-height: 1.45; color: #1d1d1b; }

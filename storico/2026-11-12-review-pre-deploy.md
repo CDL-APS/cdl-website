@@ -214,3 +214,47 @@ nome, numero già preso, scheda senza Email), PDF e mail con la mail al
 candidato che fallisce e poi riesce, validazione (apostrofi, email,
 `constructor`, formule). Restano da provare con un vero Apps Script
 (`storico/2026-11-14-prove-sito-online.md`, sezione 4).
+
+## Terzo giro sulla web app (18 novembre 2026, sera)
+
+Dopo l'installazione e le prove con ciao@ erano cambiati in modo
+sostanziale `google/iscrizioni/`: tasto nella mail a ciao@ con la pagina
+riservata (secondo deployment "Chiunque in cdlaps.com"), giro ogni minuto
+con il Sì valido dopo 2 minuti, Note corte. Rifatte una review di
+sicurezza e una di correttezza, solo su quella cartella.
+
+**Sicurezza**: nessuna vulnerabilità. Controllati l'accesso alla pagina
+dal deployment anonimo e da altri account del dominio, la chiave usa e
+getta della conferma, l'escape di pagina e mail, le formule nel foglio.
+Due accorgimenti, scritti nel README: dopo ogni aggiornamento controllare
+gli accessi dei due deployment, e non aggiungere pagine HtmlService
+pubbliche (da una pagina si possono chiamare le funzioni senza `_`).
+
+**Correttezza**, corretto in `Codice.gs` (versione `2026-11-18h`):
+
+1. Mentre il giro rifaceva PDF o mail di una domanda, una conferma dal
+   tasto poteva essere riscritta come "da pagare": seconda mail di
+   benvenuto. Ora `registro.aggiorna` lavora sotto il lock e
+   `completaDomanda` salva solo i suoi campi, e solo se la domanda è
+   ancora da pagare.
+2. Lo stesso per `siDal` (il momento in cui il giro vede il Sì).
+3. Il segno contro i giri accavallati scadeva prima della durata massima
+   di un'esecuzione e un giro poteva togliere quello di un altro: ora dura
+   7 minuti e ognuno toglie solo il suo.
+4. La riga si ricerca sotto il lock in `registraQuota`: un foglio
+   riordinato durante l'attesa non manda numero e data sulla riga di
+   un'altra persona.
+5. Un errore nel rinominare il PDF fermava la conferma e il giro ci
+   riprovava ogni minuto senza dirlo: ora è un problema segnalato e la
+   conferma va avanti.
+6. La conferma cancellava gli errori precedenti (PDF mai creato, mail di
+   riepilogo mai partita): ora restano e finiscono nel riepilogo.
+7. La pagina diceva "mail di benvenuto partita" anche quando non lo era.
+8. Le Note si riconoscono anche con una virgola o un a capo subito dopo il
+   codice.
+
+Non corretto: ogni domanda aperta rilegge la colonna Note a ogni giro;
+con poche domande aperte il tempo è trascurabile.
+
+Provati con dati finti in Node: pagina e conferma, giro con il Sì,
+numerazione e rinnovi, PDF e mail che falliscono e poi riescono.

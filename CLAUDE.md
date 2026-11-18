@@ -35,26 +35,22 @@ Prima di unire, in quest'ordine:
   (`google/iscrizioni/`) che scrive nel libro soci e manda le mail:
   `storico/2026-11-17-piano-iscrizione-online.md`. Decisioni del
   direttivo e testi a posto (vedi lì "Fuori dal codice").
-  Stato al 18 novembre: tutto **scritto, rivisto, committato e caricato
-  sul deploy di prova**, ma non ancora provato con un vero Apps Script; il
-  modulo dice "non ancora attiva" finché `data-indirizzo` è vuoto. Nel
-  libro soci tolti i numeri di tessera scritti in anticipo (035-150): i
-  numeri li dà solo lo script, anche alle domande cartacee, e chi rinnova
-  tiene il suo. Mancano: l'installazione della web app con ciao@ e il suo
-  indirizzo in `data-indirizzo` (`google/iscrizioni/README.md`: l'utente
-  vuole essere guidato passo per passo) e l'account PayPal da verificare
-  (`cdlaps` o `cdl-aps`). Punto di ripartenza:
-  `storico/2026-11-18-handoff-domanda-ammissione.md`.
-- [ ] **Rilettura finale delle due informative** e del modulo cartaceo
-  (`assets/doc/`), da parte dell'utente: i testi sono approvati, l'utente
-  può ancora segnalare correzioni. Prima della pubblicazione si correggono
-  tenendo lo stesso nome; dopo, nome e versione nuovi
-  (`documenti/README.md`).
+  Stato al 18 novembre sera: web app **installata con ciao@** (progetto
+  "CDL – Domande di ammissione", due deployment: "Sito", indirizzo in
+  `data-indirizzo`, e "Tasto mail ciao@", in `URL_CONFERMA`) e **provata
+  sulla copia del foglio**: tutte le prove della sezione 4 a posto, tranne
+  il pagamento PayPal vero, che l'utente fa dopo il deploy con un amico che
+  si tessera. Le review della web app sono state rifatte dopo il tasto
+  nella mail (versione `2026-11-18h`, da reincollare). Nel libro soci tolti i
+  numeri di tessera scritti in anticipo (035-150): i numeri li dà solo lo
+  script, anche alle domande cartacee, e chi rinnova tiene il suo. Punto
+  di ripartenza: `storico/2026-11-18-handoff-domanda-ammissione.md`.
 - [x] **Review di nuovo** con `/code-review` e `/security-review` sul
   lavoro dal 17 novembre: fatte il 18 novembre, nessuna vulnerabilità,
   dieci correzioni alla web app e al modulo; esiti in
-  `storico/2026-11-12-review-pre-deploy.md`. Vanno rifatte solo se la web
-  app cambia in modo sostanziale dopo le prove. Le review del 12-13
+  `storico/2026-11-12-review-pre-deploy.md`. Rifatte la sera del 18 solo
+  sulla web app, dopo il tasto nella mail e il giro ogni minuto: nessuna
+  vulnerabilità, otto correzioni di casi limite. Le review del 12-13
   novembre restano valide per il resto. Regola dell'utente (15 novembre
   2026): non si rifanno per ritocchi grafici, di impaginazione o di testi;
   si rifanno per lavoro sostanziale (nuove funzioni, dati, permessi,
@@ -79,9 +75,12 @@ Subito dopo il deploy:
   "[Sito CDL] …" (rilevamento dei moduli e notifiche sono già attivi dal 13
   novembre). Controllare anche che rispondendo alla mail la risposta vada a
   chi ha scritto; se no, annotarlo qui sotto "Contatti".
-- [ ] Domanda di ammissione: la web app passa dalla copia di prova al
-  foglio vero (`FOGLIO_ID`), poi un invio di prova dal sito online, da
-  togliere subito dopo dal foglio e dalla cartella "Domande di ammissione".
+- [ ] Domanda di ammissione: nelle proprietà dello script `FOGLIO_ID` →
+  foglio vero, `CARTELLA_DOMANDE_ID` → la cartella vera "Domande di
+  ammissione", `STATUTO_URL` → `https://cdlaps.com/assets/doc/statuto-cdl-aps-v1.pdf`
+  (oggi puntano alla copia di prova e al deploy di prova); poi `verifica`
+  dall'editor. Prima prova vera: la domanda di un amico con PayPal da 5 €
+  (scelta dell'utente), seguita fino alla tessera.
 - [ ] `curl -I` su `/gestione.html` e `/gestione`: devono avere la
   Content-Security-Policy e `Cache-Control: no-store`.
   `/cortoteca.html` e `/cortoteca` devono rispondere 302 verso
@@ -490,7 +489,10 @@ Cortoteca più sotto descrivono il sistema com'è, spento.
   `data-indirizzo` del modulo; vuoto = modulo non attivo), che scrive in
   `TESSERATI <anno>` senza numero di tessera e con `Pagato? = No`, crea il
   PDF riepilogativo e manda le mail a ciao@ e al candidato. Il tesoriere
-  mette `Pagato? = Sì` e lo script assegna il numero e manda la conferma.
+  preme il tasto nella mail a ciao@ (pagina riservata a ciao@ con il
+  numero da scrivere sulla tessera, poi "Conferma") o mette
+  `Pagato? = Sì` nel foglio, e lo script assegna il numero e manda la
+  conferma.
   **I numeri di tessera li assegna solo lo script**, anche alle righe
   scritte a mano (domande cartacee): nessuno li scrive in anticipo. Il
   numero è della persona: chi rinnova riprende il suo, un socio nuovo prende

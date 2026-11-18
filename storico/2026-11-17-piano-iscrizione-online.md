@@ -148,7 +148,7 @@ Codice nel repository in `google/iscrizioni/` (`Codice.gs`,
 | `FOGLIO_ID` | Prima una **copia di prova** di "Gestione APS (fogli)", poi il foglio vero |
 | `CARTELLA_DOMANDE_ID` | Cartella "Domande di ammissione" (Amministrazione/Associazione/Documenti Aps) |
 | `DESTINATARIO` | ciao@cdlaps.com |
-| `PAYPAL_ME` | `https://paypal.me/<account>`, da verificare (`@cdlaps` nella domanda ufficiale, `@cdl-aps` in una bozza) |
+| `PAYPAL_ME` | `https://paypal.me/cdlaps` (verificato) |
 | `IBAN` | Quello della domanda ufficiale, beneficiario CDL APS |
 | `QUOTE` | `{"2026":5,"2027":10}`: l'anno è quello della data della domanda, a Roma |
 | `INFORMATIVA`, `STATUTO` | Versioni in vigore, scritte nel PDF e nella riga; il server rifiuta una versione diversa |
@@ -197,7 +197,39 @@ Codice nel repository in `google/iscrizioni/` (`Codice.gs`,
 6. Le domande registrate stanno in `PropertiesService` (codice → email,
    anno, stato, PDF, mail inviate).
 
-### Ogni 10 minuti (`controllaPagamenti`)
+### Il tasto nella mail a ciao@ (aggiunto il 18 novembre 2026)
+
+Richiesta dell'utente: accogliere la domanda dalla mail, come con gli
+inviti di Calendar, e vedere subito il numero da scrivere sulla tessera
+fisica.
+
+- La mail a ciao@ ha il tasto "Quota ricevuta: accogli la domanda"
+  (`URL_CONFERMA?codice=D26-017`). Apre una pagina della web app
+  (`doGet` → `mostraConferma`, pagina scritta da `paginaConferma`) con i dati e, in
+  grande, il numero che la persona prenderà (`numeroPerRiga`, senza
+  scrivere niente). Aprirla non cambia nulla: antivirus e anteprime delle
+  mail aprono i collegamenti da soli.
+- "Quota ricevuta: conferma" (`confermaQuota`) porta una chiave usa e getta
+  di 30 minuti (`CacheService`) e fa subito quello che fa il Sì nel foglio
+  (`registraQuota(…, segnaPagato)`), più `Pagato? = Sì`. Se nel frattempo
+  il numero mostrato è andato a un altro, la pagina lo dice e dà quello
+  giusto.
+- La pagina risponde solo all'account `DESTINATARIO`
+  (`Session.getActiveUser()`): la mail a ciao@ ha "Rispondi a" il
+  candidato, e in una risposta il collegamento finirebbe citato. Per questo
+  c'è un secondo deployment, "Chiunque in cdlaps.com" (ciao@ è un account
+  Workspace), oltre a quello "Chiunque" per il sito. A chi non è ciao@ va
+  un testo semplice, mai una pagina HtmlService (da cui si potrebbero
+  chiamare le funzioni con `google.script.run`).
+- Niente tasto "Respingi" (decisione dell'utente): un rifiuto si gestisce a
+  mano.
+
+### Ogni minuto (`controllaPagamenti`)
+
+Dal 18 novembre 2026 ogni minuto (prima ogni 10), e un Sì vale dopo 2
+minuti (prima 9): il Sì nel foglio arriva in 3-4 minuti invece che in
+10-20. Un giro non parte se il precedente non è finito; PDF e mail falliti
+si riprovano ogni 10 minuti, al massimo 6 volte.
 
 Un trigger a tempo, non `onEdit`: `onEdit` non scatta per le scritture da
 script, dà valori vuoti su incolla e intervalli, e cerca le righe per
@@ -215,7 +247,7 @@ posizione.
   - manda a ciao@ e al candidato "quota ricevuta: domanda accolta, sarà
     ratificata dal direttivo", **una volta sola** (registro in
     `PropertiesService`: un Sì tolto e rimesso non manda una seconda mail).
-- Un Sì messo per sbaglio e tolto entro pochi minuti non manda nulla.
+- Un Sì messo per sbaglio e tolto entro 2 minuti non manda nulla.
 - **Ogni mattina**, un riepilogo a ciao@ (solo se c'è qualcosa):
   - domande non pagate da più di 7 giorni;
   - domande non pagate da più di 30 giorni, da far decadere (riga tolta, PDF
@@ -276,10 +308,12 @@ Il flusso è stato controllato caso per caso il 17 novembre. In sintesi:
 - **Consiglieri delegati** all'accoglimento: sono quelli che hanno accesso
   alla casella ciao@ (risposta dell'utente, 18 novembre 2026), cioè chi
   riceve le domande e mette il "Sì"; il direttivo ratifica entro 30 giorni
-  ("Conferma assemblea?"). La restituzione della quota a chi viene respinto
+  ("Conferma assemblea?", a mano: lo script non la compila mai, perché la
+  ratifica è una delibera; dettagli in `google/iscrizioni/README.md`). La restituzione della quota a chi viene respinto
   è scritta nella pagina, nel modulo cartaceo e nell'informativa.
-- **PayPal**: verificare l'account (`@cdlaps` o `@cdl-aps`) e che
-  `paypal.me/<account>/5EUR` apra il pagamento giusto.
+- **PayPal**: l'account è `@cdlaps` (verificato dall'utente il 18
+  novembre 2026); nelle prove, controllare che `paypal.me/cdlaps/5EUR`
+  apra il pagamento giusto.
 - **RUNTS**: in regola (risposta dell'utente, 18 novembre 2026). Il PDF
   dello statuto non riporta date di registrazione o deposito.
 - **Libro soci**: i numeri da 035 a 150 scritti in anticipo nelle righe

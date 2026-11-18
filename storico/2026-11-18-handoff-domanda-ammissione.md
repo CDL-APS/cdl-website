@@ -15,10 +15,14 @@ ripartire senza rileggere la conversazione.
 - Fatti e controllati a occhio in locale (desktop e 375 px): pausa della
   Cortoteca, informativa obbligatoria in Contatti, sezione "Domanda di
   ammissione a socio" in Vantaggi (a comparsa), PDF in `assets/doc/`.
-- **La web app non è installata**: `data-indirizzo` del modulo è vuoto,
-  quindi il modulo risponde "non ancora attiva". Il codice
-  (`google/iscrizioni/Codice.gs`) è controllato solo con dati finti in
-  Node (validazione, numerazione), mai in Apps Script.
+- **Aggiornamento del 18 novembre sera**: web app installata con ciao@ e
+  provata sulla copia del foglio (sezione 4 delle prove, tutto a posto
+  tranne il pagamento PayPal vero, rimandato a dopo il deploy). In
+  `data-indirizzo` c'è l'indirizzo del deployment "Sito". Cambiati dopo le
+  review: tasto nella mail a ciao@, testi più colloquiali, Note corte
+  (`Sito D26-003`), giro ogni minuto con il Sì valido dopo 2 minuti,
+  mittente "CDL APS". "Conferma assemblea?" resta a mano: è la ratifica del
+  direttivo (art. 4 dello statuto), lo script la ricorda e basta.
 
 ## Decisioni prese con l'utente (17-18 novembre)
 
@@ -38,11 +42,16 @@ ripartire senza rileggere la conversazione.
 - Quota 5 € fino al 31 dicembre 2026, poi 10 € (proprietà `QUOTE`).
   Deliberata dall'ultima assemblea ordinaria.
 - Delegati all'accoglimento: chi ha accesso a ciao@.
+- **Tasto nella mail a ciao@** (18 novembre, dopo le review): apre una
+  pagina riservata all'account ciao@ con il numero da scrivere sulla
+  tessera fisica; "Conferma" accoglie subito la domanda. Serve un secondo
+  deployment "Chiunque in cdlaps.com" (`URL_CONFERMA`). Niente tasto
+  "Respingi". Le review della web app si decidono dopo le prove.
 - Statuto: testo semplice, senza date di registrazione o deposito
   (`statuto-cdl-aps-v1.pdf`); link solo dal modulo, `noindex`, allegato
   alla mail. Lo statuto è in regola sul RUNTS.
-- Informative: approvate dall'utente, che può ancora segnalare
-  correzioni nella rilettura finale.
+- Informative, statuto e modulo cartaceo: riletti e approvati
+  dall'utente il 18 novembre (rilettura finale fatta).
 - Contatti: tolto il motivo "Diventare socio".
 
 ## Prossimi passi, in ordine
@@ -52,7 +61,7 @@ ripartire senza rileggere la conversazione.
 2. Installare la web app con l'account ciao@, **guidando l'utente un passo
    alla volta** (cosa aprire, cosa cliccare, cosa incollare):
    `google/iscrizioni/README.md`, prima su una **copia** del foglio soci.
-   Verificare l'account PayPal (`cdlaps` o `cdl-aps`).
+   L'account PayPal è `paypal.me/cdlaps` (verificato).
 3. Mettere l'indirizzo `/exec` in `data-indirizzo`, ricaricare il deploy
    di prova e fare le prove della sezione 4 di
    `storico/2026-11-14-prove-sito-online.md`, fino a un pagamento vero da

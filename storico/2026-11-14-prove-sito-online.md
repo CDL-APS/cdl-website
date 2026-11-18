@@ -30,7 +30,8 @@ computer (Chrome o Firefox).
 
 ## 1. Pagine pubbliche
 
-Su telefono e computer:
+Su telefono e computer. Sul computer provate dall'utente il 18 novembre
+2026, tutto a posto: restano da vedere sul telefono.
 
 - [ ] **Home**: si vede la sala al buio e la torcia segue il dito o il
   puntatore; il nastro delle notizie scorre (senza voci sulla Cortoteca).
@@ -67,11 +68,13 @@ Su telefono e computer:
 
 ## 2. Indirizzi vecchi e redirect
 
-- [ ] `/cortoteca/info_film2?film=interzona` apre la pagina del corto.
-- [ ] `/cortoteca.html`, `/cortoteca` e `/cortoteca/` portano a Produzioni.
-- [ ] `/area-socio.html`, `/area-socio`, `/proponi.html` e `/proponi`
+Controllati con `curl` sul deploy di prova il 18 novembre 2026: tutti a posto.
+
+- [x] `/cortoteca/info_film2?film=interzona` apre la pagina del corto.
+- [x] `/cortoteca.html`, `/cortoteca` e `/cortoteca/` portano a Produzioni.
+- [x] `/area-socio.html`, `/area-socio`, `/proponi.html` e `/proponi`
   portano alla home.
-- [ ] `/CLAUDE.md`, `/README.md`, `/storico/`, `/supabase/config.toml`,
+- [x] `/CLAUDE.md`, `/README.md`, `/storico/`, `/supabase/config.toml`,
   `/google/iscrizioni/Codice.gs` rispondono "non trovato".
 
 ## 3. Modulo di Contatti (mail vere)
@@ -103,41 +106,48 @@ Prima delle prove sul sito online, la web app punta alla **copia di prova**
 del foglio soci (`FOGLIO_ID` nelle proprietà dello script). Usa un tuo
 indirizzo come email del candidato.
 
-- [ ] La sezione "Domanda di ammissione a socio" è chiusa aprendo
+- [x] La sezione "Domanda di ammissione a socio" è chiusa aprendo
   Vantaggi; si apre col + e da sola con `#associati`. Il link "modulo
   cartaceo" apre il PDF a 5 €.
-- [ ] Le caselle di statuto e informativa si spuntano solo dopo aver aperto
+- [x] Le caselle di statuto e informativa si spuntano solo dopo aver aperto
   i due PDF; lo statuto non compare in nessun'altra pagina.
-- [ ] Una data di nascita da minorenne: il modulo non parte e rimanda al
+- [x] Una data di nascita da minorenne: il modulo non parte e rimanda al
   modulo cartaceo.
-- [ ] **PayPal**: invia; compare la conferma con codice, importo (5 €),
+- [x] **PayPal**: invia; compare la conferma con codice, importo (5 €),
   causale, la riga su "amici e familiari" e il tasto Vai a PayPal, che apre
   il pagamento giusto (non serve pagare in questa prova). Arrivano le due
   mail (ciao@ e candidato) con il PDF, e al candidato anche lo statuto.
   Nel foglio: riga nuova senza `#`, `Pagato? = No`, `PayPal`, link al PDF.
-- [ ] **Bonifico**: la conferma mostra IBAN, beneficiario e causale; riga
+- [x] **Bonifico**: la conferma mostra IBAN, beneficiario e causale; riga
   con `Bonifico`.
-- [ ] **Contanti**: la conferma dice chi contattare; riga con `Cash`.
-- [ ] Doppio clic sul tasto, e ricarica dopo l'invio: una sola riga, una
+- [x] **Contanti**: la conferma dice chi contattare; riga con `Cash`.
+- [x] Doppio clic sul tasto, e ricarica dopo l'invio: una sola riga, una
   sola coppia di mail.
-- [ ] Stessa email una seconda volta (modulo ricompilato): la risposta è
+- [x] Stessa email una seconda volta (modulo ricompilato): la risposta è
   normale, la riga è segnata "possibile doppione".
-- [ ] Rete staccata al momento dell'invio: messaggio "non registrata", e
+- [x] Rete staccata al momento dell'invio: messaggio "non registrata", e
   nessuna istruzione di pagamento.
-- [ ] Nel foglio di prova, metti `Pagato? = Sì` (anche dal telefono): entro
-  10 minuti compaiono il `#`, la data di pagamento, il PDF rinominato
+- [x] **Tasto nella mail a ciao@**: aperto da ciao@, mostra i dati e il
+  numero di tessera in grande, e nel foglio non cambia niente. Aperto da
+  una finestra anonima chiede l'accesso a Google; da un altro account
+  risponde "riservata all'account". "Conferma": subito `Pagato? = Sì`, il
+  `#` uguale a quello mostrato, la data, il PDF rinominato, la mail "quota
+  ricevuta". Ricaricando: "già accolta" con il numero, nessuna seconda
+  mail. Il modulo del sito continua a funzionare (deployment "Chiunque").
+- [x] Su un'altra domanda, nel foglio di prova metti `Pagato? = Sì` (anche dal telefono): entro
+  4 minuti compaiono il `#`, la data di pagamento, il PDF rinominato
   `NNN_NomeCognome`, e arriva "quota ricevuta" a ciao@ e al candidato.
   Togli e rimetti il Sì: nessuna seconda mail.
-- [ ] **Riga a mano** (come una domanda cartacea): nome, niente `#`,
-  `Pagato? = Sì`. Entro 20 minuti prende il numero successivo e la data di
+- [x] **Riga a mano** (come una domanda cartacea): nome, niente `#`,
+  `Pagato? = Sì`. Entro 4 minuti prende il numero successivo e la data di
   pagamento, senza mail.
-- [ ] **Rinnovo**: riga a mano con nome ed email di un socio già numerato
+- [x] **Rinnovo**: riga a mano con nome ed email di un socio già numerato
   (nella copia di prova, in una scheda `TESSERATI 2027` copiata da quella
   del 2026), `Pagato? = Sì`: riprende il suo numero. Un nome nuovo prende
   il successivo al più alto delle due schede.
-- [ ] Scrivi a mano un numero già usato su un'altra riga: il riepilogo del
+- [x] Scrivi a mano un numero già usato su un'altra riga: il riepilogo del
   mattino dopo lo segnala fra i "numeri di tessera usati due volte".
-- [ ] **Una prova vera**: una domanda con PayPal e un pagamento reale da
+- [ ] **Una prova vera** (decisione dell'utente, 18 novembre: la fa con un amico che si tessera, per valutare anche l'esperienza; quindi dopo il deploy, sul foglio vero): una domanda con PayPal e un pagamento reale da
   5 € come "amici e familiari", fino alla mail "quota ricevuta". Poi la
   web app passa al foglio vero (vedi `CLAUDE.md`, dopo il deploy).
 

@@ -132,8 +132,8 @@ function forte(testo) { return elemento('strong', testo); }
 function mostraConferma(esito, modulo, conferma) {
   conferma.replaceChildren();
   conferma.append(elemento('h3', 'Domanda ricevuta', 'domanda__conferma-titolo'));
-  conferma.append(riga('Il codice della tua domanda è ', forte(esito.codice), '. Ti abbiamo scritto a ',
-    forte(esito.email), ' con il riepilogo e lo statuto: se non trovi la mail guarda nello spam, o scrivi a ciao@cdlaps.com.'));
+  conferma.append(riga('Grazie! Ti abbiamo mandato il riepilogo e lo statuto a ', forte(esito.email),
+    '. Se non trovi la mail, guarda nello spam o scrivici a ciao@cdlaps.com.'));
 
   const dati = elemento('dl', undefined, 'domanda__dati');
   const voce = (termine, valore) => {
@@ -147,8 +147,8 @@ function mostraConferma(esito, modulo, conferma) {
   voce('Causale', esito.causale);
 
   if (esito.pagamento === 'paypal') {
-    conferma.append(riga('Ora paga la quota con PayPal. Nella pagina di PayPal scegli ', forte('“Amici e familiari”'),
-      ' e, nel messaggio, scrivi la causale qui sotto: così riconosciamo il tuo pagamento.'));
+    conferma.append(riga('Ora manca solo la quota. Su PayPal scegli ', forte('“Amici e familiari”'),
+      ' e nel messaggio scrivi la causale qui sotto, così capiamo che il pagamento è tuo.'));
     conferma.append(dati);
     if (/^https:\/\/(www\.)?paypal\.me\/[\w.-]+(\/[\w.]+)?$/i.test(esito.paypal || '')) {
       const vai = elemento('a', 'Vai a PayPal ', 'btn btn--pieno domanda__paypal');
@@ -158,15 +158,16 @@ function mostraConferma(esito, modulo, conferma) {
       conferma.append(vai);
     }
   } else if (esito.pagamento === 'bonifico') {
-    conferma.append(riga('Ora paga la quota con un bonifico (anche istantaneo), con questi dati:'));
+    conferma.append(riga('Ora manca solo la quota: puoi fare un bonifico, anche istantaneo, con questi dati.'));
     conferma.append(dati);
   } else {
     conferma.append(riga('Per pagare in contanti scrivici a ', forte('ciao@cdlaps.com'),
-      ': fissiamo un appuntamento, o ci vediamo al prossimo evento.'));
+      ' e ci mettiamo d’accordo: ci vediamo di persona o al prossimo evento.'));
     conferma.append(dati);
   }
 
-  conferma.append(riga('Quando riceviamo la quota, la domanda viene accolta e ti arriva una mail di conferma. Se non viene accolta, la quota ti viene restituita.'));
+  conferma.append(riga('Il codice ', forte(esito.codice), ' nella causale ci serve solo a riconoscere il pagamento. '
+    + 'Appena arriva la quota ti scriviamo con il tuo numero di tessera; se la domanda non venisse accolta, ti restituiamo la quota.'));
   const altra = elemento('button', 'Compila un’altra domanda', 'link domanda__altra');
   altra.type = 'button';
   altra.addEventListener('click', () => {

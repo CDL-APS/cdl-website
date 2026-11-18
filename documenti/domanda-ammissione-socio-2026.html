@@ -16,55 +16,79 @@
      file nuovo domanda-ammissione-socio-<anno>.html e link nuovo in
      vantaggi-tesseramento.html (documenti/README.md). -->
 
+<!-- Fronte: la domanda, con le sezioni e i testi della domanda dal sito
+     (vantaggi-tesseramento.html#associati). Retro: l'informativa. -->
+<section class="carta__fronte">
 <header class="carta__testa">
-  <h1>Domanda di ammissione a socio, CDL - APS</h1>
+  <div>
+    <h1>Domanda di ammissione a socio</h1>
+    <p class="carta__quota">CDL APS &middot; quota associativa 2026: <strong>5 &euro;</strong>, ridotta per gli ultimi mesi dell&rsquo;anno</p>
+  </div>
   <img class="carta__logo" src="../assets/img/brand/logo-cdl.png" alt="CDL">
 </header>
 
-<p class="carta__destinatario">Al Presidente Francesco Pasquinelli dell&rsquo;Associazione CDL - APS,<br>con sede in viale Laurana 13, 47921 Rimini (RN)</p>
+<p class="carta__destinatario">Al Presidente dell&rsquo;Associazione CDL APS, Francesco Pasquinelli, viale Francesco Laurana 13, 47921 Rimini (RN)</p>
 
-<div class="campi">
-  <p class="campo">Il/la sottoscritto/a <span class="riga-punti"></span></p>
-  <p class="campo">nato/a a <span class="riga-punti"></span> il <span class="data">&hellip;&hellip; / &hellip;&hellip; / &hellip;&hellip;&hellip;&hellip;</span></p>
-  <p class="campo">residente a <span class="riga-punti"></span> prov. <span class="corto"></span></p>
-  <p class="campo">in (via e numero civico) <span class="riga-punti"></span> CAP <span class="corto"></span></p>
-  <p class="campo">e-mail <span class="riga-punti"></span></p>
-  <p class="campo">Cellulare (facoltativo) <span class="riga-punti"></span></p>
+<h2 class="carta__sezione">Chi sei</h2>
+<div class="riquadri">
+  <div class="riquadro"><span>Nome</span></div>
+  <div class="riquadro"><span>Cognome</span></div>
+  <div class="riquadro"><span>Luogo di nascita</span></div>
+  <div class="riquadro"><span>Data di nascita</span><em>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/</em></div>
+</div>
+<p class="carta__sotto">Indirizzo di residenza</p>
+<div class="riquadri riquadri--indirizzo">
+  <div class="riquadro riquadro--largo"><span>Via e numero civico</span></div>
+  <div class="riquadro"><span>Comune</span></div>
+  <div class="riquadro"><span>Provincia</span></div>
+  <div class="riquadro"><span>CAP</span></div>
 </div>
 
-<p class="giustificato">chiede di essere ammesso/a quale socio ordinario dell&rsquo;Associazione di Promozione Sociale CDL - APS e si impegna a rispettare le disposizioni statutarie vigenti e le delibere degli organi sociali validamente costituiti. A tale scopo dichiara di assumersi ogni responsabilità derivante dalle dichiarazioni rese nel presente modulo, e di conoscere e accettare lo Statuto sociale e i regolamenti interni.</p>
+<h2 class="carta__sezione">Contatti</h2>
+<div class="riquadri">
+  <div class="riquadro"><span>Email</span></div>
+  <div class="riquadro"><span>Cellulare (facoltativo)</span></div>
+</div>
 
-<p class="giustificato">Il dichiarante si impegna inoltre a versare la <strong>quota associativa di euro cinque (€5,00)</strong>, ridotta per gli ultimi mesi dell&rsquo;anno, per l&rsquo;esercizio sociale <strong>2026</strong>, entro 30 giorni dal ricevimento della comunicazione dell&rsquo;avvenuta adesione, anche verbale, tramite:</p>
+<h2 class="carta__sezione">Metodo di pagamento</h2>
+<div class="pagamenti">
+  <div><p class="scelta"><span class="casella"></span>PayPal</p><p>A <strong>@cdlaps</strong>, come &ldquo;amici e familiari&rdquo;.</p></div>
+  <div><p class="scelta"><span class="casella"></span>Bonifico istantaneo</p><p>IBAN <strong>IT98&thinsp;T062&thinsp;3002&thinsp;4600&thinsp;0004&thinsp;7093&thinsp;273</strong>, intestato a CDL APS.</p></div>
+  <div><p class="scelta"><span class="casella"></span>Contanti</p><p>Alla consegna della domanda, o a un nostro evento.</p></div>
+</div>
+<p class="carta__causale">Causale o messaggio: &ldquo;Quota associativa 2026 &ndash; Nome Cognome&rdquo;.</p>
+<div class="riquadri riquadri--uno">
+  <div class="riquadro"><span>Paga un&rsquo;altra persona? Scrivi il suo nome (facoltativo)</span></div>
+</div>
 
-<ul class="scelte">
-  <li><span class="casella"></span>Bonifico bancario
-    <ul>
-      <li>IBAN: IT98T0623002460000047093273;</li>
-      <li>Beneficiario: CDL APS;</li>
-      <li>Causale: &ldquo;Quota associativa 2026 [Cognome Nome associato/a]&rdquo;;</li>
-    </ul></li>
-  <li><span class="casella"></span>Pagamento PayPal (per amici e familiari)
-    <ul>
-      <li>Contatto: @cdlaps;</li>
-      <li>Messaggio: &ldquo;Quota associativa 2026 [Cognome Nome associato/a]&rdquo;;</li>
-    </ul></li>
-  <li><span class="casella"></span>Contanti (previo appuntamento)</li>
-</ul>
-<p class="nota">Se la domanda non viene accolta, la quota versata viene restituita.</p>
+<div class="dichiarazioni">
+  <p class="scelta"><span class="casella"></span><span>Chiedo di essere ammesso/a come socio ordinario dell&rsquo;Associazione di Promozione Sociale CDL APS. Mi impegno a rispettare lo statuto, i regolamenti interni e le delibere degli organi dell&rsquo;associazione, e mi assumo la responsabilit&agrave; di quanto dichiaro in questa domanda.</span></p>
+  <p class="scelta"><span class="casella"></span><span>Ho letto e accetto lo statuto di CDL APS (cdlaps.com/assets/doc/statuto-cdl-aps-v1.pdf, o chiedilo a ciao@cdlaps.com).</span></p>
+  <p class="scelta"><span class="casella"></span><span>Ho letto l&rsquo;informativa sulla privacy, sul retro.</span></p>
+</div>
+<p class="nota">Se qualcosa va storto o la domanda dovesse essere respinta, la quota ti sar&agrave; rimborsata.</p>
 
 <div class="firme">
-  <p>Luogo e data: <span class="data">&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;, &hellip;&hellip; / &hellip;&hellip; / &hellip;&hellip;&hellip;&hellip;</span></p>
-  <p class="firma">Firma <span class="linea"></span></p>
+  <p>Luogo e data <span class="linea linea--data"></span></p>
+  <p>Firma <span class="linea"></span></p>
 </div>
 
 <section class="minori">
-  <h2>Solo per soci minorenni</h2>
-  <p class="giustificato">In qualità di esercente la responsabilità genitoriale (genitore/tutore), il/la sottoscritto/a <span class="riga-punti in-linea"></span>, richiede l&rsquo;ammissione del minore (i cui dati sono raccolti nella sezione precedente) a socio ordinario dell&rsquo;Associazione. Dichiara inoltre di assumersi ogni responsabilità derivante dalle dichiarazioni rese nel presente modulo, e di conoscere e accettare lo Statuto sociale e i regolamenti interni.</p>
-  <p class="giustificato"><strong>Dichiarazione sostitutiva (D.P.R. 445/2000):</strong> il sottoscritto, consapevole delle sanzioni penali previste in caso di dichiarazioni mendaci, dichiara di aver effettuato la presente richiesta in osservanza delle disposizioni sulla responsabilità genitoriale e di agire con il consenso dell&rsquo;altro genitore (artt. 316, 337-ter e 337-quater c.c.).</p>
-  <p class="firma">Firma del genitore/tutore <span class="linea"></span></p>
+  <h2 class="carta__sezione">Solo per chi &egrave; minorenne</h2>
+  <p class="giustificato">Il genitore o tutore <span class="linea linea--nome"></span> chiede l&rsquo;ammissione del minore indicato sopra come socio ordinario dell&rsquo;associazione, si assume la responsabilit&agrave; di quanto dichiarato in questa domanda e dichiara di conoscere e accettare lo statuto e i regolamenti interni.</p>
+  <p class="giustificato"><strong>Dichiarazione sostitutiva (D.P.R. 445/2000):</strong> consapevole delle sanzioni penali previste per le dichiarazioni mendaci, dichiara di presentare questa richiesta nel rispetto delle norme sulla responsabilit&agrave; genitoriale e con il consenso dell&rsquo;altro genitore (artt. 316, 337-ter e 337-quater c.c.).</p>
+  <div class="firme firme--destra"><p>Firma del genitore o tutore <span class="linea"></span></p></div>
 </section>
 
-<p class="piede">CDL - Associazione di Promozione Sociale · sede legale viale Francesco Laurana 13, 47921 Rimini (RN) · C.F. 91200080405 · ciao@cdlaps.com · PEC cdl.aps@pec.poste.it</p>
+<div class="ufficio">
+  <span>Riservato all&rsquo;associazione</span>
+  <span>Tessera n. <i></i></span>
+  <span>Quota ricevuta il <i></i></span>
+  <span>Accolta da <i></i></span>
+</div>
+
+<p class="piede">CDL APS &middot; viale Francesco Laurana 13, 47921 Rimini (RN) &middot; C.F. 91200080405 &middot; ciao@cdlaps.com &middot; PEC cdl.aps@pec.poste.it</p>
+</section>
 
 <section class="carta__informativa">
 <header class="carta__testa">
@@ -72,6 +96,7 @@
   <img class="carta__logo" src="../assets/img/brand/logo-cdl.png" alt="CDL">
 </header>
 <p class="sotto">Articolo 13 del Regolamento (UE) 2016/679 (GDPR). Da conservare.</p>
+<div class="colonne">
 
 <h3>1. Chi tratta i tuoi dati</h3>
 <p>Titolare del trattamento è l&rsquo;associazione <strong>CDL - APS</strong>, con sede in viale Francesco Laurana 13, 47921 Rimini (RN), codice fiscale 91200080405. Per qualsiasi domanda sui tuoi dati puoi scrivere a <strong>ciao@cdlaps.com</strong> o alla PEC <strong>cdl.aps@pec.poste.it</strong>.</p>
@@ -118,10 +143,12 @@
 <h3>8. Minorenni</h3>
 <p>La domanda dal sito è riservata ai maggiorenni. Per un minore la domanda si fa con il modulo cartaceo, firmato da chi esercita la responsabilità genitoriale.</p>
 
+</div>
+
 <div class="firme firme--informativa">
-  <p>Luogo e data: <span class="data">&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;, &hellip;&hellip; / &hellip;&hellip; / &hellip;&hellip;&hellip;&hellip;</span></p>
-  <p class="firma">L&rsquo;interessato, per presa visione <span class="linea"></span></p>
-  <p class="firma">L&rsquo;esercente la responsabilità genitoriale (per soci minorenni) <span class="linea"></span></p>
+  <p>Luogo e data <span class="linea linea--data"></span></p>
+  <p>Firma, per presa visione <span class="linea"></span></p>
+  <p>Firma del genitore o tutore (per i minorenni) <span class="linea"></span></p>
 </div>
 
 <p class="piede">CDL - APS · viale Francesco Laurana 13, 47921 Rimini (RN) · C.F. 91200080405 · ciao@cdlaps.com · PEC cdl.aps@pec.poste.it<br>Informativa per i soci, versione 1 (17 novembre 2026).</p>

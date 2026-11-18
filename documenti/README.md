@@ -12,10 +12,13 @@ I PDF in `assets/doc/` nascono da questi file HTML (stile comune in
 
 Il modulo cartaceo (per i minorenni, o per chi non usa il sito) è
 `domanda-ammissione-socio-<anno>.html` → `assets/doc/domanda-ammissione-socio-<anno>.pdf`:
-la domanda ufficiale su Drive (Google Doc
-`1ixyMoVRldNa2oLvQfNILGgCToWiyJ7OEjfmQoQylDk4`) con la quota dell'anno,
-più una copia dell'informativa per i soci, da tenere uguale a
-`informativa-soci-v1.html`. Ogni anno (o quota) nuovo: file nuovo e link
+un foglio A4 fronte e retro. Sul fronte la domanda, con le sezioni e i
+testi della domanda dal sito (Chi sei, Contatti, Metodo di pagamento,
+dichiarazioni), il riquadro per i minorenni e quello riservato
+all'associazione (numero di tessera); sul retro, su due colonne, una
+copia dell'informativa per i soci, da tenere uguale a
+`informativa-soci-v1.html`. Deve restare in due facciate: dopo una
+modifica, controlla il numero di pagine del PDF. Ogni anno (o quota) nuovo: file nuovo e link
 nuovo in `vantaggi-tesseramento.html`.
 
 Per rifare un PDF, dalla cartella del progetto (serve Google Chrome):

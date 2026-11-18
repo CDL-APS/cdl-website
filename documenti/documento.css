@@ -11,33 +11,59 @@ ul { margin: 0 0 2.4mm; padding-left: 5mm; }
 .bozza { margin: 0 0 6mm; padding: 3mm 4mm; border: 1.5pt solid #ef7d00; font-weight: 700; }
 .piede { margin-top: 8mm; padding-top: 3mm; border-top: 0.75pt solid #1d1d1b; font-size: 9pt; }
 
-/* Il modulo cartaceo (domanda-ammissione-socio-<anno>.html): righe da
-   compilare a mano, caselle, spazi per le firme */
-@page carta { size: A4; margin: 14mm 18mm 14mm; }
-.carta { page: carta; font-size: 9.6pt; line-height: 1.4; }
-.carta p, .carta li { margin-bottom: 1.8mm; }
-.carta h1 { margin: 0; font-size: 13pt; }
-.carta h3 { margin: 4mm 0 1.5mm; font-size: 10pt; font-weight: 800; }
-.carta__testa { display: flex; align-items: center; justify-content: space-between; gap: 8mm; margin-bottom: 4mm; }
-.carta__logo { width: 20mm; height: auto; filter: brightness(0); }
-.carta__destinatario { margin-bottom: 4mm; text-align: right; }
-.campi { margin-bottom: 3mm; }
-.carta .campo { display: flex; align-items: baseline; gap: 2mm; margin: 0 0 3mm; white-space: nowrap; }
-.riga-punti { flex: 1 1 auto; border-bottom: 1pt dotted #1d1d1b; min-width: 20mm; transform: translateY(-1mm); }
-.riga-punti.in-linea { display: inline-block; width: 70mm; flex: none; }
-.corto { display: inline-block; width: 22mm; border-bottom: 1pt dotted #1d1d1b; transform: translateY(-1mm); }
+/* Il modulo cartaceo (domanda-ammissione-socio-<anno>.html): due facciate.
+   Fronte con le sezioni della domanda dal sito (riquadri da compilare a
+   mano, caselle, firme), retro con l'informativa su due colonne. */
+@page carta { size: A4; margin: 11mm 15mm 10mm; }
+.carta { page: carta; font-size: 9pt; line-height: 1.38; }
+.carta p, .carta li { margin-bottom: 1.4mm; }
+.carta h1 { margin: 0; font-size: 15pt; }
+.carta__fronte { height: 276mm; display: flex; flex-direction: column; }
+.carta__testa { display: flex; align-items: center; justify-content: space-between; gap: 8mm; margin-bottom: 2.5mm; }
+.carta__quota { margin: 1mm 0 0; font-weight: 600; }
+.carta__logo { width: 18mm; height: auto; filter: brightness(0); }
+.carta__destinatario { margin-bottom: 1mm; font-size: 8pt; }
+.carta__sezione { margin: 3.2mm 0 1.6mm; padding-top: 1.6mm; border-top: 0.75pt solid #1d1d1b; font-size: 9.5pt; font-weight: 900; text-transform: uppercase; letter-spacing: 0.01em; }
+.carta__sotto { margin: 1.8mm 0 1.2mm; font-weight: 800; }
+.riquadri { display: grid; grid-template-columns: 1fr 1fr; gap: 1.8mm 3mm; }
+.riquadri--indirizzo { grid-template-columns: 1fr 22mm 26mm; }
+.riquadri--uno { grid-template-columns: 1fr; margin-top: 1.6mm; }
+.riquadro--largo { grid-column: 1 / -1; }
+.riquadro { position: relative; height: 10.5mm; border: 1pt solid #1d1d1b; border-radius: 3.5mm; padding: 0.9mm 3mm 0; }
+.riquadro span { font-size: 7.4pt; font-weight: 700; }
+.riquadro em { position: absolute; left: 32%; bottom: 1.3mm; font-style: normal; font-size: 11pt; }
+.casella { flex: none; display: inline-block; width: 3.4mm; height: 3.4mm; border: 1pt solid #1d1d1b; border-radius: 0.8mm; }
+.carta .scelta { display: flex; align-items: flex-start; gap: 2.4mm; margin: 0 0 1mm; font-weight: 800; }
+.carta .scelta .casella { margin-top: 0.4mm; }
+.pagamenti { display: grid; grid-template-columns: 1fr 1.35fr 1fr; gap: 3mm; }
+.pagamenti p { margin: 0; font-size: 8.2pt; }
+.pagamenti .scelta { font-size: 9pt; margin-bottom: 0.6mm; }
+.carta__causale { margin: 1.4mm 0 0; font-size: 8.2pt; font-weight: 600; }
+.dichiarazioni { margin-top: 3.2mm; padding-top: 2.4mm; border-top: 0.75pt solid #1d1d1b; }
+.dichiarazioni .scelta { font-weight: 500; margin-bottom: 1.4mm; }
 .giustificato { text-align: justify; }
-.scelte { margin: 0 0 2mm; padding: 0; list-style: none; }
-.scelte > li { margin-bottom: 1.5mm; }
-.scelte ul { margin: 1mm 0 0 10mm; padding-left: 4mm; list-style: circle; }
-.scelte ul li { margin: 0; }
-.casella { display: inline-block; width: 3.4mm; height: 3.4mm; margin-right: 2.5mm; border: 1pt solid #1d1d1b; vertical-align: -0.5mm; }
-.nota { font-size: 9pt; font-weight: 600; }
-.firme { margin: 3mm 0; }
-.carta .firma { display: flex; align-items: baseline; justify-content: flex-end; gap: 3mm; margin-top: 6mm; white-space: nowrap; }
-.linea { display: inline-block; width: 60mm; border-bottom: 1pt solid #1d1d1b; }
-.minori { margin-top: 4mm; padding-top: 3mm; border-top: 0.75pt solid #1d1d1b; }
-.minori h2 { margin-top: 0; text-transform: uppercase; font-size: 10pt; text-decoration: underline; }
-.carta__informativa { break-before: page; }
-.carta__informativa .sotto { margin-bottom: 3mm; }
-.carta .piede { margin-top: 4mm; font-size: 8pt; text-align: center; }
+.nota { margin: 0.6mm 0 0; font-size: 8.2pt; font-weight: 700; }
+.firme { display: flex; justify-content: space-between; gap: 8mm; margin: 6mm 0 1mm; }
+.firme p { display: flex; align-items: baseline; gap: 2mm; margin: 0; white-space: nowrap; font-weight: 700; }
+.firme--destra { justify-content: flex-end; margin-top: 5mm; }
+.linea { display: inline-block; width: 62mm; border-bottom: 1pt solid #1d1d1b; }
+.linea--data { width: 52mm; }
+.linea--nome { width: 58mm; transform: translateY(-0.6mm); }
+.minori { margin-top: 1mm; }
+.minori p { font-size: 8.2pt; }
+.ufficio { display: flex; gap: 5mm; align-items: baseline; margin-top: auto; padding: 2mm 3mm; border: 0.75pt dashed #1d1d1b; border-radius: 3.5mm; font-size: 7.6pt; font-weight: 700; white-space: nowrap; }
+.ufficio span:first-child { text-transform: uppercase; font-weight: 900; }
+.ufficio i { display: inline-block; width: 22mm; border-bottom: 0.75pt solid #1d1d1b; }
+.carta .piede { margin-top: 2mm; padding-top: 0; border-top: 0; font-size: 7.2pt; text-align: center; }
+.carta__informativa { break-before: page; font-size: 8.8pt; line-height: 1.42; }
+.carta__informativa h1 { font-size: 12pt; }
+.carta__informativa .carta__testa { margin-bottom: 1mm; }
+.carta__informativa .sotto { margin-bottom: 2.4mm; }
+.carta__informativa .colonne { column-count: 2; column-gap: 7mm; }
+.carta__informativa h3 { margin: 3mm 0 1mm; font-size: 9.3pt; font-weight: 900; break-after: avoid; }
+.carta__informativa h3:first-child { margin-top: 0; }
+.carta__informativa p, .carta__informativa li { margin-bottom: 1.3mm; }
+.carta__informativa ul { padding-left: 3.5mm; margin-bottom: 1mm; }
+.firme--informativa { display: grid; grid-template-columns: auto auto; justify-content: space-between; row-gap: 8mm; margin-top: 9mm; }
+.firme--informativa .linea--data { width: 45mm; }
+.firme--informativa p:last-child { grid-column: 1 / -1; }

@@ -14,14 +14,18 @@
      istruzioni per pagare);
    - risponde alla pagina con il codice della domanda e i dati per pagare.
 
-   Ogni 10 minuti (controllaPagamenti): per le domande arrivate dal sito,
-   quando il tesoriere ha messo "Pagato?" = Sì da almeno un giro (così un Sì
-   messo per sbaglio si può togliere), assegna il numero di tessera, compila
+   Ogni minuto (controllaPagamenti): per le domande arrivate dal sito,
+   quando il tesoriere ha messo "Pagato?" = Sì da un paio di minuti (così un
+   Sì messo per sbaglio si può togliere), assegna il numero di tessera, compila
    la data di pagamento se manca, rinomina il PDF e manda "quota ricevuta"
    al candidato (e a ciao@ in copia nascosta). Una volta sola. Dà il numero
    anche alle righe scritte a mano (domande cartacee) pagate e senza #
    (numeraRigheCartacee): i numeri li assegna solo lo script, e chi rinnova
    riprende il suo (numeroPerRiga).
+   Il tasto nella mail a ciao@ (doGet, mostraConferma, confermaQuota): apre
+   una pagina, riservata all'account ciao@, con i dati della domanda e il
+   numero di tessera che prenderà; "Conferma" fa subito quello che fa il Sì
+   nel foglio, senza aspettare.
    Ogni mattina (riepilogoQuotidiano): a ciao@ le domande non pagate, quelle
    da far decadere, quelle pagate e non ancora ratificate, gli errori, i
    numeri di tessera doppi.
@@ -56,7 +60,7 @@ const LIMITI = {
   tempoMinimo: 4000,     // ms fra l'apertura della pagina e l'invio
   allOra: 10,            // domande nuove all'ora, da chiunque
   perEmail: 3,           // domande nuove al giorno con la stessa email
-  attesaSi: 9 * 60000,   // un Sì vale dopo che è rimasto almeno questo
+  attesaSi: 2 * 60000,   // un Sì vale dopo che è rimasto almeno questo
   promemoria: 7,         // giorni senza pagamento prima del riepilogo
   decadenza: 30,         // giorni senza pagamento: la domanda decade
   ratifica: 20,          // giorni dal pagamento senza "Conferma assemblea?"
@@ -64,13 +68,18 @@ const LIMITI = {
   // arrivata: PDF e mail li sta ancora facendo doPost (una web app non
   // dura più di 6 minuti)
   attesaNuova: 7 * 60000,
-  tentativi: 6           // giri falliti di PDF e mail prima di arrendersi
+  tentativi: 6,          // giri falliti di PDF e mail prima di arrendersi
+  riprova: 10 * 60000    // fra un tentativo fallito e l'altro
 };
 const LUNGHEZZE = {
   nome: 60, cognome: 60, luogo_nascita: 80, via: 120, comune: 80,
   provincia: 2, cap: 5, email: 120, cellulare: 20, chi_paga: 80
 };
 const FUSO = 'Europe/Rome';
+// Da cambiare a ogni modifica: la mostrano la pagina della conferma e
+// l'indirizzo della web app aperto senza parametri, per sapere quale
+// versione serve ciascun deployment
+const VERSIONE = '2026-11-18h';
 const GENERICO = 'La domanda non è stata registrata. Riprova tra poco, o scrivici a ciao@cdlaps.com.';
 
 class Rifiuto extends Error {}
@@ -95,7 +104,10 @@ function impostazioni() {
     quote: JSON.parse(p.QUOTE),
     informativa: p.INFORMATIVA,
     statuto: p.STATUTO,
-    statutoUrl: p.STATUTO_URL
+    statutoUrl: p.STATUTO_URL,
+    // L'indirizzo /exec del secondo deployment, riservato al dominio: senza,
+    // la mail a ciao@ non ha il tasto
+    urlConferma: p.URL_CONFERMA || ''
   };
 }
 
@@ -115,14 +127,23 @@ const registro = {
   togli(nome) {
     PropertiesService.getScriptProperties().deleteProperty(nome);
   },
-  // Rilegge la domanda, la cambia e la riscrive: mai scrivere una copia
-  // letta prima, che cancellerebbe quello che ha scritto un'altra esecuzione
+  // Rilegge la domanda, la cambia e la riscrive, sotto il lock: mai
+  // scrivere una copia letta prima, che cancellerebbe quello che ha scritto
+  // un'altra esecuzione (per esempio la conferma dal tasto della mail).
+  // Se cambia() restituisce false non scrive niente. Mai chiamarla con il
+  // lock già preso.
   aggiorna(codice, cambia) {
-    const domanda = this.leggi('domanda:' + codice);
-    if (!domanda) return null;
-    cambia(domanda);
-    this.scrivi('domanda:' + codice, domanda);
-    return domanda;
+    const lock = LockService.getScriptLock();
+    if (!lock.tryLock(30000)) return null;
+    try {
+      const domanda = this.leggi('domanda:' + codice);
+      if (!domanda) return null;
+      if (cambia(domanda) === false) return domanda;
+      this.scrivi('domanda:' + codice, domanda);
+      return domanda;
+    } finally {
+      lock.releaseLock();
+    }
   },
   domande() {
     const tutte = PropertiesService.getScriptProperties().getProperties();
@@ -143,8 +164,51 @@ function doPost(e) {
   }
 }
 
-function doGet() {
-  return risposta({ ok: false, messaggio: 'Qui si inviano le domande di ammissione di CDL APS dal sito.' });
+/* La stessa web app è pubblicata due volte (README.md): "Chiunque", per le
+   domande dal sito, e "Chiunque in cdlaps.com", per il tasto della mail a
+   ciao@. La pagina del tasto risponde solo a chi è entrato in Google con
+   l'account DESTINATARIO: la mail a ciao@ ha "Rispondi a" il candidato, e
+   in una risposta il collegamento finirebbe citato. A chiunque altro va un
+   testo semplice, mai una pagina HtmlService (da una pagina HtmlService si
+   possono chiamare le funzioni dello script con google.script.run). */
+function doGet(e) {
+  const p = (e && e.parameter) || {};
+  if (!p.codice) return risposta({ ok: false, messaggio: 'Qui si inviano le domande di ammissione di CDL APS dal sito.', versione: VERSIONE });
+  let imp;
+  try {
+    imp = impostazioni();
+  } catch (errore) {
+    console.error(errore);
+    return testoSemplice('La web app non è configurata.');
+  }
+  if (!utenteAutorizzato(imp)) {
+    return testoSemplice('Questa pagina si apre solo con l\'account ' + imp.destinatario
+      + '. Entra in Google con quell\'account e riapri il link della mail.');
+  }
+  const codice = String(p.codice).slice(0, 20);
+  try {
+    return p.t ? confermaQuota(codice, String(p.t).slice(0, 60), imp) : mostraConferma(codice, imp, '');
+  } catch (errore) {
+    console.error(errore);
+    return paginaConferma({
+      titolo: 'Qualcosa è andato storto',
+      testo: 'Errore: ' + (errore.message || errore) + '. Riprova fra qualche minuto, oppure metti "Pagato?" = Sì nel foglio.'
+    });
+  }
+}
+
+function utenteAutorizzato(imp) {
+  let email = '';
+  try {
+    email = Session.getActiveUser().getEmail();
+  } catch (_) {
+    return false;
+  }
+  return !!email && email.toLowerCase() === imp.destinatario.toLowerCase();
+}
+
+function testoSemplice(messaggio) {
+  return ContentService.createTextOutput(messaggio).setMimeType(ContentService.MimeType.TEXT);
 }
 
 function risposta(oggetto) {
@@ -202,9 +266,10 @@ function riceviDomanda(e) {
     if (colPrima && cercaEmail(prima, colPrima, v.email)) segni.push('email presente anche in TESSERATI ' + (anno - 1));
 
     const quando = Utilities.formatDate(adesso, FUSO, "dd/MM/yyyy 'alle' HH:mm");
+    // Corte: data e ora stanno in "Data tesseramento" e nel registro, le
+    // versioni di statuto e informativa nel PDF
     const note = [
-      'Domanda dal sito ' + codice + ', ' + quando,
-      'statuto ' + v.statuto + ', informativa ' + v.informativa,
+      'Sito ' + codice,
       v.chi_paga ? 'paga: ' + v.chi_paga : '',
       v.cellulare ? 'cell. ' + v.cellulare : ''
     ].concat(segni).filter(Boolean).join(' · ');
@@ -398,10 +463,18 @@ function primaRigaLibera(scheda, col) {
   return ultima + 2;
 }
 
-// La riga della domanda, dal suo codice nelle Note
+// La riga della domanda, dal suo codice all'inizio delle Note: "Sito
+// D26-017 · …" (fino al 18 novembre 2026 "Domanda dal sito D26-017, …")
+function notaDellaDomanda(nota, codice) {
+  const n = String(nota).trim();
+  const inizio = 'Sito ' + codice;
+  if (n.indexOf(inizio) === 0) return !/[0-9A-Za-z]/.test(n.charAt(inizio.length));
+  return n.indexOf('Domanda dal sito ' + codice + ',') === 0;
+}
+
 function rigaDomanda(scheda, col, codice) {
   const note = valoriColonna(scheda, col.note);
-  const i = note.findIndex((n) => n.indexOf('Domanda dal sito ' + codice + ',') === 0);
+  const i = note.findIndex((n) => notaDellaDomanda(n, codice));
   return i < 0 ? 0 : i + 2;
 }
 
@@ -507,7 +580,12 @@ function collegaPdf(scheda, riga, col, file, testoLink) {
 function completaDomanda(codice, imp) {
   const domanda = registro.leggi('domanda:' + codice);
   if (!domanda || domanda.stato !== 'da pagare') return domanda;
-  const salva = () => registro.scrivi('domanda:' + codice, domanda);
+  // Solo i campi di questa funzione, e solo se nel frattempo la domanda non
+  // è stata accolta (dal tasto della mail, mentre qui partivano le mail)
+  const salva = () => registro.aggiorna(codice, (x) => {
+    if (x.stato !== 'da pagare') return false;
+    ['pdf', 'mailNoi', 'mailCandidato', 'tentativi', 'provata', 'errore'].forEach((k) => { x[k] = domanda[k]; });
+  });
   try {
     if (!domanda.pdf) {
       const modello = HtmlService.createTemplateFromFile('domanda');
@@ -543,6 +621,7 @@ function completaDomanda(codice, imp) {
   } catch (errore) {
     console.error(errore);
     domanda.tentativi = (domanda.tentativi || 0) + 1;
+    domanda.provata = Date.now();
     domanda.errore = String(errore.message || errore);
     salva();
   }
@@ -553,22 +632,22 @@ function istruzioniPagamento(domanda, imp) {
   const d = domanda.dati;
   if (d.pagamento === 'paypal') {
     return [
-      'Paga con PayPal da questo collegamento: ' + imp.paypal + '/' + domanda.importo + 'EUR',
-      'Nella pagina di PayPal scegli "Amici e familiari" e, nel messaggio, scrivi la causale:',
+      'Puoi pagare con PayPal da qui: ' + imp.paypal + '/' + domanda.importo + 'EUR',
+      'Su PayPal scegli "Amici e familiari" e nel messaggio scrivi questa causale:',
       domanda.causale
     ].join('\n');
   }
   if (d.pagamento === 'bonifico') {
     return [
-      'Paga con un bonifico (anche istantaneo):',
+      'Puoi fare un bonifico, anche istantaneo:',
       'IBAN: ' + imp.iban,
       'Intestato a: ' + imp.beneficiario,
       'Importo: ' + domanda.importo + ' euro',
       'Causale: ' + domanda.causale
     ].join('\n');
   }
-  return 'Per pagare in contanti rispondi a questa mail: fissiamo un appuntamento, o ci vediamo al prossimo evento.\n'
-    + 'Causale, da ricordare: ' + domanda.causale;
+  return 'Per pagare in contanti rispondi a questa mail e ci mettiamo d\'accordo: ci vediamo di persona '
+    + 'o al prossimo evento. Il codice della tua domanda è ' + domanda.codice + '.';
 }
 
 function mandaMailNoi(domanda, imp, pdf) {
@@ -576,7 +655,7 @@ function mandaMailNoi(domanda, imp, pdf) {
   const nomeCompleto = d.nome + ' ' + d.cognome;
 
   const perNoi = [
-    'Nuova domanda di ammissione dal sito: ' + domanda.codice + ', ' + domanda.quando + '.',
+    nomeCompleto + ' ha fatto domanda di ammissione dal sito (' + domanda.codice + ', ' + domanda.quando + ').',
     '',
     'Nome: ' + nomeCompleto,
     'Nato/a a ' + d.luogo_nascita + ' il ' + d.data_nascita,
@@ -586,22 +665,195 @@ function mandaMailNoi(domanda, imp, pdf) {
     'Pagamento: ' + NOMI_MODALITA[d.pagamento] + ', ' + domanda.importo + ' euro per il ' + domanda.anno,
     d.chi_paga ? 'Paga: ' + d.chi_paga : '',
     'Causale: ' + domanda.causale,
-    domanda.segni.length ? '\nAttenzione: ' + domanda.segni.join('; ') : '',
+    domanda.segni.length ? '\nDa controllare: ' + domanda.segni.join('; ') : '',
     '',
-    'La domanda è nella scheda TESSERATI ' + domanda.anno + ', senza numero di tessera e con "Pagato?" = No.',
-    'Quando arriva la quota intera metti "Pagato?" = Sì: entro una ventina di minuti lo script assegna il numero,',
-    'compila la data di pagamento se manca, rinomina il PDF e manda la conferma al candidato.',
-    'Il PDF è allegato. Rispondendo a questa mail scrivi al candidato.'
-  ].filter((r) => r !== '').join('\n');
+    'La trovi nella scheda TESSERATI ' + domanda.anno + ', ancora senza numero di tessera.'
+  ].filter((r) => r !== '');
+  const link = imp.urlConferma ? imp.urlConferma + '?codice=' + encodeURIComponent(domanda.codice) : '';
+  const comeAccogliere = link
+    ? ['Quando arriva la quota, apri il link qui sotto con l\'account ' + imp.destinatario + '. Ti mostra il numero '
+      + 'da scrivere sulla tessera, e con "Conferma" la domanda è accolta: lo script aggiorna il foglio, rinomina il PDF '
+      + 'e manda il benvenuto a ' + d.nome + '.',
+      'Se preferisci, puoi anche mettere "Pagato?" = Sì nel foglio: ci pensa lo script in tre o quattro minuti.']
+    : ['Quando arriva la quota, metti "Pagato?" = Sì nel foglio: in tre o quattro minuti lo script dà il numero di '
+      + 'tessera, aggiorna il foglio, rinomina il PDF e manda il benvenuto a ' + d.nome + '.'];
+  const chiusura = 'Il PDF della domanda è allegato. Se rispondi a questa mail, scrivi direttamente a ' + d.nome + '.';
+  const body = perNoi.concat([''], comeAccogliere.slice(0, 1), link ? [link] : [], comeAccogliere.slice(1), ['', chiusura]).join('\n');
+  const paragrafo = (righe) => '<p>' + righe.map(html).join('<br>') + '</p>';
+  const htmlBody = '<div style="font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.5;color:#111">'
+    + paragrafo(perNoi)
+    + paragrafo(comeAccogliere.slice(0, 1))
+    + (link ? '<p><a href="' + html(link) + '" style="display:inline-block;background:#f26b21;color:#111;'
+      + 'font-weight:bold;text-decoration:none;padding:12px 20px;border-radius:12px">Quota arrivata: accogli la domanda</a></p>' : '')
+    + comeAccogliere.slice(1).map((r) => paragrafo([r])).join('')
+    + paragrafo([chiusura]) + '</div>';
   MailApp.sendEmail({
     to: imp.destinatario,
     replyTo: d.email,
-    name: 'Sito CDL',
-    subject: '[Sito CDL] Domanda di ammissione – ' + nomeCompleto + ' – ' + MODALITA[d.pagamento] + ' (da pagare)'
+    name: 'CDL APS',
+    subject: '[Sito CDL] Domanda di ammissione – ' + nomeCompleto + ' – ' + MODALITA[d.pagamento] + ', da pagare'
       + (domanda.segni.length ? ' – da controllare' : ''),
-    body: perNoi,
+    body: body,
+    htmlBody: htmlBody,
     attachments: [pdf]
   });
+}
+
+function html(testo) {
+  return String(testo).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+}
+
+/* --------------------------------------------------------------------------
+   Il tasto della mail a ciao@ (solo per l'account DESTINATARIO, vedi doGet)
+   -------------------------------------------------------------------------- */
+
+/* Prima pagina: i dati della domanda e il numero di tessera che prenderà,
+   da scrivere sulla tessera. Non cambia niente: un antivirus o un'anteprima
+   che apre il collegamento non accoglie nessuna domanda. Il tasto Conferma
+   porta una chiave usa e getta (30 minuti), così un collegamento di
+   conferma non si può preparare da fuori. */
+function mostraConferma(codice, imp, avviso) {
+  const domanda = registro.leggi('domanda:' + codice);
+  if (!domanda) {
+    return paginaConferma({
+      titolo: 'Domanda ' + codice + ' non trovata',
+      testo: 'Questa domanda non c\'è più: forse è scaduta, o la riga è stata tolta dal foglio. Se la quota è '
+        + 'arrivata, scrivi la riga a mano e metti "Pagato?" = Sì, e il numero lo dà lo script.'
+    });
+  }
+  if (domanda.stato === 'pagata') {
+    return paginaConferma({
+      titolo: 'Domanda già accolta',
+      numero: domanda.numero,
+      etichettaNumero: 'Numero di tessera',
+      righe: [['Socio', domanda.nome], ['Domanda', domanda.codice]],
+      avviso: avviso,
+      testo: domanda.mailBenvenuto === false
+        ? 'La quota è registrata, ma la mail di benvenuto non era partita: scrivi tu a ' + domanda.nome + '.'
+        : 'La quota è registrata e la mail di benvenuto è già partita.'
+    });
+  }
+  const scheda = SpreadsheetApp.openById(imp.foglio).getSheetByName('TESSERATI ' + domanda.anno);
+  const col = scheda && colonne(scheda);
+  const riga = scheda ? rigaDomanda(scheda, col, domanda.codice) : 0;
+  if (!riga) {
+    return paginaConferma({
+      titolo: 'Riga non trovata',
+      testo: 'Nel foglio non trovo la riga di questa domanda. Le sue Note devono cominciare con "Sito '
+        + codice + '": dai un\'occhiata al foglio.'
+    });
+  }
+  const numero = scheda.getRange(riga, col.numero).getDisplayValue().trim() || numeroPerRiga(scheda, col, riga);
+  const chiave = Utilities.getUuid();
+  CacheService.getScriptCache().put('conferma:' + chiave, JSON.stringify({ codice: codice, numero: numero }), 1800);
+  const d = domanda.dati;
+  return paginaConferma({
+    titolo: d.nome + ' ' + d.cognome,
+    numero: numero,
+    etichettaNumero: 'Numero da scrivere sulla tessera',
+    righe: [
+      ['Domanda', domanda.codice + ', ' + domanda.quando],
+      ['Quota', domanda.importo + ' euro per il ' + domanda.anno],
+      ['Pagamento', NOMI_MODALITA[d.pagamento] + (d.chi_paga ? ', paga ' + d.chi_paga : '')],
+      ['Causale', domanda.causale],
+      ['Email', d.email]
+    ],
+    avviso: avviso || (domanda.segni.length ? 'Da controllare: ' + domanda.segni.join('; ') : ''),
+    testo: 'Premi "Conferma" solo quando la quota è arrivata tutta. Il numero diventa definitivo, il foglio si '
+      + 'aggiorna e a ' + d.nome + ' arriva la mail di benvenuto.',
+    tasto: { etichetta: 'Quota arrivata: conferma', url: indirizzoConferma(imp) + '?codice=' + encodeURIComponent(codice) + '&t=' + chiave },
+    pdf: domanda.pdf ? 'https://drive.google.com/file/d/' + domanda.pdf + '/view' : ''
+  });
+}
+
+/* Il tasto Conferma: la chiave vale una volta sola. Un ricaricamento (o una
+   chiave scaduta) mostra di nuovo la prima pagina, che dice com'è la
+   domanda adesso. */
+function confermaQuota(codice, chiave, imp) {
+  const cache = CacheService.getScriptCache();
+  const salvata = cache.get('conferma:' + chiave);
+  if (!salvata) return mostraConferma(codice, imp, 'Questo link di conferma era già stato usato, o è scaduto. Ecco com\'è la domanda adesso.');
+  const visto = JSON.parse(salvata);
+  if (visto.codice !== codice) return mostraConferma(codice, imp, '');
+  cache.remove('conferma:' + chiave);
+
+  const domanda = registro.leggi('domanda:' + codice);
+  if (!domanda || domanda.stato !== 'da pagare') return mostraConferma(codice, imp, '');
+  const scheda = SpreadsheetApp.openById(imp.foglio).getSheetByName('TESSERATI ' + domanda.anno);
+  const col = scheda && colonne(scheda);
+  const riga = scheda ? rigaDomanda(scheda, col, codice) : 0;
+  if (!riga) return mostraConferma(codice, imp, '');
+
+  const dopo = registraQuota(domanda, scheda, col, riga, imp, true);
+  if (!dopo || dopo.stato !== 'pagata') {
+    return paginaConferma({
+      titolo: 'Non ancora confermata',
+      testo: 'Il foglio era occupato. Riprova fra un minuto dal link della mail.'
+    });
+  }
+  const cambiato = dopo.numero !== visto.numero;
+  return paginaConferma({
+    titolo: 'Domanda accolta',
+    numero: dopo.numero,
+    etichettaNumero: 'Numero di tessera',
+    righe: [['Socio', dopo.nome], ['Domanda', dopo.codice]],
+    avviso: [
+      cambiato ? 'Attenzione: nel frattempo il ' + visto.numero + ' è andato a un\'altra persona. Sulla tessera scrivi '
+        + dopo.numero + '.' : '',
+      dopo.errore ? 'Da sistemare: ' + dopo.errore + '.' : ''
+    ].filter(Boolean).join(' '),
+    testo: 'Fatto! Il foglio è aggiornato'
+      + (dopo.mailBenvenuto === false ? '.' : ' e la mail di benvenuto è partita.')
+      + ' Resta solo la ratifica del direttivo, entro 30 giorni: dopo la riunione metti "Conferma assemblea?" = Sì.'
+  });
+}
+
+function indirizzoConferma(imp) {
+  return imp.urlConferma || ScriptApp.getService().getUrl();
+}
+
+// La pagina è scritta qui, non in un modello HtmlService: ogni dato passa
+// da html(), che fa l'escape (i dati arrivano dal modulo del sito)
+const STILE_CONFERMA = [
+  'body{margin:0;background:#f7f7f7;color:#111;font-family:Arial,Helvetica,sans-serif}',
+  'main{max-width:520px;margin:0 auto;padding:28px 16px 40px}',
+  'h1{font-size:26px;font-weight:900;text-transform:uppercase;margin:0 0 18px;line-height:1.1}',
+  '.numero{background:#f26b21;border-radius:20px;padding:18px 20px;margin:0 0 20px}',
+  '.numero span{display:block;font-size:14px;font-weight:700}',
+  '.numero strong{display:block;font-size:64px;font-weight:900;line-height:1;margin-top:6px}',
+  'dl{margin:0 0 18px;display:grid;grid-template-columns:max-content 1fr;gap:6px 14px;font-size:15px}',
+  'dt{font-weight:700}dd{margin:0;overflow-wrap:anywhere}',
+  '.avviso{background:#fff;border:2px solid #111;border-radius:14px;padding:12px 14px;font-weight:700;margin:0 0 18px}',
+  'p{font-size:15px;line-height:1.5}',
+  '.tasto{display:block;text-align:center;background:#111;color:#fff;text-decoration:none;font-weight:800;font-size:17px;padding:16px 20px;border-radius:14px;margin:22px 0 14px}',
+  '.pdf{color:#111;font-weight:700}',
+  '.versione{margin-top:32px;font-size:12px;color:#777}'
+].join('');
+
+function paginaConferma(dati) {
+  const v = Object.assign({ numero: '', etichettaNumero: '', righe: [], avviso: '', testo: '', tasto: null, pdf: '' }, dati);
+  const parti = ['<!DOCTYPE html><html lang="it"><head><base target="_top"><meta charset="UTF-8"><style>' + STILE_CONFERMA + '</style></head><body><main>'];
+  parti.push('<h1>' + html(v.titolo) + '</h1>');
+  if (v.numero) parti.push('<div class="numero"><span>' + html(v.etichettaNumero) + '</span><strong>' + html(v.numero) + '</strong></div>');
+  if (v.avviso) parti.push('<p class="avviso">' + html(v.avviso) + '</p>');
+  if (v.righe.length) parti.push('<dl>' + v.righe.map((r) => '<dt>' + html(r[0]) + '</dt><dd>' + html(r[1]) + '</dd>').join('') + '</dl>');
+  if (v.testo) parti.push('<p>' + html(v.testo) + '</p>');
+  if (v.tasto) parti.push('<a class="tasto" href="' + html(v.tasto.url) + '">' + html(v.tasto.etichetta) + '</a>');
+  if (v.pdf) parti.push('<p><a class="pdf" href="' + html(v.pdf) + '" target="_blank" rel="noopener">Apri il PDF della domanda</a></p>');
+  parti.push('<p class="versione">Versione ' + VERSIONE + '</p></main></body></html>');
+  return HtmlService.createHtmlOutput(parti.join(''))
+    .setTitle('Domanda di ammissione – CDL APS')
+    .addMetaTag('viewport', 'width=device-width, initial-scale=1');
+}
+
+// Da eseguire dall'editor per vedere la pagina della conferma senza
+// passare dal deployment: scrive nel log l'inizio della pagina per la
+// domanda indicata (prepara solo l'anteprima, non conferma niente)
+function provaPagina() {
+  const codice = 'D26-001';
+  const pagina = mostraConferma(codice, impostazioni(), '').getContent();
+  console.log('Versione ' + VERSIONE + ', pagina di ' + pagina.length + ' caratteri');
+  console.log(pagina.replace(/<style>.*?<\/style>/, '<style>…</style>').slice(0, 1500));
 }
 
 function mandaMailCandidato(domanda, imp, pdf) {
@@ -615,35 +867,55 @@ function mandaMailCandidato(domanda, imp, pdf) {
   const perCandidato = [
     'Ciao ' + d.nome + ',',
     '',
-    'abbiamo ricevuto la tua domanda di ammissione a CDL APS (codice ' + domanda.codice + '). In allegato trovi il riepilogo e lo statuto.',
+    'grazie per la tua domanda di ammissione a CDL APS! In allegato trovi il riepilogo e lo statuto.',
     '',
-    'La quota associativa è di ' + domanda.importo + ' euro per il ' + domanda.anno + '.',
+    'Se hai già pagato la quota sei a posto: appena ci arriva ti scriviamo con il tuo numero di tessera.',
+    '',
+    'Se non l\'hai ancora pagata, sono ' + domanda.importo + ' euro per il ' + domanda.anno + '.',
     istruzioniPagamento(domanda, imp),
     '',
-    'Quando riceviamo la quota, la domanda viene accolta e ti scriviamo di nuovo. Se non viene accolta, la quota ti viene restituita.',
+    'Il codice ' + domanda.codice + ' ci serve solo a riconoscere il tuo pagamento, non è il numero di tessera. '
+      + 'Se per qualche motivo la domanda non venisse accolta, ti restituiamo la quota.',
     '',
-    'Per qualsiasi domanda rispondi a questa mail.',
+    'Per qualsiasi dubbio rispondi pure a questa mail.',
     '',
+    'A presto!',
     'CDL APS',
     'cdlaps.com',
     '',
     '—',
-    'Se non hai fatto tu questa domanda, ignora questa mail: senza pagamento non succede nulla. Se vuoi, scrivici e cancelliamo i dati.'
+    'Non hai fatto tu questa domanda? Ignora pure questa mail: senza pagamento non succede niente. Se vuoi che '
+      + 'cancelliamo i tuoi dati, scrivici.'
   ].join('\n');
   MailApp.sendEmail({
     to: d.email,
     replyTo: imp.destinatario,
     name: 'CDL APS',
-    subject: 'CDL APS – La tua domanda di ammissione (' + domanda.codice + ')',
+    subject: 'La tua domanda per CDL APS (' + domanda.codice + ')',
     body: perCandidato,
     attachments: allegati
   });
 }
 
 /* --------------------------------------------------------------------------
-   Ogni 10 minuti: pagamenti segnati dal tesoriere, PDF e mail da rifare
+   Ogni minuto: pagamenti segnati dal tesoriere, PDF e mail da rifare
    -------------------------------------------------------------------------- */
 function controllaPagamenti() {
+  // Un giro lento non deve accavallarsi con quello del minuto dopo. Il
+  // segno dura più di un'esecuzione (6 minuti al massimo), e ogni giro
+  // toglie solo il suo
+  const cache = CacheService.getScriptCache();
+  if (cache.get('giro in corso')) return;
+  const mio = Utilities.getUuid();
+  cache.put('giro in corso', mio, 420);
+  try {
+    giroPagamenti();
+  } finally {
+    if (cache.get('giro in corso') === mio) cache.remove('giro in corso');
+  }
+}
+
+function giroPagamenti() {
   const imp = impostazioni();
   const aperte = registro.domande().filter((d) => d.stato === 'da pagare');
   const foglio = SpreadsheetApp.openById(imp.foglio);
@@ -654,7 +926,9 @@ function controllaPagamenti() {
       if (incompleta) {
         // Appena arrivata: ci sta ancora lavorando doPost
         if (Date.now() - domanda.ricevuta < LIMITI.attesaNuova) return;
-        if ((domanda.tentativi || 0) < LIMITI.tentativi) domanda = completaDomanda(domanda.codice, imp) || domanda;
+        const daRiprovare = (domanda.tentativi || 0) < LIMITI.tentativi
+          && Date.now() - (domanda.provata || 0) >= LIMITI.riprova;
+        if (daRiprovare) domanda = completaDomanda(domanda.codice, imp) || domanda;
       }
       const scheda = foglio.getSheetByName('TESSERATI ' + domanda.anno);
       if (!scheda) return;
@@ -663,12 +937,20 @@ function controllaPagamenti() {
       if (!riga) return; // riga tolta o Note cambiate: lo dice il riepilogo
       const pagato = /^s[iì]$/i.test(scheda.getRange(riga, col.pagato).getDisplayValue().trim());
       if (!pagato) {
-        if (domanda.siDal) registro.aggiorna(domanda.codice, (x) => { x.siDal = 0; });
+        if (domanda.siDal) {
+          registro.aggiorna(domanda.codice, (x) => {
+            if (x.stato !== 'da pagare') return false;
+            x.siDal = 0;
+          });
+        }
         return;
       }
-      // Il Sì vale dal giro dopo: c'è il tempo di toglierlo se era uno sbaglio
+      // Il Sì vale dopo un paio di minuti: c'è il tempo di toglierlo se era uno sbaglio
       if (!domanda.siDal) {
-        registro.aggiorna(domanda.codice, (x) => { x.siDal = Date.now(); });
+        registro.aggiorna(domanda.codice, (x) => {
+          if (x.stato !== 'da pagare') return false;
+          x.siDal = Date.now();
+        });
         return;
       }
       if (Date.now() - domanda.siDal < LIMITI.attesaSi) return;
@@ -708,7 +990,7 @@ function numeraRigheCartacee(foglio, codiciAperti) {
   const daNumerare = [];
   nomi.forEach((nome, i) => {
     if (!nome || numeri[i]) return;
-    if (codiciAperti.some((c) => note[i].indexOf('Domanda dal sito ' + c + ',') === 0)) return;
+    if (codiciAperti.some((c) => notaDellaDomanda(note[i], c))) return;
     if (!/^s[iì]$/i.test(pagati[i])) return;
     const chiave = 'carta:' + anno + ':' + impronta(nome.toLowerCase());
     visti[chiave] = true;
@@ -744,12 +1026,22 @@ function numeraRigheCartacee(foglio, codiciAperti) {
   }
 }
 
-function registraQuota(domanda, scheda, col, riga, imp) {
+// Restituisce la domanda com'è dopo (null se il foglio era occupato).
+// segnaPagato: dal tasto della mail, mette anche "Pagato?" = Sì.
+function registraQuota(domanda, scheda, col, riga, imp, segnaPagato) {
   const lock = LockService.getScriptLock();
-  if (!lock.tryLock(30000)) return;
+  if (!lock.tryLock(30000)) return null;
   try {
     const attuale = registro.leggi('domanda:' + domanda.codice);
-    if (!attuale || attuale.stato !== 'da pagare') return;
+    if (!attuale || attuale.stato !== 'da pagare') return attuale;
+    // La riga si ricerca sotto il lock: nell'attesa il foglio può essere
+    // stato riordinato
+    riga = rigaDomanda(scheda, col, domanda.codice);
+    if (!riga) return attuale;
+    if (segnaPagato) scheda.getRange(riga, col.pagato).setValue('Sì');
+    const problemi = [];
+    if (!attuale.pdf) problemi.push('il PDF della domanda non è mai stato creato');
+    if (!attuale.mailCandidato) problemi.push('la mail con il riepilogo e lo statuto non era partita');
 
     let numero = scheda.getRange(riga, col.numero).getDisplayValue().trim();
     if (!numero) {
@@ -761,10 +1053,15 @@ function registraQuota(domanda, scheda, col, riga, imp) {
       cellaData.setValue(giornoSenzaOra(new Date())).setNumberFormat('dd/mm/yyyy');
     }
     if (attuale.pdf) {
-      const file = DriveApp.getFileById(attuale.pdf);
-      const nome = nomeFile(numero, attuale.dati);
-      file.setName(nome + '.pdf');
-      collegaPdf(scheda, riga, col, file, nome);
+      try {
+        const file = DriveApp.getFileById(attuale.pdf);
+        const nome = nomeFile(numero, attuale.dati);
+        file.setName(nome + '.pdf');
+        collegaPdf(scheda, riga, col, file, nome);
+      } catch (errore) {
+        console.error(errore);
+        problemi.push('PDF non rinominato (' + (errore.message || errore) + '): rinominalo tu ' + numero + '_NomeCognome');
+      }
     }
     SpreadsheetApp.flush();
 
@@ -777,24 +1074,29 @@ function registraQuota(domanda, scheda, col, riga, imp) {
       bcc: imp.destinatario,
       replyTo: imp.destinatario,
       name: 'CDL APS',
-      subject: 'CDL APS – Quota ricevuta, benvenuto/a',
+      subject: 'Ti diamo il benvenuto in CDL APS (tessera n. ' + numero + ')',
       body: [
         'Ciao ' + d.nome + ',',
         '',
-        'abbiamo ricevuto la tua quota associativa per il ' + attuale.anno + ' (domanda ' + attuale.codice + '): la tua domanda è accolta.',
-        'Il tuo numero di tessera è ' + numero + '. Il Consiglio direttivo ratificherà l\'ammissione entro 30 giorni.',
+        'abbiamo ricevuto la tua quota per il ' + attuale.anno + ': da adesso fai parte di CDL APS!',
         '',
-        'Benvenuto/a in CDL! Ti scriveremo per i prossimi eventi e per le assemblee dei soci.',
+        'Il tuo numero di tessera è ' + numero + '.',
         '',
+        'Ti scriveremo per i prossimi eventi e per le assemblee dei soci. Come prevede lo statuto, alla prossima '
+          + 'riunione il Consiglio direttivo ratificherà la tua ammissione: tu non devi fare niente.',
+        '',
+        'A presto!',
         'CDL APS',
         'cdlaps.com'
       ].join('\n')
     });
-      attuale.errore = '';
+      attuale.mailBenvenuto = true;
     } catch (errore) {
       console.error(errore);
-      attuale.errore = 'mail "quota ricevuta" non partita (' + (errore.message || errore) + '): scrivi tu al socio, numero ' + numero;
+      attuale.mailBenvenuto = false;
+      problemi.push('mail di benvenuto non partita (' + (errore.message || errore) + '): scrivi tu al socio, numero ' + numero);
     }
+    attuale.errore = problemi.join('; ');
 
     attuale.stato = 'pagata';
     attuale.numero = numero;
@@ -802,6 +1104,7 @@ function registraQuota(domanda, scheda, col, riga, imp) {
     attuale.nome = d.nome + ' ' + d.cognome;
     delete attuale.dati; // i dati ora stanno nel libro soci e nel PDF
     registro.scrivi('domanda:' + attuale.codice, attuale);
+    return attuale;
   } finally {
     lock.releaseLock();
   }
@@ -860,18 +1163,18 @@ function riepilogoQuotidiano() {
   const doppi = schedaOggi ? numeriDoppi(schedaOggi, colonne(schedaOggi)) : [];
 
   const parti = [];
-  if (doppi.length) parti.push('Numeri di tessera usati due volte in ' + schedaOggi.getName() + ' (cancella il # sbagliato e lascia Pagato? = Sì: entro venti minuti lo script gli dà il numero giusto):\n' + doppi.join('\n'));
-  if (sezioni.decadute.length) parti.push('Non pagate da più di ' + LIMITI.decadenza + ' giorni (decadute: togli la riga e sposta il PDF; poi la domanda esce da qui il giorno dopo):\n' + sezioni.decadute.join('\n'));
-  if (sezioni.promemoria.length) parti.push('Non ancora pagate da più di ' + LIMITI.promemoria + ' giorni (un promemoria al candidato?):\n' + sezioni.promemoria.join('\n'));
-  if (sezioni.ratifica.length) parti.push('Pagate e non ancora ratificate dal direttivo ("Conferma assemblea?"), lo statuto chiede 30 giorni:\n' + sezioni.ratifica.join('\n'));
-  if (sezioni.errori.length) parti.push('PDF o mail non riusciti (per le domande da pagare lo script riprova ogni 10 minuti per un\'ora, poi si ferma: controlla l\'indirizzo e scrivi tu al candidato):\n' + sezioni.errori.join('\n'));
-  if (sezioni.sparite.length) parti.push('Domande dal sito di cui non trovo più la riga (Note cambiate o riga tolta; da oggi non le seguo più: se la riga c\'è ancora, al Sì il numero lo do come a una domanda cartacea, senza mail):\n' + sezioni.sparite.join('\n'));
+  if (doppi.length) parti.push('Numeri di tessera usati due volte in ' + schedaOggi.getName() + '. Cancella il # sbagliato e lascia "Pagato?" = Sì: in pochi minuti lo script gli dà quello giusto.\n' + doppi.join('\n'));
+  if (sezioni.decadute.length) parti.push('Non pagate da più di ' + LIMITI.decadenza + ' giorni, quindi decadute. Togli la riga dal foglio e sposta il PDF: dal giorno dopo spariscono da qui.\n' + sezioni.decadute.join('\n'));
+  if (sezioni.promemoria.length) parti.push('Ancora da pagare dopo ' + LIMITI.promemoria + ' giorni. Mandiamo un promemoria?\n' + sezioni.promemoria.join('\n'));
+  if (sezioni.ratifica.length) parti.push('Nuovi soci da far ratificare al direttivo, che ha 30 giorni di tempo. Dopo la riunione metti "Conferma assemblea?" = Sì.\n' + sezioni.ratifica.join('\n'));
+  if (sezioni.errori.length) parti.push('PDF o mail non riusciti. Lo script riprova ogni 10 minuti per un\'ora, poi si ferma: controlla l\'indirizzo e scrivi tu alla persona.\n' + sezioni.errori.join('\n'));
+  if (sezioni.sparite.length) parti.push('Domande di cui non trovo più la riga (Note cambiate o riga tolta). Da oggi non le seguo più; se la riga c\'è ancora, al "Sì" do il numero come per una domanda cartacea, senza mail.\n' + sezioni.sparite.join('\n'));
 
   if (!parti.length) return;
   MailApp.sendEmail({
     to: imp.destinatario,
-    name: 'Sito CDL',
-    subject: '[Sito CDL] Domande di ammissione: cose da fare',
+    name: 'CDL APS',
+    subject: '[Sito CDL] Domande di ammissione: da fare oggi',
     body: parti.join('\n\n') + '\n\nIl libro soci: ' + foglio.getUrl()
   });
 }
@@ -886,7 +1189,7 @@ function installa() {
   ScriptApp.getProjectTriggers()
     .filter((t) => ['controllaPagamenti', 'riepilogoQuotidiano'].includes(t.getHandlerFunction()))
     .forEach((t) => ScriptApp.deleteTrigger(t));
-  ScriptApp.newTrigger('controllaPagamenti').timeBased().everyMinutes(10).create();
+  ScriptApp.newTrigger('controllaPagamenti').timeBased().everyMinutes(1).create();
   ScriptApp.newTrigger('riepilogoQuotidiano').timeBased().everyDays(1).atHour(8).inTimezone(FUSO).create();
   verifica();
 }
@@ -899,8 +1202,10 @@ function verifica() {
   const scheda = foglio.getSheetByName('TESSERATI ' + anno);
   if (scheda) colonne(scheda);
   DriveApp.getFolderById(imp.cartella).getName();
-  UrlFetchApp.fetch(imp.statutoUrl, { method: 'head' });
+  // UrlFetchApp non conosce il metodo HEAD: si scarica lo statuto
+  const statuto = UrlFetchApp.fetch(imp.statutoUrl, { muteHttpExceptions: true }).getResponseCode();
   console.log([
+    'Statuto: ' + (statuto === 200 ? 'raggiungibile' : 'NON raggiungibile (risposta ' + statuto + '), controlla STATUTO_URL'),
     'Foglio: ' + foglio.getName() + (scheda ? ', scheda ' + scheda.getName() + ' con tutte le colonne' : ', manca TESSERATI ' + anno + ' (la crea alla prima domanda)'),
     'Quota ' + anno + ': ' + (imp.quote[anno] || 'MANCA'),
     'Modulo ' + (imp.attivo ? 'aperto' : 'chiuso (ATTIVO non è "si")'),
