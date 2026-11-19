@@ -44,7 +44,7 @@ a ogni salvataggio.
 ├── cornicenarrativa.html      Generatore del "biglietto" di LSS 2026
 ├── cortoteca.html             Archivio dei cortometraggi (in pausa: rimanda a Produzioni)
 ├── opera.html                 Pagina di un singolo corto (opera.html?film=codice)
-├── vantaggi-tesseramento.html Vantaggi per i soci e domanda di ammissione online
+├── vantaggi-tesseramento.html Sostieni: vantaggi per i soci e domanda di ammissione online
 ├── 404.html                   Pagina non trovata (percorsi assoluti)
 ├── gestione.html              Pagina riservata ai redattori (non indicizzata)
 ├── area-socio.html            Area socio: accesso con password, proposte (in pausa: rimanda alla home)
@@ -226,36 +226,21 @@ Anche se la copia contenesse opere non pubblicate, il sito le scarta.
 Il sito è ospitato su Netlify e si aggiorna da solo: ogni commit sul ramo
 `main` fa partire una nuova pubblicazione in un paio di minuti.
 
-**Attenzione a chi firma il commit.** Con il piano Netlify attuale e il
-repository privato, Netlify costruisce solo i commit il cui autore è membro
-del team Netlify, cioè l'account GitHub `cdl-aps`. Gli altri vengono
-rifiutati ("Build blocked: Unrecognized Git contributor"), e da quel momento
-anche *Trigger deploy* fallisce, perché ricostruisce lo stesso commit.
+Dal 19 novembre 2026 il repository (`CDL-APS/cdl-website`) è **pubblico**:
+il piano gratuito di Netlify non costruisce i repository privati di
+un'organizzazione GitHub. Quindi niente password, chiavi segrete o dati
+personali nei file e nei commit. Con il repository pubblico non c'è più il
+blocco "Unrecognized Git contributor": si può unire da qualsiasi account
+del team.
 
-Il modo di lavorare quindi è:
+Il modo di lavorare:
 
-1. Le modifiche si fanno su un ramo dedicato, da qualsiasi account, e si apre
-   una pull request verso `main`.
-2. La pull request si unisce **da GitHub, con l'account `cdl-aps`**,
-   scegliendo *Create a merge commit*: il commit di unione è a nome
-   dell'associazione e la pubblicazione parte. Approvarla da un altro account
-   non basta, conta chi clicca *Merge*.
-
-Le anteprime delle pull request (deploy preview) falliscono per lo stesso
-motivo quando i commit del ramo sono di un account personale: è normale, non
-indica un errore nel codice. Per vedere le modifiche prima di pubblicarle si
-usa il server locale.
-
-Netlify guarda l'autore dell'**ultimo commit di `main`**: se è un account
-personale, per esempio dopo un push diretto, resta tutto bloccato, compreso
-un deploy caricato a mano dal connettore o dalla CLI di Netlify. Per
-sbloccare basta unire con `cdl-aps` una pull request qualsiasi: il commit di
-unione pubblica `main` così com'è, compresi i commit precedenti.
-
-**Redesign (novembre 2026)**: le cose da fare prima di unire il branch
-`redesign` e subito dopo il deploy (una migrazione da applicare, la prova
-dei moduli di Contatti, i controlli sugli header…) sono in cima a `CLAUDE.md`,
-come lista da spuntare.
+1. Le modifiche si fanno su un ramo dedicato e si apre una pull request
+   verso `main`.
+2. Prima di unire, si prova tutto su un deploy di prova (comandi in
+   `CLAUDE.md`, voce "Pubblicazione").
+3. La pull request si unisce da GitHub scegliendo *Create a merge commit*:
+   la pubblicazione parte da sola.
 
 `netlify.toml` contiene i redirect dai vecchi indirizzi: **non vanno rimossi**,
 servono a non rompere i link già condivisi su Instagram e nelle chat.
