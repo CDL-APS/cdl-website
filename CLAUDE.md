@@ -8,91 +8,6 @@ com'è.
 `python3 -m http.server 5500`, poi `http://localhost:5500` (Ctrl+C per
 fermarlo). Dentro Claude Code: `! python3 -m http.server 5500`.
 
-## Redesign: da fare prima e dopo il deploy (togliere quando fatto)
-
-Il redesign sta sul branch `redesign` (dettagli in
-`storico/2026-11-12-handoff-redesign-nel-sito.md`). Finché questa lista non
-è vuota, ricordala all'utente quando si parla di pubblicare.
-
-**Cambio di piano del 17 novembre 2026** (decisione dell'utente): la
-Cortoteca va in pausa ed esce dal deploy; il deploy comprende invece la
-domanda di ammissione a socio online e l'informativa obbligatoria nel
-modulo di Contatti. Il piano approvato, fase per fase, è riassunto qui; i
-dettagli stanno nei due documenti dello storico.
-
-Prima di unire, in quest'ordine:
-
-- [x] **Cortoteca in pausa**: nascosta dal sito pubblico, area socio
-  irraggiungibile, in gestione Dashboard, Proposte e Soci "In sviluppo".
-  Cosa si spegne e dove, cosa resta acceso e come riprendere:
-  `storico/2026-11-17-cortoteca-in-pausa.md`.
-- [x] **Privacy nel modulo di Contatti**: "Ho letto l'informativa",
-  casella obbligatoria con il link al PDF
-  (`assets/doc/informativa-contatti-v1.pdf`); dal 19 novembre 2026 si può
-  spuntare senza aprirlo.
-- [x] **Domanda di ammissione a socio online** in
-  `vantaggi-tesseramento.html#associati`, con la web app Google Apps Script
-  (`google/iscrizioni/`) che scrive nel libro soci e manda le mail:
-  `storico/2026-11-17-piano-iscrizione-online.md`. Decisioni del
-  direttivo e testi a posto (vedi lì "Fuori dal codice").
-  Stato al 18 novembre sera: web app **installata con ciao@** (progetto
-  "CDL – Domande di ammissione", due deployment: "Sito", indirizzo in
-  `data-indirizzo`, e "Tasto mail ciao@", in `URL_CONFERMA`) e **provata
-  sulla copia del foglio**: tutte le prove della sezione 4 a posto, tranne
-  il pagamento PayPal vero, che l'utente fa dopo il deploy con un amico che
-  si tessera. Le review della web app sono state rifatte dopo il tasto
-  nella mail (versione `2026-11-18h`: il 19 novembre la web app era ancora alla `g`, va reincollata e ridistribuita). Nel libro soci tolti i
-  numeri di tessera scritti in anticipo (035-150): i numeri li dà solo lo
-  script, anche alle domande cartacee, e chi rinnova tiene il suo. Punto
-  di ripartenza: `storico/2026-11-18-handoff-domanda-ammissione.md`.
-- [x] **Review di nuovo** con `/code-review` e `/security-review` sul
-  lavoro dal 17 novembre: fatte il 18 novembre, nessuna vulnerabilità,
-  dieci correzioni alla web app e al modulo; esiti in
-  `storico/2026-11-12-review-pre-deploy.md`. Rifatte la sera del 18 solo
-  sulla web app, dopo il tasto nella mail e il giro ogni minuto: nessuna
-  vulnerabilità, otto correzioni di casi limite. Le review del 12-13
-  novembre restano valide per il resto. Regola dell'utente (15 novembre
-  2026): non si rifanno per ritocchi grafici, di impaginazione o di testi;
-  si rifanno per lavoro sostanziale (nuove funzioni, dati, permessi,
-  Supabase, header di sicurezza).
-- [x] **Prove sul deploy di prova** (fatte il 18-19 novembre, tutte a posto; il pagamento PayPal vero passa a dopo il deploy) `https://redesign--cdl-aps.netlify.app`
-  (caricato a mano con la CLI di Netlify, senza `--prod`), seguendo
-  `storico/2026-11-14-prove-sito-online.md` (aggiornata il 17 novembre),
-  fino a un pagamento vero da 5 €. Il deploy di prova va ricaricato dopo le
-  tre voci sopra (`git archive` in una cartella pulita, poi
-  `npx netlify-cli@17 deploy --dir . --site <id> --alias redesign`).
-- [ ] Pull request `redesign` → `main`, unita da GitHub con l'account
-  `cdl-aps` e un merge commit (vedi "Pubblicazione" più sotto).
-
-Subito dopo il deploy:
-
-- [ ] Applicare `supabase/migrations/20261113200000_colonne_pubbliche.sql`
-  (non prima: il sito vecchio legge con `select=*` e ripiegherebbe sulle
-  copie di riserva). Poi aprire home, Eventi, Produzioni e una pagina di un
-  corto: in console non deve comparire "uso la copia di riserva".
-- [ ] Un invio di prova per ogni motivo del modulo di Contatti, dal sito
-  online: deve arrivare la mail all'indirizzo giusto, con l'oggetto
-  "[Sito CDL] …" (rilevamento dei moduli e notifiche sono già attivi dal 13
-  novembre). Controllare anche che rispondendo alla mail la risposta vada a
-  chi ha scritto; se no, annotarlo qui sotto "Contatti".
-- [ ] Domanda di ammissione: nelle proprietà dello script `FOGLIO_ID` →
-  foglio vero, `CARTELLA_DOMANDE_ID` → la cartella vera "Domande di
-  ammissione", `STATUTO_URL` → `https://cdlaps.com/assets/doc/statuto-cdl-aps-v1.pdf`
-  (oggi puntano alla copia di prova e al deploy di prova); poi `verifica`
-  dall'editor. Prima prova vera: la domanda di un amico con PayPal da 5 €
-  (scelta dell'utente), seguita fino alla tessera.
-- [ ] `curl -I` su `/gestione.html` e `/gestione`: devono avere la
-  Content-Security-Policy e `Cache-Control: no-store`.
-  `/cortoteca.html` e `/cortoteca` devono rispondere 302 verso
-  `/produzioni.html`; `/area-socio.html`, `/area-socio`, `/proponi.html` e
-  `/proponi` 302 verso `/`; lo statuto in `assets/doc/` deve avere
-  `X-Robots-Tag: noindex`.
-- [ ] Ricaricare dalla gestione, come PNG, i titoli di Interzona, Quarto
-  Livello, Relatività e Viva Revolution; poi togliere `TITOLI_GRAFICI` da
-  `comune.js` e la cartella `assets/img/film/titoli/`.
-- [ ] Un giro del sito su un iPhone e su Safari (mai provati su dispositivi
-  veri).
-
 ## Cortoteca in pausa (dal 17 novembre 2026)
 
 Galleria pubblica, area socio, proposte, licenze e le schede Dashboard,
@@ -102,14 +17,20 @@ corto) resta pubblica: la usano Produzioni, il rullino e le pagine evento.
 Interruttori: `CORTOTECA_ATTIVA` in `dati.js` (lo leggono anche
 `gestione.js` e `gestione-rullino.js`), `SCHEDE_IN_SVILUPPO` in
 `gestione.js`, i redirect 302 in `netlify.toml`, le voci tolte dall'HTML
-(barra, indice della home, Vantaggi, Contatti, 404). Tutto, compreso come
+(barra, indice della home, Contatti; in Sostieni la voce è senza link). Tutto, compreso come
 riprendere e il da fare congelato (ordinamenti e ricerca globale della
-Cortoteca, collegamenti dei soci da rigenerare, prove di area socio e
-proposte), è in `storico/2026-11-17-cortoteca-in-pausa.md`. Le sezioni sulla
-Cortoteca più sotto descrivono il sistema com'è, spento.
+Cortoteca, titoli grafici da ricaricare, collegamenti dei soci da
+rigenerare, prove di area socio e proposte), è in
+`storico/2026-11-17-cortoteca-in-pausa.md`: è il punto di partenza del
+branch della ripresa. Le sezioni sulla Cortoteca più sotto descrivono il
+sistema com'è, spento.
 
 ## Da fare più avanti (non prioritario)
 
+- [ ] Forse: impaginazione più curata della mail che arriva dal modulo di
+  Contatti (la notifica di Netlify Forms). Funziona, l'utente l'ha provata
+  per intero il 19 novembre 2026; non gli piace molto com'è impaginata, ma
+  non è detto che valga la pena cambiarla.
 - [ ] Gestione degli eventi e pagine evento composte dal database: ferme
   dal 13 novembre 2026, escluse dal deploy del redesign. Il piano completo
   per riprenderle (cosa è spento e dove, cosa è emerso dalle verifiche,
@@ -337,9 +258,10 @@ Cortoteca più sotto descrivono il sistema com'è, spento.
     `ritagliaTitolo()`, che toglie i margini trasparenti del file (tutti i
     titoli vengono della stessa altezza, `--alto`) e segna i disegni scuri.
     Quei quattro
-    SVG (Interzona, Quarto Livello, Relatività, Viva Revolution) vanno
-    ricaricati dalla gestione come PNG, poi si tolgono `TITOLI_GRAFICI` e i
-    file;
+    SVG (Interzona, Quarto Livello, Relatività, Viva Revolution) sono i
+    titoli definitivi: ricaricarli dalla gestione come PNG è solo una
+    questione di ordine, perché stiano nel database come quelli degli altri
+    corti (voce nel da fare della Cortoteca);
   - il **colore della pagina del corto** (`--titolo`): `opere.colore`
     (`#rrggbb`, campo in gestione), poi il colore dell'SVG provvisorio, poi
     l'arancio della Cortoteca. Un colore troppo scuro per il nero diventa
@@ -516,14 +438,25 @@ Cortoteca più sotto descrivono il sistema com'è, spento.
   installazione e lavoro del tesoriere: `google/iscrizioni/README.md`.
 - `404.html` usa solo percorsi assoluti: Netlify la serve a qualsiasi
   profondità.
-- **Pubblicazione**: Netlify costruisce solo i commit il cui autore è membro
-  del team (l'account GitHub `cdl-aps`). Le pull request vanno unite da
-  GitHub con quell'account, con un merge commit; un'unione fatta da un
-  account personale blocca la pubblicazione di `main`. Le deploy preview
-  falliscono per lo stesso motivo: non è un errore del codice. Conta l'autore
-  dell'ultimo commit di `main`: dopo un push diretto da un account personale
-  è bloccato anche un deploy caricato a mano (connettore o CLI). Si sblocca
-  unendo con `cdl-aps` una pull request qualsiasi.
+- **Pubblicazione**: dal 19 novembre 2026 il repository è
+  `CDL-APS/cdl-website`, di un'organizzazione GitHub, ed è **pubblico**
+  (Netlify gratuito non costruisce i repository privati delle
+  organizzazioni). Netlify è ricollegato a quel repository e pubblica `main`
+  a ogni push o merge. Con il repository pubblico non vale più il blocco
+  "Unrecognized Git contributor" che fino a ottobre costringeva a unire con
+  l'account `cdl-aps`. Essendo pubblico, **niente segreti né dati personali
+  nel repository** (nemmeno nei commit: restano nella storia); gli
+  indirizzi interni (`CLAUDE.md`, `storico/`, `google/`…) sono leggibili su
+  GitHub, anche se il sito risponde 404.
+  Si lavora su un branch (dal redesign, il 19 novembre 2026, nessun lavoro
+  è in corso), si prova su un deploy di prova e si unisce con una pull
+  request verso `main` (*Create a merge commit*). Deploy di prova: copiare
+  i file del branch in una cartella pulita
+  (`git ls-files -z -c -o --exclude-standard | xargs -0 -I{} rsync -R "{}" <cartella>/`),
+  poi da lì `npx -y netlify-cli@17 deploy --dir . --site
+  f4a10032-1dee-4d84-944d-8e2708a5c8cd --alias <nome-del-branch>`, che
+  pubblica su `https://<nome-del-branch>--cdl-aps.netlify.app`. **Mai
+  `--prod`.**
 - Netlify pubblica tutta la radice: `netlify.toml` risponde 404 a
   `README.md`, `CLAUDE.md`, `supabase/`, `.github/`, `storico/`, `google/`,
   `documenti/` e `revisione-design-2026-11-11.md`. Nuovi file
@@ -557,6 +490,6 @@ python3 -m http.server 5500                        # poi http://localhost:5500
 Aprire almeno home, produzioni, eventi e una pagina di un corto: sono le
 pagine che dipendono dal database, e quindi le prime a rompersi. Provare
 anche la sala di Eventi (clic su una scheda, poi Esc e indietro), la
-domanda di ammissione in Vantaggi e le pagine a 375 px. Il server Python non manda
+domanda di ammissione in Sostieni e le pagine a 375 px. Il server Python non manda
 gli header di `netlify.toml`: la CSP di gestione e proposta si vede solo
 online (o con un server che li aggiunga).

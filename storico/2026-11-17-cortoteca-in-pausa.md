@@ -5,15 +5,35 @@ cambiate le necessità dell'associazione. Il deploy del redesign esce con la
 parte principale del sito e con la domanda di ammissione a socio online
 (`storico/2026-11-17-piano-iscrizione-online.md`), **senza**:
 
-- la galleria pubblica della Cortoteca, che però c'è sul sito vecchio, in
-  `main`: col deploy sparisce;
+- la galleria pubblica della Cortoteca (c'era sul sito vecchio: è sparita
+  col deploy del 19 novembre 2026);
 - l'area socio (accesso dei soci, proposte dei corti, licenze);
 - in gestione, le schede Dashboard, Proposte e Soci.
 
 Questo documento dice cosa si spegne e dove, cosa resta acceso e come
-riprendere. Il progetto completo della Cortoteca resta in
+riprendere. **È il punto di partenza del branch della ripresa**: si comincia
+da "Come partire", qui sotto. Il progetto completo della Cortoteca resta in
 `storico/2026-11-11-cortoteca-infrastruttura.md`, e in `CLAUDE.md` alla
 voce "Cortoteca, proposte dei soci".
+
+## Come partire
+
+Stato al 19 novembre 2026: il redesign è unito in `main` e online, il
+branch `redesign` è chiuso (si può cancellare), nessun altro lavoro è in
+corso.
+
+1. Da `main` aggiornato: `git switch main && git pull`, poi
+   `git switch -c cortoteca`.
+2. Leggere, in quest'ordine: questo documento; in `CLAUDE.md` le voci
+   "Cortoteca, proposte dei soci", "Dashboard di gestione", "Chi è
+   redattore" e "Le sale"; il progetto completo in
+   `storico/2026-11-11-cortoteca-infrastruttura.md`.
+3. Decidere con l'utente cosa entra nella ripresa: tutto ("Da fare alla
+   ripresa") o anche le voci congelate (ordinamenti, ricerca globale).
+4. Il repository è **pubblico**: niente chiavi, password o dati dei soci nei
+   commit, neanche nei file di prova.
+5. Le prove si fanno su un deploy di prova con `--alias cortoteca`
+   (comandi in `CLAUDE.md`, voce "Pubblicazione"), mai `--prod`.
 
 ## Cosa resta pubblico
 
@@ -36,9 +56,9 @@ voce "Cortoteca, proposte dei soci".
 | `assets/js/dati.js` | `const CORTOTECA_ATTIVA = false`, accanto a `MODELLO_EVENTI`: l'interruttore letto da `home.js`, `corto.js`, `gestione.js` e `gestione-rullino.js`. |
 | `assets/js/home.js` | Con l'interruttore spento: niente voce "In Cortoteca N opere" nel nastro; una foto del rullino legata a un'opera non pubblicata non porta da nessuna parte (prima andava a `cortoteca.html`); la didascalia dei corti non CDL dice "Cortometraggio" invece di "Cortoteca". |
 | `assets/js/corto.js` | Con l'interruttore spento, la pagina del corto senza video non mostra la pillola "Streaming in arrivo": oggi è una promessa che non vale. |
-| `vantaggi-tesseramento.html` | Dal 19 novembre 2026 la voce "Cortoteca" è di nuovo fra i vantaggi, senza link e con "(coming soon…)": alla ripresa torna un link a `cortoteca.html`. |
+| `vantaggi-tesseramento.html` (Sostieni) | La voce "Cortoteca" è fra i vantaggi per i soci, senza link e con "(coming soon…)": alla ripresa torna un link a `cortoteca.html` e via il "coming soon". |
 | `contatti.html` | Tolto il motivo "Un corto per la Cortoteca". |
-| `404.html` | Tolto il tasto "Vai alla Cortoteca". |
+| `404.html` | Tolto il tasto "Vai alla Cortoteca". Dal 19 novembre 2026 la 404 ha solo "Torna alla home" (scelta dell'utente): alla ripresa **non** va rimesso. |
 | `opera.html` | Descrizione: "Un cortometraggio di CDL APS." |
 | Pagine evento e `modello-evento.js` | L'etichetta "Nella Cortoteca" accanto ai corti del programma diventa "Scheda del corto". |
 | `netlify.toml` | `/cortoteca.html`, `/cortoteca` e `/cortoteca/` → `/produzioni.html` (302, prima della regola `/cortoteca/*`). `/area-socio.html`, `/area-socio`, `/proponi.html` e `/proponi` → `/` (302, al posto dei 301 verso l'area socio). `/cortoteca/info_film2` resta com'è. |
@@ -75,13 +95,16 @@ dalla gestione, perché le usa anche `area-socio.js`.
   ("Cortoteca: cose da sistemare") vanno spenti durante la pausa: menu
   Cortoteca del foglio → Destinatari degli avvisi → lasciare vuoto (lo fa
   l'utente).
-- La migrazione `20261113200000_colonne_pubbliche.sql` riguarda tutto il
-  sito, non la Cortoteca: si applica comunque dopo il deploy.
+- La migrazione `20261113200000_colonne_pubbliche.sql` (tutto il sito) è
+  applicata dal 19 novembre 2026: `anon` legge solo le colonne elencate in
+  `dati.js`. Una colonna nuova da mostrare in Cortoteca va aggiunta lì e
+  con un `grant select (colonna)` ad `anon` in una migrazione.
 
 ## Da fare alla ripresa
 
 1. Rimettere la pillola nella barra di tutte le pagine, la voce dell'indice
-   in home (con gli occhi), le voci in Vantaggi, Contatti e 404.
+   in home (con gli occhi), il link della voce in Sostieni e il motivo in
+   Contatti (non la 404, vedi sopra).
    `git log` sul commit della pausa mostra esattamente cosa è stato tolto.
 2. `CORTOTECA_ATTIVA = true` in `dati.js`: riaccende da solo anche le
    schede Dashboard, Proposte e Soci, la Dashboard come scheda di partenza,
@@ -101,7 +124,8 @@ dalla gestione, perché le usa anche `area-socio.js`.
 6. Fare le prove della sezione qui sotto sul deploy di prova.
 7. Dopo la pubblicazione: rigenerare dal sito online ("Nuovo collegamento",
    scheda Soci) i collegamenti dei soci creati in locale o sul deploy di
-   prova, che puntano a `localhost` o a `redesign--cdl-aps.netlify.app`.
+   prova, che puntano a `localhost` o a un deploy di prova
+   (`redesign--cdl-aps.netlify.app`, `cortoteca--…`).
 
 ### Interazioni con la domanda di ammissione online
 
@@ -112,6 +136,10 @@ dalla gestione, perché le usa anche `area-socio.js`.
 - `email_in_regola` guarda l'anno della scheda e `pagato`, non la data di
   pagamento: da ricontrollare alla ripresa insieme al cambio d'anno della
   domanda online (dal 1° gennaio).
+- Le righe della domanda online hanno nelle Note `Sito D26-…`: la
+  sincronizzazione non le legge, ma non vanno cambiate a mano (la web app
+  ritrova la riga da lì). I numeri di tessera li assegna solo la web app,
+  anche alle righe scritte a mano.
 
 ## Da fare più avanti, congelato con la pausa
 
@@ -124,6 +152,16 @@ dalla gestione, perché le usa anche `area-socio.js`.
   un attore o una maestranza che si chiama Andrea).
 - Regolamento, licenza e delibera della Cortoteca: sono ancora bozze per il
   Consiglio direttivo (`storico/2026-11-11-cortoteca-infrastruttura.md`).
+- **Titoli grafici di Interzona, Quarto Livello, Relatività e Viva
+  Revolution.** Oggi il sito li prende dagli SVG in
+  `assets/img/film/titoli/` (codici in `TITOLI_GRAFICI`, `comune.js`), che
+  sono già i titoli definitivi (controllati dall'utente il 19 novembre
+  2026). Ricaricarli dalla gestione come PNG (`titolo_png`) è **solo una
+  questione di ordine**, perché stiano nel database come quelli degli altri
+  corti; poi si tolgono `TITOLI_GRAFICI`, il ramo che lo usa in
+  `titoloGrafico()` e la cartella. Il colore della pagina del corto, per
+  quei quattro, oggi viene dall'SVG: prima di togliere i file va scritto in
+  `opere.colore` dalla gestione (al 19 novembre ce l'ha solo Relatività).
 
 ## Prove da fare alla ripresa
 
