@@ -35,11 +35,12 @@ a ogni salvataggio.
 
 ```
 .
-├── index.html                 Home
+├── index.html                 Home (in cima la vetrina, slide scelte in gestione)
 ├── produzioni.html            Le produzioni CDL
 ├── eventi.html                Gli eventi CDL, divisi in blocchi per serie
 ├── contatti.html              Diventa socio e modulo per scriverci (Netlify Forms)
-├── longstoryshort.html        Pagina dell'evento Long Story Short
+├── longstoryshort.html        Pagina dell'evento Long Story Short (in Inter)
+├── evento-interzona.html      La serata per i soci del 27 novembre 2026 (in VT323)
 ├── short-talks-1.html, …      Pagine degli altri eventi, una per evento (vedi sotto)
 ├── cornicenarrativa.html      Generatore del "biglietto" di LSS 2026
 ├── cortoteca.html             Archivio dei cortometraggi (in pausa: rimanda a Produzioni)
@@ -51,7 +52,9 @@ a ogni salvataggio.
 │
 ├── data/                      Copie di riserva del database (vedi sotto)
 │   ├── opere.json
-│   └── eventi.json
+│   ├── eventi.json
+│   ├── rullino.json
+│   └── vetrina.json
 │
 ├── supabase/
 │   ├── migrations/            Struttura del database, un file SQL per modifica
@@ -73,7 +76,7 @@ a ogni salvataggio.
 │   │   ├── comune.js          Scritte a tutta larghezza, occhi, rullini, schede,
 │   │   │                      titolo grafico, passaggi fra le pagine
 │   │   ├── corto.js           La pagina del corto (opera.html e la sala della Cortoteca)
-│   │   ├── home.js            Torcia, nastro delle notizie, indice
+│   │   ├── home.js            Vetrina, torcia, nastro delle notizie, indice
 │   │   ├── cortoteca.js       Galleria e lista, ricerca, ordine, la sala
 │   │   ├── opera.js           opera.html: legge ?film= e riempie la pagina
 │   │   ├── eventi.js          Blocchi della pagina Eventi e la sala dell'evento
@@ -81,6 +84,8 @@ a ogni salvataggio.
 │   │   ├── contatti.js        Modulo di Contatti: destinatario e oggetto
 │   │   ├── riservato.js       Parti comuni a gestione e area socio
 │   │   ├── gestione.js        Pagina dei redattori
+│   │   ├── gestione-indice.js Dashboard: vetrina della home e albero delle pagine
+│   │   ├── gestione-rullino.js Scheda Rullino
 │   │   ├── area-socio.js      Area socio
 │   │   ├── vendor/            Librerie di terzi copiate nel sito (supabase-js)
 │   │   └── cornice.js         Generatore del biglietto LSS
@@ -94,6 +99,7 @@ a ogni salvataggio.
 │       │                      cartella per evento
 │       └── film/              Fotogrammi dei primi corti (copie locali) e titoli
 │                              grafici provvisori (titoli/)
+│   └── video/                 Video brevi delle pagine evento (in loop o d'entrata)
 │
 ├── netlify.toml               Redirect dai vecchi indirizzi e cache
 └── robots.txt
@@ -131,9 +137,11 @@ sapere:
   Si genera dal titolo e dopo il primo salvataggio non si cambia più, per non
   rompere i link già condivisi.
 - La **serie** di un evento decide dove compare nella pagina Eventi:
-  l'ultima edizione di Long Story Short sta in primo piano, le edizioni di
-  Short Talks hanno un blocco loro, gli eventi senza serie finiscono fra gli
-  altri eventi.
+  l'ultima edizione di Long Story Short ha un blocco suo col lettering, le
+  edizioni di Short Talks un altro, gli eventi senza serie finiscono fra gli
+  altri eventi. In cima, *In evidenza*, c'è un evento scelto a mano
+  nell'HTML di `eventi.html` (dal 21 novembre 2026 la serata del 27
+  novembre): per cambiarlo si riscrive quel blocco.
 - Un'opera con **Prodotta da CDL** compare fra le produzioni originali della
   pagina Produzioni e nell'elenco breve della home. Fra due produzioni dello
   stesso anno conta come più recente l'ultima inserita.
@@ -154,6 +162,33 @@ sapere:
 - Per togliere qualcosa dal sito senza perderlo, togli la spunta
   *Pubblicata* invece di eliminarlo.
 
+### La vetrina della home (Dashboard)
+
+Il primo blocco della home scorre in orizzontale: una slide per schermo,
+che passa da sola ogni 8 secondi (le linee in basso dicono quanto manca) e
+si ferma col mouse sopra o col tasto pausa. Cosa mostra si decide nella
+**Dashboard** di `gestione.html`, la prima scheda:
+
+- in cima, **Vetrina della home**: le slide nell'ordine in cui scorrono, da
+  spostare con ↑ ↓ e togliere con ✕. La sala vista dall'alto (l'apertura di
+  sempre) c'è sempre: si sposta ma non si toglie. Per ogni slide si possono
+  riscrivere titolo, riga di testo e invito del tasto, scegliere il colore
+  del titolo (vale anche per il lettering) e quello del testo e del tasto
+  (vuoto: come il titolo), caricare un'altra immagine o un **lettering**
+  (un PNG senza fondo, che prende il posto del titolo scritto), spegnerla
+  per un po' con *Mostra in home*. Un campo vuoto prende il valore della
+  pagina a cui la slide porta, scritto in grigio;
+- sotto, **Pagine del sito**: tutte le pagine ad albero (sezioni, eventi,
+  corti, pagine interne), ognuna con *Apri* e *Metti in vetrina*. Sulla
+  riga di un evento si sceglie anche il suo **carattere** (Montserrat,
+  Inter, VT323), che la sua slide usa per titolo e testo.
+
+Senza un lettering caricato, la slide di un evento o di un corto usa quello
+che il sito ha già (il logo dell'evento, il lettering di Long Story Short,
+il titolo grafico del corto). Una slide che porta a un evento o a un corto
+non pubblicato in home non si vede: la Dashboard lo segnala. Le modifiche
+sono online subito.
+
 ### Pagine dei singoli eventi
 
 Un evento diventa cliccabile, nella pagina Eventi e nella home, quando ha
@@ -161,8 +196,10 @@ una **pagina dedicata**: il campo *Pagina dedicata* del modulo contiene il
 nome del file, per esempio `short-talks-1.html` (solo un file del sito: la
 pagina Eventi lo apre al suo interno).
 
-Le pagine degli eventi sono file HTML nella radice, tutte sullo stesso modello
-(per una nuova si parte da una esistente): lo stile è in
+Le pagine degli eventi sono file HTML nella radice, quasi tutte sullo stesso
+modello (per una nuova si parte da una esistente; Long Story Short e la
+serata del 27 novembre 2026 sono pagine a sé, ognuna nel carattere della sua
+grafica): lo stile è in
 `assets/css/pages/evento.css`, dove stanno anche il colore di ogni evento
 (classe `evento--<pagina>` sul `<body>`) e il suo logo (classe
 `marchio--<pagina>`, PNG senza fondo in `assets/img/eventi/loghi/<pagina>.png`,
@@ -197,9 +234,12 @@ un altro indirizzo nel libro soci.
 
 Se Supabase non risponde (per esempio perché il progetto gratuito è stato
 messo in pausa dopo una settimana senza attività), il sito ripiega su
-`data/opere.json` e `data/eventi.json` e sulle immagini in `assets/img/`.
+`data/opere.json`, `data/eventi.json`, `data/rullino.json` e
+`data/vetrina.json`, e sulle immagini in `assets/img/`. Per guardare una
+pagina con le sole copie di riserva basta aggiungere `?riserva`
+all'indirizzo: una striscia rossa ricorda che non sono i dati veri.
 
-Le copie non si aggiornano da sole: sono ferme al 12 novembre 2026. Per
+Le copie non si aggiornano da sole: le ultime righe aggiornate sono del 21 novembre 2026 (eventi e vetrina). Per
 rinfrescarle si scaricano le righe pubblicate dalla Data API con la stessa
 richiesta del sito (colonne e chiave pubblica di `dati.js`), e si copiano in
 `assets/img/` le immagini nuove con lo stesso nome che hanno nel bucket. Con
