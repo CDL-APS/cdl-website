@@ -551,8 +551,8 @@ sistema com'è, spento.
   nel repository** (nemmeno nei commit: restano nella storia); gli
   indirizzi interni (`CLAUDE.md`, `storico/`, `google/`…) sono leggibili su
   GitHub, anche se il sito risponde 404.
-  Si lavora su un branch (dal redesign, il 19 novembre 2026, nessun lavoro
-  è in corso), si prova su un deploy di prova e si unisce con una pull
+  Si lavora su un branch (il 21 novembre 2026, unite le PR #12 e #13,
+  nessun lavoro è in corso), si prova su un deploy di prova e si unisce con una pull
   request verso `main` (*Create a merge commit*). Deploy di prova: copiare
   i file del branch in una cartella pulita
   (`git ls-files -z -c -o --exclude-standard | xargs -0 -I{} rsync -R "{}" <cartella>/`),
@@ -565,7 +565,8 @@ sistema com'è, spento.
   `documenti/` e `revisione-design-2026-11-11.md`. Nuovi file
   interni vanno aggiunti lì.
 - `storico/` raccoglie i passaggi di consegne fra una sessione di lavoro e
-  l'altra (handoff e specifiche di design), con la data nel nome.
+  l'altra (handoff e specifiche di design), con la data nel nome. L'ultimo:
+  `storico/2026-11-21-handoff-vetrina-e-serata.md`.
 - `netlify.toml` mantiene in vita gli indirizzi precedenti alla
   riorganizzazione (in particolare `/cortoteca/info_film2?film=...`, oggi
   `/opera.html?film=...`). Vanno conservati, e con loro i file a cui puntano
