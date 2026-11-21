@@ -18,7 +18,8 @@
     "instagram": null,
     "sfondo": null,
     "presentazione": null,
-    "blocchi": []
+    "blocchi": [],
+    "carattere": "VT323"
   },
   {
     "id": 8,
@@ -39,7 +40,8 @@
     "instagram": null,
     "sfondo": null,
     "presentazione": null,
-    "blocchi": []
+    "blocchi": [],
+    "carattere": null
   },
   {
     "id": 1,
@@ -60,7 +62,8 @@
     "instagram": null,
     "sfondo": null,
     "presentazione": null,
-    "blocchi": []
+    "blocchi": [],
+    "carattere": "Inter"
   },
   {
     "id": 7,
@@ -81,7 +84,8 @@
     "instagram": null,
     "sfondo": null,
     "presentazione": null,
-    "blocchi": []
+    "blocchi": [],
+    "carattere": null
   },
   {
     "id": 6,
@@ -102,7 +106,8 @@
     "instagram": null,
     "sfondo": null,
     "presentazione": null,
-    "blocchi": []
+    "blocchi": [],
+    "carattere": null
   },
   {
     "id": 5,
@@ -123,7 +128,8 @@
     "instagram": null,
     "sfondo": null,
     "presentazione": null,
-    "blocchi": []
+    "blocchi": [],
+    "carattere": null
   },
   {
     "id": 4,
@@ -144,7 +150,8 @@
     "instagram": null,
     "sfondo": null,
     "presentazione": null,
-    "blocchi": []
+    "blocchi": [],
+    "carattere": null
   },
   {
     "id": 3,
@@ -165,7 +172,8 @@
     "instagram": null,
     "sfondo": null,
     "presentazione": null,
-    "blocchi": []
+    "blocchi": [],
+    "carattere": null
   },
   {
     "id": 2,
@@ -231,6 +239,7 @@
         ],
         "descrizione_foto": "Foto della serata del 18 aprile"
       }
-    ]
+    ],
+    "carattere": null
   }
 ]

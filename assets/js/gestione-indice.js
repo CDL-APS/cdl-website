@@ -294,7 +294,8 @@ function disegnaSlide() {
       };
       campi.append(
         sceltaColore('Colore del titolo o del lettering', 'colore', r.colore),
-        sceltaColore('Colore del testo e del tasto', 'colore_testo', r.immagine ? null : r.colore));
+        // il testo, se non ha un colore suo, prende quello del titolo
+        sceltaColore('Colore del testo e del tasto (vuoto: come il titolo)', 'colore_testo', riga.colore || r.colore));
 
       // L'immagine: quella della pagina o una caricata qui
       const immagine = document.createElement('div');
@@ -365,7 +366,27 @@ function disegnaSlide() {
    domanda di ammissione. Gli altri corti stanno nella Cortoteca, oggi in
    pausa: le loro pagine si aprono ancora.
    -------------------------------------------------------------------------- */
-function rigaIndice({ nome, dettaglio, href, collegamento, nota, sezione, figli = [] }) {
+/* Il carattere di un evento (colonna carattere degli eventi): quello della
+   sua grafica, che la vetrina usa nella sua slide. La pagina dell'evento lo
+   dichiara nel suo CSS: qui si dice al resto del sito. */
+function sceltaCarattere(evento) {
+  const campo = document.createElement('label');
+  campo.className = 'g-indice__carattere';
+  campo.innerHTML = '<span>Carattere</span><select></select>';
+  const menu = campo.querySelector('select');
+  menu.innerHTML = ['', ...Object.keys(CARATTERI)].map((nome) =>
+    `<option value="${esc(nome)}"${(evento.carattere || '') === nome ? ' selected' : ''}>${esc(nome || 'Montserrat (del sito)')}</option>`).join('');
+  menu.setAttribute('aria-label', `Carattere di ${evento.titolo}`);
+  menu.addEventListener('change', () => scriviVetrina(async () => {
+    const { error } = await client.from('eventi').update({ carattere: menu.value || null }).eq('id', evento.id);
+    if (error) throw error;
+    evento.carattere = menu.value || null;
+    avviso(`Carattere di ${evento.titolo}: ${menu.value || 'Montserrat'}.`);
+  }));
+  return campo;
+}
+
+function rigaIndice({ nome, dettaglio, href, collegamento, nota, sezione, evento, figli = [] }) {
   const voce = document.createElement('li');
   voce.className = 'g-indice__voce' + (sezione ? ' g-indice__voce--sezione' : '');
   const riga = document.createElement('div');
@@ -377,6 +398,7 @@ function rigaIndice({ nome, dettaglio, href, collegamento, nota, sezione, figli 
 
   const azioni = document.createElement('div');
   azioni.className = 'g-indice__azioni';
+  if (evento) azioni.append(sceltaCarattere(evento));
   if (nota) {
     const piccola = document.createElement('span');
     piccola.className = 'g-indice__nota';
@@ -445,6 +467,7 @@ function alberoSito() {
       dettaglio: [formattaData(e.data_inizio), e.pubblicato ? '' : 'non pubblicato', pagina || 'senza pagina'].filter(Boolean).join(' · '),
       href: pagina,
       collegamento: { evento_id: e.id },
+      evento: e,
       figli: dentroEventi.filter((p) => pagina && p.dentro === pagina).map((p) => nodoPagina(p))
     };
   });

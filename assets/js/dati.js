@@ -116,8 +116,30 @@ const COLONNE_OPERE = [
 const COLONNE_EVENTI = [
   'id', 'codice', 'titolo', 'data_inizio', 'data_fine', 'luogo', 'riassunto', 'descrizione',
   'copertina', 'miniatura', 'pagina', 'serie', 'pubblicato',
-  'logo', 'colore', 'instagram', 'sfondo', 'presentazione', 'blocchi'
+  'logo', 'colore', 'instagram', 'sfondo', 'presentazione', 'blocchi', 'carattere'
 ].join(',');
+
+/* I caratteri che un evento può avere al posto di Montserrat (colonna
+   carattere, 20261121150000_carattere_eventi.sql): la famiglia, il nome
+   per Google Fonts e come si comportano i titoli. VT323 è piccolo a parità
+   di corpo: il testo si ingrandisce (scala). Un carattere nuovo va aggiunto
+   qui e nel vincolo della colonna. */
+const CARATTERI = {
+  Inter: { famiglia: "'Inter', sans-serif", google: 'Inter:wght@400;500;600;700', pesoTitolo: 600, maiuscolo: false, spazio: '-0.035em', pesoTesto: 500, scala: 1 },
+  VT323: { famiglia: "'VT323', ui-monospace, monospace", google: 'VT323', pesoTitolo: 400, maiuscolo: true, spazio: '0', pesoTesto: 400, scala: 1.3 }
+};
+
+// Carica da Google Fonts un carattere di CARATTERI, una volta sola per pagina
+function caricaCarattere(nome) {
+  const c = CARATTERI[nome];
+  if (!c || document.querySelector(`link[data-carattere="${nome}"]`)) return c || null;
+  const link = document.createElement('link');
+  link.rel = 'stylesheet';
+  link.href = `https://fonts.googleapis.com/css2?family=${c.google}&display=swap`;
+  link.dataset.carattere = nome;
+  document.head.append(link);
+  return c;
+}
 
 // Gli interpreti arrivano già annidati in ogni opera, nell'ordine del cast
 const QUERY_OPERE =

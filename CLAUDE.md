@@ -460,8 +460,19 @@ sistema com'è, spento.
   corto); se il file non c'è resta il titolo scritto. Due colori per slide,
   scelti in Dashboard: `colore` per il titolo o il lettering, `colore_testo`
   (`20261121140000_vetrina_colore_testo.sql`) per la riga di testo e il
-  tasto; con un testo scuro su una foto il velo diventa chiaro, e la
-  scritta del tasto va in contrasto da sola (`coloreChiaro` in `home.js`). Il pubblico legge solo le slide
+  tasto, che se vuoto segue il colore del titolo; con un testo scuro su
+  una foto il velo diventa chiaro, e la scritta del tasto va in contrasto
+  da sola (`coloreChiaro` in `home.js`). La slide di un evento usa il suo
+  **carattere** (colonna `carattere` di `eventi`,
+  `20261121150000_carattere_eventi.sql`: Inter per LSS, VT323 per la serata
+  del 27 novembre; vuota, Montserrat) per titolo, testo e tasto: i
+  caratteri ammessi, con le loro misure, sono in `CARATTERI` (`dati.js`),
+  che li carica da Google Fonts quando servono; si sceglie nella Dashboard,
+  sulla riga dell'evento. La pagina dell'evento lo dichiara invece nel suo
+  CSS (`evento.css`): le due cose vanno tenute uguali. Porta alla pagina
+  solo il tasto, che al passaggio sale e basta: niente slide tutta
+  cliccabile (cambiava il tasto a ogni movimento del puntatore e
+  sfarfallava sui comandi). Il pubblico legge solo le slide
   attive, e una slide verso un evento o un corto non pubblicato non si
   vede. Finché i dati non arrivano (al massimo 1,2 secondi) la vetrina
   resta nascosta, così parte già dalla slide giusta; senza contenuti resta
