@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Evento riservato ai soci – CDL APS</title>
+    <meta name="description" content="27.11.2026, dalle 22:00: audiovisual live set al Laboratorio Aperto di Rimini. Evento riservato ai soci CDL.">
+
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="icon" type="image/png" href="assets/img/brand/favicon.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800;900&family=VT323&display=swap">
+    <link rel="stylesheet" href="assets/css/base.css?v=2026-11-21d">
+    <link rel="stylesheet" href="assets/css/components.css?v=2026-11-21d">
+    <link rel="stylesheet" href="assets/css/pages/evento.css?v=2026-11-21d">
+</head>
+<!-- La serata del 27 novembre 2026 per i soci (grafica di Studio JAM).
+     La pagina riporta solo quello che c'è nel post Instagram, tutto in una
+     schermata.
+     Tutto in VT323, il carattere dei titoli di testa e di coda; nero, giallo
+     acido e il bianco bruciato della figura. Le regole stanno in pages/evento.css, sotto
+     .evento--evento-interzona, perché valgano anche nella sala di Eventi. -->
+<body class="pagina-evento evento--evento-interzona">
+
+    <header class="nav">
+        <div class="wrap nav__riga">
+            <a class="skip-link" href="#top">Vai al contenuto</a>
+            <a class="nav__logo" href="index.html" aria-label="CDL, pagina iniziale"><span class="logo"></span></a>
+            <a class="nav__voce nav__voce--eventi" href="eventi.html" aria-current="page">Eventi</a>
+            <a class="nav__voce nav__voce--produzioni" href="produzioni.html">Produzioni</a>
+            <a class="nav__voce nav__voce--contatti" href="contatti.html#contatti">Contatti</a>
+            <a class="btn btn--pieno nav__socio" href="vantaggi-tesseramento.html">Diventa socio</a>
+        </div>
+    </header>
+
+    <main id="top">
+        <!-- Una schermata sola, come il manifesto: la figura che all'apertura
+             emerge dal buio e resta (il video, dal reel del post, una volta
+             sola; fermo sul suo poster, l'ultimo fotogramma, con "riduci
+             movimento"), le righe della videocassetta, il
+             conto alla rovescia (comune.js), la scritta glitch (il PNG in
+             assets/img/eventi/loghi/, a maschera) e tutte le informazioni del
+             post Instagram, niente di più. -->
+        <section class="hero hero--evento iz-testata">
+            <div class="iz-testata__righe" aria-hidden="true"></div>
+            <div class="wrap iz-testata__quadro">
+                <p class="iz-osd">
+                    <span class="iz-conto" data-conto="2026-11-27T22:00:00+01:00" data-dopo="27.11.2026"><span class="iz-conto__punto" aria-hidden="true"></span><span data-conto-valore aria-hidden="true">27.11.2026</span><span class="sr-only">Venerd&igrave; 27 novembre 2026, dalle 22</span></span>
+                </p>
+                <h1 class="evento-g__marchio" id="titolo-evento"><span class="sr-only">Evento riservato ai soci</span><span class="marchio-serie marchio-serie--evento marchio--evento-interzona" data-arrivo aria-hidden="true"></span></h1>
+                <video class="iz-testata__figura" src="assets/video/eventi/evento-interzona-figura.mp4" poster="assets/img/eventi/evento-interzona/figura-video.jpg" width="720" height="774" muted playsinline autoplay preload="auto" aria-hidden="true"></video>
+                <div class="iz-invito">
+                    <p class="iz-cosa">Audiovisual live set<br><span>Evento riservato ai soci CDL</span></p>
+                    <a class="btn btn--pieno iz-associati" href="vantaggi-tesseramento.html#associati">Associati <svg class="freccia" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h15"/><path d="m13 6 6 6-6 6"/></svg></a>
+                </div>
+                <div class="iz-testata__piede">
+                    <p class="iz-luogo"><strong>Laboratorio Aperto</strong><br>Ala Nuova del Museo della Citt&agrave;<br>Via dei Cavalieri 22, 3&deg; piano</p>
+                    <p class="iz-quando">22:00 &ndash; late<br>27.11.2026</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="piede">
+            <div class="wrap piede__riga">
+                <a href="index.html" aria-label="CDL, pagina iniziale"><span class="logo"></span></a>
+                <ul class="piede__collegamenti">
+                    <li><a href="contatti.html#contatti">Contatti</a></li>
+                    <li><a href="https://instagram.com/cdl_aps" target="_blank" rel="noopener">Instagram <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h6"/></svg></a></li>
+                    <li><a href="https://www.youtube.com/@cdl_aps" target="_blank" rel="noopener">YouTube <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h6"/></svg></a></li>
+                </ul>
+                <p class="piede__dati">CDL APS, 2026<br>
+                Associazione di promozione sociale<br>
+                Sede legale: Viale Laurana 13, 47921 Rimini<br>
+                CF 91200080405</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="assets/js/comune.js?v=2026-11-21d"></script>
+</body>
+</html>

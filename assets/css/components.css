@@ -505,3 +505,16 @@ a.scheda-g:hover .cornice--logo .logo-evento { transform: scale(1.025); }
 .da-passaggio .presentazione { animation: filo 0.6s ease-out both; }
 @keyframes affiora { from { opacity: 0; } }
 @keyframes filo { from { border-bottom-color: transparent; } }
+
+/* --------------------------------------------------------------------------
+   Prove con ?riserva (dati.js): la pagina legge le copie di riserva, non il
+   database, e questa striscia in basso lo ricorda
+   -------------------------------------------------------------------------- */
+.avviso-riserva {
+  position: fixed; z-index: 60; left: 50%; bottom: 16px; translate: -50% 0;
+  width: max-content; max-width: calc(100% - 32px); padding: 10px 18px;
+  border-radius: 999px; background: var(--rosso); color: #fff;
+  font-size: 14px; font-weight: 700; line-height: 1.35; text-align: center;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.25);
+}
+.avviso-riserva a { display: inline-flex; align-items: center; min-height: 44px; margin-block: -12px; text-decoration: underline; text-underline-offset: 3px; }

@@ -15,8 +15,42 @@
 html:has(.pagina-eventi) { background: var(--blu); }
 .pagina-eventi .nav__voce[aria-current]::before { background: var(--azzurro); }
 
-/* In evidenza: il lettering a sinistra, la breve descrizione a destra, e
-   sotto le fotografie che scorrono */
+/* In evidenza: la serata per i soci del 27.11.2026 nella sua grafica, un
+   riquadro nero ad angoli del marchio. La figura bruciata a destra, il
+   conto alla rovescia in alto, la scritta glitch gialla (il marchio di
+   evento.css, che al clic sale nella sala) e sotto titolo e dati in VT323.
+   Colori e marchio vengono da .evento--evento-interzona (evento.css). */
+.evidenza-iz {
+  position: relative; isolation: isolate; overflow: hidden;
+  display: grid; grid-template-rows: auto minmax(0, 1fr) auto; gap: clamp(16px, 2vw, 28px);
+  min-height: clamp(440px, 46vw, 620px); padding: clamp(20px, 2.8vw, 40px);
+  border-radius: var(--r); background: var(--iz-nero); color: var(--chiaro);
+  font-family: 'VT323', ui-monospace, monospace; font-weight: 400; font-synthesis: none; line-height: 1.05; text-transform: uppercase;
+}
+.evidenza-iz__figura {
+  position: absolute; z-index: -1; right: 0; bottom: 0; width: auto; height: 100%; max-width: none;
+  -webkit-mask: linear-gradient(to right, transparent, #000 32%); mask: linear-gradient(to right, transparent, #000 32%);
+}
+.evidenza-iz__righe {
+  position: absolute; z-index: -1; inset: 0; pointer-events: none;
+  background: repeating-linear-gradient(to bottom, rgba(0, 0, 0, 0.26) 0 1px, transparent 1px 3px);
+}
+.evidenza-iz__conto { justify-self: end; font-size: clamp(22px, 2vw, 30px); line-height: 1; color: var(--evento); text-shadow: 0 0 10px rgba(232, 222, 44, 0.4); }
+.evidenza-iz__marchio { align-self: center; width: min(78%, 46svh * 1.7749); color: var(--evento); filter: drop-shadow(0 0 12px rgba(232, 222, 44, 0.3)); }
+.evidenza-iz__piede { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; }
+.evidenza-iz__testo { display: grid; gap: 6px; }
+.evidenza-iz__titolo { font-size: clamp(30px, 3.2vw, 48px); line-height: 0.9; color: var(--evento); }
+.evidenza-iz__dati { font-size: clamp(20px, 1.7vw, 26px); }
+/* la freccia passa sopra la figura bianca: il tondo ha il fondo nero */
+.evidenza-iz .evidenza__freccia { flex: 0 0 auto; background: var(--iz-nero); color: var(--chiaro); }
+.evidenza-iz:hover .evidenza__freccia { transform: translate(3px, -3px); }
+.evidenza-iz:focus-visible { outline: 3px solid var(--azzurro); outline-offset: 4px; }
+
+/* Long Story Short: il lettering a sinistra, la breve descrizione a destra
+   (in Inter, il carattere della sua grafica), e sotto le fotografie che
+   scorrono */
+#blocco-lss .evidenza__descrizione { font-family: 'Inter', sans-serif; font-weight: 500; letter-spacing: -0.015em; }
+#blocco-lss .evidenza__descrizione strong { font-weight: 700; }
 .evidenza { align-items: end; }
 .evidenza .marchio-serie--lss { width: 100%; max-width: 600px; }
 .evidenza__testo { display: flex; flex-direction: column; align-items: flex-start; gap: 20px; }
@@ -42,6 +76,19 @@ html:has(.pagina-eventi) { background: var(--blu); }
 @media (max-width: 1023px) {
   .evidenza .marchio-serie--lss, .evidenza__testo { grid-column: 1 / -1; }
   .evidenza .marchio-serie--lss { max-width: 320px; }
+}
+/* Sul telefono la figura sta in alto a destra e sfuma, la scritta le passa
+   sopra, titolo e dati restano sul nero */
+@media (max-width: 639px) {
+  .evidenza-iz { min-height: 520px; }
+  .evidenza-iz__marchio { width: 100%; align-self: end; }
+  .evidenza-iz__figura {
+    top: 0; bottom: auto; right: -18%; height: 70%;
+    -webkit-mask-image: linear-gradient(to bottom, #000 55%, transparent), linear-gradient(to right, transparent, #000 32%);
+    -webkit-mask-composite: source-in;
+    mask-image: linear-gradient(to bottom, #000 55%, transparent), linear-gradient(to right, transparent, #000 32%);
+    mask-composite: intersect;
+  }
 }
 
 /* --------------------------------------------------------------------------

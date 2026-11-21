@@ -1,0 +1,47 @@
+[
+  {
+    "tipo": "contenuto",
+    "evento_id": 9,
+    "opera_id": null,
+    "pagina": null,
+    "titolo": null,
+    "testo": "27.11.2026 · 22:00 – late · Laboratorio Aperto",
+    "invito": null,
+    "immagine": null,
+    "lettering": null,
+    "colore": null,
+    "colore_testo": null,
+    "attiva": true,
+    "posizione": 1
+  },
+  {
+    "tipo": "apertura",
+    "evento_id": null,
+    "opera_id": null,
+    "pagina": null,
+    "titolo": null,
+    "testo": null,
+    "invito": null,
+    "immagine": null,
+    "lettering": null,
+    "colore": null,
+    "colore_testo": null,
+    "attiva": true,
+    "posizione": 2
+  },
+  {
+    "tipo": "contenuto",
+    "evento_id": 1,
+    "opera_id": null,
+    "pagina": null,
+    "titolo": null,
+    "testo": null,
+    "invito": null,
+    "immagine": null,
+    "lettering": null,
+    "colore": null,
+    "colore_testo": null,
+    "attiva": true,
+    "posizione": 3
+  }
+]

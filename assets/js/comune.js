@@ -245,7 +245,7 @@ function durata(opera) {
    prende quel colore: l'immagine fa da maschera a un fondo pieno, così la
    forma resta quella del file. Con colora: false (Produzioni, che lo vuole
    nero) resta com'è. ---- */
-const TITOLI_GRAFICI = new Set(['interzona', 'quartolivello', 'relativita', 'vivarevolution']);
+// TITOLI_GRAFICI sta in dati.js: lo usa anche la vetrina della home (e la gestione)
 const caratteriTitolo = new Map();
 
 // Il titolo scritto, in Montserrat (o nel carattere del corto, vedi sotto)
@@ -589,6 +589,58 @@ function preparaGiostre(radice) {
   });
 }
 
+/* ---- Conto alla rovescia da videocassetta (la serata del 27.11.2026, nella
+   sua pagina, nella sala e nel blocco in evidenza di Eventi):
+   data-conto="<inizio ISO>" sull'elemento, data-conto-valore dove scrivere,
+   data-dopo il testo che resta a serata finita. Fino all'inizio
+   -GG:HH:MM:SS (senza secondi con il movimento ridotto), durante la serata
+   LIVE, poi data-dopo. data-stato dice in che fase è, per il CSS. ---- */
+const DURATA_SERATA = 6 * 3600 * 1000; // "22:00 – late": fino alle 4
+function preparaConti(radice) {
+  radice.querySelectorAll('[data-conto]').forEach((conto) => {
+    if (conto.dataset.pronto) return;
+    const inizio = Date.parse(conto.dataset.conto);
+    const valore = conto.querySelector('[data-conto-valore]');
+    if (Number.isNaN(inizio) || !valore) return;
+    conto.dataset.pronto = 'si';
+    const due = (n) => String(n).padStart(2, '0');
+    const scrivi = () => {
+      const ora = Date.now();
+      if (ora >= inizio + DURATA_SERATA) {
+        conto.dataset.stato = 'finito';
+        valore.textContent = conto.dataset.dopo || '';
+        return false;
+      }
+      if (ora >= inizio) {
+        conto.dataset.stato = 'live';
+        valore.textContent = 'LIVE';
+        return true;
+      }
+      conto.dataset.stato = 'attesa';
+      const s = Math.floor((inizio - ora) / 1000);
+      const parti = [Math.floor(s / 86400), Math.floor(s / 3600) % 24, Math.floor(s / 60) % 60];
+      if (!FERMO) parti.push(s % 60);
+      valore.textContent = '-' + parti.map(due).join(':');
+      return true;
+    };
+    if (!scrivi()) return;
+    const giro = setInterval(() => {
+      // la sala chiusa porta via il suo conto: il giro si ferma
+      if (!conto.isConnected || !scrivi()) clearInterval(giro);
+    }, FERMO ? 30000 : 1000);
+  });
+}
+
+/* ---- I video in loop delle pagine evento partono da soli e senza audio;
+   con il movimento ridotto restano fermi sul loro poster ---- */
+function preparaVideo(radice) {
+  if (!FERMO) return;
+  radice.querySelectorAll('video[autoplay]').forEach((video) => {
+    video.removeAttribute('autoplay');
+    video.pause();
+  });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   adatta();
   window.addEventListener('resize', adatta);
@@ -601,6 +653,8 @@ document.addEventListener('DOMContentLoaded', () => {
   if (document.body.classList.contains('pagina-evento')) {
     document.querySelectorAll('.rullino').forEach(preparaScorre);
     preparaGiostre(document);
+    preparaConti(document);
+    preparaVideo(document);
   }
 });
 

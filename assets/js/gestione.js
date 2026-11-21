@@ -356,24 +356,25 @@ document.querySelectorAll('.g-scheda').forEach((b) => {
    pagine composte dal database non sono ancora stati provati. Piano per
    riprenderla in storico/2026-11-13-piano-eventi-gestione.md. Per
    riaccenderla: togliere 'eventi' da qui e l'etichetta in gestione.html.
-   Dashboard, Proposte e Soci sono ferme con la Cortoteca (CORTOTECA_ATTIVA
-   in dati.js, 17 novembre 2026): per riaccenderle basta l'interruttore,
-   più le etichette in gestione.html. */
-const SCHEDE_CORTOTECA = ['dashboard', 'proposte', 'soci'];
+   Proposte e Soci sono ferme con la Cortoteca (CORTOTECA_ATTIVA in
+   dati.js, 17 novembre 2026): per riaccenderle basta l'interruttore, più
+   le etichette in gestione.html. La Dashboard è accesa dal 21 novembre
+   2026 come indice del sito e vetrina della home (gestione-indice.js); il
+   cruscotto della Cortoteca le torna sotto con l'interruttore. */
+const SCHEDE_CORTOTECA = ['proposte', 'soci'];
 const SCHEDE_IN_SVILUPPO = new Set(['eventi', ...(CORTOTECA_ATTIVA ? [] : SCHEDE_CORTOTECA)]);
-// La scheda di partenza: la Dashboard, oppure Opere se la Dashboard è ferma
-const SCHEDA_INIZIALE = SCHEDE_IN_SVILUPPO.has('dashboard') ? 'opere' : 'dashboard';
+// La scheda di partenza
+const SCHEDA_INIZIALE = 'dashboard';
 
 // Il testo che sostituisce l'elenco di una scheda ferma
 const TESTI_IN_SVILUPPO = {
   eventi: 'La gestione degli eventi tornerà con un prossimo aggiornamento del sito. Gli eventi già pubblicati restano online come sono; per aggiungerne uno o correggerlo, per ora, chiedi a chi cura il sito.',
-  dashboard: 'La Dashboard tornerà con la Cortoteca, oggi in pausa. Opere e Rullino funzionano come sempre.',
   proposte: 'Le proposte dei soci torneranno con la Cortoteca, oggi in pausa. Quelle già arrivate restano salvate.',
   soci: 'I collegamenti personali dei soci torneranno con la Cortoteca, oggi in pausa. Il libro soci resta sul foglio Google.'
 };
 
 const SCHEDE = {
-  dashboard: ['Dashboard', 'Ciò che aspetta una decisione, lo stato della Cortoteca e le ultime cose successe.'],
+  dashboard: ['Dashboard', 'Tutte le pagine del sito, e la vetrina in cima alla home: da qui scegli cosa mettere in evidenza e in che ordine.'],
   proposte: ['Proposte', 'I corti che i soci mandano dalla loro pagina. Si rileggono, si approvano e vanno in Cortoteca.'],
   opere: ['Opere', 'Tutte le opere del sito, pubblicate e non. Le produzioni CDL e i corti dei soci.'],
   eventi: ['Eventi', 'Gli eventi del sito, pubblicati e non.'],
@@ -416,7 +417,7 @@ async function mostraElenco() {
   elenco.innerHTML = '<li class="g-vuoto">Caricamento…</li>';
 
   // Alla prima apertura si parte dalla scheda dell'indirizzo (#opere…),
-  // o dalla Dashboard (da Opere, se la Dashboard è ferma)
+  // o dalla Dashboard
   if (!stato.scheda) {
     const daIndirizzo = location.hash.slice(1).split('/')[0];
     stato.scheda = SCHEDE[daIndirizzo] ? daIndirizzo : SCHEDA_INIZIALE;
@@ -429,7 +430,8 @@ async function mostraElenco() {
   const ferma = SCHEDE_IN_SVILUPPO.has(stato.scheda);
   $('pannello-soci').hidden = ferma || stato.scheda !== 'soci';
   $('bozze-in-corso').hidden = true; // la riempie elencoProposte
-  $('cruscotto').hidden = ferma || stato.scheda !== 'dashboard';
+  $('indice-sito').hidden = ferma || stato.scheda !== 'dashboard';
+  $('cruscotto').hidden = ferma || stato.scheda !== 'dashboard' || !CORTOTECA_ATTIVA;
   $('rullino-gestione').hidden = ferma || stato.scheda !== 'rullino';
   $('elenco').hidden = !ferma && ['dashboard', 'rullino'].includes(stato.scheda);
 
@@ -438,7 +440,10 @@ async function mostraElenco() {
   if (CORTOTECA_ATTIVA) await caricaAvvisi();
 
   if (ferma) return mostraInSviluppo();
-  if (stato.scheda === 'dashboard') return mostraCruscotto();
+  if (stato.scheda === 'dashboard') {
+    if (CORTOTECA_ATTIVA) mostraCruscotto();
+    return mostraIndice();
+  }
   if (stato.scheda === 'rullino') return mostraRullino();
   if (stato.scheda === 'proposte') return elencoProposte();
   if (stato.scheda === 'soci') return elencoSoci();

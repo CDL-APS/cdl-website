@@ -1,12 +1,12 @@
 /* ==========================================================================
-   DATI — opere, eventi e il rullino della home, comune a tutte le pagine
+   DATI — opere, eventi, il rullino e la vetrina della home, comune a tutte le pagine
    che li mostrano: home, Cortoteca, Produzioni, pagina del corto, Eventi. Lo usano anche gestione
    e proposta (urlImmagine, esc, indirizzoSicuro).
 
    La fonte è il database Supabase dell'associazione. Se non risponde (per
    esempio perché il progetto è in pausa) le pagine ripiegano sulla copia di
-   riserva in data/opere.json, data/eventi.json e data/rullino.json, che ha la stessa forma dei
-   dati del database. Le immagini seguono la stessa logica: prima lo spazio
+   riserva in data/opere.json, data/eventi.json, data/rullino.json e
+   data/vetrina.json, che ha la stessa forma dei dati del database. Le immagini seguono la stessa logica: prima lo spazio
    immagini di Supabase, poi le copie in assets/img/.
 
    Va caricato prima dello script della pagina, che ne usa le funzioni.
@@ -30,8 +30,37 @@ const IMMAGINI_LOCALI = {
 const RISERVA = {
   opere: 'data/opere.json',
   eventi: 'data/eventi.json',
-  rullino: 'data/rullino.json'
+  rullino: 'data/rullino.json',
+  vetrina: 'data/vetrina.json'
 };
+
+/* Prove senza toccare il database: ?riserva nell'indirizzo fa leggere a
+   quella pagina solo le copie di riserva in data/, così un evento o una
+   slide nuovi si guardano prima di scriverli nel database. Vale solo per
+   la pagina che ce l'ha nell'indirizzo (fino al 21 novembre 2026 restava
+   acceso per tutta la scheda, e la home non corrispondeva più alla
+   gestione), e una striscia in basso lo ricorda, col collegamento per
+   tornare ai dati veri. */
+const SOLO_RISERVA = (() => {
+  try {
+    sessionStorage.removeItem('cdl-solo-riserva'); // il segno di prima
+    const scelta = new URLSearchParams(location.search).get('riserva');
+    return scelta !== null && scelta !== 'no';
+  } catch (errore) {
+    return false;
+  }
+})();
+if (SOLO_RISERVA) {
+  document.addEventListener('DOMContentLoaded', () => {
+    const indirizzo = new URL(location.href);
+    indirizzo.searchParams.delete('riserva');
+    const striscia = document.createElement('p');
+    striscia.className = 'avviso-riserva';
+    striscia.setAttribute('role', 'status');
+    striscia.innerHTML = `Stai guardando le copie di riserva, non il database. <a href="${esc(indirizzo.pathname + indirizzo.search + indirizzo.hash)}">Torna ai dati veri</a>`;
+    document.body.append(striscia);
+  });
+}
 
 /* Legge una tabella dalla Data API di Supabase. `query` è la parte dopo il
    punto di domanda, per esempio "select=*&order=id". */
@@ -57,12 +86,13 @@ async function leggiRiserva(tabella) {
   const response = await fetch(RISERVA[tabella]);
   if (!response.ok) throw new Error('Copia di riserva non trovata: ' + RISERVA[tabella]);
   const righe = await response.json();
-  const campo = { opere: 'pubblicata', eventi: 'pubblicato' }[tabella];
+  const campo = { opere: 'pubblicata', eventi: 'pubblicato', vetrina: 'attiva' }[tabella];
   return campo ? righe.filter((riga) => riga[campo] === true) : righe;
 }
 
 /* Prima il database, poi la copia di riserva */
 async function leggi(tabella, query) {
+  if (SOLO_RISERVA) return leggiRiserva(tabella);
   try {
     return await leggiSupabase(tabella, query);
   } catch (errore) {
@@ -112,6 +142,46 @@ async function caricaEventi() {
    un evento, a un corto o a una pagina del sito (vedi home.js) */
 async function caricaRullino() {
   return leggi('rullino', 'select=immagine,descrizione,evento_id,opera_id,pagina,posizione&order=posizione,id');
+}
+
+/* La vetrina della home: le slide attive (la sala e i contenuti in
+   evidenza), nell'ordine scelto nella Dashboard della gestione (vedi
+   home.js) */
+async function caricaVetrina() {
+  return leggi('vetrina', 'select=tipo,evento_id,opera_id,pagina,titolo,testo,invito,immagine,lettering,colore,colore_testo,posizione&order=posizione,id');
+}
+
+/* I corti che hanno un titolo grafico provvisorio in SVG in
+   assets/img/film/titoli/ (vedi titoloGrafico in comune.js) */
+const TITOLI_GRAFICI = new Set(['interzona', 'quartolivello', 'relativita', 'vivarevolution']);
+
+/* Il lettering di un evento o di un corto, se il sito ne ha uno: la
+   vetrina della home lo usa al posto del titolo scritto, se la slide non ne
+   ha uno suo (colonna lettering). Per un evento: il logo del database, il
+   lettering di Long Story Short, o il PNG col nome della pagina in
+   assets/img/eventi/loghi/ (se il file non c'è, chi lo usa torna al titolo
+   scritto). Per un corto: il titolo grafico caricato, o l'SVG provvisorio. */
+function letteringEvento(evento) {
+  if (!evento) return null;
+  if (evento.logo) return urlImmagineEvento(evento.logo);
+  if (evento.serie === 'long-story-short') return 'assets/img/brand/long-story-short.png';
+  const pagina = paginaEvento(evento);
+  return pagina && /^[a-z0-9-]+\.html$/.test(pagina) ? `assets/img/eventi/loghi/${pagina.replace(/\.html$/, '')}.png` : null;
+}
+
+function letteringOpera(opera) {
+  if (!opera) return null;
+  if (opera.titolo_png) return urlImmagine(opera.titolo_png);
+  return TITOLI_GRAFICI.has(opera.codice) ? `assets/img/film/titoli/${encodeURIComponent(opera.codice)}.svg` : null;
+}
+
+/* L'indirizzo del lettering caricato per una slide: un file del sito o un
+   percorso nello spazio immagini */
+function indirizzoLettering(percorso) {
+  if (!percorso || percorso.includes('..')) return null;
+  if (/^assets\/img\/[A-Za-z0-9\/._-]+\.png$/.test(percorso)) return percorso;
+  if (/^(vetrina|eventi)\/[A-Za-z0-9\/._-]+\.png$/.test(percorso)) return urlImmagine(percorso);
+  return null;
 }
 
 /* Ordine dalla più recente. A parità di anno conta come più recente l'opera
@@ -213,6 +283,24 @@ const MODELLO_EVENTI = false;
    netlify.toml rimanda galleria e area socio. Come riprendere:
    storico/2026-11-17-cortoteca-in-pausa.md. */
 const CORTOTECA_ATTIVA = false;
+
+/* Le pagine fisse del sito, con il nome e i colori della loro sezione
+   (fondo e scritte): le usano la vetrina della home (una slide che porta a
+   una pagina) e la gestione (l'indice nella Dashboard, i collegamenti del
+   rullino). Le sezioni sono quelle della barra, più la home; una pagina che
+   sta dentro un'altra lo dice con dentro (la pagina che la contiene: una
+   sezione o la pagina di un evento). Le pagine dei corti e degli eventi
+   vengono dal database: stanno dentro Produzioni (o la Cortoteca) e Eventi. */
+const PAGINE_SITO = [
+  { pagina: 'index.html', nome: 'Home', fondo: '#1d1d1b', colore: '#b9bbf8' },
+  { pagina: 'eventi.html', nome: 'Eventi', fondo: '#004aad', colore: '#84f1f7' },
+  { pagina: 'produzioni.html', nome: 'Produzioni', fondo: '#b9bbf8', colore: '#1d1d1b' },
+  ...(CORTOTECA_ATTIVA ? [{ pagina: 'cortoteca.html', nome: 'Cortoteca', fondo: '#000000', colore: '#ff751f' }] : []),
+  { pagina: 'contatti.html', nome: 'Contatti', fondo: '#ff751f', colore: '#1d1d1b' },
+  { pagina: 'vantaggi-tesseramento.html', nome: 'Sostieni', fondo: '#ff751f', colore: '#1d1d1b' },
+  { pagina: 'vantaggi-tesseramento.html#associati', nome: 'Domanda di ammissione', dentro: 'vantaggi-tesseramento.html', fondo: '#ff751f', colore: '#1d1d1b' },
+  { pagina: 'cornicenarrativa.html', nome: 'Cornice narrativa', dentro: 'longstoryshort.html', fondo: '#1d1d1b', colore: '#f7f7f7' }
+];
 
 /* Vero se la pagina dell'evento si compone dal database (evento.html, vedi
    modello-evento.js): ha una presentazione o almeno un blocco */

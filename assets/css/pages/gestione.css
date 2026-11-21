@@ -222,6 +222,75 @@ h4.g-blocco__nome { font-size: 16px; }
 }
 
 /* --------------------------------------------------------------------------
+   Dashboard (gestione-indice.js): in cima la vetrina della home, una
+   superficie bianca per slide con anteprima, campi e tasti tondi; sotto
+   l'indice delle pagine del sito, a righe col filo, ognuna con "Apri" e
+   "Metti in vetrina". Una slide spenta si vede sbiadita.
+   -------------------------------------------------------------------------- */
+.g-indice .titoletto + .g-nota-tenue { margin: -6px 0 20px; }
+.g-indice__nota-vetrina { margin-bottom: 20px; }
+.g-vetrina { display: grid; gap: 16px; margin-bottom: clamp(40px, 5vw, 64px); list-style: none; }
+.g-slide {
+  display: grid; grid-template-columns: minmax(160px, 240px) minmax(0, 1fr) auto; gap: 12px 24px; align-items: start;
+  padding: clamp(16px, 2vw, 24px); border-radius: var(--r); background: #fff;
+}
+.g-slide--spenta > :not(.g-scelta__comandi) { opacity: 0.55; }
+.g-slide__foto { grid-row: span 2; aspect-ratio: 16 / 9; }
+.g-slide__testa { display: grid; gap: 2px; }
+.g-slide__nome { font-family: var(--f-titoli); font-size: clamp(20px, 1.9vw, 26px); font-weight: 900; line-height: 1; text-transform: uppercase; letter-spacing: var(--titoli-spazio); }
+.g-slide__stato { font-weight: 700; color: var(--nero); }
+.g-slide__apri { justify-self: start; display: inline-flex; align-items: center; min-height: 44px; font-size: 14px; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
+.g-slide__apri:hover { text-decoration-thickness: 2px; }
+.g-slide > .g-nota-tenue, .g-slide__campi { grid-column: 2 / 3; }
+.g-slide__campi { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 16px; }
+.g-slide__campi .g-campo input[type=text] { min-height: 44px; padding: 8px 12px; font-size: 15px; }
+.g-slide__campi .g-spunta { grid-column: auto; padding-top: 0; align-items: center; }
+.g-slide__colore-riga { display: flex; align-items: center; gap: 12px; min-height: 44px; }
+.g-slide__colore-riga input[type=color] { width: 56px; height: 40px; padding: 2px; border: 2px solid var(--nero); border-radius: 10px; background: none; cursor: pointer; }
+.g-slide__colore-riga input[type=color]:disabled { opacity: 0.35; cursor: not-allowed; }
+.g-slide .g-scelta__comandi { grid-column: 3; grid-row: 1 / span 2; margin-top: 0; }
+@media (max-width: 959px) {
+  .g-slide { grid-template-columns: minmax(0, 1fr); }
+  .g-slide__foto { grid-row: auto; max-width: 360px; }
+  .g-slide > .g-nota-tenue, .g-slide__campi, .g-slide .g-scelta__comandi { grid-column: 1; grid-row: auto; }
+  .g-slide__campi { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* L'albero delle pagine: le sezioni a righe col filo, in grassetto; le
+   pagine che stanno dentro una sezione (o dentro un evento) rientrano, con
+   un filo a sinistra */
+.g-indice__lista { list-style: none; border-top: 1px solid var(--filo); }
+.g-indice__voce { border-bottom: 1px solid var(--filo); }
+.g-indice__figli .g-indice__voce:last-child { border-bottom: 0; }
+.g-indice__riga {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 20px;
+  padding: 12px 0;
+}
+.g-indice__testo { display: grid; gap: 2px; min-width: min(100%, 260px); }
+.g-indice__nome { font-size: 16px; font-weight: 600; line-height: 1.25; }
+.g-indice__voce--sezione > .g-indice__riga .g-indice__nome {
+  font-family: var(--f-titoli); font-size: clamp(19px, 1.7vw, 23px); font-weight: 900; line-height: 1;
+  text-transform: uppercase; letter-spacing: var(--titoli-spazio);
+}
+.g-indice__dettaglio { font-size: 14px; color: var(--tenue); }
+.g-indice__azioni { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.g-indice__azioni .btn { min-height: 44px; padding: 0 18px; font-size: 14px; }
+.g-indice__nota { font-size: 14px; font-weight: 600; color: var(--tenue); }
+.g-indice__figli {
+  list-style: none; margin: 0 0 14px clamp(10px, 2vw, 20px);
+  padding-left: clamp(14px, 2vw, 24px); border-left: 2px solid var(--filo);
+}
+.g-indice__figli .g-indice__riga { padding: 8px 0; }
+.g-indice__figli .g-indice__voce { border-bottom: 1px solid rgba(29, 29, 27, 0.1); }
+
+/* Il lettering sopra l'anteprima della slide, in basso a sinistra come in home */
+.g-slide__foto { position: relative; }
+.g-slide__foto .g-slide__lettering {
+  position: absolute; left: 8%; bottom: 12%; width: 56%; height: 44%;
+  -webkit-mask: var(--lettering) left bottom / contain no-repeat; mask: var(--lettering) left bottom / contain no-repeat;
+}
+
+/* --------------------------------------------------------------------------
    Rullino della home (gestione-rullino.js): in alto le foto scelte, in
    ordine, ognuna con i tasti tondi per spostarla e toglierla; sotto le foto
    disponibili, divise per provenienza (tre pillole), in griglia. Una foto
