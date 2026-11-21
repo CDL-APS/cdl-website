@@ -11,11 +11,11 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800;900&display=swap">
-    <link rel="stylesheet" href="assets/css/base.css?v=2026-11-18b">
-    <link rel="stylesheet" href="assets/css/components.css?v=2026-11-18b">
-    <link rel="stylesheet" href="assets/css/pages/evento.css?v=2026-11-18b">
-    <link rel="stylesheet" href="assets/css/pages/eventi.css?v=2026-11-18b">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800;900&family=Inter:wght@400;500;600;700&family=VT323&display=swap">
+    <link rel="stylesheet" href="assets/css/base.css?v=2026-11-21d">
+    <link rel="stylesheet" href="assets/css/components.css?v=2026-11-21d">
+    <link rel="stylesheet" href="assets/css/pages/evento.css?v=2026-11-21d">
+    <link rel="stylesheet" href="assets/css/pages/eventi.css?v=2026-11-21d">
 </head>
 <body class="pagina-colore pagina-eventi">
 
@@ -38,16 +38,42 @@
             </div>
         </section>
 
-        <!-- IN EVIDENZA: Long Story Short, col solo lettering su tre righe e
-             la breve descrizione (la mette eventi.js), e sotto le fotografie della
-             sua pagina che scorrono -->
+        <!-- IN EVIDENZA: la serata per i soci del 27.11.2026 (evento-interzona.html),
+             nella sua grafica: il nero, la figura bruciata, la scritta glitch
+             gialla (che al clic sale al suo posto nella sala) e il conto alla
+             rovescia (comune.js). data-evento è il codice dell'evento:
+             eventi.js ne prende l'indirizzo dal database e lo toglie da "Altri
+             eventi". Per mettere in evidenza un altro evento si riscrive questo
+             blocco. -->
         <section class="blocco-pagina entra" aria-labelledby="titolo-evidenza">
             <div class="wrap">
                 <h2 class="blocco-pagina__testa" id="titolo-evidenza">In evidenza</h2>
-                <a class="evidenza grid" id="evidenza" href="longstoryshort.html">
+                <a class="evidenza-iz evento--evento-interzona" id="evidenza" data-evento="evento-interzona" href="evento-interzona.html">
+                    <img class="evidenza-iz__figura" src="assets/img/eventi/evento-interzona/figura.jpg" alt="" width="1080" height="1150">
+                    <span class="evidenza-iz__righe" aria-hidden="true"></span>
+                    <span class="evidenza-iz__conto iz-conto" data-conto="2026-11-27T22:00:00+01:00" data-dopo="27.11.2026" aria-hidden="true"><span class="iz-conto__punto"></span><span data-conto-valore>27.11.2026</span></span>
+                    <span class="marchio-serie marchio-serie--evento marchio--evento-interzona evidenza-iz__marchio" role="img" aria-label="A/V Live Set"></span>
+                    <span class="evidenza-iz__piede">
+                        <span class="evidenza-iz__testo">
+                            <span class="evidenza-iz__titolo">Evento riservato ai soci CDL</span>
+                            <span class="evidenza-iz__dati">27.11.2026 &middot; 22:00 &ndash; late &middot; Laboratorio Aperto</span>
+                        </span>
+                        <span class="evidenza__freccia"><svg class="freccia" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg></span>
+                    </span>
+                </a>
+            </div>
+        </section>
+
+        <!-- LONG STORY SHORT: il lettering su tre righe e la breve descrizione
+             (la mette eventi.js, in Inter come la sua grafica), sotto le
+             fotografie della sua pagina che scorrono -->
+        <section class="blocco-pagina blocco-pagina--diviso entra" id="blocco-lss" aria-labelledby="titolo-lss">
+            <div class="wrap">
+                <h2 class="blocco-pagina__testa" id="titolo-lss">Long Story Short</h2>
+                <a class="evidenza grid" id="lss" href="longstoryshort.html">
                     <span class="marchio-serie marchio-serie--lss span-6" role="img" aria-label="Long Story Short"></span>
                     <span class="evidenza__testo span-6 start-7">
-                        <span class="evidenza__descrizione" id="evidenza-descrizione"></span>
+                        <span class="evidenza__descrizione" id="lss-descrizione"></span>
                         <span class="evidenza__freccia"><svg class="freccia" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg></span>
                     </span>
                 </a>
@@ -114,9 +140,9 @@
         </div>
     </footer>
 
-    <script src="assets/js/dati.js?v=2026-11-18b"></script>
-    <script src="assets/js/comune.js?v=2026-11-18b"></script>
-    <script src="assets/js/modello-evento.js?v=2026-11-18b"></script>
-    <script src="assets/js/eventi.js?v=2026-11-18b"></script>
+    <script src="assets/js/dati.js?v=2026-11-21d"></script>
+    <script src="assets/js/comune.js?v=2026-11-21d"></script>
+    <script src="assets/js/modello-evento.js?v=2026-11-21d"></script>
+    <script src="assets/js/eventi.js?v=2026-11-21d"></script>
 </body>
 </html>

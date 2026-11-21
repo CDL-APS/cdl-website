@@ -1,12 +1,127 @@
 /* ==========================================================================
    HOME (index.html)
-   L'apertura: la sala vista dall'alto, al buio, con la torcia che segue il
-   puntatore e, al piede, il nastro delle ultime notizie. Sotto l'indice
-   delle tre sezioni, il rullino delle fotografie degli eventi e Sostieni.
+   La vetrina: slide a tutto schermo che scorrono in orizzontale, la sala
+   vista dall'alto (al buio, con la torcia che segue il puntatore) e i
+   contenuti in evidenza scelti in gestione; al piede, sotto tutte, il
+   nastro delle ultime notizie. Sotto l'indice delle sezioni, il rullino
+   delle fotografie degli eventi e Sostieni.
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
-   Apertura: la sala al buio, la torcia e, al piede, il nastro
+   La vetrina: una pista che scorre in orizzontale, una slide per schermo,
+   col dito, coi tasti, con la tastiera e da sola (home.js). Il nastro e i
+   comandi stanno sopra la pista, al piede. Finché arrivano i dati la pista
+   aspetta nascosta (al massimo un secondo e poco più), così la prima slide
+   è già quella giusta, e le entrate della sala aspettano con lei.
+   -------------------------------------------------------------------------- */
+.vetrina { min-height: 0; padding: 0; background: var(--nero); color: var(--chiaro); }
+.vetrina__pista {
+  display: flex; overflow-x: auto; overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory; scrollbar-width: none;
+}
+.vetrina__pista::-webkit-scrollbar { display: none; }
+.vetrina__slide {
+  position: relative; overflow: clip; flex: 0 0 100%; min-height: 100svh;
+  scroll-snap-align: start; scroll-snap-stop: always;
+}
+.vetrina.in-attesa .vetrina__pista { visibility: hidden; }
+.vetrina.in-attesa :is(.hero__foto, .marchio img) { animation-play-state: paused; }
+
+/* Una slide in evidenza: la foto a tutto campo, velata a sinistra e in
+   basso come la sala; il titolo (o il marchio dell'evento) nel colore della
+   slide, una riga, l'invito. Tutta la slide porta alla pagina: il tasto
+   si allarga su di lei (::after), e al passaggio la foto si avvicina. Senza
+   foto, il fondo pieno della sezione. */
+.vetrina__slide--contenuto {
+  display: flex; align-items: flex-end; isolation: isolate;
+  padding-bottom: calc(46px + clamp(36px, 5svh, 64px));
+  --fondo: var(--fondo-slide, var(--nero)); --inchiostro: var(--testo-slide, var(--chiaro));
+  --accento-hover: var(--colore-slide, var(--lilla)); --accento-hover-testo: var(--fondo);
+  background: var(--fondo); color: var(--inchiostro);
+}
+.vetrina__foto {
+  position: absolute; z-index: -1; inset: 0; width: 100%; height: 100%; max-width: none; object-fit: cover;
+  /* tagliata verso destra: a sinistra c'è il testo. Ferma: sulla grana
+     delle foto anche un piccolo ingrandimento sfarfalla */
+  object-position: 72% 50%;
+}
+.vetrina__velo {
+  position: absolute; z-index: -1; inset: 0;
+  background:
+    linear-gradient(90deg, rgba(13, 7, 9, 0.82) 0%, rgba(13, 7, 9, 0.42) 42%, rgba(13, 7, 9, 0) 68%),
+    linear-gradient(0deg, rgba(13, 7, 9, 0.66) 0%, rgba(13, 7, 9, 0) 42%);
+}
+.vetrina__testo { display: grid; justify-items: start; gap: clamp(16px, 2vw, 26px); }
+.vetrina__titolo { max-width: 15ch; font-size: clamp(44px, 7vw, 116px); line-height: 0.86; color: var(--colore-slide, var(--chiaro)); }
+/* col marchio il titolo prende tutta la riga: il marchio non ha un contenuto che lo misuri */
+.vetrina__titolo:has(.vetrina__marchio) { justify-self: stretch; max-width: none; }
+.vetrina__marchio { --ar: 2; width: min(100%, 760px, 42svh * var(--ar)); aspect-ratio: var(--ar); color: var(--colore-slide, var(--chiaro)); }
+.vetrina__riga { max-width: 46ch; font-size: clamp(18px, 1.6vw, 24px); font-weight: 600; line-height: 1.35; }
+.vetrina__invito .freccia { width: 15px; height: 15px; }
+.vetrina__invito:hover .freccia { transform: translateX(4px); }
+.vetrina__invito::after { content: ''; position: absolute; inset: 0; }
+/* il tasto: fondo del colore del testo, scritta in contrasto (--sul-testo);
+   al passaggio il colore del titolo (--sul-colore) */
+.vetrina__slide--contenuto .vetrina__invito { color: var(--sul-testo, var(--fondo)); }
+.vetrina__slide--contenuto .vetrina__invito:hover { color: var(--sul-colore, var(--accento-hover-testo)); }
+/* testo scuro su una foto chiara: il velo schiarisce invece di scurire */
+.vetrina__slide--velo-chiaro .vetrina__velo {
+  background:
+    linear-gradient(90deg, rgba(247, 247, 247, 0.82) 0%, rgba(247, 247, 247, 0.42) 42%, rgba(247, 247, 247, 0) 68%),
+    linear-gradient(0deg, rgba(247, 247, 247, 0.66) 0%, rgba(247, 247, 247, 0) 42%);
+}
+
+/* I comandi: una riga sopra il nastro, sui margini della pagina. Un
+   segmento per slide, una linea sottile che si riempie mentre
+   la slide resta in vista: a linea piena si passa alla slide dopo (home.js
+   ascolta la fine dell'animazione). Ferma, la linea si ferma con lei. A
+   destra il tasto pausa. Prendono il colore delle scritte della slide in
+   vista (--tinta-comandi). */
+.vetrina__comandi {
+  position: absolute; z-index: 2; left: 0; right: 0; bottom: calc(46px + 14px);
+  width: min(100% - 2 * var(--gut), 1280px); margin-inline: auto;
+  display: flex; align-items: center; gap: clamp(16px, 2.4vw, 32px);
+  color: var(--tinta-comandi, var(--chiaro)); transition: color 0.4s var(--ease);
+}
+.vetrina__segni { flex: 1 1 auto; display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: clamp(10px, 1.6vw, 24px); }
+.vetrina__segno {
+  display: grid; align-content: center; min-width: 0; min-height: 44px; padding: 0;
+  border: 0; background: none; font: inherit; color: inherit; text-align: left; cursor: pointer;
+}
+.vetrina__segno-linea {
+  position: relative; overflow: hidden; height: 3px; border-radius: 3px;
+  background: color-mix(in srgb, currentColor 26%, transparent);
+  transition: background-color 0.2s var(--ease);
+}
+.vetrina__segno:hover .vetrina__segno-linea { background: color-mix(in srgb, currentColor 50%, transparent); }
+.vetrina__segno-linea::after {
+  content: ''; position: absolute; inset: 0; border-radius: inherit; background: currentColor;
+  transform: scaleX(0); transform-origin: left;
+}
+.vetrina__segno[aria-current="true"] .vetrina__segno-linea::after { animation: vetrina-avanza var(--giro, 8s) linear forwards; }
+.vetrina.is-ferma .vetrina__segno[aria-current="true"] .vetrina__segno-linea::after { animation-play-state: paused; }
+@keyframes vetrina-avanza { to { transform: scaleX(1); } }
+.vetrina__segno:focus-visible { outline: 3px solid currentColor; outline-offset: 4px; border-radius: 4px; }
+.vetrina__pausa {
+  display: grid; place-items: center; flex: 0 0 auto; width: 44px; height: 44px; padding: 0;
+  border: 2px solid currentColor; border-radius: 50%; background: none; color: inherit; cursor: pointer;
+  transition: background-color 0.15s var(--ease), transform 0.15s var(--ease);
+}
+.vetrina__pausa svg { width: 16px; height: 16px; }
+.vetrina__pausa:hover { background: color-mix(in srgb, currentColor 18%, transparent); transform: translateY(-1px); }
+.vetrina__pausa:active { transform: translateY(1px) scale(0.96); }
+.vetrina__pausa:focus-visible { outline: 3px solid currentColor; outline-offset: 3px; }
+.vetrina__pausa .icona-riprendi, .vetrina__pausa[aria-pressed="true"] .icona-ferma { display: none; }
+.vetrina__pausa[aria-pressed="true"] .icona-riprendi { display: block; }
+/* Movimento ridotto: niente scorrimento da solo né pausa; la slide in
+   vista ha la linea piena */
+@media (prefers-reduced-motion: reduce) {
+  .vetrina__segno[aria-current="true"] .vetrina__segno-linea::after { transform: scaleX(1); }
+  .vetrina__pausa { display: none; }
+}
+
+/* --------------------------------------------------------------------------
+   Apertura: la sala al buio e la torcia
    -------------------------------------------------------------------------- */
 .hero--sala {
   display: flex; align-items: flex-end;
@@ -194,10 +309,25 @@
    Adattamenti
    -------------------------------------------------------------------------- */
 @media (max-width: 1023px) {
-  .hero--sala { min-height: min(100svh, 760px); }
+  .vetrina__slide { min-height: min(100svh, 760px); }
 }
 
 @media (max-width: 639px) {
-  .hero--sala { min-height: min(100svh, 680px); padding-bottom: calc(46px + 32px); }
+  .vetrina__slide { min-height: min(100svh, 680px); }
+  .hero--sala, .vetrina__slide--contenuto { padding-bottom: calc(46px + 32px); }
   .hero--sala .marchio { --largo: 170px; --rientro: 0.071; }
+  .vetrina__invito { width: 100%; }
+  /* la foto nella metà alta, sfumata nel fondo: titolo e testo restano sul
+     pieno, senza la foto dietro */
+  .vetrina__foto {
+    height: 52%;
+    -webkit-mask: linear-gradient(to bottom, #000 55%, transparent); mask: linear-gradient(to bottom, #000 55%, transparent);
+  }
+  .vetrina__velo { display: none; }
+  /* testo scuro: sotto la foto il fondo è chiaro */
+  .vetrina__slide--velo-chiaro { background: var(--chiaro); }
 }
+
+/* Con i comandi sopra il nastro le slide lasciano loro il posto in fondo */
+.vetrina.ha-comandi :is(.hero--sala, .vetrina__slide--contenuto) { padding-bottom: calc(46px + 14px + 44px + clamp(24px, 4svh, 48px)); }
+

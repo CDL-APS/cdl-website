@@ -4,7 +4,8 @@
 // tutte le richieste verso Supabase, coi dati delle copie di riserva
 // (data/*.json) e qualche dato d'esempio per avvisi, cruscotto, proposte e
 // soci. Nessuna scrittura esce dal browser: le richieste POST/PATCH/DELETE
-// vengono bloccate e scritte in console. Passano solo le letture delle
+// vengono bloccate e scritte in console (quelle sulla vetrina della home si
+// applicano a una copia in memoria, per provare la Dashboard). Passano solo le letture delle
 // immagini pubbliche. Per ogni vista: misure (scorrimento orizzontale, aree
 // da toccare sotto i 44 px, scritte sotto gli 11 px) e due schermate.
 //
@@ -26,6 +27,7 @@ const W = Number(process.env.W || 375);
 const opere = JSON.parse(fs.readFileSync(SITO + '/data/opere.json'));
 const eventi = JSON.parse(fs.readFileSync(SITO + '/data/eventi.json'));
 const rullino = JSON.parse(fs.readFileSync(SITO + '/data/rullino.json'));
+const vetrina = JSON.parse(fs.readFileSync(SITO + '/data/vetrina.json')).map((r, i) => ({ id: i + 1, ...r }));
 
 const b64 = (o) => Buffer.from(JSON.stringify(o)).toString('base64url');
 const ora = Math.floor(Date.now() / 1000);
@@ -65,7 +67,7 @@ const RPC = {
 };
 
 function tabella(nome, url) {
-  const righe = { opere, eventi, rullino, testi_licenza: [{ testo: 'Testo della licenza di prova.\n\nSecondo paragrafo.' }], interpreti: [] }[nome] || [];
+  const righe = { opere, eventi, rullino, vetrina: [...vetrina].sort((a, b) => a.posizione - b.posizione || a.id - b.id), testi_licenza: [{ testo: 'Testo della licenza di prova.\n\nSecondo paragrafo.' }], interpreti: [] }[nome] || [];
   const id = url.searchParams.get('id');
   let fuori = righe;
   if (id && id.startsWith('eq.')) fuori = righe.filter((r) => String(r.id) === id.slice(3));
@@ -94,6 +96,16 @@ function tabella(nome, url) {
     if (rpc) return json(RPC[rpc[1]] ?? null);
     const tab = url.pathname.match(/^\/rest\/v1\/(\w+)/);
     if (tab) {
+      // la vetrina: le scritture cambiano la copia in memoria
+      if (tab[1] === 'vetrina' && r.method() !== 'GET') {
+        const id = Number((url.searchParams.get('id') || '').replace('eq.', ''));
+        const corpo = r.postData() ? JSON.parse(r.postData()) : {};
+        if (r.method() === 'POST') vetrina.push({ id: Math.max(0, ...vetrina.map((v) => v.id)) + 1, attiva: true, titolo: null, testo: null, invito: null, immagine: null, lettering: null, colore: null, colore_testo: null, evento_id: null, opera_id: null, pagina: null, ...corpo });
+        if (r.method() === 'PATCH') Object.assign(vetrina.find((v) => v.id === id) || {}, corpo);
+        if (r.method() === 'DELETE') vetrina.splice(vetrina.findIndex((v) => v.id === id), 1);
+        console.log('scrittura finta sulla vetrina:', r.method(), id || '', JSON.stringify(corpo));
+        return json([]);
+      }
       if (r.method() !== 'GET') { console.log('SCRITTURA BLOCCATA:', r.method(), url.pathname); return json([]); }
       const righe = tabella(tab[1], url);
       const singola = (r.headers().accept || '').includes('vnd.pgrst.object');
@@ -139,6 +151,12 @@ function tabella(nome, url) {
 
   await p.goto('http://localhost:5500/gestione.html', { waitUntil: 'networkidle0' });
   await passo('01-dashboard');
+  // la vetrina: una pagina messa in vetrina dall'indice, spostata in cima, un
+  // titolo riscritto, poi tolta
+  await passo('01b-vetrina-aggiunta', () => p.evaluate(() => [...document.querySelectorAll('.g-indice__vetrina')].find((b) => /Produzioni/.test(b.getAttribute('aria-label'))).click()));
+  await passo('01c-vetrina-spostata', () => p.evaluate(() => [...document.querySelectorAll('#vetrina-slide > li')].at(-1).querySelector('[aria-label="Sposta prima"]').click()));
+  await passo('01d-vetrina-titolo', () => p.evaluate(() => { const c = document.querySelector('#vetrina-slide .g-slide__campi input[type=text]'); c.value = 'Le nostre produzioni'; c.dispatchEvent(new Event('change')); }));
+  await passo('01e-vetrina-tolta', () => p.evaluate(() => [...document.querySelectorAll('.g-indice__vetrina')].find((b) => /Togli dalla vetrina: Produzioni/.test(b.getAttribute('aria-label'))).click()));
   await passo('02-proposte', () => scheda('proposte'));
   await passo('03-revisione', () => clic('#elenco button.g-riga'));
   await passo('04-opere', async () => { await p.evaluate(() => document.querySelector('[data-annulla]')?.click()); await attendi(300); await scheda('opere'); });

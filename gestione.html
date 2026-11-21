@@ -12,10 +12,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800;900&display=swap">
-    <link rel="stylesheet" href="assets/css/base.css?v=2026-11-18b">
-    <link rel="stylesheet" href="assets/css/components.css?v=2026-11-18b">
-    <link rel="stylesheet" href="assets/css/pages/riservato.css?v=2026-11-18b">
-    <link rel="stylesheet" href="assets/css/pages/gestione.css?v=2026-11-18b">
+    <link rel="stylesheet" href="assets/css/base.css?v=2026-11-21d">
+    <link rel="stylesheet" href="assets/css/components.css?v=2026-11-21d">
+    <link rel="stylesheet" href="assets/css/pages/riservato.css?v=2026-11-21d">
+    <link rel="stylesheet" href="assets/css/pages/gestione.css?v=2026-11-21d">
 </head>
 <body class="gestione">
 
@@ -32,7 +32,7 @@
         <div class="wrap nav__riga">
             <a class="nav__logo" href="index.html" aria-label="Torna al sito"><span class="logo"></span></a>
             <nav id="schede" class="g-schede" aria-label="Contenuti da gestire" hidden>
-                <button type="button" class="g-scheda" data-scheda="dashboard">Dashboard<span id="conta-avvisi" class="g-conta" hidden></span><span class="g-sviluppo">In sviluppo</span></button>
+                <button type="button" class="g-scheda" data-scheda="dashboard">Dashboard<span id="conta-avvisi" class="g-conta" hidden></span></button>
                 <button type="button" class="g-scheda" data-scheda="proposte">Proposte<span id="conta-proposte" class="g-conta" hidden></span><span class="g-sviluppo">In sviluppo</span></button>
                 <button type="button" class="g-scheda" data-scheda="opere">Opere</button>
                 <button type="button" class="g-scheda" data-scheda="eventi">Eventi<span class="g-sviluppo">In sviluppo</span></button>
@@ -134,6 +134,19 @@
                     <button type="button" id="nuovo" class="btn btn--pieno">Nuova opera</button>
                 </div>
             </header>
+
+            <!-- Dashboard: l'indice del sito. In cima la vetrina della home,
+                 le slide nell'ordine in cui scorrono; sotto tutte le pagine
+                 del sito, ognuna da aprire o da mettere in vetrina
+                 (gestione-indice.js). Con la Cortoteca accesa sotto
+                 ricompare il cruscotto. -->
+            <div id="indice-sito" class="g-indice" hidden>
+                <h2 class="titoletto">Vetrina della home</h2>
+                <p class="g-nota-tenue g-indice__nota-vetrina">Le slide che scorrono in cima alla home, in quest&rsquo;ordine. I campi vuoti prendono il valore della pagina a cui la slide porta, scritto in grigio.</p>
+                <ol id="vetrina-slide" class="g-vetrina"></ol>
+                <h2 class="titoletto">Pagine del sito</h2>
+                <div id="indice-pagine" class="g-indice__pagine"></div>
+            </div>
 
             <!-- Dashboard: ciò che richiede una decisione (quota non
                  rinnovata, opere senza licenza, foglio dei soci non
@@ -604,10 +617,11 @@
     <!-- Copia locale di supabase-js 2.117.3: niente codice da server esterni
          in una pagina con accesso (vedi la CSP in netlify.toml) -->
     <script src="assets/js/vendor/supabase-2.117.3.min.js"></script>
-    <script src="assets/js/dati.js?v=2026-11-18b"></script>
-    <script src="assets/js/riservato.js?v=2026-11-18b"></script>
-    <script src="assets/js/gestione.js?v=2026-11-18b"></script>
-    <script src="assets/js/gestione-rullino.js?v=2026-11-18b"></script>
-    <script src="assets/js/gestione-eventi.js?v=2026-11-18b"></script>
+    <script src="assets/js/dati.js?v=2026-11-21d"></script>
+    <script src="assets/js/riservato.js?v=2026-11-21d"></script>
+    <script src="assets/js/gestione.js?v=2026-11-21d"></script>
+    <script src="assets/js/gestione-rullino.js?v=2026-11-21d"></script>
+    <script src="assets/js/gestione-eventi.js?v=2026-11-21d"></script>
+    <script src="assets/js/gestione-indice.js?v=2026-11-21d"></script>
 </body>
 </html>

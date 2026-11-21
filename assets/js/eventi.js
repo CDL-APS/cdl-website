@@ -1,6 +1,7 @@
 /* ==========================================================================
-   EVENTI (eventi.html) — gli eventi per serie: in evidenza l'ultimo Long
-   Story Short, poi le edizioni di Short Talks, poi gli altri. Ogni evento
+   EVENTI (eventi.html) — gli eventi per serie: in evidenza un evento scelto
+   nell'HTML, poi l'ultimo Long Story Short, le edizioni di Short Talks e
+   gli altri. Ogni evento
    con una pagina si apre qui sopra, nella sala: composta dal database con
    modello-evento.js (come evento.html) o, per le pagine scritte a mano,
    letta così com'è dal suo file. Si appoggia a dati.js, comune.js e
@@ -60,18 +61,27 @@ function preparaEdizioni(lista, visibili) {
 }
 
 async function paginaEventi() {
+  // il conto alla rovescia del blocco in evidenza parte subito, senza aspettare i dati
+  const evidenza = document.getElementById('evidenza');
+  if (evidenza) preparaConti(evidenza);
   const eventi = await caricaEventi();
   eventi.forEach((e) => eventiDelModello.set(e.codice, e));
   const lss = eventi.find((e) => e.serie === 'long-story-short');
 
-  // In evidenza: la breve descrizione, fino a due frasi
+  // In evidenza: l'evento scritto nell'HTML (data-evento è il suo codice).
+  // L'indirizzo arriva dal database; finché l'evento non c'è resta quello
+  // dell'HTML.
+  const inEvidenza = evidenza && eventi.find((e) => e.codice === evidenza.dataset.evento);
+  if (inEvidenza && paginaEvento(inEvidenza)) evidenza.href = paginaEvento(inEvidenza);
+
+  // Long Story Short, subito sotto: la breve descrizione, fino a due frasi
   if (lss) {
     const frasi = (lss.descrizione || lss.riassunto || '').match(/[^.!?]+[.!?]+/g) || [lss.descrizione || ''];
-    document.getElementById('evidenza-descrizione').innerHTML = conGrassetti(frasi.slice(0, 2).join('').trim(), GRASSETTI_LSS);
+    document.getElementById('lss-descrizione').innerHTML = conGrassetti(frasi.slice(0, 2).join('').trim(), GRASSETTI_LSS);
     const pagina = paginaEvento(lss);
-    if (pagina) document.getElementById('evidenza').href = pagina;
+    if (pagina) document.getElementById('lss').href = pagina;
   }
-  preparaScorre(document.querySelector('.rullino'));
+  preparaScorre(document.querySelector('#blocco-lss .rullino'));
 
   const scheda = (e) => ({
     titolo: e.titolo,
@@ -82,12 +92,13 @@ async function paginaEventi() {
   });
   riempiSchede('blocco-short-talks', eventi.filter((e) => e.serie === 'short-talks').map(scheda));
   preparaEdizioni(document.getElementById('edizioni-short-talks'), 3);
-  riempiSchede('blocco-altri', eventi.filter((e) => e !== lss && e.serie !== 'short-talks').map(scheda));
+  riempiSchede('blocco-altri', eventi.filter((e) => e !== lss && e !== inEvidenza && e.serie !== 'short-talks').map(scheda));
 
   // Ogni evento si apre qui, sopra la pagina: dalla scheda sale il logo
-  // dell'evento (o, senza logo, cresce la foto), da In evidenza il lettering
-  // di Long Story Short
-  preparaEvento(document.getElementById('evidenza'), '.marchio-serie');
+  // dell'evento (o, senza logo, cresce la foto), da In evidenza e da Long
+  // Story Short il loro lettering
+  preparaEvento(evidenza, '.marchio-serie');
+  preparaEvento(document.getElementById('lss'), '.marchio-serie');
   document.querySelectorAll('a.scheda-g').forEach((link) => preparaEvento(link, '.logo-evento', '.cornice'));
 }
 
@@ -158,6 +169,8 @@ function mostraEvento(nuova, ritorno, scriviIndirizzo) {
   const rullino = nuova.querySelector('.rullino');
   if (rullino) preparaScorre(rullino);
   preparaGiostre(nuova);
+  preparaConti(nuova);
+  preparaVideo(nuova);
   nuova.querySelector('.sala-evento__chiudi').addEventListener('click', () => history.back());
   if (scriviIndirizzo) history.pushState({ evento: nuova.href }, '', nuova.href);
   nuova.querySelector('.sala-evento__chiudi').focus({ preventScroll: true });

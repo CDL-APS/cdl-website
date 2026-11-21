@@ -22,6 +22,9 @@
 .evento--short-talks-al-not-2025 { --evento: #e47800; }
 .evento--short-talks-3-x-laiff { --evento: #f00084; }
 .evento--short-talks-al-not-2026 { --evento: #0c7830; }
+/* La serata per i soci del 27.11.2026: il giallo acido della grafica di
+   Studio JAM, sul nero pieno del post Instagram */
+.evento--evento-interzona { --evento: #e8de2c; --evento-testo: var(--evento); --filo: rgba(232, 222, 44, 0.32); --iz-nero: #000; }
 
 /* Il logo di ogni evento: il PNG senza fondo in assets/img/eventi/loghi/,
    col nome della pagina, usato come maschera; --ar è larghezza / altezza.
@@ -35,6 +38,8 @@
 .marchio--short-talks-al-not-2025 { --marchio: url('/assets/img/eventi/loghi/short-talks-al-not-2025.png'); --ar: 1.9827; }
 .marchio--short-talks-al-not-2026 { --marchio: url('/assets/img/eventi/loghi/short-talks-al-not-2026.png'); --ar: 2.1769; }
 .marchio--blue-hour { --marchio: url('/assets/img/eventi/loghi/blue-hour.png'); --ar: 0.9881; }
+/* la scritta glitch "A/V LIVE SET", presa dal video del post */
+.marchio--evento-interzona { --marchio: url('/assets/img/eventi/loghi/evento-interzona.png'); --ar: 1.7749; }
 
 .pagina-evento .nav__voce[aria-current]::before { background: var(--evento); }
 .pagina-evento main > section { min-height: 0; }
@@ -89,6 +94,17 @@
 @media (max-width: 1023px) {
   .evento--longstoryshort .hero--marchio { background-size: 100% auto; background-position: center top; }
 }
+/* Long Story Short parla con il carattere della sua grafica, Inter (quello
+   del lettering): testi e titoli, questi in tondo e senza maiuscolo, come
+   il lettering. Barra e piede restano quelli del sito; nella sala le
+   regole valgono sul suo riquadro. */
+.evento--longstoryshort main, .sala-evento.evento--longstoryshort {
+  --f-testo: 'Inter', sans-serif; --f-titoli: 'Inter', sans-serif; --titoli-spazio: -0.035em;
+  font-family: var(--f-testo);
+}
+.evento--longstoryshort :is(h1, h2, h3, .riga-g__titolo, .vincitore--primo .vincitore__premi li:first-child) { font-weight: 600; text-transform: none; }
+.evento--longstoryshort :is(.presentazione, .blocco-testo) { font-weight: 500; letter-spacing: -0.015em; }
+.evento--longstoryshort :is(.presentazione, .blocco-testo) strong { font-weight: 700; }
 /* Long Story Short: nessun filo fra i blocchi, solo lo spazio */
 .evento--longstoryshort .blocco-pagina--diviso { margin-top: clamp(36px, 4.5vw, 64px); }
 .evento--longstoryshort .blocco-pagina--diviso > .wrap { padding-top: 0; border-top: 0; }
@@ -310,3 +326,120 @@
   font-size: 14px; font-weight: 700; line-height: 1.4; text-align: center;
 }
 
+
+/* --------------------------------------------------------------------------
+   La serata per i soci del 27 novembre 2026 (evento-interzona.html). Una
+   pagina a sé, come Long Story Short, e per ora una schermata sola, come il
+   manifesto di Studio JAM: nero, giallo acido e il bianco bruciato della
+   figura, che all'apertura emerge dal buio e resta (un video breve dal
+   reel del post, senza ripetizione), con le righe e il conto alla rovescia di una videocassetta. Tutto
+   in VT323, il carattere dei titoli di testa e di coda; barra e piede
+   restano quelli del sito. Le regole valgono sia nella pagina sia nella
+   sala di Eventi (che porta le classi del <body> sul suo riquadro e non ha
+   un <main>).
+   -------------------------------------------------------------------------- */
+body.evento--evento-interzona,
+.sala-evento.evento--evento-interzona {
+  --fondo: var(--iz-nero); --inchiostro: var(--chiaro); --tenue: rgba(247, 247, 247, 0.72);
+  --accento-hover: var(--evento); --accento-hover-testo: var(--iz-nero);
+  background: var(--fondo); color: var(--inchiostro);
+}
+html:has(> body.evento--evento-interzona) { background: var(--iz-nero); }
+.evento--evento-interzona main,
+.sala-evento.evento--evento-interzona {
+  --f-testo: 'VT323', ui-monospace, monospace; --f-titoli: var(--f-testo); --titoli-spazio: 0;
+  font-family: var(--f-testo); font-weight: 400; font-size: 22px; line-height: 1.2;
+  /* VT323 ha un peso solo: niente grassetti finti */
+  font-synthesis: none;
+}
+/* la schermata finisce dove comincia il piede */
+.pagina-evento.evento--evento-interzona main, .sala-evento.evento--evento-interzona { padding-bottom: 0; }
+.evento--evento-interzona :is(h1, h2, strong, .btn) { font-weight: 400; }
+.sala-evento.evento--evento-interzona .sala-evento__chiudi { color: var(--iz-nero); }
+.sala-evento.evento--evento-interzona .sala-evento__chiudi:focus-visible { outline-color: var(--chiaro); }
+
+/* La schermata: la figura a destra, dal fondo; sopra le righe di
+   scansione. In alto a destra il conto alla rovescia, poi la scritta
+   glitch, sotto di lei cosa e per chi con l'invito ad associarsi, in fondo
+   luogo e ora come nel manifesto: dove passano sopra la figura bianca
+   diventano neri (difference). */
+.evento--evento-interzona .iz-testata {
+  display: flex; min-height: 100svh; padding-bottom: clamp(24px, 3.4vw, 44px);
+  isolation: isolate; background: var(--iz-nero);
+}
+.iz-testata__figura {
+  position: absolute; z-index: -1; right: 0; bottom: 0; width: auto; height: 100%; max-width: none;
+  aspect-ratio: 720 / 774; object-fit: cover;
+  -webkit-mask: linear-gradient(to right, transparent, #000 32%); mask: linear-gradient(to right, transparent, #000 32%);
+  animation: iz-affiora 1.4s ease-out both;
+}
+.iz-testata__righe {
+  position: absolute; z-index: -1; inset: 0; pointer-events: none;
+  background: repeating-linear-gradient(to bottom, rgba(0, 0, 0, 0.26) 0 1px, transparent 1px 3px);
+}
+.iz-testata__quadro { display: flex; flex-direction: column; gap: clamp(14px, 2.2svh, 26px); }
+.iz-osd { display: flex; justify-content: flex-end; font-size: clamp(24px, 2.2vw, 32px); line-height: 1; color: var(--evento); text-shadow: 0 0 10px rgba(232, 222, 44, 0.4); }
+.iz-conto { display: inline-flex; align-items: center; gap: 0.35em; font-variant-numeric: tabular-nums; }
+.iz-conto__punto { width: 0.45em; height: 0.45em; border-radius: 50%; background: var(--rosso); box-shadow: 0 0 8px var(--rosso); animation: iz-rec 1.2s steps(1, end) infinite; }
+.iz-conto[data-stato="finito"] .iz-conto__punto, .iz-conto:not([data-stato]) .iz-conto__punto { display: none; }
+.iz-testata .evento-g__marchio { margin-top: auto; }
+.evento--evento-interzona .iz-testata .evento-g__marchio .marchio-serie--evento {
+  width: min(100%, 44svh * 1.7749);
+  filter: drop-shadow(0 0 14px rgba(232, 222, 44, 0.35));
+  animation: iz-glitch 0.75s steps(1, end) 0.2s both;
+}
+/* nella sala la scritta arriva in volo dalla scheda: niente ingresso */
+.sala-evento .iz-testata .evento-g__marchio .marchio-serie--evento { animation: none; }
+
+/* Cosa e per chi, con l'invito: subito sotto la scritta, sul nero */
+.iz-invito { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 28px; margin-bottom: auto; }
+.iz-cosa { font-size: clamp(26px, 2.6vw, 38px); line-height: 1; text-transform: uppercase; color: var(--evento); text-shadow: 0 0 12px rgba(232, 222, 44, 0.3); }
+.iz-cosa span { color: var(--chiaro); text-shadow: none; }
+.evento--evento-interzona .iz-associati { min-height: 56px; padding: 0 28px; font-size: 28px; text-transform: uppercase; }
+.iz-associati .freccia { width: 0.75em; height: 0.75em; }
+.iz-associati:hover .freccia { transform: translateX(4px); }
+
+.iz-testata__piede {
+  display: flex; justify-content: space-between; align-items: flex-end; gap: 16px 32px; flex-wrap: wrap;
+  color: var(--chiaro); mix-blend-mode: difference; text-transform: uppercase;
+}
+.iz-luogo { font-size: clamp(22px, 2vw, 30px); line-height: 1.05; letter-spacing: 0.03em; }
+.iz-quando { font-size: clamp(40px, 5vw, 76px); line-height: 0.86; text-align: right; }
+@keyframes iz-affiora { from { opacity: 0; } }
+@keyframes iz-rec { 50% { opacity: 0; } }
+@keyframes iz-glitch {
+  0% { opacity: 0; }
+  12% { opacity: 1; clip-path: inset(38% 0 44% 0); translate: -3% 0; }
+  24% { clip-path: inset(0 0 66% 0); translate: 2.4% 0; }
+  36% { clip-path: inset(58% 0 0 0); translate: -1.2% 0; }
+  48% { clip-path: inset(0); translate: 0.8% 0; }
+  60% { clip-path: inset(22% 0 30% 0); translate: 0; }
+  72%, 100% { clip-path: inset(0); translate: 0; opacity: 1; }
+}
+
+/* Tablet in verticale e telefono: la figura entra nel flusso, sotto la
+   scritta (ne prende appena il fondo) e sopra l'invito, sfumando in basso;
+   testi e tasto restano sul nero */
+@media (max-width: 1023px) {
+  .evento--evento-interzona .iz-testata { min-height: min(100svh, 1000px); }
+  .iz-testata .evento-g__marchio { margin-top: 8px; }
+  .evento--evento-interzona .iz-testata .evento-g__marchio .marchio-serie--evento { width: min(100%, 30svh * 1.7749); }
+  .iz-testata__figura {
+    position: relative; inset: auto; align-self: flex-end;
+    width: min(72%, 400px); height: auto;
+    margin: calc(-1 * clamp(36px, 9vw, 90px)) calc(-1 * var(--gut)) -28px auto;
+    -webkit-mask-image: linear-gradient(to bottom, transparent, #000 22%, #000 58%, transparent), linear-gradient(to right, transparent, #000 32%);
+    -webkit-mask-composite: source-in;
+    mask-image: linear-gradient(to bottom, transparent, #000 22%, #000 58%, transparent), linear-gradient(to right, transparent, #000 32%);
+    mask-composite: intersect;
+  }
+  .iz-invito { margin-bottom: 0; }
+  .iz-testata__piede { margin-top: auto; mix-blend-mode: normal; }
+}
+@media (max-width: 639px) {
+  .evento--evento-interzona .iz-testata { min-height: 100svh; }
+  .evento--evento-interzona .iz-testata .evento-g__marchio .marchio-serie--evento { width: 100%; }
+  .iz-testata__figura { width: 58%; margin-top: -40px; }
+  .iz-quando { text-align: left; }
+  .evento--evento-interzona .iz-associati { width: 100%; }
+}

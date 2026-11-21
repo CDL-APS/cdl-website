@@ -12,9 +12,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800;900&display=swap">
-    <link rel="stylesheet" href="assets/css/base.css?v=2026-11-18b">
-    <link rel="stylesheet" href="assets/css/components.css?v=2026-11-18b">
-    <link rel="stylesheet" href="assets/css/pages/home.css?v=2026-11-18b">
+    <link rel="stylesheet" href="assets/css/base.css?v=2026-11-21d">
+    <link rel="stylesheet" href="assets/css/components.css?v=2026-11-21d">
+    <link rel="stylesheet" href="assets/css/pages/home.css?v=2026-11-21d">
 </head>
 <body>
 
@@ -30,20 +30,39 @@
     </header>
 
     <main id="top">
-        <!-- APERTURA: la sala vista dall'alto, al buio, con la torcia che segue
-             il puntatore; al piede il nastro delle ultime notizie -->
-        <section class="hero hero--sala">
-            <img class="hero__foto" src="assets/img/sfondi/wallpaper-cdl.jpg" alt="" width="2400" height="1601" fetchpriority="high">
-            <div class="hero__buio" aria-hidden="true"></div>
-            <div class="wrap">
-                <h1 class="marchio">
-                    <img src="assets/img/brand/icona-cdl.png" alt="" width="1080" height="1080" fetchpriority="high"><span class="sr-only">CDL APS</span>
-                </h1>
-                <p class="lead">CDL &egrave; un'associazione di promozione sociale che si occupa di sostenere, diffondere ed esplorare il cinema giovane e indipendente, attraverso la realizzazione di progetti cinematografici e l'organizzazione di eventi.</p>
-                <!-- Solo su telefono: sul computer l'invito ai soci è già nella barra -->
-                <div class="btn-riga">
-                    <a class="btn solo-telefono" href="vantaggi-tesseramento.html">Diventa socio</a>
+        <!-- VETRINA: il primo blocco scorre in orizzontale, una slide per
+             schermo. Le slide e il loro ordine si scelgono nella Dashboard
+             della gestione (tabella vetrina): home.js aggiunge i contenuti in
+             evidenza e mette la sala (l'apertura, scritta qui) al suo posto.
+             Scorrono da sole, piano; si fermano al passaggio, col fuoco, al
+             tocco o col tasto pausa. Al piede, sotto tutte, il nastro delle
+             ultime notizie. Senza altre slide resta la sola sala, come prima. -->
+        <section class="vetrina" id="vetrina" aria-roledescription="carosello" aria-label="In evidenza">
+            <h1 class="sr-only">CDL APS</h1>
+            <div class="vetrina__pista">
+                <!-- APERTURA: la sala vista dall'alto, al buio, con la torcia che
+                     segue il puntatore -->
+                <div class="vetrina__slide hero hero--sala" data-apertura role="group" aria-roledescription="slide" aria-label="CDL APS">
+                    <img class="hero__foto" src="assets/img/sfondi/wallpaper-cdl.jpg" alt="" width="2400" height="1601" fetchpriority="high">
+                    <div class="hero__buio" aria-hidden="true"></div>
+                    <div class="wrap">
+                        <p class="marchio">
+                            <img src="assets/img/brand/icona-cdl.png" alt="CDL APS" width="1080" height="1080" fetchpriority="high">
+                        </p>
+                        <p class="lead">CDL &egrave; un'associazione di promozione sociale che si occupa di sostenere, diffondere ed esplorare il cinema giovane e indipendente, attraverso la realizzazione di progetti cinematografici e l'organizzazione di eventi.</p>
+                        <!-- Solo su telefono: sul computer l'invito ai soci è già nella barra -->
+                        <div class="btn-riga">
+                            <a class="btn solo-telefono" href="vantaggi-tesseramento.html">Diventa socio</a>
+                        </div>
+                    </div>
                 </div>
+            </div>
+            <!-- I comandi: compaiono quando c'è più di una slide. Un segmento
+                 per slide, col suo nome e una linea che si riempie finché la
+                 slide resta in vista (home.js), e il tasto pausa -->
+            <div class="vetrina__comandi" hidden>
+                <div class="vetrina__segni" role="group" aria-label="Scegli la slide"></div>
+                <button class="vetrina__pausa" type="button" aria-pressed="false" aria-label="Ferma lo scorrimento delle slide"><svg class="icona-ferma" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="5" width="4.5" height="14" rx="1"/><rect x="13.5" y="5" width="4.5" height="14" rx="1"/></svg><svg class="icona-riprendi" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.14v13.72L19 12 8 5.14Z"/></svg></button>
             </div>
             <!-- data-quota: la voce del nastro sulla quota ridotta (vuota, la voce non c'è) -->
             <div class="nastro scorre" id="nastro" role="group" aria-label="Ultime notizie" data-quota="Quota associativa ridotta a 5 € fino al 31 dicembre">
@@ -130,8 +149,8 @@
         </div>
     </footer>
 
-    <script src="assets/js/dati.js?v=2026-11-18b"></script>
-    <script src="assets/js/comune.js?v=2026-11-18b"></script>
-    <script src="assets/js/home.js?v=2026-11-18b"></script>
+    <script src="assets/js/dati.js?v=2026-11-21d"></script>
+    <script src="assets/js/comune.js?v=2026-11-21d"></script>
+    <script src="assets/js/home.js?v=2026-11-21d"></script>
 </body>
 </html>

@@ -1,5 +1,26 @@
 [
   {
+    "id": 9,
+    "codice": "evento-interzona",
+    "titolo": "Evento riservato ai soci",
+    "data_inizio": "2026-11-27",
+    "data_fine": null,
+    "luogo": "Laboratorio Aperto, Rimini",
+    "riassunto": "27 novembre 2026, dalle 22 • Audiovisual live set al Laboratorio Aperto, Ala Nuova del Museo della Città, 3° piano",
+    "descrizione": "Audiovisual live set al Laboratorio Aperto (Via dei Cavalieri 22, 3° piano). Evento riservato ai soci CDL.",
+    "copertina": "assets/img/eventi/evento-interzona-copertina.jpg",
+    "miniatura": "assets/img/eventi/evento-interzona-miniatura.jpg",
+    "pagina": "evento-interzona.html",
+    "serie": null,
+    "pubblicato": true,
+    "logo": "assets/img/eventi/loghi/evento-interzona.png",
+    "colore": "#e8de2c",
+    "instagram": null,
+    "sfondo": null,
+    "presentazione": null,
+    "blocchi": []
+  },
+  {
     "id": 8,
     "codice": "short-talks-al-not-2026",
     "titolo": "Short Talks al Nòt 2026",

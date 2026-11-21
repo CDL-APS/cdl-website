@@ -10,8 +10,10 @@ fermarlo). Dentro Claude Code: `! python3 -m http.server 5500`.
 
 ## Cortoteca in pausa (dal 17 novembre 2026)
 
-Galleria pubblica, area socio, proposte, licenze e le schede Dashboard,
-Proposte e Soci della gestione sono spente; database, Edge Function e
+Galleria pubblica, area socio, proposte, licenze e le schede Proposte e
+Soci della gestione sono spente (la Dashboard dal 21 novembre 2026 è
+l'indice del sito; il suo cruscotto della Cortoteca torna con
+l'interruttore); database, Edge Function e
 sincronizzazione del foglio restano accesi. `opera.html` (la pagina del
 corto) resta pubblica: la usano Produzioni, il rullino e le pagine evento.
 Interruttori: `CORTOTECA_ATTIVA` in `dati.js` (lo leggono anche
@@ -26,6 +28,14 @@ branch della ripresa. Le sezioni sulla Cortoteca più sotto descrivono il
 sistema com'è, spento.
 
 ## Da fare più avanti (non prioritario)
+
+- [ ] **Dopo il 27 novembre 2026** (la serata per i soci,
+  `evento-interzona.html`): fino alla serata la pagina riporta solo le
+  informazioni del post Instagram, niente di più (il perché è nel
+  documento della serata, sul Drive). Dopo: aggiornare la pagina (foto
+  della serata, eventuale nome), decidere cosa mettere in "In evidenza" in
+  Eventi (si riscrive il blocco in `eventi.html`) e togliere o cambiare la
+  slide della vetrina dalla Dashboard.
 
 - [ ] Forse: impaginazione più curata della mail che arriva dal modulo di
   Contatti (la notifica di Netlify Forms). Funziona, l'utente l'ha provata
@@ -84,13 +94,19 @@ sistema com'è, spento.
   `cortoteca.html`), `modello-evento.js` (la pagina di un evento composta
   dal database: `evento.html` e la sala di `eventi.html`) e `riservato.js` (parti condivise da `gestione.html` e
   `area-socio.html`, dopo `dati.js`). La scheda Rullino di gestione sta in
-  `gestione-rullino.js` e la pagina dell'evento (logo, colore, blocchi,
-  anteprima) in `gestione-eventi.js`, caricati dopo `gestione.js` (ne usano
-  client e stato). Non ci sono moduli ES né bundler: le
+  `gestione-rullino.js`, la pagina dell'evento (logo, colore, blocchi,
+  anteprima) in `gestione-eventi.js` e la Dashboard (indice del sito e
+  vetrina della home) in `gestione-indice.js`, caricati dopo `gestione.js`
+  (ne usano client e stato; `gestione-indice.js` anche `caricaFonti` del
+  rullino). Non ci sono moduli ES né bundler: le
   funzioni sono globali. Le librerie di terzi stanno copiate in
   `assets/js/vendor/` con la versione nel nome.
 - **Identità visiva** (dettagli in `storico/2026-11-11-design-handoff.md`):
-  solo Montserrat (500–900, da Google Fonts con un `<link>`); titoli 900
+  solo Montserrat (500–900, da Google Fonts con un `<link>`), tranne due
+  eventi che parlano col carattere della loro grafica, nel `<main>` della
+  pagina, nella sala e nel loro blocco in Eventi (barra e piede restano in
+  Montserrat): Long Story Short in Inter (quello del lettering) e la serata
+  del 27 novembre 2026 in VT323; titoli 900
   maiuscoli e stretti, spesso a tutta larghezza (`.fit`); carta `#f7f7f7`.
   Ogni sezione ha il suo fondo pieno: Eventi blu con le scritte azzurre,
   Produzioni lilla e nero, Cortoteca nera con le scritte arancio (`--cortoteca` in `base.css`), Contatti e
@@ -115,7 +131,8 @@ sistema com'è, spento.
   fuori (Instagram e YouTube nel piede, i tag Instagram nelle pagine evento).
 - **Titolo della scheda del browser**: "Pagina – CDL APS"; la home resta
   "CDL APS – Cinema giovane e indipendente a Rimini".
-- **Immagini**: sempre sotto `assets/img/<categoria>/`, mai nella radice.
+- **Immagini**: sempre sotto `assets/img/<categoria>/`, mai nella radice;
+  i video (brevi, in loop, senza audio) sotto `assets/video/<categoria>/`.
   Nomi in minuscolo con trattini.
 - **Lingua**: interfaccia, commenti e nomi di file in italiano.
 
@@ -132,7 +149,12 @@ sistema com'è, spento.
   `select` ad `anon` (se il sito la legge), `select, insert, update, delete`
   ad `authenticated` e `service_role`, come nello schema iniziale e in
   `20261021120000_permessi_service_role.sql`. Senza, la Data API risponde
-  "permission denied".
+  "permission denied". Attenzione: il 21 novembre 2026 la tabella nuova
+  `vetrina` era comunque leggibile da `anon` per intero (permessi
+  predefiniti dello schema): una tabella letta dal sito toglie tutto ad
+  `anon` (`revoke all`) e gli concede solo le colonne che servono, come in
+  `20261121120000_vetrina_home.sql`. Va sempre verificato con la chiave
+  pubblica (`curl …/rest/v1/<tabella>?select=<colonna>`).
 - **Il progetto Supabase è sul piano gratuito** e va in pausa dopo 7 giorni
   senza attività. Lo tiene sveglio `.github/workflows/sveglia-supabase.yml`,
   una lettura il lunedì e il giovedì con la chiave pubblica. Se fallisce,
@@ -278,8 +300,18 @@ sistema com'è, spento.
     (attore e personaggio, da `interpreti`) e i Crediti della troupe, un nome
     per riga (i valori separati da virgole diventano un elenco). Un titolo
     grafico scuro diventa bianco, uno con `colore` prende `--titolo`.
-- **Dashboard di gestione** (in pausa con la Cortoteca: la gestione si
-  apre su Opere): la prima scheda di `gestione.html`. "Da
+- **Dashboard di gestione**: la prima scheda di `gestione.html`, dove la
+  gestione si apre. Dal 21 novembre 2026 è l'indice del sito
+  (`gestione-indice.js`): in cima la **vetrina della home** (le slide, il
+  loro ordine, titolo, riga di testo, invito, colore e immagine di
+  ciascuna, lettering compreso, accese o spente), sotto tutte le pagine del
+  sito ad albero, con "Apri" e "Metti in vetrina": le sezioni (le pagine
+  fisse di `PAGINE_SITO` in `dati.js`, dove `dentro` dice in che pagina sta
+  una pagina: la domanda di ammissione in Sostieni, la cornice narrativa
+  nella pagina di LSS), dentro Eventi ogni evento, dentro Produzioni i corti
+  di CDL, poi la Cortoteca (in pausa) con gli altri corti. Si appoggia a `caricaFonti()` di `gestione-rullino.js`
+  (eventi e opere, anche non pubblicati). Con la Cortoteca accesa sotto
+  torna il cruscotto: "Da
   sistemare" compare solo lì e contiene solo ciò che chiede un'azione: le
   informazioni vanno altrove (ritiri e revoche fra le ultime attività, i
   soci senza email come nota nella scheda Soci); i numeri e le ultime attività arrivano da
@@ -344,10 +376,32 @@ sistema com'è, spento.
   la foto del database. La scheda porta alla pagina solo se il campo
   `pagina` del database contiene il nome del file: si compila quando la
   pagina è già online.
-- La pagina Eventi divide gli eventi per `serie` (colonna di `eventi`, scelta
-  dal modulo di gestione): l'ultima edizione con `long-story-short` va in
-  evidenza col lettering, `short-talks` ha un blocco suo, gli eventi senza
-  serie finiscono in "Altri eventi".
+- La pagina Eventi apre con "In evidenza": un evento scelto nell'HTML, nella
+  sua grafica (dal 21 novembre 2026 la serata del 27 novembre,
+  `#evidenza` con `data-evento="evento-interzona"`: `eventi.js` ne prende
+  l'indirizzo dal database e lo toglie da "Altri eventi"; per cambiarlo si
+  riscrive il blocco). Poi divide gli eventi per `serie` (colonna di
+  `eventi`, scelta dal modulo di gestione): l'ultima edizione con
+  `long-story-short` ha un blocco suo col lettering e le foto che scorrono
+  (`#blocco-lss`), `short-talks` un altro, gli eventi senza serie finiscono
+  in "Altri eventi".
+- **La serata del 27 novembre 2026** (`evento-interzona.html`, nome di
+  comodo: in pagina, nelle schede e nella scheda del browser si chiama
+  "Evento riservato ai soci"; "A/V LIVE SET" è solo la scritta grafica).
+  Materiale di Studio JAM sul Drive condiviso (post e manifesti nella
+  cartella della serata, in Eventi). Per ora è una schermata sola, come il
+  manifesto, con le sole informazioni del post, niente di più. La scritta glitch è un PNG a maschera preso
+  dal video del post (`assets/img/eventi/loghi/evento-interzona.png`); la
+  figura che all'apertura emerge dal buio e resta è un video di due
+  secondi ricavato dal reel del post, senza ripetizione
+  (`assets/video/eventi/evento-interzona-figura.mp4`, poster
+  `figura-video.jpg`, il suo ultimo fotogramma; `figura.jpg` serve al blocco
+  in evidenza). Il fondo è il nero pieno del post (`#000`, `--iz-nero`), e
+  video e immagini hanno il fondo portato allo stesso nero. Il conto
+  alla rovescia (`preparaConti` in `comune.js`, su `[data-conto]`) e i
+  video in loop fermi con "riduci movimento" (`preparaVideo`) partono
+  nella pagina, nella sala e nel blocco in evidenza. Regole in
+  `evento.css` sotto `.evento--evento-interzona`.
 - La pagina Produzioni mette in "Prossimamente" il lavoro più recente, poi il
   blocco delle produzioni originali (`produzione_cdl`) e quello delle
   collaborazioni (`collaborazione_cdl`, nascosto finché è vuoto). Le due
@@ -364,8 +418,9 @@ sistema com'è, spento.
 - Eventi, Produzioni, Cortoteca e 404 aprono con il nome della
   pagina a tutta larghezza (`.parola` con `.fit`, misurato da `adatta()`) e
   una presentazione (`.presentazione`) chiusa da un filo.
-- La home ha quattro parti: l'apertura sulla sala vista dall'alto, al buio,
-  con l'icona CDL (`assets/img/brand/icona-cdl.png`), la torcia che segue il puntatore e il nastro delle ultime notizie;
+- La home ha quattro parti: la **vetrina** (sotto), con al piede il nastro
+  delle ultime notizie ("Prossimo evento" se la data è futura, "Ultimo
+  evento" altrimenti);
   l'indice (Eventi e Produzioni, più la Cortoteca quando non è in pausa, tutti dello stesso corpo, centrati
   e misurati sul disegno delle lettere con `data-preciso` e `data-uguali`:
   il nome più lungo tocca i margini; nel cambio di pagina il nome
@@ -374,6 +429,43 @@ sistema com'è, spento.
   il rullino di fotografie, senza titolo; Sostieni in arancio. Nastro,
   elenchi e rullino li riempie `home.js`; il testo della quota ridotta del
   nastro sta in `data-quota`, nell'HTML.
+- **La vetrina della home**: il primo blocco scorre in orizzontale, una
+  slide per schermo (`scroll-snap`): col dito, coi segmenti in basso (uno
+  per slide, solo la linea, senza scritte), con le frecce della tastiera e
+  da sola. Il tempo di ogni slide è la linea del suo segmento che si
+  riempie in 8 secondi (`GIRO_VETRINA` in `home.js`, animazione
+  `vetrina-avanza`): alla fine dell'animazione si passa alla dopo, e la
+  linea si ferma col puntatore sopra, col fuoco da tastiera dentro e col
+  tasto pausa; con "riduci movimento" non scorre da sola. I comandi
+  prendono il colore delle scritte della slide in vista. Le slide fuori
+  vista sono `inert`; le foto non si ingrandiscono al passaggio (sulla
+  grana sfarfallano). Una slide è
+  la sala vista dall'alto, al buio, con l'icona CDL
+  (`assets/img/brand/icona-cdl.png`) e la torcia che segue il puntatore
+  (si ferma quando la sala non si vede): è scritta nell'HTML ed è sempre
+  presente. Le altre sono contenuti in evidenza, scelti nella Dashboard
+  della gestione: tabella `public.vetrina`
+  (`20261121120000_vetrina_home.sql`, copia di riserva
+  `data/vetrina.json`), una riga per slide, `tipo` `apertura` (una sola,
+  non si elimina) o `contenuto`, che porta a un evento, a un corto o a una
+  pagina del sito; titolo, testo, invito, immagine e colore vuoti si
+  ricavano da lì (`ricavaSlide` in `home.js`). Il **lettering** (un PNG
+  senza fondo, a maschera nel colore della slide) prende il posto del
+  titolo scritto: quello caricato per la slide (colonna `lettering`,
+  `20261121130000_vetrina_lettering.sql`, cartella `vetrina/` dello spazio
+  immagini, caricato com'è) o, se la slide non ha un titolo suo, quello che
+  il sito ha già (`letteringEvento` e `letteringOpera` in `dati.js`: il
+  `logo` dell'evento, il lettering di LSS, il PNG in
+  `assets/img/eventi/loghi/` col nome della pagina, il titolo grafico del
+  corto); se il file non c'è resta il titolo scritto. Due colori per slide,
+  scelti in Dashboard: `colore` per il titolo o il lettering, `colore_testo`
+  (`20261121140000_vetrina_colore_testo.sql`) per la riga di testo e il
+  tasto; con un testo scuro su una foto il velo diventa chiaro, e la
+  scritta del tasto va in contrasto da sola (`coloreChiaro` in `home.js`). Il pubblico legge solo le slide
+  attive, e una slide verso un evento o un corto non pubblicato non si
+  vede. Finché i dati non arrivano (al massimo 1,2 secondi) la vetrina
+  resta nascosta, così parte già dalla slide giusta; senza contenuti resta
+  la sola sala, senza comandi. L'unico `h1` è in sola lettura ("CDL APS").
 - **Il rullino della home**: fermandosi sopra una foto per 1,5 secondi
   (`ATTESA_LENTE` in `home.js`, solo con un puntatore vero) la foto si
   ingrandisce di una volta e mezza e mostra la didascalia (evento e data,
@@ -484,11 +576,18 @@ sistema com'è, spento.
 python3 -m json.tool data/opere.json > /dev/null  # le copie di riserva sono valide
 python3 -m json.tool data/eventi.json > /dev/null
 python3 -m json.tool data/rullino.json > /dev/null
+python3 -m json.tool data/vetrina.json > /dev/null
 python3 -m http.server 5500                        # poi http://localhost:5500
 ```
 
 Aprire almeno home, produzioni, eventi e una pagina di un corto: sono le
-pagine che dipendono dal database, e quindi le prime a rompersi. Provare
+pagine che dipendono dal database, e quindi le prime a rompersi. Con
+`?riserva` nell'indirizzo (`dati.js`, `SOLO_RISERVA`) quella pagina legge
+solo le copie in `data/` e una striscia rossa in basso lo dice: serve a
+guardare un evento o una slide nuovi prima di scriverli nel database. Vale
+solo per la pagina che ce l'ha nell'indirizzo. La gestione
+si prova in locale con `storico/strumenti/gestione-finta.js`, che simula
+anche le scritture sulla vetrina. Provare
 anche la sala di Eventi (clic su una scheda, poi Esc e indietro), la
 domanda di ammissione in Sostieni e le pagine a 375 px. Il server Python non manda
 gli header di `netlify.toml`: la CSP di gestione e proposta si vede solo

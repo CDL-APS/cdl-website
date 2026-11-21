@@ -28,14 +28,11 @@ const PROVENIENZE = {
   altre: ['Altre foto', 'Foto caricate apposta per il rullino: backstage, associazione, serate senza pagina. Per ognuna scegli dove porta. Un clic su una foto già caricata la rimette nel rullino.']
 };
 
-// Le pagine del sito a cui può portare un'altra foto
-const PAGINE_SITO = [
-  ['eventi.html', 'Eventi'],
-  ['produzioni.html', 'Produzioni'],
-  ...(CORTOTECA_ATTIVA ? [['cortoteca.html', 'Cortoteca']] : []),
-  ['vantaggi-tesseramento.html', 'Vantaggi per i soci'],
-  ['contatti.html', 'Contatti']
-];
+// Le pagine del sito a cui può portare un'altra foto: quelle di PAGINE_SITO
+// (dati.js) tranne la home e le ancore, che la colonna pagina non accetta
+const PAGINE_RULLINO = PAGINE_SITO
+  .filter((p) => p.pagina !== 'index.html' && !p.pagina.includes('#'))
+  .map((p) => [p.pagina, p.nome]);
 
 const CARTELLA_RULLINO = 'rullino';
 
@@ -83,17 +80,19 @@ async function caricaRighe() {
   rullino.righe = data;
 }
 
+/* Tutti gli eventi e tutte le opere, anche non pubblicati, letti una volta
+   per sessione: li usa anche la Dashboard (gestione-indice.js) */
 async function caricaFonti() {
   if (!rullino.eventi) {
     const { data, error } = await client.from('eventi')
-      .select('id, codice, titolo, data_inizio, pagina, presentazione, blocchi, copertina, miniatura, pubblicato')
+      .select('id, codice, titolo, data_inizio, luogo, pagina, serie, presentazione, blocchi, copertina, miniatura, logo, colore, pubblicato')
       .order('data_inizio', { ascending: false });
     if (error) throw error;
     rullino.eventi = data;
   }
   if (!rullino.opere) {
     const { data, error } = await client.from('opere')
-      .select('id, titolo, anno, regista, fotogramma, pubblicata')
+      .select('id, codice, titolo, anno, regista, fotogramma, titolo_png, colore, produzione_cdl, collaborazione_cdl, pubblicata')
       .order('anno', { ascending: false }).order('id', { ascending: false });
     if (error) throw error;
     rullino.opere = data;
@@ -130,7 +129,7 @@ function collegamentoInParole(riga) {
     const opera = rullino.opere.find((o) => o.id === riga.opera_id);
     return 'porta a ' + (opera ? opera.titolo : 'un corto');
   }
-  const pagina = PAGINE_SITO.find(([file]) => file === riga.pagina);
+  const pagina = PAGINE_RULLINO.find(([file]) => file === riga.pagina);
   return pagina ? 'porta a ' + pagina[1] : 'non porta da nessuna parte';
 }
 
@@ -158,7 +157,7 @@ function riempiCollegamenti(select, scelto = 'nessuna', daScegliere = false) {
   select.innerHTML =
     (daScegliere ? '<option value="" disabled selected>Scegli dove porta</option>' : '') +
     opzione('nessuna', 'Nessuna pagina (la foto non si clicca)') +
-    `<optgroup label="Pagine del sito">${PAGINE_SITO.map(([file, nome]) => opzione('pagina:' + file, nome)).join('')}</optgroup>` +
+    `<optgroup label="Pagine del sito">${PAGINE_RULLINO.map(([file, nome]) => opzione('pagina:' + file, nome)).join('')}</optgroup>` +
     `<optgroup label="Un evento">${rullino.eventi.map((e) => opzione('evento:' + e.id, e.titolo)).join('')}</optgroup>` +
     `<optgroup label="Un corto">${rullino.opere.map((o) => opzione('opera:' + o.id, o.titolo)).join('')}</optgroup>`;
 }
