@@ -73,6 +73,7 @@ function ricavaSlide(riga, eventi, opere) {
       immagine: evento.copertina || evento.miniatura,
       colore: evento.colore,
       lettering: letteringEvento(evento),
+      carattere: evento.carattere,
       href: paginaEvento(evento) || 'eventi.html',
       invito: evento.data_inizio >= oggi() ? 'Scopri l\'evento' : 'Vai all\'evento',
     };
@@ -123,9 +124,9 @@ function slideContenuto(riga, eventi, opere, prima) {
     invito: riga.invito || base.invito,
     immagine: riga.immagine || base.immagine,
     colore: riga.colore || base.colore,
-    // il colore della riga di testo e del tasto: quello scelto, o per una
-    // pagina senza foto quello delle scritte della sua sezione
-    coloreTesto: riga.colore_testo || null,
+    // il colore della riga di testo e del tasto: quello scelto, altrimenti
+    // lo stesso del titolo (scelto per la slide o dell'evento)
+    coloreTesto: riga.colore_testo || riga.colore || base.colore || null,
     // il lettering caricato per la slide; senza, quello dell'evento o del
     // corto, ma solo se la slide non ha un titolo suo
     lettering: indirizzoLettering(riga.lettering) || (riga.titolo ? null : base.lettering),
@@ -145,7 +146,18 @@ function slideContenuto(riga, eventi, opere, prima) {
     // testo scuro su una foto: il velo diventa chiaro
     if (d.immagine && !coloreChiaro(coloreTesto)) slide.classList.add('vetrina__slide--velo-chiaro');
   }
-  if (d.colore) slide.style.setProperty('--sul-colore', coloreChiaro(d.colore) ? '#1d1d1b' : '#f7f7f7');
+  // il carattere dell'evento (Inter per Long Story Short, VT323 per la
+  // serata del 27 novembre): titolo, testo e tasto, come nella sua pagina
+  const carattere = d.carattere && caricaCarattere(d.carattere);
+  if (carattere) {
+    slide.classList.add('vetrina__slide--carattere');
+    slide.style.setProperty('--carattere', carattere.famiglia);
+    slide.style.setProperty('--peso-titolo', carattere.pesoTitolo);
+    slide.style.setProperty('--maiuscolo', carattere.maiuscolo ? 'uppercase' : 'none');
+    slide.style.setProperty('--spazio-titolo', carattere.spazio);
+    slide.style.setProperty('--peso-testo', carattere.pesoTesto);
+    slide.style.setProperty('--scala-testo', carattere.scala);
+  }
   if (d.immagine) {
     slide.append(immagineVetrina(d.immagine, prima));
     const velo = document.createElement('div');

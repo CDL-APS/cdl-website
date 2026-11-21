@@ -29,9 +29,12 @@
 
 /* Una slide in evidenza: la foto a tutto campo, velata a sinistra e in
    basso come la sala; il titolo (o il marchio dell'evento) nel colore della
-   slide, una riga, l'invito. Tutta la slide porta alla pagina: il tasto
-   si allarga su di lei (::after), e al passaggio la foto si avvicina. Senza
-   foto, il fondo pieno della sezione. */
+   slide, una riga, l'invito. Porta alla pagina il tasto, solo lui (con
+   tutta la slide cliccabile il tasto cambiava a ogni passaggio del
+   puntatore, e sfarfallava passando sui comandi); la foto resta ferma.
+   Senza foto, il fondo pieno della sezione. Un evento col suo carattere
+   (colonna carattere) lo usa per titolo, testo e tasto: --carattere e le
+   sue misure le mette home.js. */
 .vetrina__slide--contenuto {
   display: flex; align-items: flex-end; isolation: isolate;
   padding-bottom: calc(46px + clamp(36px, 5svh, 64px));
@@ -53,17 +56,24 @@
 }
 .vetrina__testo { display: grid; justify-items: start; gap: clamp(16px, 2vw, 26px); }
 .vetrina__titolo { max-width: 15ch; font-size: clamp(44px, 7vw, 116px); line-height: 0.86; color: var(--colore-slide, var(--chiaro)); }
+.vetrina__slide--carattere { font-family: var(--carattere); font-synthesis: none; }
+.vetrina__slide--carattere .vetrina__titolo {
+  font-family: var(--carattere); font-weight: var(--peso-titolo); text-transform: var(--maiuscolo); letter-spacing: var(--spazio-titolo);
+}
+.vetrina__slide--carattere .vetrina__riga { font-size: calc(clamp(18px, 1.6vw, 24px) * var(--scala-testo)); font-weight: var(--peso-testo); line-height: 1.2; }
+.vetrina__slide--carattere .vetrina__invito { font-size: calc(16px * var(--scala-testo)); font-weight: var(--peso-testo); }
 /* col marchio il titolo prende tutta la riga: il marchio non ha un contenuto che lo misuri */
 .vetrina__titolo:has(.vetrina__marchio) { justify-self: stretch; max-width: none; }
 .vetrina__marchio { --ar: 2; width: min(100%, 760px, 42svh * var(--ar)); aspect-ratio: var(--ar); color: var(--colore-slide, var(--chiaro)); }
 .vetrina__riga { max-width: 46ch; font-size: clamp(18px, 1.6vw, 24px); font-weight: 600; line-height: 1.35; }
 .vetrina__invito .freccia { width: 15px; height: 15px; }
 .vetrina__invito:hover .freccia { transform: translateX(4px); }
-.vetrina__invito::after { content: ''; position: absolute; inset: 0; }
-/* il tasto: fondo del colore del testo, scritta in contrasto (--sul-testo);
-   al passaggio il colore del titolo (--sul-colore) */
-.vetrina__slide--contenuto .vetrina__invito { color: var(--sul-testo, var(--fondo)); }
-.vetrina__slide--contenuto .vetrina__invito:hover { color: var(--sul-colore, var(--accento-hover-testo)); }
+/* il tasto: fondo del colore del testo, scritta in contrasto (--sul-testo).
+   Al passaggio non cambia colore: sale di un pixel e la freccia avanza */
+.vetrina__slide--contenuto .vetrina__invito,
+.vetrina__slide--contenuto .vetrina__invito:hover {
+  border-color: var(--inchiostro); background: var(--inchiostro); color: var(--sul-testo, var(--fondo));
+}
 /* testo scuro su una foto chiara: il velo schiarisce invece di scurire */
 .vetrina__slide--velo-chiaro .vetrina__velo {
   background:

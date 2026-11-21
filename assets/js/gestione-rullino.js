@@ -85,7 +85,7 @@ async function caricaRighe() {
 async function caricaFonti() {
   if (!rullino.eventi) {
     const { data, error } = await client.from('eventi')
-      .select('id, codice, titolo, data_inizio, luogo, pagina, serie, presentazione, blocchi, copertina, miniatura, logo, colore, pubblicato')
+      .select('id, codice, titolo, data_inizio, luogo, pagina, serie, presentazione, blocchi, copertina, miniatura, logo, colore, carattere, pubblicato')
       .order('data_inizio', { ascending: false });
     if (error) throw error;
     rullino.eventi = data;

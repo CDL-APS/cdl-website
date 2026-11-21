@@ -276,6 +276,11 @@ h4.g-blocco__nome { font-size: 16px; }
 .g-indice__azioni { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
 .g-indice__azioni .btn { min-height: 44px; padding: 0 18px; font-size: 14px; }
 .g-indice__nota { font-size: 14px; font-weight: 600; color: var(--tenue); }
+.g-indice__carattere { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; }
+.g-indice__carattere select {
+  width: 190px; min-height: 44px; padding: 0 12px; border: 2px solid var(--nero); border-radius: 14px;
+  background-color: #fff; font: inherit; font-size: 14px; color: var(--nero);
+}
 .g-indice__figli {
   list-style: none; margin: 0 0 14px clamp(10px, 2vw, 20px);
   padding-left: clamp(14px, 2vw, 24px); border-left: 2px solid var(--filo);
