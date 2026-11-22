@@ -19,7 +19,7 @@ html:has(.pagina-eventi) { background: var(--blu); }
    riquadro nero ad angoli del marchio. La figura bruciata a destra, il
    conto alla rovescia in alto, la scritta glitch gialla (il marchio di
    evento.css, che al clic sale nella sala) e sotto titolo e dati in VT323.
-   Colori e marchio vengono da .evento--evento-interzona (evento.css). */
+   Colori e marchio vengono da .evento--evento-riservato-1 (evento.css). */
 .evidenza-iz {
   position: relative; isolation: isolate; overflow: hidden;
   display: grid; grid-template-rows: auto minmax(0, 1fr) auto; gap: clamp(16px, 2vw, 28px);

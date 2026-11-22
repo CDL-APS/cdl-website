@@ -30,7 +30,7 @@ sistema com'è, spento.
 ## Da fare più avanti (non prioritario)
 
 - [ ] **Dopo il 27 novembre 2026** (la serata per i soci,
-  `evento-interzona.html`): fino alla serata la pagina riporta solo le
+  `evento-riservato-1.html`): fino alla serata la pagina riporta solo le
   informazioni del post Instagram, niente di più (il perché è nel
   documento della serata, sul Drive). Dopo: aggiornare la pagina (foto
   della serata, eventuale nome), decidere cosa mettere in "In evidenza" in
@@ -385,13 +385,18 @@ sistema com'è, spento.
   `long-story-short` ha un blocco suo col lettering e le foto che scorrono
   (`#blocco-lss`), `short-talks` un altro, gli eventi senza serie finiscono
   in "Altri eventi".
-- **La serata del 27 novembre 2026** (`evento-interzona.html`, nome di
-  comodo: in pagina, nelle schede e nella scheda del browser si chiama
-  "Evento riservato ai soci"; "A/V LIVE SET" è solo la scritta grafica).
+- **La serata del 27 novembre 2026** (`evento-riservato-1.html`; in
+  pagina, nelle schede e nella scheda del browser si chiama "Evento
+  riservato ai soci"; "A/V LIVE SET" è solo la scritta grafica). Fino al
+  22 novembre 2026 la pagina era `evento-interzona.html`: `netlify.toml`
+  rimanda il vecchio indirizzo (e il vecchio logo) al nuovo. Il codice
+  dell'evento nel database e i nomi di foto e video sono rimasti
+  `evento-interzona`. Niente `#` nei nomi delle pagine: in un indirizzo
+  tutto ciò che segue `#` non arriva al server.
   Materiale di Studio JAM sul Drive condiviso (post e manifesti nella
   cartella della serata, in Eventi). Per ora è una schermata sola, come il
   manifesto, con le sole informazioni del post, niente di più. La scritta glitch è un PNG a maschera preso
-  dal video del post (`assets/img/eventi/loghi/evento-interzona.png`); la
+  dal video del post (`assets/img/eventi/loghi/evento-riservato-1.png`); la
   figura che all'apertura emerge dal buio e resta è un video di due
   secondi ricavato dal reel del post, senza ripetizione
   (`assets/video/eventi/evento-interzona-figura.mp4`, poster
@@ -401,7 +406,7 @@ sistema com'è, spento.
   alla rovescia (`preparaConti` in `comune.js`, su `[data-conto]`) e i
   video in loop fermi con "riduci movimento" (`preparaVideo`) partono
   nella pagina, nella sala e nel blocco in evidenza. Regole in
-  `evento.css` sotto `.evento--evento-interzona`.
+  `evento.css` sotto `.evento--evento-riservato-1`.
 - La pagina Produzioni mette in "Prossimamente" il lavoro più recente, poi il
   blocco delle produzioni originali (`produzione_cdl`) e quello delle
   collaborazioni (`collaborazione_cdl`, nascosto finché è vuoto). Le due

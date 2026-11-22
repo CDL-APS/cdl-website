@@ -24,7 +24,7 @@
 .evento--short-talks-al-not-2026 { --evento: #0c7830; }
 /* La serata per i soci del 27.11.2026: il giallo acido della grafica di
    Studio JAM, sul nero pieno del post Instagram */
-.evento--evento-interzona { --evento: #e8de2c; --evento-testo: var(--evento); --filo: rgba(232, 222, 44, 0.32); --iz-nero: #000; }
+.evento--evento-riservato-1 { --evento: #e8de2c; --evento-testo: var(--evento); --filo: rgba(232, 222, 44, 0.32); --iz-nero: #000; }
 
 /* Il logo di ogni evento: il PNG senza fondo in assets/img/eventi/loghi/,
    col nome della pagina, usato come maschera; --ar è larghezza / altezza.
@@ -39,7 +39,7 @@
 .marchio--short-talks-al-not-2026 { --marchio: url('/assets/img/eventi/loghi/short-talks-al-not-2026.png'); --ar: 2.1769; }
 .marchio--blue-hour { --marchio: url('/assets/img/eventi/loghi/blue-hour.png'); --ar: 0.9881; }
 /* la scritta glitch "A/V LIVE SET", presa dal video del post */
-.marchio--evento-interzona { --marchio: url('/assets/img/eventi/loghi/evento-interzona.png'); --ar: 1.7749; }
+.marchio--evento-riservato-1 { --marchio: url('/assets/img/eventi/loghi/evento-riservato-1.png'); --ar: 1.7749; }
 
 .pagina-evento .nav__voce[aria-current]::before { background: var(--evento); }
 .pagina-evento main > section { min-height: 0; }
@@ -328,7 +328,7 @@
 
 
 /* --------------------------------------------------------------------------
-   La serata per i soci del 27 novembre 2026 (evento-interzona.html). Una
+   La serata per i soci del 27 novembre 2026 (evento-riservato-1.html). Una
    pagina a sé, come Long Story Short, e per ora una schermata sola, come il
    manifesto di Studio JAM: nero, giallo acido e il bianco bruciato della
    figura, che all'apertura emerge dal buio e resta (un video breve dal
@@ -338,32 +338,32 @@
    sala di Eventi (che porta le classi del <body> sul suo riquadro e non ha
    un <main>).
    -------------------------------------------------------------------------- */
-body.evento--evento-interzona,
-.sala-evento.evento--evento-interzona {
+body.evento--evento-riservato-1,
+.sala-evento.evento--evento-riservato-1 {
   --fondo: var(--iz-nero); --inchiostro: var(--chiaro); --tenue: rgba(247, 247, 247, 0.72);
   --accento-hover: var(--evento); --accento-hover-testo: var(--iz-nero);
   background: var(--fondo); color: var(--inchiostro);
 }
-html:has(> body.evento--evento-interzona) { background: var(--iz-nero); }
-.evento--evento-interzona main,
-.sala-evento.evento--evento-interzona {
+html:has(> body.evento--evento-riservato-1) { background: var(--iz-nero); }
+.evento--evento-riservato-1 main,
+.sala-evento.evento--evento-riservato-1 {
   --f-testo: 'VT323', ui-monospace, monospace; --f-titoli: var(--f-testo); --titoli-spazio: 0;
   font-family: var(--f-testo); font-weight: 400; font-size: 22px; line-height: 1.2;
   /* VT323 ha un peso solo: niente grassetti finti */
   font-synthesis: none;
 }
 /* la schermata finisce dove comincia il piede */
-.pagina-evento.evento--evento-interzona main, .sala-evento.evento--evento-interzona { padding-bottom: 0; }
-.evento--evento-interzona :is(h1, h2, strong, .btn) { font-weight: 400; }
-.sala-evento.evento--evento-interzona .sala-evento__chiudi { color: var(--iz-nero); }
-.sala-evento.evento--evento-interzona .sala-evento__chiudi:focus-visible { outline-color: var(--chiaro); }
+.pagina-evento.evento--evento-riservato-1 main, .sala-evento.evento--evento-riservato-1 { padding-bottom: 0; }
+.evento--evento-riservato-1 :is(h1, h2, strong, .btn) { font-weight: 400; }
+.sala-evento.evento--evento-riservato-1 .sala-evento__chiudi { color: var(--iz-nero); }
+.sala-evento.evento--evento-riservato-1 .sala-evento__chiudi:focus-visible { outline-color: var(--chiaro); }
 
 /* La schermata: la figura a destra, dal fondo; sopra le righe di
    scansione. In alto a destra il conto alla rovescia, poi la scritta
    glitch, sotto di lei cosa e per chi con l'invito ad associarsi, in fondo
    luogo e ora come nel manifesto: dove passano sopra la figura bianca
    diventano neri (difference). */
-.evento--evento-interzona .iz-testata {
+.evento--evento-riservato-1 .iz-testata {
   display: flex; min-height: 100svh; padding-bottom: clamp(24px, 3.4vw, 44px);
   isolation: isolate; background: var(--iz-nero);
 }
@@ -383,7 +383,7 @@ html:has(> body.evento--evento-interzona) { background: var(--iz-nero); }
 .iz-conto__punto { width: 0.45em; height: 0.45em; border-radius: 50%; background: var(--rosso); box-shadow: 0 0 8px var(--rosso); animation: iz-rec 1.2s steps(1, end) infinite; }
 .iz-conto[data-stato="finito"] .iz-conto__punto, .iz-conto:not([data-stato]) .iz-conto__punto { display: none; }
 .iz-testata .evento-g__marchio { margin-top: auto; }
-.evento--evento-interzona .iz-testata .evento-g__marchio .marchio-serie--evento {
+.evento--evento-riservato-1 .iz-testata .evento-g__marchio .marchio-serie--evento {
   width: min(100%, 44svh * 1.7749);
   filter: drop-shadow(0 0 14px rgba(232, 222, 44, 0.35));
   animation: iz-glitch 0.75s steps(1, end) 0.2s both;
@@ -395,7 +395,7 @@ html:has(> body.evento--evento-interzona) { background: var(--iz-nero); }
 .iz-invito { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 28px; margin-bottom: auto; }
 .iz-cosa { font-size: clamp(26px, 2.6vw, 38px); line-height: 1; text-transform: uppercase; color: var(--evento); text-shadow: 0 0 12px rgba(232, 222, 44, 0.3); }
 .iz-cosa span { color: var(--chiaro); text-shadow: none; }
-.evento--evento-interzona .iz-associati { min-height: 56px; padding: 0 28px; font-size: 28px; text-transform: uppercase; }
+.evento--evento-riservato-1 .iz-associati { min-height: 56px; padding: 0 28px; font-size: 28px; text-transform: uppercase; }
 .iz-associati .freccia { width: 0.75em; height: 0.75em; }
 .iz-associati:hover .freccia { transform: translateX(4px); }
 
@@ -421,9 +421,9 @@ html:has(> body.evento--evento-interzona) { background: var(--iz-nero); }
    scritta (ne prende appena il fondo) e sopra l'invito, sfumando in basso;
    testi e tasto restano sul nero */
 @media (max-width: 1023px) {
-  .evento--evento-interzona .iz-testata { min-height: min(100svh, 1000px); }
+  .evento--evento-riservato-1 .iz-testata { min-height: min(100svh, 1000px); }
   .iz-testata .evento-g__marchio { margin-top: 8px; }
-  .evento--evento-interzona .iz-testata .evento-g__marchio .marchio-serie--evento { width: min(100%, 30svh * 1.7749); }
+  .evento--evento-riservato-1 .iz-testata .evento-g__marchio .marchio-serie--evento { width: min(100%, 30svh * 1.7749); }
   .iz-testata__figura {
     position: relative; inset: auto; align-self: flex-end;
     width: min(72%, 400px); height: auto;
@@ -437,9 +437,9 @@ html:has(> body.evento--evento-interzona) { background: var(--iz-nero); }
   .iz-testata__piede { margin-top: auto; mix-blend-mode: normal; }
 }
 @media (max-width: 639px) {
-  .evento--evento-interzona .iz-testata { min-height: 100svh; }
-  .evento--evento-interzona .iz-testata .evento-g__marchio .marchio-serie--evento { width: 100%; }
+  .evento--evento-riservato-1 .iz-testata { min-height: 100svh; }
+  .evento--evento-riservato-1 .iz-testata .evento-g__marchio .marchio-serie--evento { width: 100%; }
   .iz-testata__figura { width: 58%; margin-top: -40px; }
   .iz-quando { text-align: left; }
-  .evento--evento-interzona .iz-associati { width: 100%; }
+  .evento--evento-riservato-1 .iz-associati { width: 100%; }
 }
