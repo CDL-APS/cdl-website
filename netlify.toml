@@ -79,6 +79,28 @@
   status = 301
   force = true
 
+# La serata per i soci del 27 novembre 2026 si chiamava evento-interzona.html
+# (nome di comodo) fino al 22 novembre 2026: il vecchio indirizzo può essere
+# già stato condiviso. Il vecchio logo serve finché il campo logo del database
+# non punta al nuovo.
+[[redirects]]
+  from = "/evento-interzona.html"
+  to = "/evento-riservato-1.html"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/evento-interzona"
+  to = "/evento-riservato-1.html"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/assets/img/eventi/loghi/evento-interzona.png"
+  to = "/assets/img/eventi/loghi/evento-riservato-1.png"
+  status = 301
+  force = true
+
 # Vecchi percorsi delle immagini dei corti
 [[redirects]]
   from = "/cortoteca/*"
