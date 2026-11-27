@@ -39,11 +39,13 @@
 
 // Le intestazioni di TESSERATI <anno> lette e scritte (riga 1). Se una
 // cambia nome lo script si ferma con un errore invece di scrivere male.
+// Un elenco vale per più nomi, il primo è quello attuale: "DD?" (delibera
+// del direttivo) si chiamava "Conferma assemblea?" fino al 27 novembre 2026.
 const INTESTAZIONI = {
   numero: '#',
   nome: 'Nome cognome',
   data: 'Data tesseramento',
-  conferma: 'Conferma assemblea?',
+  conferma: ['DD?', 'Conferma assemblea?'],
   modulo: 'Link al modulo',
   pagato: 'Pagato?',
   modalita: 'Modalità pagamento',
@@ -63,7 +65,7 @@ const LIMITI = {
   attesaSi: 2 * 60000,   // un Sì vale dopo che è rimasto almeno questo
   promemoria: 7,         // giorni senza pagamento prima del riepilogo
   decadenza: 30,         // giorni senza pagamento: la domanda decade
-  ratifica: 20,          // giorni dal pagamento senza "Conferma assemblea?"
+  ratifica: 20,          // giorni dal pagamento senza "DD?" = Sì
   // controllaPagamenti lascia stare per questo tempo una domanda appena
   // arrivata: PDF e mail li sta ancora facendo doPost (una web app non
   // dura più di 6 minuti)
@@ -79,7 +81,7 @@ const FUSO = 'Europe/Rome';
 // Da cambiare a ogni modifica: la mostrano la pagina della conferma e
 // l'indirizzo della web app aperto senza parametri, per sapere quale
 // versione serve ciascun deployment
-const VERSIONE = '2026-11-19a';
+const VERSIONE = '2026-11-27a';
 const GENERICO = 'La domanda non è stata registrata. Riprova tra poco, o scrivici a ciao@cdlaps.com.';
 
 class Rifiuto extends Error {}
@@ -322,6 +324,7 @@ function riceviDomanda(e) {
     };
     registro.scrivi('domanda:' + codice, domanda);
     registro.scrivi('chiave:' + chiave, { quando: adesso.getTime(), risposta: esito });
+    contaDomanda(v.email);
   } finally {
     lock.releaseLock();
   }
@@ -382,17 +385,44 @@ function valida(d, imp) {
   return v;
 }
 
-// Limiti contro gli abusi: l'indirizzo della web app è pubblico
+// Limiti contro gli abusi: l'indirizzo della web app è pubblico, e il
+// limite per email evita che qualcuno faccia arrivare le nostre mail a un
+// indirizzo altrui. Contano solo le domande registrate (contaDomanda, dopo
+// la scrittura): un tentativo fallito per un errore nostro non consuma il
+// limite di chi riprova (successo il 27 novembre 2026, con una colonna del
+// foglio rinominata)
+function chiaviLimiti(email) {
+  const adesso = new Date();
+  return {
+    ora: 'ora:' + Utilities.formatDate(adesso, FUSO, 'yyyyMMddHH'),
+    giorno: 'email:' + impronta(email) + ':' + Utilities.formatDate(adesso, FUSO, 'yyyyMMdd')
+  };
+}
+
 function controllaLimiti(email) {
   const cache = CacheService.getScriptCache();
-  const ora = 'ora:' + Utilities.formatDate(new Date(), FUSO, 'yyyyMMddHH');
-  const giorno = 'email:' + impronta(email) + ':' + Utilities.formatDate(new Date(), FUSO, 'yyyyMMdd');
-  const nOra = Number(cache.get(ora) || 0);
-  const nEmail = Number(cache.get(giorno) || 0);
-  if (nOra >= LIMITI.allOra) throw new Rifiuto('In questo momento arrivano troppe domande: riprova fra un\'ora, o scrivici a ciao@cdlaps.com.');
-  if (nEmail >= LIMITI.perEmail) throw new Rifiuto('Con questa email sono già arrivate alcune domande oggi: se serve, scrivici a ciao@cdlaps.com.');
-  cache.put(ora, String(nOra + 1), 3600);
-  cache.put(giorno, String(nEmail + 1), 86400);
+  const k = chiaviLimiti(email);
+  if (Number(cache.get(k.ora) || 0) >= LIMITI.allOra) throw new Rifiuto('In questo momento arrivano troppe domande: riprova fra un\'ora, o scrivici a ciao@cdlaps.com.');
+  if (Number(cache.get(k.giorno) || 0) >= LIMITI.perEmail) throw new Rifiuto('Con questa email sono già arrivate alcune domande oggi: se serve, scrivici a ciao@cdlaps.com.');
+}
+
+// Sotto il lock, appena la domanda è scritta
+function contaDomanda(email) {
+  const cache = CacheService.getScriptCache();
+  const k = chiaviLimiti(email);
+  cache.put(k.ora, String(Number(cache.get(k.ora) || 0) + 1), 3600);
+  cache.put(k.giorno, String(Number(cache.get(k.giorno) || 0) + 1), 86400);
+}
+
+/* Da eseguire a mano dall'editor: azzera per oggi il limite di domande di
+   un'email (e quello dell'ora in corso). Scrivi l'indirizzo fra le
+   virgolette, esegui, poi rimettilo vuoto */
+function sbloccaEmail() {
+  const email = '';
+  if (!email) throw new Error('Scrivi l\'email fra le virgolette in sbloccaEmail, poi esegui di nuovo');
+  const k = chiaviLimiti(email.trim().toLowerCase());
+  CacheService.getScriptCache().removeAll([k.ora, k.giorno]);
+  console.log('Limite azzerato per oggi: ' + email.trim().toLowerCase());
 }
 
 function impronta(testo) {
@@ -437,8 +467,9 @@ function colonne(scheda, campi) {
   const intestazioni = scheda.getRange(1, 1, 1, scheda.getLastColumn()).getDisplayValues()[0].map((t) => t.trim());
   const col = {};
   (campi || Object.keys(INTESTAZIONI)).forEach((campo) => {
-    const i = intestazioni.indexOf(INTESTAZIONI[campo]);
-    if (i < 0) throw new Error('Nella scheda ' + scheda.getName() + ' manca la colonna "' + INTESTAZIONI[campo] + '"');
+    const nomi = [].concat(INTESTAZIONI[campo]);
+    const i = nomi.map((nome) => intestazioni.indexOf(nome)).find((n) => n >= 0);
+    if (i === undefined) throw new Error('Nella scheda ' + scheda.getName() + ' manca la colonna "' + nomi[0] + '"');
     col[campo] = i + 1;
   });
   return col;
@@ -804,7 +835,7 @@ function confermaQuota(codice, chiave, imp) {
     ].filter(Boolean).join(' '),
     testo: 'Fatto! Il foglio è aggiornato'
       + (dopo.mailBenvenuto === false ? '.' : ' e la mail di benvenuto è partita.')
-      + ' Resta solo la ratifica del direttivo, entro 30 giorni: dopo la riunione metti "Conferma assemblea?" = Sì.'
+      + ' Resta solo la ratifica del direttivo, entro 30 giorni: dopo la riunione metti "DD?" = Sì.'
   });
 }
 
@@ -1166,7 +1197,7 @@ function riepilogoQuotidiano() {
   if (doppi.length) parti.push('Numeri di tessera usati due volte in ' + schedaOggi.getName() + '. Cancella il # sbagliato e lascia "Pagato?" = Sì: in pochi minuti lo script gli dà quello giusto.\n' + doppi.join('\n'));
   if (sezioni.decadute.length) parti.push('Non pagate da più di ' + LIMITI.decadenza + ' giorni, quindi decadute. Togli la riga dal foglio e sposta il PDF: dal giorno dopo spariscono da qui.\n' + sezioni.decadute.join('\n'));
   if (sezioni.promemoria.length) parti.push('Ancora da pagare dopo ' + LIMITI.promemoria + ' giorni. Mandiamo un promemoria?\n' + sezioni.promemoria.join('\n'));
-  if (sezioni.ratifica.length) parti.push('Nuovi soci da far ratificare al direttivo, che ha 30 giorni di tempo. Dopo la riunione metti "Conferma assemblea?" = Sì.\n' + sezioni.ratifica.join('\n'));
+  if (sezioni.ratifica.length) parti.push('Nuovi soci da far ratificare al direttivo, che ha 30 giorni di tempo. Dopo la riunione metti "DD?" = Sì.\n' + sezioni.ratifica.join('\n'));
   if (sezioni.errori.length) parti.push('PDF o mail non riusciti. Lo script riprova ogni 10 minuti per un\'ora, poi si ferma: controlla l\'indirizzo e scrivi tu alla persona.\n' + sezioni.errori.join('\n'));
   if (sezioni.sparite.length) parti.push('Domande di cui non trovo più la riga (Note cambiate o riga tolta). Da oggi non le seguo più; se la riga c\'è ancora, al "Sì" do il numero come per una domanda cartacea, senza mail.\n' + sezioni.sparite.join('\n'));
 

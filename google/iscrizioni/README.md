@@ -92,6 +92,22 @@ pagine le vede solo ciao@).
   crea `TESSERATI <anno>` copiando intestazioni, formati e menu dell'anno
   prima, senza i dati.
 
+## Se le domande non arrivano
+
+- **Colonne del foglio**: lo script trova le colonne di `TESSERATI <anno>`
+  per nome (`INTESTAZIONI` in cima a `Codice.gs`). Se una viene rinominata,
+  ogni domanda risponde "La domanda non è stata registrata" e si fermano
+  anche i numeri di tessera (successo il 27 novembre 2026, quando "Conferma
+  assemblea?" è diventata "DD?" prima che lo script la conoscesse). Per
+  rinominare una colonna: prima si aggiunge il nome nuovo in `INTESTAZIONI`
+  (un elenco di nomi accettati, il primo è quello attuale) e si aggiornano
+  i due deployment, poi si rinomina nel foglio. `verifica` dall'editor controlla
+  tutte le colonne.
+- **Limite per email**: 3 domande registrate al giorno con la stessa email,
+  10 all'ora in tutto (`LIMITI`). Per sbloccare una persona oggi: scrivi la
+  sua email in `sbloccaEmail`, esegui dall'editor, poi rimetti le virgolette
+  vuote. Non serve aggiornare i deployment.
+
 ## Cosa fa il tesoriere
 
 - Ogni domanda arriva a ciao@ con il PDF e compare in `TESSERATI <anno>`
@@ -134,7 +150,8 @@ pagine le vede solo ciao@).
   a un evento riservato con la tessera appena scritta. Entro 30 giorni il
   direttivo ratifica, con una delibera come le `DD_2026_00x` ("Conferma
   dell'associazione dei progressivi …"); poi si mette a mano
-  `Conferma assemblea? = Sì`. Lo script non tocca mai quella colonna: non
+  `DD? = Sì` (fino al 27 novembre 2026 la colonna si chiamava "Conferma
+  assemblea?": lo script accetta tutti e due i nomi). Lo script non tocca mai quella colonna: non
   può fare una delibera, ma la controlla e la ricorda nel riepilogo.
 - **Mittente**: tutte le mail partono a nome "CDL APS". Nella casella di
   ciao@ quelle mandate a ciao@ stesso compaiono comunque come "io": Gmail
