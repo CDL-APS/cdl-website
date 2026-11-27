@@ -92,6 +92,20 @@ pagine le vede solo ciao@).
   crea `TESSERATI <anno>` copiando intestazioni, formati e menu dell'anno
   prima, senza i dati.
 
+## Se le domande non arrivano
+
+- **Colonne del foglio**: lo script trova le colonne di `TESSERATI <anno>`
+  per nome (`INTESTAZIONI` in cima a `Codice.gs`). Se una viene rinominata,
+  ogni domanda risponde "La domanda non è stata registrata" e si fermano
+  anche i numeri di tessera (successo il 27 novembre 2026: "Conferma
+  assemblea?" era diventata "DD?"). Si rimette il nome, oppure si cambia
+  `INTESTAZIONI` e si aggiorna il codice. `verifica` dall'editor controlla
+  tutte le colonne.
+- **Limite per email**: 3 domande registrate al giorno con la stessa email,
+  10 all'ora in tutto (`LIMITI`). Per sbloccare una persona oggi: scrivi la
+  sua email in `sbloccaEmail`, esegui dall'editor, poi rimetti le virgolette
+  vuote. Non serve aggiornare i deployment.
+
 ## Cosa fa il tesoriere
 
 - Ogni domanda arriva a ciao@ con il PDF e compare in `TESSERATI <anno>`

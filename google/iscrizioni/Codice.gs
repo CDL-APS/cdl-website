@@ -79,7 +79,7 @@ const FUSO = 'Europe/Rome';
 // Da cambiare a ogni modifica: la mostrano la pagina della conferma e
 // l'indirizzo della web app aperto senza parametri, per sapere quale
 // versione serve ciascun deployment
-const VERSIONE = '2026-11-19a';
+const VERSIONE = '2026-11-27a';
 const GENERICO = 'La domanda non è stata registrata. Riprova tra poco, o scrivici a ciao@cdlaps.com.';
 
 class Rifiuto extends Error {}
@@ -322,6 +322,7 @@ function riceviDomanda(e) {
     };
     registro.scrivi('domanda:' + codice, domanda);
     registro.scrivi('chiave:' + chiave, { quando: adesso.getTime(), risposta: esito });
+    contaDomanda(v.email);
   } finally {
     lock.releaseLock();
   }
@@ -382,17 +383,44 @@ function valida(d, imp) {
   return v;
 }
 
-// Limiti contro gli abusi: l'indirizzo della web app è pubblico
+// Limiti contro gli abusi: l'indirizzo della web app è pubblico, e il
+// limite per email evita che qualcuno faccia arrivare le nostre mail a un
+// indirizzo altrui. Contano solo le domande registrate (contaDomanda, dopo
+// la scrittura): un tentativo fallito per un errore nostro non consuma il
+// limite di chi riprova (successo il 27 novembre 2026, con una colonna del
+// foglio rinominata)
+function chiaviLimiti(email) {
+  const adesso = new Date();
+  return {
+    ora: 'ora:' + Utilities.formatDate(adesso, FUSO, 'yyyyMMddHH'),
+    giorno: 'email:' + impronta(email) + ':' + Utilities.formatDate(adesso, FUSO, 'yyyyMMdd')
+  };
+}
+
 function controllaLimiti(email) {
   const cache = CacheService.getScriptCache();
-  const ora = 'ora:' + Utilities.formatDate(new Date(), FUSO, 'yyyyMMddHH');
-  const giorno = 'email:' + impronta(email) + ':' + Utilities.formatDate(new Date(), FUSO, 'yyyyMMdd');
-  const nOra = Number(cache.get(ora) || 0);
-  const nEmail = Number(cache.get(giorno) || 0);
-  if (nOra >= LIMITI.allOra) throw new Rifiuto('In questo momento arrivano troppe domande: riprova fra un\'ora, o scrivici a ciao@cdlaps.com.');
-  if (nEmail >= LIMITI.perEmail) throw new Rifiuto('Con questa email sono già arrivate alcune domande oggi: se serve, scrivici a ciao@cdlaps.com.');
-  cache.put(ora, String(nOra + 1), 3600);
-  cache.put(giorno, String(nEmail + 1), 86400);
+  const k = chiaviLimiti(email);
+  if (Number(cache.get(k.ora) || 0) >= LIMITI.allOra) throw new Rifiuto('In questo momento arrivano troppe domande: riprova fra un\'ora, o scrivici a ciao@cdlaps.com.');
+  if (Number(cache.get(k.giorno) || 0) >= LIMITI.perEmail) throw new Rifiuto('Con questa email sono già arrivate alcune domande oggi: se serve, scrivici a ciao@cdlaps.com.');
+}
+
+// Sotto il lock, appena la domanda è scritta
+function contaDomanda(email) {
+  const cache = CacheService.getScriptCache();
+  const k = chiaviLimiti(email);
+  cache.put(k.ora, String(Number(cache.get(k.ora) || 0) + 1), 3600);
+  cache.put(k.giorno, String(Number(cache.get(k.giorno) || 0) + 1), 86400);
+}
+
+/* Da eseguire a mano dall'editor: azzera per oggi il limite di domande di
+   un'email (e quello dell'ora in corso). Scrivi l'indirizzo fra le
+   virgolette, esegui, poi rimettilo vuoto */
+function sbloccaEmail() {
+  const email = '';
+  if (!email) throw new Error('Scrivi l\'email fra le virgolette in sbloccaEmail, poi esegui di nuovo');
+  const k = chiaviLimiti(email.trim().toLowerCase());
+  CacheService.getScriptCache().removeAll([k.ora, k.giorno]);
+  console.log('Limite azzerato per oggi: ' + email.trim().toLowerCase());
 }
 
 function impronta(testo) {
